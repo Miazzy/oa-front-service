@@ -88,7 +88,15 @@
             <template>
               <a-timeline>
                 <div v-for="(item,index) in workflows" :key="index">
-                  <a-timeline-item v-bind:color="item.color">{{item.content}}</a-timeline-item>
+                  <a-timeline-item v-bind:color="item.color">
+                    <a-icon
+                      v-if="item.status == 'wait'"
+                      slot="dot"
+                      type="clock-circle-o"
+                      style="font-size: 16px;"
+                    />
+                    {{item.content}}
+                  </a-timeline-item>
                 </div>
               </a-timeline>
             </template>

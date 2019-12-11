@@ -687,6 +687,38 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
     }
 }
 
+/**
+ * 获取某业务记录对应的审批日志信息
+ */
+export async function queryPRLogByDataID(business_data_id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取某业务记录对应的审批日志信息
+ */
+export async function queryPRLogInfByDataID(business_data_id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export async function queryLoginUser() {
     let queryURL = `${api.domain}/jeecg-boot/api/login/user`;
 
@@ -952,10 +984,11 @@ export async function queryWorkflows(business_data_id, record) {
         typeof workflows == 'undefined' ||
         workflows.length == 0
     ) {
-        //获取审批日志信息
-        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
         //流程数据设置为数组
         workflows = [];
+
+        //获取审批日志信息
+        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
 
         //遍历审批日志
         _.each(processLogs, (item, index) => {
@@ -967,7 +1000,7 @@ export async function queryWorkflows(business_data_id, record) {
             let flag = index == processLogs.length - 1;
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
-            optime = optime.replace('T', ' ');
+
             let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime} `;
 
             let color = item.action == '同意' ?
@@ -983,8 +1016,37 @@ export async function queryWorkflows(business_data_id, record) {
                 id: item.id,
                 color: color,
                 content: content,
+                status: 'over',
             };
 
+            workflows.push(node);
+        });
+
+        //获取正在审批的审批日志信息
+        processLogs = await queryPRLogByDataID(business_data_id);
+
+        _.each(processLogs, (item, index) => {
+            let node = {
+                id: item.id,
+                color: '#30A0AE',
+                content: `节点：${item.process_station} , 待处理人： ${item.employee} , 审批：待处理 , 时间：-- `,
+                status: 'wait',
+            };
+            workflows.push(node);
+        });
+
+        //获取正在审批的审批日志信息
+        processLogs = await queryPRLogInfByDataID(business_data_id);
+
+        _.each(processLogs, (item, index) => {
+            //获取操作时间
+            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+            let node = {
+                id: item.id,
+                color: '#30A0AE',
+                content: `节点：${item.process_station} , 待处理人： ${item.employee} ,  已处理人： ${item.approve_user} , 审批：知会 , 时间：${optime} `,
+                status: 'wait',
+            };
             workflows.push(node);
         });
 
