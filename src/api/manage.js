@@ -1,0 +1,860 @@
+import { axios } from '@/utils/request';
+import axios_ from 'axios';
+import qs from 'qs';
+import phin from 'phin';
+import superagent from 'superagent';
+import _ from 'underscore';
+import { setStore, getStore, clearStore, clearAll } from '@/utils/storage';
+import {
+    filterObj,
+    formatDate,
+    existChinese,
+    deNull,
+    queryUrlString,
+} from '@/utils/util';
+
+axios_.defaults.headers.post['Content-Type'] =
+    'application/x-www-form-urlencoded';
+
+const api = {
+    domain: window._CONFIG['domian'],
+    user: '/api/user',
+    role: '/api/role',
+    service: '/api/service',
+    permission: '/api/permission',
+    permissionNoPager: '/api/permission/no-pager',
+    PROCESS_NODE_DICT_ID: '095a5c3fed5b29706cdfc6d9cb32cd4c', //流程节点，对应的字典的ID,根据这个查询流程节点的名称
+};
+
+export default api;
+
+//post
+export async function postAction(url, parameter) {
+    return axios({
+        url: url,
+        method: 'post',
+        data: parameter,
+    });
+}
+
+//post method= {post | put}
+export async function httpAction(url, parameter, method) {
+    return axios({
+        url: url,
+        method: method,
+        data: parameter,
+    });
+}
+
+//put
+export async function putAction(url, parameter) {
+    return axios({
+        url: url,
+        method: 'put',
+        data: parameter,
+    });
+}
+
+//get
+export async function getAction(url, parameter) {
+    return axios({
+        url: url,
+        method: 'get',
+        params: parameter,
+    });
+}
+
+//deleteAction
+export async function deleteAction(url, parameter) {
+    return axios({
+        url: url,
+        method: 'delete',
+        params: parameter,
+    });
+}
+
+export async function getUserList(parameter) {
+    return axios({
+        url: api.user,
+        method: 'get',
+        params: parameter,
+    });
+}
+
+export async function getRoleList(parameter) {
+    return axios({
+        url: api.role,
+        method: 'get',
+        params: parameter,
+    });
+}
+
+export async function getServiceList(parameter) {
+    return axios({
+        url: api.service,
+        method: 'get',
+        params: parameter,
+    });
+}
+
+export async function getPermissions(parameter) {
+    return axios({
+        url: api.permissionNoPager,
+        method: 'get',
+        params: parameter,
+    });
+}
+
+// id == 0 add     post
+// id != 0 update  put
+export async function saveService(parameter) {
+    return axios({
+        url: api.service,
+        method: parameter.id == 0 ? 'post' : 'put',
+        data: parameter,
+    });
+}
+
+/**
+ * 下载文件 用于excel导出
+ * @param url
+ * @param parameter
+ * @returns {*}
+ */
+export async function downFile(url, parameter) {
+    //检查此处的URL,改成Nginx服务器对应的下载地址
+    console.log(' download url :' + url);
+    return axios({
+        url: url,
+        params: parameter,
+        method: 'get',
+        responseType: 'blob',
+    });
+}
+
+/**
+ * 查询URL地址TableID变量
+ */
+export function queryURLTableParam() {
+    let url = document.location.toString();
+    url = url.substring(url.lastIndexOf('/') + 1, url.length);
+    console.log('tableID : ' + url);
+    return url;
+}
+
+/**
+ * 查询当前业务对应表单名称
+ * @param {*} url
+ */
+export async function queryTableName(callback) {
+    //获取主键ID
+    let tableID = queryURLTableParam();
+
+    //查询URL
+    let queryURL = `${api.domain}/api/onl_cgform_head/${tableID}`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res.body);
+
+        if (
+            typeof res != 'undefined' &&
+            res.body instanceof Array &&
+            res.body.length > 0 &&
+            typeof callback != 'undefined'
+        ) {
+            callback(res.body[0]);
+        }
+
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 检测审批是否存在 存在 false  不存在 true
+ * @param {*} tableName
+ * @param {*} businessID
+ */
+export async function queryApprovalExist(tableName, businessID) {
+    //查询URL GET	/api/tableName/:id/exists	True or false whether a row exists or not  /api/tableName/findOne
+    let queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+
+    //查询标识
+    let vflag = false;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+
+        vflag = res.body.length > 0 ? true : false;
+
+        return vflag;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 添加数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function insertTableData(tableName, node) {
+    //Post数据的URL地址
+    let insertURL = `${api.domain}/api/${tableName}`;
+
+    //如果传入数据为数组，则URL添加bulk路径
+    if (typeof node != 'undefined' && node != null && node instanceof Array) {
+        insertURL = insertURL + '/bulk';
+    }
+
+    try {
+        const res = await superagent
+            .post(insertURL)
+            .send(node)
+            .set('accept', 'json');
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 添加数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function deleteTableData(tableName, id) {
+    //Post数据的URL地址
+    let deleteURL = `${api.domain}/api/${tableName}/${id}`;
+
+    try {
+        const res = await superagent.delete(deleteURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 更新数据
+ * @param {*} tableName
+ * @param {*} id
+ * @param {*} node
+ */
+export async function patchTableData(tableName, id, node) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    let patchURL = `${api.domain}/api/${tableName}/${id}`;
+
+    //如果传入数据为空，则直接返回错误
+    if (typeof node == 'undefined' || node == null || node == '') {
+        return false;
+    }
+
+    try {
+        const res = await superagent
+            .patch(patchURL)
+            .send(node)
+            .set('accept', 'json');
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function queryTableData(tableName, id) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    let queryURL = `${api.domain}/api/${tableName}/${id}`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询流程权责业务信息
+ */
+export async function queryBusinessInfo(tableName, callback) {
+    //查询URL
+    let queryURL = `${api.domain}/api/PR_RIGHTS?_where=(business,like,~${tableName}~)`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res.body);
+
+        if (
+            typeof res != 'undefined' &&
+            res.body instanceof Array &&
+            res.body.length > 0 &&
+            typeof callback != 'undefined'
+        ) {
+            callback(res.body);
+        }
+
+        return JSON.parse(JSON.stringify(res.body));
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的员工信息
+ */
+export async function queryProcessNodeEmployee(node, callback) {
+    //查询URL
+    let queryURL = `${api.domain}/api/BS_APPROVE_NODE?_where=(name,eq,${node})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res.body);
+
+        if (
+            typeof res != 'undefined' &&
+            res.body instanceof Array &&
+            res.body.length > 0 &&
+            typeof callback != 'undefined'
+        ) {
+            callback(res.body[0]['item_text']);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessNodeProcName(node, callback) {
+    //查询URL
+    let queryURL = `${api.domain}/api/sys_dict_item?_where=(dict_id,eq,${api.PROCESS_NODE_DICT_ID})~and(item_value,eq,${node})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        if (
+            typeof res != 'undefined' &&
+            res.body instanceof Array &&
+            res.body.length > 0 &&
+            typeof callback != 'undefined'
+        ) {
+            callback(res.body[0]['item_text']);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询审批处理页面的记录
+ */
+export async function queryProcessLogToApproved(username, realname, params) {
+    //用户对于的中文代码
+    //let realname = username;
+
+    //查询URL
+    let queryURL = `${api.domain}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
+    let queryCountURL = `${api.domain}/api/PR_LOG/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
+    let result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        const count = await superagent.get(queryCountURL).set('accept', 'json');
+        console.log(res);
+        result.records = res.body;
+        result.total = res.body.length <= 20 ?
+            res.body.length :
+            count.body[0].no_of_rows;
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询审批历史记录页面的记录
+ */
+export async function queryProcessLogHisApproved(username, realname, params) {
+    //用户对于的中文代码
+    //let username_zh = username;
+
+    //查询URL
+    let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
+    let queryCountURL = `${api.domain}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
+    let result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        const count = await superagent.get(queryCountURL).set('accept', 'json');
+        console.log(res);
+        result.records = res.body;
+
+        //遍历并格式化日期
+        _.each(result.records, function(item) {
+            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
+            optime = optime.replace('T', ' ');
+            item['operate_time'] = optime;
+        });
+
+        result.total = res.body.length <= 20 ?
+            res.body.length :
+            count.body[0].no_of_rows;
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询审批知会记录页面的记录
+ */
+export async function queryProcessLogInfApproved(username, realname, params) {
+    //用户对于的中文代码
+    //let username_zh = username;
+    //查询URL
+    //let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=operate_time`;
+    //let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))`;
+    let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=operate_time`;
+    let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
+    let result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        const count = await superagent.get(queryCountURL).set('accept', 'json');
+
+        console.log('query url : ' + queryURL);
+
+        console.log(res);
+        result.records = res.body;
+        result.total = res.body.length <= 20 ?
+            res.body.length :
+            count.body[0].no_of_rows;
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessLogInfByID(tableName, id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessLog(tableName, businessID) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessLogByID(tableName, id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function deleteProcessLog(tableName, node) {
+    //遍历node,取出里面的ids
+    var ids = '';
+
+    _.each(node, function(item) {
+        ids = ids + ',' + item['id'];
+    });
+
+    ids = ids.substring(1);
+
+    //提交URL
+    let deleteURL = `${api.domain}/api/PR_LOG/bulk?_ids=${ids}`;
+
+    try {
+        const res = await superagent.delete(deleteURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，删除到这个节点对应的流程信息
+ */
+export async function deleteProcessLogInf(tableName, node) {
+    //遍历node,取出里面的ids
+    var ids = '';
+
+    _.each(node, function(item) {
+        ids = ids + ',' + item['id'];
+    });
+
+    ids = ids.substring(1);
+
+    //提交URL
+    let deleteURL = `${api.domain}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
+
+    try {
+        const res = await superagent.delete(deleteURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postProcessLog(node, callback) {
+    //提交URL
+    let postURL = `${api.domain}/api/PR_LOG`;
+
+    try {
+        const res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postProcessLogHistory(node, callback) {
+    //是否批处理
+    let bflag = node instanceof Array && node.length > 0 ? '/bulk' : '';
+
+    //提交URL
+    let postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
+
+    try {
+        const res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 想知会记录列表提交数据
+ */
+export async function postProcessLogInformed(node, callback) {
+    //是否批处理
+    let bflag = node instanceof Array && node.length > 0 ? '/bulk' : '';
+
+    //提交URL
+    let postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
+
+    try {
+        const res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function setProcessLogHtml(business_data_id, record) {
+    //获取html信息
+    let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
+
+    if (htmlInfo == null || htmlInfo == '') {
+        //清空htmlInfo数据
+        htmlInfo = '';
+        //获取审批日志信息
+        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
+
+        //遍历审批日志
+        processLogs.forEach(item => {
+            //获取操作时间
+            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm');
+            optime = optime.replace('T', ' ');
+            //获取html文本
+            htmlInfo =
+                htmlInfo +
+                `流程：${item.process_name} , 节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime}<br/>`;
+        });
+
+        setStore(`processlog_by_bs_data_id@${business_data_id}`, htmlInfo, 600);
+    }
+
+    return htmlInfo;
+}
+
+/**
+ * 获取某业务记录对应的审批日志信息
+ */
+export async function queryPRLogHistoryByDataID(business_data_id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function queryLoginUser() {
+    let queryURL = `${api.domain}/jeecg-boot/api/login/user`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取n位随机数,随机来源chars
+ */
+export function randomChars(n) {
+    var chars = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(
+        ','
+    );
+
+    var res = '';
+    for (var i = 0; i < n; i++) {
+        var id = Math.ceil(Math.random() * 35);
+        res += chars[id];
+    }
+    return res;
+}
+
+/**
+ * 通过函数暴露API
+ */
+export function commonArgs() {
+    return api;
+}
+
+/**
+ * @function 查询请假类型
+ */
+export function queryLeaveType(leave) {
+    var config = {
+        affairs_leave: '事假',
+        sick_leave: '病假',
+        marital_leave: '婚假',
+        funeral_leave: '丧假',
+        maternity_leave: '产假',
+        paternity_leave: '陪产假',
+        annual_leave: '年假',
+        wr_injury_leave: '工伤假',
+        other_leave: '其他',
+    };
+    return config[leave];
+}
+
+/**
+ * @function 查询流程状态
+ */
+export function queryBpmStatus(status) {
+    var config = {
+        '1': '待提交',
+        '2': '处理中',
+        '3': '已完成',
+        '4': '已作废',
+    };
+
+    return config[status];
+}
+
+/**
+ * @function 根据表名查询表单名称
+ */
+export function queryFormName(tableName) {
+    var config = {
+        BS_LEAVE: '请假流程申请单',
+        BS_EGRESS: '外出流程申请单',
+        BS_OVERTIME: '加班流程申请单',
+        BS_ATTENDANCE: '考勤异常流程申请单',
+        BS_RECORD_BORROW: '档案及证照借阅申请单',
+        BS_SEAL_NORMAL: '用印申请(非合同)流程申请单',
+        BS_SEAL_CONTRACT: '用印申请(合同)流程申请单',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 查询审批流程信息
+ */
+export async function queryWorkflows(business_data_id, record) {
+    //待返回审批流程数据
+    let workflows = getStore(`workflows_by_data_id@${business_data_id}`);
+
+    if (
+        workflows == null ||
+        workflows == '' ||
+        typeof workflows == 'undefined' ||
+        workflows.length == 0
+    ) {
+        //获取审批日志信息
+        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
+        //流程数据设置为数组
+        workflows = [];
+
+        //遍历审批日志
+        _.each(processLogs, (item, index) => {
+            //获取下一节点
+            let next = index < processLogs.length - 1 ?
+                processLogs[index + 1] :
+                { action: '' };
+            //获取标识
+            let flag = index == processLogs.length - 1;
+            //获取操作时间
+            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+            optime = optime.replace('T', ' ');
+            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime} `;
+
+            let color = item.action == '同意' ?
+                'green' :
+                item.action == '驳回' ? 'red' : item.action == '知会' ? 'yellow' : 'blue';
+
+            //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
+            color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
+            color = flag && item.action == '同意' ? 'blue' : color;
+            color = flag && item.action == '知会' ? 'orange' : color;
+
+            let node = {
+                id: item.id,
+                color: color,
+                content: content,
+            };
+
+            workflows.push(node);
+        });
+
+        setStore(
+            `workflows_by_data_id@${business_data_id}`,
+            JSON.stringify(workflows),
+            600
+        );
+    }
+
+    return workflows;
+}
+
+/**
+ * 获取某业务记录对应的审批日志信息
+ */
+export async function queryDepartNameByCode(code) {
+    //提交URL
+    let queryURL = `${api.domain}/api/sys_depart?_where=(org_code,eq,${code})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * @function 查询表单详情页面
+ */
+export async function watchFormLeave(that) {
+    debugger;
+    let tableName = queryUrlString('table_name');
+    let id = queryUrlString('id');
+    let username = queryUrlString('user');
+
+    that.formName = queryFormName(tableName);
+
+    that.curRow = await queryTableData(tableName, id);
+    let department = await queryTableData(
+        'sys_depart',
+        that.curRow.sys_org_code
+    );
+
+    department = department || await queryDepartNameByCode(that.curRow.sys_org_code);
+
+    that.workflows = await queryWorkflows(that.curRow.id);
+
+    that.curRow.leave_type_name = queryLeaveType(that.curRow.leave_off_type);
+    that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);
+
+    that.curRow.starttime = formatDate(
+        that.curRow.starttime,
+        'yyyy-MM-dd HH:mm:ss'
+    );
+    that.curRow.endtime = formatDate(that.curRow.endtime, 'yyyy-MM-dd HH:mm:ss');
+    that.curRow.create_time = formatDate(
+        that.curRow.create_time,
+        'yyyy-MM-dd HH:mm:ss'
+    );
+
+    try {
+        that.depart = department;
+    } catch (error) {}
+    console.log(that.curRow.department_name);
+
+    return that;
+}
