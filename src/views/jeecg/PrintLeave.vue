@@ -25,10 +25,10 @@
           </a-col>
           <a-col
             :span="24"
-            style="margin-top: 30px;margin-bottom:10px;"
+            style="margin-top: 10px;margin-bottom:10px;"
             v-if="typeof curRow.file_name != 'undefined' && curRow.file_name != null"
           >
-            <span style="float:left;display:block;">档案资料:</span>
+            <span style="float:left;display:block;">{{curRow.fileNameTitle}}:</span>
             <div
               style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.file_name"

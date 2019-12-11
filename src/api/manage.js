@@ -825,7 +825,6 @@ export function queryFormMainTable(tableName) {
  * @function 开始日期表单显示名称
  */
 export function queryFormMTStarttimeName(tableName) {
-    debugger;
     var config = {
         BS_LEAVE: '开始',
         BS_EGRESS: '开始',
@@ -851,6 +850,23 @@ export function queryFormMTEndtimeName(tableName) {
         BS_RECORD_BORROW: '归还',
         BS_SEAL_NORMAL: '结束',
         BS_SEAL_CONTRACT: '结束',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 结束日期表单显示名称
+ */
+export function queryFormMTFileName(tableName) {
+    var config = {
+        BS_LEAVE: '文件名称',
+        BS_EGRESS: '文件名称',
+        BS_OVERTIME: '文件名称',
+        BS_ATTENDANCE: '文件名称',
+        BS_RECORD_BORROW: '档案资料',
+        BS_SEAL_NORMAL: '文件名称',
+        BS_SEAL_CONTRACT: '文件名称',
     };
 
     return config[tableName];
@@ -1084,6 +1100,9 @@ export async function watchFormLeave(that) {
     that.curRow.startTimeName = queryFormMTStarttimeName(tableName) || '开始';
     //查询结束时间表单显示名称
     that.curRow.endTimeName = queryFormMTEndtimeName(tableName) || '结束';
+
+    //查询文件名称显示标题
+    that.curRow.fileNameTitle = queryFormMTFileName(tableName) || '文件名称';
 
     //查询字段中文名称
     that.curRow.fieldName = {};
