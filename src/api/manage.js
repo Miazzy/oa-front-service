@@ -1,17 +1,9 @@
 import { axios } from '@/utils/request';
 import axios_ from 'axios';
-import qs from 'qs';
-import phin from 'phin';
 import superagent from 'superagent';
 import _ from 'underscore';
 import { setStore, getStore, clearStore, clearAll } from '@/utils/storage';
-import {
-    filterObj,
-    formatDate,
-    existChinese,
-    deNull,
-    queryUrlString,
-} from '@/utils/util';
+import { formatDate, queryDateDiff, deNull, queryUrlString } from '@/utils/util';
 
 axios_.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
@@ -272,6 +264,42 @@ export async function patchTableData(tableName, id, node) {
 export async function queryTableData(tableName, id) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     let queryURL = `${api.domain}/api/${tableName}/${id}`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} foreignKey
+ * @param {*} id
+ */
+export async function queryTableDataByField(tableName, field, value) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    let queryURL = `${api.domain}/api/${tableName}?_where=(${field},eq,${value})`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询表单字段数据
+ * @param {*} tableName
+ * @param {*} foreignKey
+ * @param {*} id
+ */
+export async function queryTableFieldInfo(tableName, field, value) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    let queryURL = `${api.domain}/api/${tableName}?_where=(name,eq,${field})~and(field,eq,${value})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -743,6 +771,157 @@ export function queryFormName(tableName) {
 }
 
 /**
+ * @function 根据表名查询表单名称
+ */
+export function queryFormTypeName(tableName) {
+    var config = {
+        BS_LEAVE: '请假',
+        BS_EGRESS: '外出',
+        BS_OVERTIME: '加班',
+        BS_ATTENDANCE: '考勤',
+        BS_RECORD_BORROW: '借阅',
+        BS_SEAL_NORMAL: '申请',
+        BS_SEAL_CONTRACT: '申请',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 根据表名查询表单名称
+ */
+export function queryFormTypeValue(tableName) {
+    var config = {
+        BS_LEAVE: '--',
+        BS_EGRESS: '普通',
+        BS_OVERTIME: '普通',
+        BS_ATTENDANCE: '普通',
+        BS_RECORD_BORROW: '普通',
+        BS_SEAL_NORMAL: '非合同',
+        BS_SEAL_CONTRACT: '合同',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 根据表名查询表单名称
+ */
+export function queryFormMainTable(tableName) {
+    var config = {
+        BS_LEAVE: false,
+        BS_EGRESS: false,
+        BS_OVERTIME: false,
+        BS_ATTENDANCE: true,
+        BS_RECORD_BORROW: false,
+        BS_SEAL_NORMAL: false,
+        BS_SEAL_CONTRACT: false,
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 开始日期表单显示名称
+ */
+export function queryFormMTStarttimeName(tableName) {
+    debugger;
+    var config = {
+        BS_LEAVE: '开始',
+        BS_EGRESS: '开始',
+        BS_OVERTIME: '开始',
+        BS_ATTENDANCE: '开始',
+        BS_RECORD_BORROW: '借阅',
+        BS_SEAL_NORMAL: '开始',
+        BS_SEAL_CONTRACT: '开始',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 结束日期表单显示名称
+ */
+export function queryFormMTEndtimeName(tableName) {
+    var config = {
+        BS_LEAVE: '结束',
+        BS_EGRESS: '结束',
+        BS_OVERTIME: '结束',
+        BS_ATTENDANCE: '结束',
+        BS_RECORD_BORROW: '归还',
+        BS_SEAL_NORMAL: '结束',
+        BS_SEAL_CONTRACT: '结束',
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 查询附表字段
+ */
+export function queryFormMTSubColumns(tableName) {
+    var config = {
+        BS_LEAVE: [],
+        BS_EGRESS: [],
+        BS_OVERTIME: [],
+        BS_ATTENDANCE: [{
+                title: '序号',
+                dataIndex: 'no',
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: '异常时间',
+                dataIndex: 'adate',
+                width: '35%',
+                align: 'center',
+            },
+            {
+                title: '异常类型',
+                dataIndex: 'type',
+                width: '20%',
+                align: 'center',
+            },
+            {
+                title: '异常说明',
+                dataIndex: 'content',
+                width: '35%',
+                align: 'left',
+            },
+        ],
+        BS_RECORD_BORROW: [],
+        BS_SEAL_NORMAL: [],
+        BS_SEAL_CONTRACT: [],
+    };
+
+    return config[tableName];
+}
+
+/**
+ * @function 查询附表数据
+ */
+export async function queryFormMTSubData(tableName, foreignKey, id) {
+    var config = {
+        BS_LEAVE: [],
+        BS_EGRESS: [],
+        BS_OVERTIME: [],
+        BS_ATTENDANCE: [],
+        BS_RECORD_BORROW: [],
+        BS_SEAL_NORMAL: [],
+        BS_SEAL_CONTRACT: [],
+    };
+    if (tableName == 'BS_ATTENDANCE') {
+        let data = await queryTableDataByField(
+            tableName + '_DETAILS',
+            foreignKey,
+            id
+        );
+        config['BS_ATTENDANCE'] = data;
+    }
+    return config[tableName];
+}
+
+/**
  * @function 查询审批流程信息
  */
 export async function queryWorkflows(business_data_id, record) {
@@ -821,39 +1000,115 @@ export async function queryDepartNameByCode(code) {
  * @function 查询表单详情页面
  */
 export async function watchFormLeave(that) {
-    debugger;
+    //获取对应表单信息
     let tableName = queryUrlString('table_name');
+    //查询主键ID
     let id = queryUrlString('id');
+    //获取用户名称
     let username = queryUrlString('user');
 
     that.formName = queryFormName(tableName);
+    that.username = username;
 
     that.curRow = await queryTableData(tableName, id);
-    let department = await queryTableData(
-        'sys_depart',
-        that.curRow.sys_org_code
-    );
 
-    department = department || await queryDepartNameByCode(that.curRow.sys_org_code);
+    //获取部门信息
+    var department = '';
 
+    try {
+        department = await queryTableData(
+            'sys_depart',
+            that.curRow.department || that.curRow.sys_org_code
+        );
+    } catch (error) {
+        console.log('query department error :' + error);
+    }
+
+    //如果没查询到部门信息，则通过org_code字段查询部门信息
+    department =
+        department || (await queryDepartNameByCode(that.curRow.sys_org_code));
+
+    //查询审批流程信息
     that.workflows = await queryWorkflows(that.curRow.id);
 
-    that.curRow.leave_type_name = queryLeaveType(that.curRow.leave_off_type);
+    that.curRow.leave_type_name =
+        queryLeaveType(that.curRow.leave_off_type) ||
+        queryFormTypeValue(tableName);
+
+    //查询当前流程状态
     that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);
 
+    //查询申请开始日期
     that.curRow.starttime = formatDate(
         that.curRow.starttime,
         'yyyy-MM-dd HH:mm:ss'
     );
+
+    //如果未查询到开始日期，则使用申请日期
+    if (that.curRow.starttime == '--') {
+        that.curRow.starttime = formatDate(
+            that.curRow.create_time,
+            'yyyy-MM-dd HH:mm:ss'
+        );
+    }
+
+    //查询申请结束日期
     that.curRow.endtime = formatDate(that.curRow.endtime, 'yyyy-MM-dd HH:mm:ss');
+
+    //查询申请创建日期
     that.curRow.create_time = formatDate(
         that.curRow.create_time,
         'yyyy-MM-dd HH:mm:ss'
     );
 
+    //查询表单类型名称
+    that.curRow.formTypeName = queryFormTypeName(tableName);
+    //查询日期之间的天数
+    that.curRow.total_days = queryDateDiff(
+        that.curRow.starttime,
+        that.curRow.endtime
+    );
+
+    //查询此表单是否为主表单
+    that.curRow.main_table_status = queryFormMainTable(tableName);
+    //查询此表单的附表字段
+    that.curRow.sub_columns = queryFormMTSubColumns(tableName);
+    //查询此表单的附表数据
+    that.curRow.sub_data = await queryFormMTSubData(
+        tableName,
+        'foreign_key_id',
+        id
+    );
+
+    //查询结束时间表单显示名称
+    that.curRow.startTimeName = queryFormMTStarttimeName(tableName) || '开始';
+    //查询结束时间表单显示名称
+    that.curRow.endTimeName = queryFormMTEndtimeName(tableName) || '结束';
+
+    //查询字段中文名称
+    that.curRow.fieldName = {};
+
+    try {
+        //设置字段名称
+        let filedValue = await queryTableFieldInfo(
+            'v_table_field',
+            tableName,
+            'file_name'
+        );
+
+        //设置字段名称
+        if (typeof filedValue != 'undefined') {
+            that.curRow.fieldName['file_name'] = filedValue['txt'];
+        }
+    } catch (error) {
+        console.log('setup fieldName info error :' + error);
+    }
+
     try {
         that.depart = department;
-    } catch (error) {}
+    } catch (error) {
+        console.log('setup department error : ' + error);
+    }
     console.log(that.curRow.department_name);
 
     return that;

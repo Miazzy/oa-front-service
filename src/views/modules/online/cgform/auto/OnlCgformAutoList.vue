@@ -257,9 +257,6 @@
                     </a-menu-item>
                   </template>
                 </template>
-                <a-menu-item>
-                  <a href="javascript:;" @click="handleDetail(record)">详情</a>
-                </a-menu-item>
                 <template v-if="hasBpmStatus"></template>
                 <template v-else>
                   <a-menu-item v-if="buttonSwitch.delete">
@@ -341,45 +338,57 @@ import {
   deleteProcessLogInf,
   queryProcessLogInfByID,
   queryPRLogHistoryByDataID
-} from '@/api/manage'
-import Vue from 'vue'
-import { getLoginfo, getVisitInfo } from '@/api/api'
-import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
-import { filterObj, formatDate, existChinese, deNull, queryUrlString } from '@/utils/util'
-import JImportModal from '@/components/jeecg/JImportModal'
-import _ from 'underscore'
-import { setStore, getStore, clearStore, clearAll } from '@/utils/storage'
-import { ACCESS_TOKEN, USER_NAME, USER_INFO, USER_AUTH, SYS_BUTTON_AUTH } from '@/store/mutation-types'
+} from "@/api/manage";
+import Vue from "vue";
+import { getLoginfo, getVisitInfo } from "@/api/api";
+import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
+import {
+  filterObj,
+  formatDate,
+  existChinese,
+  deNull,
+  queryUrlString
+} from "@/utils/util";
+import JImportModal from "@/components/jeecg/JImportModal";
+import _ from "underscore";
+import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
+import {
+  ACCESS_TOKEN,
+  USER_NAME,
+  USER_INFO,
+  USER_AUTH,
+  SYS_BUTTON_AUTH
+} from "@/store/mutation-types";
 
 export default {
-  name: 'OnlCgFormAutoList',
+  name: "OnlCgFormAutoList",
   components: {
     JImportModal
   },
   data() {
     return {
-      code: '',
-      fixedWFlow: '',
+      code: "",
+      fixedWFlow: "",
       modelModal: false,
-      modelWFlowSelection: '',
+      modelWFlowSelection: "",
       rights: [],
-      description: '在线报表',
-      currentTableName: '',
-      tipContent: '',
+      description: "在线报表",
+      currentTableName: "",
+      tipContent: "",
       tipVisible: false,
       tipConfirmLoading: false,
       url: {
-        getQueryInfo: '/online/cgform/api/getQueryInfo/',
-        getColumns: '/online/cgform/api/getColumns/',
-        getData: '/online/cgform/api/getData/',
-        optPre: '/online/cgform/api/form/',
-        exportXls: '/online/cgform/api/exportXls/',
-        buttonAction: '/online/cgform/api/doButton'
+        getQueryInfo: "/online/cgform/api/getQueryInfo/",
+        getColumns: "/online/cgform/api/getColumns/",
+        getData: "/online/cgform/api/getData/",
+        optPre: "/online/cgform/api/form/",
+        exportXls: "/online/cgform/api/exportXls/",
+        buttonAction: "/online/cgform/api/doButton"
       },
-      flowCodePre: 'onl_',
+      flowCodePre: "onl_",
       isorter: {
-        column: 'createTime',
-        order: 'desc'
+        column: "createTime",
+        order: "desc"
       },
       dictOptions: {},
       cgButtonLinkList: [],
@@ -388,8 +397,8 @@ export default {
       queryParam: {},
       cityList: [
         {
-          value: 'beijing',
-          label: '北京'
+          value: "beijing",
+          label: "北京"
         }
       ],
       toggleSearchStatus: false,
@@ -409,9 +418,9 @@ export default {
         pagination: {
           current: 1,
           pageSize: 20,
-          pageSizeOptions: ['10', '20', '30'],
+          pageSizeOptions: ["10", "20", "30"],
           showTotal: (total, range) => {
-            return range[0] + '-' + range[1] + ' 共' + total + '条'
+            return range[0] + "-" + range[1] + " 共" + total + "条";
           },
           showQuickJumper: true,
           showSizeChanger: true,
@@ -419,20 +428,20 @@ export default {
         }
       },
       actionColumn: {
-        title: '操作',
-        dataIndex: 'action',
+        title: "操作",
+        dataIndex: "action",
         scopedSlots: {
           //filterDropdown: 'filterDropdown',
           //filterIcon: 'filterIcon',
-          customRender: 'action'
+          customRender: "action"
         },
-        fixed: 'right',
-        align: 'center',
+        fixed: "right",
+        align: "center",
         width: 80
       },
-      formTemplate: '99',
-      EnhanceJS: '',
-      hideColumns: ['content'],
+      formTemplate: "99",
+      EnhanceJS: "",
+      hideColumns: ["content"],
       buttonSwitch: {
         add: true,
         update: true,
@@ -442,273 +451,315 @@ export default {
         export: true
       },
       hasBpmStatus: false
-    }
+    };
   },
   created() {
     //创建页面后，设置选中数据为空
-    this.initAutoList()
-    this.table.selectionRows = []
-    this.table.selectedRowKeys = []
+    this.initAutoList();
+    this.table.selectionRows = [];
+    this.table.selectedRowKeys = [];
   },
   mounted() {
-    this.cgButtonJsHandler('mounted')
+    this.cgButtonJsHandler("mounted");
   },
   watch: {
     $route() {
       // 刷新参数放到这里去触发，就可以刷新相同界面了
-      this.initAutoList()
+      this.initAutoList();
     }
   },
   methods: {
     tipHandleOk(e) {
-      this.tipConfirmLoading = true
+      this.tipConfirmLoading = true;
       setTimeout(() => {
-        this.loadData(1)
-        this.tipVisible = false
-        this.tipConfirmLoading = false
-      }, 300)
+        this.loadData(1);
+        this.tipVisible = false;
+        this.tipConfirmLoading = false;
+      }, 300);
     },
     tipHandleCancel() {
-      this.loadData(1)
-      this.tipVisible = false
+      this.loadData(1);
+      this.tipVisible = false;
     },
     hasBpmStatusFilter() {
-      var columnObjs = this.table.columns
-      let columns = []
+      var columnObjs = this.table.columns;
+      let columns = [];
       for (var item of columnObjs) {
-        columns.push(item.dataIndex)
+        columns.push(item.dataIndex);
       }
-      if (columns.includes('bpm_status') || columns.includes('BPM_STATUS')) {
-        this.hasBpmStatus = true
+      if (columns.includes("bpm_status") || columns.includes("BPM_STATUS")) {
+        this.hasBpmStatus = true;
       } else {
-        this.hasBpmStatus = false
+        this.hasBpmStatus = false;
       }
     },
     modalOk() {
       //获取下拉框选择的值
-      let value = this.modelWFlowSelection
+      let value = this.modelWFlowSelection;
 
       this.fixedWFlow = _.find(this.rights, function(item) {
-        return (item['id'] = value)
-      })
+        return (item["id"] = value);
+      });
 
       //获取流程信息
-      let wflow = JSON.stringify(this.fixedWFlow)
+      let wflow = JSON.stringify(this.fixedWFlow);
 
-      console.log(` 获取流程权责配置 ${value} , fixedWFlow : ${wflow}`)
+      console.log(` 获取流程权责配置 ${value} , fixedWFlow : ${wflow}`);
     },
     deStringNull(data) {
-      if (typeof data == 'undefined' || data == null || data == '') {
-        return ''
+      if (typeof data == "undefined" || data == null || data == "") {
+        return "";
       } else {
-        return data
+        return data;
       }
     },
     initQueryInfo() {
       getAction(`${this.url.getQueryInfo}${this.code}`).then(res => {
-        console.log('--onlineList-获取查询条件配置', res)
+        console.log("--onlineList-获取查询条件配置", res);
         if (res.success) {
-          this.queryInfo = res.result
+          this.queryInfo = res.result;
         } else {
-          this.$message.warning(res.message)
+          this.$message.warning(res.message);
         }
-      })
+      });
     },
     initAutoList() {
       if (!this.$route.params.code) {
-        return false
+        return false;
       }
-      this.table.loading = true
-      this.code = this.$route.params.code
+      this.table.loading = true;
+      this.code = this.$route.params.code;
       getAction(`${this.url.getColumns}${this.code}`).then(res => {
-        console.log('--onlineList-加载动态列>>', res)
+        console.log("--onlineList-加载动态列>>", res);
         if (res.success) {
-          this.dictOptions = res.result.dictOptions
-          this.formTemplate = res.result.formTemplate
-          this.description = res.result.description
-          this.currentTableName = res.result.currentTableName
-          this.initCgButtonList(res.result.cgButtonList)
-          this.initCgEnhanceJs(res.result.enhanceJs)
-          this.initButtonSwitch(res.result.hideColumns)
-          let currColumns = res.result.columns
+          this.dictOptions = res.result.dictOptions;
+          this.formTemplate = res.result.formTemplate;
+          this.description = res.result.description;
+          this.currentTableName = res.result.currentTableName;
+          this.initCgButtonList(res.result.cgButtonList);
+          this.initCgEnhanceJs(res.result.enhanceJs);
+          this.initButtonSwitch(res.result.hideColumns);
+          let currColumns = res.result.columns;
           for (let a = 0; a < currColumns.length; a++) {
             if (currColumns[a].customRender) {
-              let dictCode = currColumns[a].customRender
+              let dictCode = currColumns[a].customRender;
               currColumns[a].customRender = text => {
-                return filterMultiDictText(this.dictOptions[dictCode], text)
-              }
+                return filterMultiDictText(this.dictOptions[dictCode], text);
+              };
             }
           }
-          currColumns.push(this.actionColumn)
-          this.table.columns = [...currColumns]
+          currColumns.push(this.actionColumn);
+          this.table.columns = [...currColumns];
           //去掉展示content内容列，通过点击+按钮展示
           this.table.columns = _.filter(this.table.columns, function(item) {
-            return item.dataIndex != 'content'
-          })
-          this.hasBpmStatusFilter()
-          this.loadData()
-          this.initQueryInfo()
+            return item.dataIndex != "content";
+          });
+          this.hasBpmStatusFilter();
+          this.loadData();
+          this.initQueryInfo();
         } else {
-          this.$message.warning(res.message)
+          this.$message.warning(res.message);
         }
-      })
+      });
     },
 
     async processLog(business_data_id, record) {
       //this对象设置别名
-      let that = this
+      let that = this;
 
       //获取html信息
-      let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`)
+      let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
 
-      if (htmlInfo == null || htmlInfo == '') {
+      if (htmlInfo == null || htmlInfo == "") {
         //获取审批日志信息
-        let processLogs = await queryPRLogHistoryByDataID(business_data_id)
+        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
 
         //遍历审批日志
         processLogs.forEach(item => {
           htmlInfo =
             htmlInfo +
-            `流程名称：${item.process_name} , 流程节点：${item.process_station} , 处理人： ${item.approve_user} , 审批操作：${item.action} <br/>`
-        })
+            `流程名称：${item.process_name} , 流程节点：${item.process_station} , 处理人： ${item.approve_user} , 审批操作：${item.action} <br/>`;
+        });
 
-        record.processlog_html_info = htmlInfo
+        record.processlog_html_info = htmlInfo;
 
-        setStore(`processlog_by_bs_data_id@${business_data_id}`, record, 600)
+        setStore(`processlog_by_bs_data_id@${business_data_id}`, record, 600);
       }
 
       //遍历并设置相应html
       that.table.dataSource.forEach(item => {
         //找到当前选中数据，然后设置相应的html
         if (item.id == business_data_id) {
-          item.processlog_html_info = htmlInfo
+          item.processlog_html_info = htmlInfo;
         }
-      })
+      });
 
-      return htmlInfo
+      return htmlInfo;
     },
 
     async loadData(arg) {
-      var that = this
+      var that = this;
       if (arg == 1) {
-        this.table.pagination.current = 1
+        this.table.pagination.current = 1;
       }
-      let params = this.getQueryParams() //查询条件
-      console.log('--onlineList-查询条件-->', params)
+      let params = this.getQueryParams(); //查询条件
+      console.log("--onlineList-查询条件-->", params);
       //如果是审批处理页面，则此处请求数据单独处理
-      if (this.code == '0b511f234f3847baa50106a14fff6215' && this.description == '流程审批日志表') {
-        let userInfo = getStore('cur_user')
+      if (
+        this.code == "0b511f234f3847baa50106a14fff6215" &&
+        this.description == "流程审批日志表"
+      ) {
+        let userInfo = getStore("cur_user");
 
-        let result = await queryProcessLogToApproved(userInfo['username'], userInfo['realname'], params)
+        let result = await queryProcessLogToApproved(
+          userInfo["username"],
+          userInfo["realname"],
+          params
+        );
         if (Number(result.total) > 0) {
-          this.table.pagination.total = Number(result.total)
-          this.table.dataSource = result.records
+          this.table.pagination.total = Number(result.total);
+          this.table.dataSource = result.records;
         } else {
-          this.table.pagination.total = 0
-          this.table.dataSource = []
+          this.table.pagination.total = 0;
+          this.table.dataSource = [];
         }
-        this.table.loading = false
-      } else if (this.code == 'dae6cc0e7a7f4b7e9dc0fc36757fdc96' && this.description == '流程审批日志历史表') {
-        let userInfo = getStore('cur_user')
-        let result = await queryProcessLogHisApproved(userInfo['username'], userInfo['realname'], params)
+        this.table.loading = false;
+      } else if (
+        this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96" &&
+        this.description == "流程审批日志历史表"
+      ) {
+        let userInfo = getStore("cur_user");
+        let result = await queryProcessLogHisApproved(
+          userInfo["username"],
+          userInfo["realname"],
+          params
+        );
         if (Number(result.total) > 0) {
-          this.table.pagination.total = Number(result.total)
-          this.table.dataSource = result.records
+          this.table.pagination.total = Number(result.total);
+          this.table.dataSource = result.records;
         } else {
-          this.table.pagination.total = 0
-          this.table.dataSource = []
+          this.table.pagination.total = 0;
+          this.table.dataSource = [];
         }
-        this.table.loading = false
-      } else if (this.code == 'd11901bc44f24a66b25b37a7a04c611e' && this.description == '流程审批知会表') {
-        let userInfo = getStore('cur_user')
+        this.table.loading = false;
+      } else if (
+        this.code == "d11901bc44f24a66b25b37a7a04c611e" &&
+        this.description == "流程审批知会表"
+      ) {
+        let userInfo = getStore("cur_user");
         //获取待知会列表数据
-        let result = await queryProcessLogInfApproved(userInfo['username'], userInfo['realname'], params)
+        let result = await queryProcessLogInfApproved(
+          userInfo["username"],
+          userInfo["realname"],
+          params
+        );
         if (Number(result.total) > 0) {
-          this.table.pagination.total = Number(result.total)
-          this.table.dataSource = result.records
+          this.table.pagination.total = Number(result.total);
+          this.table.dataSource = result.records;
         } else {
-          this.table.pagination.total = 0
-          this.table.dataSource = []
+          this.table.pagination.total = 0;
+          this.table.dataSource = [];
         }
-        this.table.loading = false
+        this.table.loading = false;
       } else {
         getAction(`${this.url.getData}${this.code}`, params).then(async res => {
-          console.log('--onlineList-列表数据', res)
+          console.log("--onlineList-列表数据", res);
           if (res.success) {
-            var result = res.result
-            var userInfo = getStore('cur_user')
+            var result = res.result;
+            var userInfo = getStore("cur_user");
             if (Number(result.total) > 0) {
-              this.table.pagination.total = Number(res.result.total)
+              this.table.pagination.total = Number(res.result.total);
 
               res.result.records = _.filter(res.result.records, function(item) {
-                if ('create_by' in item && that.code != 'bd3d13e4fa5c4b0d91d589cd554397bd') {
-                  return item['create_by'] == userInfo['username'] || item['create_by'] == userInfo['realname']
-                } else if ('employee' in item && that.code != 'bd3d13e4fa5c4b0d91d589cd554397bd') {
-                  return item['employee'] == userInfo['username'] || item['employee'] == userInfo['realname']
-                } else if ('proposer' in item && that.code == '933e21cf445440abb8cfdae366082a62') {
+                if (
+                  "create_by" in item &&
+                  that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                ) {
+                  return (
+                    item["create_by"] == userInfo["username"] ||
+                    item["create_by"] == userInfo["realname"]
+                  );
+                } else if (
+                  "employee" in item &&
+                  that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                ) {
+                  return (
+                    item["employee"] == userInfo["username"] ||
+                    item["employee"] == userInfo["realname"]
+                  );
+                } else if (
+                  "proposer" in item &&
+                  that.code == "933e21cf445440abb8cfdae366082a62"
+                ) {
                   //外出页面使用
-                  return item['proposer'] == userInfo['username'] || item['proposer'] == userInfo['realname']
+                  return (
+                    item["proposer"] == userInfo["username"] ||
+                    item["proposer"] == userInfo["realname"]
+                  );
                 } else {
-                  return true
+                  return true;
                 }
-              })
+              });
 
               //对返回数据进行过滤,只展示创建人为自己的数据
-              this.table.dataSource = res.result.records
+              this.table.dataSource = res.result.records;
 
               //遍历数据，设置参数
               for (let index = 0; index < res.result.records.length; index++) {
-                const item = res.result.records[index]
-                const info = '' //await setProcessLogHtml(item.id, item)
-                item.log_info_html = info
-                console.log(`html info : ${info}`)
+                const item = res.result.records[index];
+                const info = ""; //await setProcessLogHtml(item.id, item)
+                item.log_info_html = info;
+                console.log(`html info : ${info}`);
               }
             } else {
-              this.table.pagination.total = 0
-              this.table.dataSource = []
+              this.table.pagination.total = 0;
+              this.table.dataSource = [];
               //this.$message.warning("查无数据")
             }
           } else {
-            this.$message.warning(res.message)
+            this.$message.warning(res.message);
           }
-          this.table.loading = false
-        })
+          this.table.loading = false;
+        });
       }
     },
 
     getQueryParams() {
-      let param = Object.assign({}, this.queryParam, this.isorter)
-      if (this.code == 'dae6cc0e7a7f4b7e9dc0fc36757fdc96' || this.code == '0b511f234f3847baa50106a14fff6215') {
-        param.column = 'operate_time'
+      let param = Object.assign({}, this.queryParam, this.isorter);
+      if (
+        this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96" ||
+        this.code == "0b511f234f3847baa50106a14fff6215"
+      ) {
+        param.column = "operate_time";
       }
 
-      param.pageNo = this.table.pagination.current
-      param.pageSize = this.table.pagination.pageSize
-      return filterObj(param)
+      param.pageNo = this.table.pagination.current;
+      param.pageSize = this.table.pagination.pageSize;
+      return filterObj(param);
     },
 
     handleChangeInTableSelect(selectedRowKeys, selectionRows) {
-      this.table.selectedRowKeys = selectedRowKeys
-      this.table.selectionRows = selectionRows
+      this.table.selectedRowKeys = selectedRowKeys;
+      this.table.selectionRows = selectionRows;
     },
 
     handleTableChange(pagination, filters, sorter) {
       //TODO 筛选
       if (Object.keys(sorter).length > 0) {
-        this.isorter.column = sorter.field
-        this.isorter.order = 'ascend' == sorter.order ? 'asc' : 'desc'
+        this.isorter.column = sorter.field;
+        this.isorter.order = "ascend" == sorter.order ? "asc" : "desc";
       }
-      this.table.pagination = pagination
-      this.loadData()
+      this.table.pagination = pagination;
+      this.loadData();
     },
 
     handleAdd() {
-      this.cgButtonJsHandler('beforeAdd')
-      this.$refs.modal.add(this.formTemplate)
+      this.cgButtonJsHandler("beforeAdd");
+      this.$refs.modal.add(this.formTemplate);
     },
 
     handleImportXls() {
-      this.$refs.importModal.show()
+      this.$refs.importModal.show();
     },
 
     /**
@@ -716,22 +767,24 @@ export default {
      */
     async handleDetailWF() {
       //获取当前用户
-      var userInfo = getStore('cur_user')
+      var userInfo = getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName()
+      var value = await queryTableName();
 
       //获取选中记录的所属表单名称
-      var tableName = value['table_name']
+      var tableName = value["table_name"];
 
       //当前被选中记录数据
-      var curRow = this.table.selectionRows[0]
+      var curRow = this.table.selectionRows[0];
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000)
+      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
       //跳转到相应页面
-      this.$router.push(`/jeecg/PrintLeave?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`)
+      this.$router.push(
+        `/jeecg/PrintLeave?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`
+      );
     },
 
     /**
@@ -744,96 +797,103 @@ export default {
      */
     async handleConfirmWF() {
       //设置this的别名
-      var that = this
+      var that = this;
       //返回结果
-      var result
+      var result;
       //获取当前用户
-      var userInfo = getStore('cur_user')
+      var userInfo = getStore("cur_user");
       //获取当前时间
-      var date = formatDate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss')
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
-      var operation = operation || '知会'
+      var operation = operation || "知会";
       //审批意见
-      var message = message || '已查看此业务流程，知会确认成功！'
+      var message = message || "已查看此业务流程，知会确认成功！";
 
       //当前被选中记录数据
-      var curRow = that.table.selectionRows[0]
+      var curRow = that.table.selectionRows[0];
 
       //流程日志编号
-      var processLogID = curRow['id']
+      var processLogID = curRow["id"];
       //业务代码ID
-      var bussinessCodeID = curRow['business_data_id']
+      var bussinessCodeID = curRow["business_data_id"];
       //打印表单名称
-      var tableName = curRow['table_name']
+      var tableName = curRow["table_name"];
 
       //检测是否为单选
       if (that.table.selectionRows.length != 1) {
-        that.$message.warning('请选择一条记录！')
-        return false
+        that.$message.warning("请选择一条记录！");
+        return false;
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogInfByID(tableName, processLogID)
+      curRow = await queryProcessLogInfByID(tableName, processLogID);
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
-      if (deNull(curRow['approve_user']).length >= deNull(curRow['employee']).length) {
+      if (
+        deNull(curRow["approve_user"]).length >=
+        deNull(curRow["employee"]).length
+      ) {
         //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await postProcessLogHistory(curRow)
+        result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
-        result = await deleteProcessLogInf(tableName, [curRow])
-        that.tipVisible = true
-        that.tipContent = '知会确认成功！'
-        return true
+        result = await deleteProcessLogInf(tableName, [curRow]);
+        that.tipVisible = true;
+        that.tipContent = "知会确认成功！";
+        return true;
       }
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
-          deNull(curRow['employee']).includes(userInfo['username']) ||
-          deNull(curRow['employee']).includes(userInfo['realname'])
+          deNull(curRow["employee"]).includes(userInfo["username"]) ||
+          deNull(curRow["employee"]).includes(userInfo["realname"])
         )
       ) {
-        that.$message.warning('您不在此知会记录的操作职员列中，无法进行确认操作！')
-        return false
+        that.$message.warning(
+          "您不在此知会记录的操作职员列中，无法进行确认操作！"
+        );
+        return false;
       }
 
       //已经知会确认过的用户，无法再次知会
       if (
-        deNull(curRow['approve_user']).includes(userInfo['username']) ||
-        deNull(curRow['approve_user']).includes(userInfo['realname'])
+        deNull(curRow["approve_user"]).includes(userInfo["username"]) ||
+        deNull(curRow["approve_user"]).includes(userInfo["realname"])
       ) {
-        that.$message.warning('您已经在此知会记录中，执行过确认操作了！')
-        return false
+        that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
+        return false;
       }
 
       //设置知会确认人员
-      curRow['approve_user'] =
-        deNull(curRow['approve_user']) + (deNull(curRow['approve_user']) == '' ? '' : ',') + userInfo['username']
+      curRow["approve_user"] =
+        deNull(curRow["approve_user"]) +
+        (deNull(curRow["approve_user"]) == "" ? "" : ",") +
+        userInfo["username"];
       //设置操作内容
-      curRow['action'] = operation
+      curRow["action"] = operation;
       //设置操作时间
-      curRow['operate_time'] = date
+      curRow["operate_time"] = date;
       //设置操作意见
-      curRow['action_opinion'] =
-        deNull(curRow['action_opinion']) +
-        (deNull(curRow['action_opinion']) == '' ? '' : '\n\r') +
-        `${userInfo['username']}:${message}`
+      curRow["action_opinion"] =
+        deNull(curRow["action_opinion"]) +
+        (deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+        `${userInfo["username"]}:${message}`;
 
       //保存当前数据到数据库中
-      patchTableData('PR_LOG_INFORMED', curRow['id'], curRow)
+      patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
-      if (curRow['approve_user'].length >= curRow['employee'].length) {
+      if (curRow["approve_user"].length >= curRow["employee"].length) {
         //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await postProcessLogHistory(curRow)
+        result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
-        result = await deleteProcessLogInf(tableName, [curRow])
+        result = await deleteProcessLogInf(tableName, [curRow]);
       }
 
-      that.tipVisible = true
-      that.tipContent = '知会确认成功！'
-      that.loadData()
+      that.tipVisible = true;
+      that.tipContent = "知会确认成功！";
+      that.loadData();
     },
 
     /**
@@ -841,188 +901,213 @@ export default {
      */
     async handleApproveWF() {
       //设置this的别名
-      var that = this
+      var that = this;
       //返回结果
-      var result
+      var result;
       //获取当前用户
-      var userInfo = getStore('cur_user')
+      var userInfo = getStore("cur_user");
       //获取当前时间
-      var date = formatDate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss')
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
-      var operation = operation || '同意'
+      var operation = operation || "同意";
       //审批意见
-      var message = message || ''
+      var message = message || "";
 
       //当前被选中记录数据
-      var curRow = that.table.selectionRows[0]
+      var curRow = that.table.selectionRows[0];
 
       //流程日志编号
-      var processLogID = curRow['id']
+      var processLogID = curRow["id"];
       //业务代码ID
-      var bussinessCodeID = curRow['business_data_id']
+      var bussinessCodeID = curRow["business_data_id"];
       //打印表单名称
-      var tableName = curRow['table_name']
+      var tableName = curRow["table_name"];
 
-      var processAudit = curRow['process_audit']
+      var processAudit = curRow["process_audit"];
 
       //检测是否为单选
       if (that.table.selectionRows.length != 1) {
-        that.$message.warning('请选择一条记录！')
-        return false
+        that.$message.warning("请选择一条记录！");
+        return false;
       }
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
-      if (!(curRow['employee'].includes(userInfo['username']) || curRow['employee'].includes(userInfo['realname']))) {
-        that.$message.warning('您不在此审批流程记录的操作职员列中，无法进行审批操作！')
-        return false
+      if (
+        !(
+          curRow["employee"].includes(userInfo["username"]) ||
+          curRow["employee"].includes(userInfo["realname"])
+        )
+      ) {
+        that.$message.warning(
+          "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
+        );
+        return false;
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, processLogID)
+      curRow = await queryProcessLogByID(tableName, processLogID);
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, bussinessCodeID)
+      let node = await queryProcessLog(tableName, bussinessCodeID);
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
-        item['approve_user'] = userInfo['username']
-        item['action'] = operation
-        item['operate_time'] = date
-        item['action_opinion'] = message
-      })
+        item["approve_user"] = userInfo["username"];
+        item["action"] = operation;
+        item["operate_time"] = date;
+        item["action_opinion"] = message;
+      });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node)
+      result = await postProcessLogHistory(node);
 
       //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node)
+      result = await deleteProcessLog(tableName, node);
 
       //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      let rights = await queryBusinessInfo(tableName)
+      let rights = await queryBusinessInfo(tableName);
 
       //选定流程权责
-      that.fixedWFlow = rights[0]
+      that.fixedWFlow = rights[0];
       //设置当前流程审批权责
-      that.rights = rights
+      that.rights = rights;
 
       //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
       if (rights.length > 1) {
-        that.modelModal = true
+        that.modelModal = true;
       } else if (rights.length <= 0) {
-        that.tipVisible = true
-        that.tipContent = '未获取到此业务的流程权责，无法同意审批！'
-        return false
+        that.tipVisible = true;
+        that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
+        return false;
       } else {
         //所有待审核节点
-        var allAudit = that.fixedWFlow['audit'] + ',' + that.fixedWFlow['approve']
+        var allAudit =
+          that.fixedWFlow["audit"] + "," + that.fixedWFlow["approve"];
         //当前审核节点
-        var curAuditor = processAudit
+        var curAuditor = processAudit;
         //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
-        var auditArray = allAudit.split(curAuditor)
+        var auditArray = allAudit.split(curAuditor);
         //如果存在审核人
-        var firstAuditor = auditArray[1]
+        var firstAuditor = auditArray[1];
 
         //所有待知会节点
-        var allNotify = that.fixedWFlow['notify']
+        var allNotify = that.fixedWFlow["notify"];
         //知会节点数组
         var notifyArray =
-          allNotify == null || allNotify == '' || typeof allNotify == 'undefiled' ? '' : allNotify.split(',')
+          allNotify == null ||
+          allNotify == "" ||
+          typeof allNotify == "undefiled"
+            ? ""
+            : allNotify.split(",");
 
         //如果待审核节点为空，则表示已经审批通过
-        if (firstAuditor == '') {
+        if (firstAuditor == "") {
           //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
-          result = await patchTableData(tableName, curRow['business_data_id'], { bpm_status: '3' })
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "3"
+          });
 
           //执行知会流程，添加多条知会记录
 
           //将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
           for (let item of notifyArray) {
             //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            var employee = await queryProcessNodeEmployee(item)
+            var employee = await queryProcessNodeEmployee(item);
             //流程岗位
-            var process_station = await queryProcessNodeProcName(item)
+            var process_station = await queryProcessNodeProcName(item);
 
             //提交审批相关处理信息
             var pnode = {
               id: randomChars(32), //获取随机数
               table_name: tableName, //业务表名
-              main_value: curRow['main_value'], //表主键值
-              business_data_id: curRow['business_data_id'], //业务具体数据主键值
-              business_code: that.fixedWFlow['id'], //业务编号
-              process_name: that.fixedWFlow['items'], //流程名称
-              employee: employee[0]['employee'],
-              process_station: process_station[0]['item_text'],
+              main_value: curRow["main_value"], //表主键值
+              business_data_id: curRow["business_data_id"], //业务具体数据主键值
+              business_code: that.fixedWFlow["id"], //业务编号
+              process_name: that.fixedWFlow["items"], //流程名称
+              employee: employee[0]["employee"],
+              process_station: process_station[0]["item_text"],
               process_audit: item,
-              proponents: curRow['proponents'],
-              content: curRow['content'],
+              proponents: curRow["proponents"],
+              content: curRow["content"],
               business_data: JSON.stringify(curRow)
-            }
+            };
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await postProcessLogInformed(pnode)
+            result = await postProcessLogInformed(pnode);
           }
 
           //当前已经是最后一个审批节点，流程已经处理完毕
-          that.tipContent = '同意审批成功，审批流程处理完毕！'
+          that.tipContent = "同意审批成功，审批流程处理完毕！";
         } else {
           //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow['business_data_id'], { bpm_status: '2' })
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "2"
+          });
           //如果firstAuditor是逗号开头，则去掉开头的逗号
-          firstAuditor = firstAuditor.indexOf(',') == 0 ? firstAuditor.substring(1) : firstAuditor
+          firstAuditor =
+            firstAuditor.indexOf(",") == 0
+              ? firstAuditor.substring(1)
+              : firstAuditor;
           //获取下一审核节点
-          firstAuditor = firstAuditor.split(',')[0]
+          firstAuditor = firstAuditor.split(",")[0];
           //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-          var employee = await queryProcessNodeEmployee(firstAuditor)
+          var employee = await queryProcessNodeEmployee(firstAuditor);
           //流程岗位
-          var process_station = await queryProcessNodeProcName(firstAuditor)
+          var process_station = await queryProcessNodeProcName(firstAuditor);
 
           //提交审批相关处理信息
           var pnode = {
             id: randomChars(32), //获取随机数
             table_name: tableName, //业务表名
-            main_value: curRow['main_value'], //表主键值
-            business_data_id: curRow['business_data_id'], //业务具体数据主键值
-            business_code: that.fixedWFlow['id'], //业务编号
-            process_name: that.fixedWFlow['items'], //流程名称
-            employee: employee[0]['employee'],
-            process_station: process_station[0]['item_text'],
+            main_value: curRow["main_value"], //表主键值
+            business_data_id: curRow["business_data_id"], //业务具体数据主键值
+            business_code: that.fixedWFlow["id"], //业务编号
+            process_name: that.fixedWFlow["items"], //流程名称
+            employee: employee[0]["employee"],
+            process_station: process_station[0]["item_text"],
             process_audit: firstAuditor,
-            proponents: curRow['proponents'],
-            content: curRow['content'],
+            proponents: curRow["proponents"],
+            content: curRow["content"],
             business_data: JSON.stringify(curRow)
-          }
+          };
 
           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-          let vflag = await queryApprovalExist(tableName, curRow['business_data_id'])
+          let vflag = await queryApprovalExist(
+            tableName,
+            curRow["business_data_id"]
+          );
 
           if (vflag) {
             //数据库中已经存在此记录，提示用户无法提交审批
-            that.tipContent = '处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！'
+            that.tipContent =
+              "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
           } else {
             //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await postProcessLog(pnode)
+            result = await postProcessLog(pnode);
 
             //第三步，根据流程审批节点，向第一个节点推送一条审批信息；根据流程审批节点，找到当前审批节点，修改节点审批状态为审批通过，增加审批意见
-            console.log(' 修改当前记录审批状态为处理中返回结果:' + JSON.stringify(result))
+            console.log(
+              " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
+            );
 
             //将当前待审核节点，添加至datasource中
-            that.table.dataSource.push(pnode)
+            that.table.dataSource.push(pnode);
 
             //提示信息
-            that.tipContent = '同意审批成功，审批流程已推向后续处理人！'
+            that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
           }
         }
 
         //提示用户撤销审批操作成功
-        that.tipVisible = true
+        that.tipVisible = true;
       }
 
-      that.loadData()
+      that.loadData();
 
-      console.log('同意审批成功！')
+      console.log("同意审批成功！");
     },
 
     /**
@@ -1030,69 +1115,80 @@ export default {
      */
     async handleRejectWF() {
       //设置this的别名
-      let that = this
+      let that = this;
       //返回结果
-      let result
+      let result;
       //获取当前用户
-      let userInfo = getStore('cur_user')
+      let userInfo = getStore("cur_user");
       //获取当前时间
-      let date = formatDate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss')
+      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
-      let operation = operation || '驳回'
+      let operation = operation || "驳回";
       //审批意见
-      let message = message || ''
+      let message = message || "";
 
       //当前被选中记录数据
-      let curRow = that.table.selectionRows[0]
+      let curRow = that.table.selectionRows[0];
 
       //检测是否为单选
       if (that.table.selectionRows.length != 1) {
-        that.$message.warning('请选择一条记录！')
-        return false
+        that.$message.warning("请选择一条记录！");
+        return false;
       }
 
       //打印表单名称
-      let tableName = curRow['table_name']
+      let tableName = curRow["table_name"];
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
-      if (!(curRow['employee'].includes(userInfo['username']) || curRow['employee'].includes(userInfo['realname']))) {
-        that.$message.warning('您不在此审批流程记录的操作职员列中，无法进行驳回操作！')
-        return false
+      if (
+        !(
+          curRow["employee"].includes(userInfo["username"]) ||
+          curRow["employee"].includes(userInfo["realname"])
+        )
+      ) {
+        that.$message.warning(
+          "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
+        );
+        return false;
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, curRow['id'])
+      curRow = await queryProcessLogByID(tableName, curRow["id"]);
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, curRow['business_data_id'])
+      let node = await queryProcessLog(tableName, curRow["business_data_id"]);
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
-        item['approve_user'] = userInfo['username']
-        item['action'] = operation
-        item['operate_time'] = date
-        item['action_opinion'] = message
-      })
+        item["approve_user"] = userInfo["username"];
+        item["action"] = operation;
+        item["operate_time"] = date;
+        item["action_opinion"] = message;
+      });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node)
+      result = await postProcessLogHistory(node);
 
       //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node)
+      result = await deleteProcessLog(tableName, node);
 
       //修改当前审批状态为待处理
-      result = await patchTableData(tableName, curRow['business_data_id'], { bpm_status: '1' })
+      result = await patchTableData(tableName, curRow["business_data_id"], {
+        bpm_status: "1"
+      });
       //再次执行修改流程状态的操作，防止网络异常
-      result = await patchTableData(tableName, curRow['business_data_id'], { bpm_status: '1' })
+      result = await patchTableData(tableName, curRow["business_data_id"], {
+        bpm_status: "1"
+      });
 
       //提示用户撤销审批操作成功
-      that.tipVisible = true
-      that.tipContent = '驳回审批成功！'
+      that.tipVisible = true;
+      that.tipContent = "驳回审批成功！";
 
-      that.loadData()
+      that.loadData();
       //打印驳回审批处理日志
-      console.log('驳回审批成功')
+      console.log("驳回审批成功");
     },
 
     /**
@@ -1100,466 +1196,496 @@ export default {
      */
     async handleSubmitWF() {
       //获取当前变量
-      let that = this
-      let result = {}
+      let that = this;
+      let result = {};
 
       if (that.table.selectionRows.length != 1) {
-        that.$message.warning('请选择一条记录！')
-        return false
+        that.$message.warning("请选择一条记录！");
+        return false;
       }
 
       //当前被选中记录Index
-      let index = that.table.selectedRowKeys[0]
+      let index = that.table.selectedRowKeys[0];
       //当前被选中记录数据
-      let curRow = that.table.selectionRows[0]
+      let curRow = that.table.selectionRows[0];
 
       //已经提交审批，无法再次提交
-      if (curRow['bpm_status'] == '2') {
-        that.tipVisible = true
-        that.tipContent = '待审记录中，已经存在此记录，无法再次提交审批！'
-        return false
-      } else if (curRow['bpm_status'] == '3') {
-        that.tipVisible = true
-        that.tipContent = '此记录的审批流程，已经完成审批，无法再次提交审批！'
-        return false
-      } else if (curRow['bpm_status'] == '4') {
-        that.tipVisible = true
-        that.tipContent = '此记录的审批流程，已经作废，无法再次提交审批！'
-        return false
+      if (curRow["bpm_status"] == "2") {
+        that.tipVisible = true;
+        that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
+        return false;
+      } else if (curRow["bpm_status"] == "3") {
+        that.tipVisible = true;
+        that.tipContent = "此记录的审批流程，已经完成审批，无法再次提交审批！";
+        return false;
+      } else if (curRow["bpm_status"] == "4") {
+        that.tipVisible = true;
+        that.tipContent = "此记录的审批流程，已经作废，无法再次提交审批！";
+        return false;
       }
 
       //获取当前用户信息
-      let userInfo = getStore('cur_user')
+      let userInfo = getStore("cur_user");
 
       //检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
 
       //第一步，获取此表单，关联的流程业务模块
-      let value = await queryTableName()
+      let value = await queryTableName();
 
       //打印表单名称
-      let tableName = value['table_name']
+      let tableName = value["table_name"];
       //console.log(' tableName : ' + value['table_name'] + ' 执行提交审批操作')
 
       //查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      let rights = await queryBusinessInfo(tableName)
+      let rights = await queryBusinessInfo(tableName);
 
       //选定流程权责
-      that.fixedWFlow = rights[0]
-      that.rights = rights
+      that.fixedWFlow = rights[0];
+      that.rights = rights;
 
       //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
       if (rights.length > 1) {
-        that.modelModal = true
+        that.modelModal = true;
       } else if (rights.length <= 0) {
-        that.tipVisible = true
-        that.tipContent = '尚未配置此业务的流程权责，无法提交审批！'
-        return false
+        that.tipVisible = true;
+        that.tipContent = "尚未配置此业务的流程权责，无法提交审批！";
+        return false;
       } else {
         //如果存在审核人
-        var firstAuditor = that.fixedWFlow['audit'].split(',')[0]
+        var firstAuditor = that.fixedWFlow["audit"].split(",")[0];
         //操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-        var employee = await queryProcessNodeEmployee(firstAuditor)
+        var employee = await queryProcessNodeEmployee(firstAuditor);
         //流程岗位
-        var process_station = await queryProcessNodeProcName(firstAuditor)
+        var process_station = await queryProcessNodeProcName(firstAuditor);
 
         //提交审批相关处理信息
         var node = {
           id: randomChars(32), //获取随机数
           table_name: tableName, //业务表名
-          main_value: value['id'], //表主键值
-          business_data_id: curRow['id'], //业务具体数据主键值
-          business_code: that.fixedWFlow['id'], //业务编号
-          process_name: that.fixedWFlow['items'], //流程名称
-          employee: employee[0]['employee'],
-          process_station: process_station[0]['item_text'],
+          main_value: value["id"], //表主键值
+          business_data_id: curRow["id"], //业务具体数据主键值
+          business_code: that.fixedWFlow["id"], //业务编号
+          process_name: that.fixedWFlow["items"], //流程名称
+          employee: employee[0]["employee"],
+          process_station: process_station[0]["item_text"],
           process_audit: firstAuditor,
-          proponents: userInfo['realname'],
-          content: curRow['content'],
+          proponents: userInfo["realname"],
+          content: curRow["content"],
           business_data: JSON.stringify(curRow)
-        }
+        };
 
         //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-        let vflag = await queryApprovalExist(tableName, curRow['id'])
+        let vflag = await queryApprovalExist(tableName, curRow["id"]);
 
         if (vflag) {
           //数据库中已经存在此记录，提示用户无法提交审批
 
-          that.tipContent = '待审记录中，已经存在此记录，无法再次提交审批！'
+          that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
         } else {
           //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
           //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-          result = await postProcessLog(node)
-          console.log(' 提交审批返回结果: ' + JSON.stringify(result))
+          result = await postProcessLog(node);
+          console.log(" 提交审批返回结果: " + JSON.stringify(result));
 
           //第三步，根据流程审批节点，向第一个节点推送一条审批信息
 
           //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow['id'], { bpm_status: '2' })
+          result = await patchTableData(tableName, curRow["id"], {
+            bpm_status: "2"
+          });
           //再次执行一次修改流程状态的操作，防止网络异常
-          result = await patchTableData(tableName, curRow['id'], { bpm_status: '2' })
+          result = await patchTableData(tableName, curRow["id"], {
+            bpm_status: "2"
+          });
 
-          curRow['bpm_status'] = '2'
-          console.log(' 修改当前记录审批状态为处理中返回结果:' + JSON.stringify(result))
+          curRow["bpm_status"] = "2";
+          console.log(
+            " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
+          );
 
-          that.tipContent = '提交审批成功！'
+          that.tipContent = "提交审批成功！";
         }
 
         //弹出审批完成提示框
-        that.tipVisible = true
+        that.tipVisible = true;
 
-        that.loadData()
+        that.loadData();
 
         //打印获取到的流程权责信息
-        console.log(' tableName : ' + tableName + ' \n rights : ' + JSON.stringify(rights))
+        console.log(
+          " tableName : " + tableName + " \n rights : " + JSON.stringify(rights)
+        );
       }
     },
 
     //取消审批
     async handleCancelWF() {
       //设置this的别名
-      let that = this
+      let that = this;
       //返回结果
-      let result
+      let result;
       //获取当前用户
-      let userInfo = getStore('cur_user')
+      let userInfo = getStore("cur_user");
       //获取当前时间
-      let date = formatDate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss')
+      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
-      let operation = '撤销'
+      let operation = "撤销";
       //审批意见
-      let message = ''
+      let message = "";
 
       //当前被选中记录数据
-      let curRow = that.table.selectionRows[0]
+      let curRow = that.table.selectionRows[0];
 
       if (that.table.selectionRows.length != 1) {
-        that.$message.warning('请选择一条记录！')
-        return false
+        that.$message.warning("请选择一条记录！");
+        return false;
       }
 
       //第一步，获取此表单，关联的流程业务模块
-      let value = await queryTableName()
+      let value = await queryTableName();
 
       //打印表单名称
-      let tableName = value['table_name']
+      let tableName = value["table_name"];
 
       //已经提交审批，无法再次提交
-      if (curRow['bpm_status'] == '1') {
-        that.tipVisible = true
-        that.tipContent = '该记录尚未提交审批，无法撤销审批！'
-        return false
-      } else if (curRow['bpm_status'] == '3') {
-        that.tipVisible = true
-        that.tipContent = '该记录已完成审批，无法撤销审批！'
-        return false
-      } else if (curRow['bpm_status'] == '4') {
-        that.tipVisible = true
-        that.tipContent = '该记录审批流程已作废，无法撤销审批！'
-        return false
+      if (curRow["bpm_status"] == "1") {
+        that.tipVisible = true;
+        that.tipContent = "该记录尚未提交审批，无法撤销审批！";
+        return false;
+      } else if (curRow["bpm_status"] == "3") {
+        that.tipVisible = true;
+        that.tipContent = "该记录已完成审批，无法撤销审批！";
+        return false;
+      } else if (curRow["bpm_status"] == "4") {
+        that.tipVisible = true;
+        that.tipContent = "该记录审批流程已作废，无法撤销审批！";
+        return false;
       }
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, curRow['id'])
+      let node = await queryProcessLog(tableName, curRow["id"]);
 
       //检查审批权限，当前用户必须申请人员，才可以进行撤销审批操作
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
-        item['approve_user'] = userInfo['username']
-        item['action'] = operation
-        item['operate_time'] = date
-        item['action_opinion'] = message
-      })
+        item["approve_user"] = userInfo["username"];
+        item["action"] = operation;
+        item["operate_time"] = date;
+        item["action_opinion"] = message;
+      });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node)
+      result = await postProcessLogHistory(node);
 
       //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node)
+      result = await deleteProcessLog(tableName, node);
 
       //修改当前审批状态为待处理
-      result = await patchTableData(tableName, curRow['id'], { bpm_status: '1' })
+      result = await patchTableData(tableName, curRow["id"], {
+        bpm_status: "1"
+      });
       //设置当前表单中的审批状态为待处理
-      curRow['bpm_status'] = '1'
+      curRow["bpm_status"] = "1";
 
       //提示用户撤销审批操作成功
-      that.tipVisible = true
-      that.tipContent = '撤销审批成功！'
+      that.tipVisible = true;
+      that.tipContent = "撤销审批成功！";
 
-      that.loadData()
+      that.loadData();
 
       //打印撤销审批处理日志
-      console.log('撤销审批成功')
+      console.log("撤销审批成功");
     },
 
     importOk() {
-      this.loadData(1)
+      this.loadData(1);
     },
 
     handleExportXls2() {
-      let param = this.queryParam
+      let param = this.queryParam;
       if (this.table.selectedRowKeys && this.table.selectedRowKeys.length > 0) {
-        param['selections'] = this.table.selectedRowKeys.join(',')
+        param["selections"] = this.table.selectedRowKeys.join(",");
       }
-      let paramsStr = encodeURI(JSON.stringify(param))
-      console.log('paramsStr: ' + paramsStr)
-      let url = window._CONFIG['domianURL'] + this.url.exportXls + this.code + '?paramsStr=' + paramsStr
-      window.location.href = url
+      let paramsStr = encodeURI(JSON.stringify(param));
+      console.log("paramsStr: " + paramsStr);
+      let url =
+        window._CONFIG["domianURL"] +
+        this.url.exportXls +
+        this.code +
+        "?paramsStr=" +
+        paramsStr;
+      window.location.href = url;
     },
     handleExportXls() {
-      let param = this.queryParam
+      let param = this.queryParam;
       if (this.table.selectedRowKeys && this.table.selectedRowKeys.length > 0) {
-        param['selections'] = this.table.selectedRowKeys.join(',')
+        param["selections"] = this.table.selectedRowKeys.join(",");
       }
-      console.log('导出参数', param)
-      let paramsStr = JSON.stringify(filterObj(param))
-      downFile(this.url.exportXls + this.code, { paramsStr: paramsStr }).then(data => {
-        if (!data) {
-          this.$message.warning('文件下载失败')
-          return
+      console.log("导出参数", param);
+      let paramsStr = JSON.stringify(filterObj(param));
+      downFile(this.url.exportXls + this.code, { paramsStr: paramsStr }).then(
+        data => {
+          if (!data) {
+            this.$message.warning("文件下载失败");
+            return;
+          }
+          if (typeof window.navigator.msSaveBlob !== "undefined") {
+            window.navigator.msSaveBlob(
+              new Blob([data]),
+              this.description + ".xls"
+            );
+          } else {
+            let url = window.URL.createObjectURL(new Blob([data]));
+            let link = document.createElement("a");
+            link.style.display = "none";
+            link.href = url;
+            link.setAttribute("download", this.description + ".xls");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link); //下载完成移除元素
+            window.URL.revokeObjectURL(url); //释放掉blob对象
+          }
         }
-        if (typeof window.navigator.msSaveBlob !== 'undefined') {
-          window.navigator.msSaveBlob(new Blob([data]), this.description + '.xls')
-        } else {
-          let url = window.URL.createObjectURL(new Blob([data]))
-          let link = document.createElement('a')
-          link.style.display = 'none'
-          link.href = url
-          link.setAttribute('download', this.description + '.xls')
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link) //下载完成移除元素
-          window.URL.revokeObjectURL(url) //释放掉blob对象
-        }
-      })
+      );
     },
     handleEdit(record) {
-      this.cgButtonLinkHandler(record, 'beforeEdit', 'js')
-      this.$refs.modal.edit(this.formTemplate, record.id)
+      this.cgButtonLinkHandler(record, "beforeEdit", "js");
+      this.$refs.modal.edit(this.formTemplate, record.id);
     },
     handleDetail(record) {
-      this.$refs.modal.detail(this.formTemplate, record.id)
+      this.$refs.modal.detail(this.formTemplate, record.id);
     },
     handleDeleteOne(record) {
-      this.cgButtonLinkHandler(record, 'beforeDelete', 'js')
-      this.handleDelete(record.id)
+      this.cgButtonLinkHandler(record, "beforeDelete", "js");
+      this.handleDelete(record.id);
     },
     handleDelete(id) {
-      deleteAction(this.url.optPre + this.code + '/' + id).then(res => {
+      deleteAction(this.url.optPre + this.code + "/" + id).then(res => {
         if (res.success) {
-          this.$message.success(res.message)
-          this.loadData()
+          this.$message.success(res.message);
+          this.loadData();
         } else {
-          this.$message.warning(res.message)
+          this.$message.warning(res.message);
         }
-      })
+      });
     },
 
     handleFormSuccess() {
-      this.loadData()
+      this.loadData();
     },
 
     onClearSelected() {
-      this.table.selectedRowKeys = []
-      this.table.selectionRows = []
+      this.table.selectedRowKeys = [];
+      this.table.selectionRows = [];
     },
 
     getImgView(text) {
-      if (text && text.indexOf(',') > 0) {
-        text = text.substring(0, text.indexOf(','))
+      if (text && text.indexOf(",") > 0) {
+        text = text.substring(0, text.indexOf(","));
       }
-      return window._CONFIG['downloadURL'] + '/' + text
+      return window._CONFIG["downloadURL"] + "/" + text;
     },
 
     uploadFile(text) {
       if (!text) {
-        this.$message.warning('未知的文件')
-        return
+        this.$message.warning("未知的文件");
+        return;
       }
-      if (text.indexOf(',') > 0) {
-        text = text.substring(0, text.indexOf(','))
+      if (text.indexOf(",") > 0) {
+        text = text.substring(0, text.indexOf(","));
       }
-      console.log(text)
-      window.open(window._CONFIG['downloadURL'] + '/' + text) //TODO 下载的方法
+      console.log(text);
+      window.open(window._CONFIG["downloadURL"] + "/" + text); //TODO 下载的方法
     },
 
     viewFile(text) {
       if (!text) {
-        this.$message.warning('未知的文件')
-        return
+        this.$message.warning("未知的文件");
+        return;
       }
-      if (text.indexOf(',') > 0) {
-        text = text.substring(0, text.indexOf(','))
+      if (text.indexOf(",") > 0) {
+        text = text.substring(0, text.indexOf(","));
       }
       //微软文档预览API
-      let officeURL = 'https://view.officeapps.live.com/op/view.aspx?src='
+      let officeURL = "https://view.officeapps.live.com/op/view.aspx?src=";
       //IDOCV文档预览API
-      let idocvURL = 'https://api.idocv.com/view/url?url='
+      let idocvURL = "https://api.idocv.com/view/url?url=";
       //文档下载地址
-      let url = window._CONFIG['downloadURL'] + '/' + text
+      let url = window._CONFIG["downloadURL"] + "/" + text;
       //URL加密，保证中文路径可以被正常解析
-      let xurl = encodeURIComponent(url)
+      let xurl = encodeURIComponent(url);
       //获取文件后缀
-      let suffix = text.substring(text.lastIndexOf('.'), text.length).toLowerCase()
+      let suffix = text
+        .substring(text.lastIndexOf("."), text.length)
+        .toLowerCase();
       //如果word文档，则使用微软API打开
-      url = suffix.includes('doc') || suffix.includes('ppt') || suffix.includes('xls') ? officeURL + xurl : url
+      url =
+        suffix.includes("doc") ||
+        suffix.includes("ppt") ||
+        suffix.includes("xls")
+          ? officeURL + xurl
+          : url;
       //如果pdf文档，则浏览器上直接打开
-      url = suffix.includes('pdf') ? url : url
+      url = suffix.includes("pdf") ? url : url;
       //浏览器打开预览
-      window.open(url)
+      window.open(url);
     },
 
     handleDelBatch() {
       if (this.table.selectedRowKeys.length != 1) {
-        this.$message.warning('请选择一条记录！')
-        return false
+        this.$message.warning("请选择一条记录！");
+        return false;
       } else {
         //待删除ID值数组
-        let ids = ''
-        let that = this
+        let ids = "";
+        let that = this;
 
         //当前被选中记录数据
-        let curRow = that.table.selectionRows[0]
+        let curRow = that.table.selectionRows[0];
 
         //已经提交审批，无法再次提交
-        if (curRow['bpm_status'] != '1') {
-          this.$message.warning('当前记录已经进入流程，无法删除！')
-          return false
+        if (curRow["bpm_status"] != "1") {
+          this.$message.warning("当前记录已经进入流程，无法删除！");
+          return false;
         }
 
         //获取所有勾选的记录
         that.table.selectedRowKeys.forEach(function(val) {
-          ids += val + ','
-        })
+          ids += val + ",";
+        });
 
         //点击确认删除，执行删除操作
         that.$confirm({
-          title: '确认删除',
-          content: '是否删除选中数据?',
+          title: "确认删除",
+          content: "是否删除选中数据?",
           onOk: function() {
-            that.handleDelete(ids)
-            that.onClearSelected()
+            that.handleDelete(ids);
+            that.onClearSelected();
           }
-        })
+        });
       }
     },
 
     searchByquery() {
-      this.loadData(1)
+      this.loadData(1);
     },
 
     searchReset() {
-      this.queryParam = {}
-      this.loadData(1)
+      this.queryParam = {};
+      this.loadData(1);
     },
 
     handleToggleSearch() {
-      this.toggleSearchStatus = !this.toggleSearchStatus
+      this.toggleSearchStatus = !this.toggleSearchStatus;
     },
     getFormatDate(text) {
       if (!text) {
-        return ''
+        return "";
       }
-      let a = text
+      let a = text;
       if (a.length > 10) {
-        a = a.substring(0, 10)
+        a = a.substring(0, 10);
       }
-      return a
+      return a;
     },
     getImportUrl() {
-      return '/online/cgform/api/importXls/' + this.code
+      return "/online/cgform/api/importXls/" + this.code;
     },
     initCgEnhanceJs(enhanceJs) {
       //console.log("--onlineList-js增强",enhanceJs)
       if (enhanceJs) {
-        let Obj = eval('(' + enhanceJs + ')')
-        this.EnhanceJS = new Obj(getAction, postAction, deleteAction)
-        this.cgButtonJsHandler('created')
+        let Obj = eval("(" + enhanceJs + ")");
+        this.EnhanceJS = new Obj(getAction, postAction, deleteAction);
+        this.cgButtonJsHandler("created");
       } else {
-        this.EnhanceJS = ''
+        this.EnhanceJS = "";
       }
     },
     initCgButtonList(btnList) {
-      let linkArr = []
-      let buttonArr = []
+      let linkArr = [];
+      let buttonArr = [];
       if (btnList && btnList.length > 0) {
         for (let i = 0; i < btnList.length; i++) {
-          let temp = btnList[i]
-          if (temp.buttonStyle == 'button') {
-            buttonArr.push(temp)
-          } else if (temp.buttonStyle == 'link') {
-            linkArr.push(temp)
+          let temp = btnList[i];
+          if (temp.buttonStyle == "button") {
+            buttonArr.push(temp);
+          } else if (temp.buttonStyle == "link") {
+            linkArr.push(temp);
           }
         }
       }
-      this.cgButtonLinkList = [...linkArr]
-      this.cgButtonList = [...buttonArr]
+      this.cgButtonLinkList = [...linkArr];
+      this.cgButtonList = [...buttonArr];
     },
     cgButtonJsHandler(buttonCode) {
       if (this.EnhanceJS[buttonCode]) {
-        this.EnhanceJS[buttonCode](this)
+        this.EnhanceJS[buttonCode](this);
       }
     },
     cgButtonActionHandler(buttonCode) {
       //处理自定义button的 需要配置该button自定义sql
-      if (!this.table.selectedRowKeys || this.table.selectedRowKeys.length == 0) {
-        this.$message.warning('请先选中一条记录')
-        return false
+      if (
+        !this.table.selectedRowKeys ||
+        this.table.selectedRowKeys.length == 0
+      ) {
+        this.$message.warning("请先选中一条记录");
+        return false;
       }
       if (this.table.selectedRowKeys.length > 1) {
-        this.$message.warning('请只选中一条记录')
-        return false
+        this.$message.warning("请只选中一条记录");
+        return false;
       }
       let params = {
         formId: this.code,
         buttonCode: buttonCode,
         dataId: this.table.selectedRowKeys[0]
-      }
-      console.log('自定义按钮请求后台参数：', params)
+      };
+      console.log("自定义按钮请求后台参数：", params);
       postAction(this.url.buttonAction, params).then(res => {
         if (res.success) {
-          this.loadData()
-          this.$message.success('处理完成!')
+          this.loadData();
+          this.$message.success("处理完成!");
         } else {
-          this.$message.warning('处理失败!')
+          this.$message.warning("处理失败!");
         }
-      })
+      });
     },
     cgButtonLinkHandler(record, buttonCode, optType) {
-      if (optType == 'js') {
+      if (optType == "js") {
         if (this.EnhanceJS[buttonCode]) {
-          this.EnhanceJS[buttonCode](this, record)
+          this.EnhanceJS[buttonCode](this, record);
         }
-      } else if (optType == 'action') {
+      } else if (optType == "action") {
         let params = {
           formId: this.code,
           buttonCode: buttonCode,
           dataId: record.id
-        }
-        console.log('自定义按钮link请求后台参数：', params)
+        };
+        console.log("自定义按钮link请求后台参数：", params);
         postAction(this.url.buttonAction, params).then(res => {
           if (res.success) {
-            this.loadData()
-            this.$message.success('处理完成!')
+            this.loadData();
+            this.$message.success("处理完成!");
           } else {
-            this.$message.warning('处理失败!')
+            this.$message.warning("处理失败!");
           }
-        })
+        });
       }
     },
     initButtonSwitch(hideColumns) {
       if (hideColumns && hideColumns.length > 0) {
         Object.keys(this.buttonSwitch).forEach(key => {
           if (hideColumns.indexOf(key) >= 0) {
-            this.buttonSwitch[key] = false
+            this.buttonSwitch[key] = false;
           }
-        })
+        });
       }
     }
   }
-}
+};
 </script>
 <style>
 .ant-card-body .table-operator {

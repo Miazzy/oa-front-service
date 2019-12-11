@@ -84,16 +84,23 @@ export function formatDate(value, fmt) {
 
         try {
             fmt = fmt.replace('T', ' ');
-        } catch (error) {}
+        } catch (error) {
+            console.log('formate date error : ' + error);
+        }
 
         return fmt;
     } else {
         //TODO
-        value = value.trim();
-        fmt = value.substr(0, fmt.length);
         try {
+            if (typeof value == 'undefined' || value == null) {
+                value = '--';
+            }
+            value = value.trim();
+            fmt = value.substr(0, fmt.length);
             fmt = fmt.replace('T', ' ');
-        } catch (error) {}
+        } catch (error) {
+            console.log('formate date error : ' + error);
+        }
 
         return fmt;
     }
@@ -307,4 +314,85 @@ export function queryUrlString(name) {
     var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
     if (r != null) return unescape(r[2]);
     return null;
+}
+
+/**
+ * 计算两个日期之间的天数
+ */
+export function queryDateDiff(date1, date2) {
+    //如果被解析日期格式为字符串，则先将字符串解析为日期格式
+    if (Object.prototype.toString.call(date1).includes('String')) {
+        try {
+            date1 = parseDate(formatDate(date1, 'yyyy-MM-dd HH:mm:ss'));
+            date2 = parseDate(formatDate(date2, 'yyyy-MM-dd HH:mm:ss'));
+        } catch (e) {
+            date1 = parseDate(date1);
+            date2 = parseDate(date2);
+        }
+    }
+
+    var beginDate = date1;
+    var endDate = date2;
+
+    //日期差值,即包含周六日、以天为单位的工时，86400000=1000*60*60*24.
+    var workDayVal = (endDate - beginDate) / 86400000;
+    //工时的余数
+    var remainder = workDayVal % 7;
+    //工时向下取整的除数
+    var divisor = Math.floor(workDayVal / 7);
+    var weekendDay = 2 * divisor;
+
+    //起始日期的星期，星期取值有（1,2,3,4,5,6,0）
+    var nextDay = beginDate.getDay();
+    //从起始日期的星期开始 遍历remainder天
+    for (var tempDay = remainder; tempDay >= 1; tempDay--) {
+        //第一天不用加1
+        if (tempDay == remainder) {
+            nextDay = nextDay + 0;
+        } else if (tempDay != remainder) {
+            nextDay = nextDay + 1;
+        }
+        //周日，变更为0
+        if (nextDay == 7) {
+            nextDay = 0;
+        }
+
+        //周六日
+        if (nextDay == 0 || nextDay == 6) {
+            weekendDay = weekendDay + 1;
+        }
+    }
+    //获取含有小数位的天数
+    var timeFloat = parseFloat(workDayVal);
+    //获取整数位的天数
+    var timeInt = parseInt(workDayVal);
+    //实际工时（天） = 起止日期差 - 周六日数目。
+    workDayVal = parseInt(workDayVal - weekendDay);
+
+    //取相差天数的小数位
+    var decpart = timeFloat - timeInt;
+
+    //如果小数位的天数大于0.5（3小时），按一天统计，如果大于0，按半天统计
+    if (decpart * 24 > 4) {
+        decpart = 1;
+    } else if (decpart > 0) {
+        decpart = 0.5;
+    } else {
+        decpart = 0;
+    }
+
+    return workDayVal + decpart;
+}
+
+/**
+ * @function 字符串转为日期
+ * @param {*} date 
+ */
+export function parseDate(date) {
+    var t = Date.parse(date);
+    if (!isNaN(t)) {
+        return new Date(Date.parse(date.replace(/-/g, '/')));
+    } else {
+        return new Date();
+    }
 }
