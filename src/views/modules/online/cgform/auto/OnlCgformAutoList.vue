@@ -334,7 +334,7 @@ import {
   queryProcessLogInfApproved,
   postProcessLogInformed,
   postProcessLogHistory,
-  setProcessLogHtml,
+  queryProcessLogHtml,
   deleteProcessLogInf,
   queryProcessLogInfByID,
   queryPRLogHistoryByDataID
@@ -712,7 +712,7 @@ export default {
               //遍历数据，设置参数
               for (let index = 0; index < res.result.records.length; index++) {
                 const item = res.result.records[index];
-                const info = ""; //await setProcessLogHtml(item.id, item)
+                const info = ""; //await queryProcessLogHtml(item.id, item)
                 item.log_info_html = info;
                 console.log(`html info : ${info}`);
               }

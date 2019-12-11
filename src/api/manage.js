@@ -644,7 +644,7 @@ export async function postProcessLogInformed(node, callback) {
     }
 }
 
-export async function setProcessLogHtml(business_data_id, record) {
+export async function queryProcessLogHtml(business_data_id, record) {
     //获取html信息
     let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
 
@@ -665,7 +665,7 @@ export async function setProcessLogHtml(business_data_id, record) {
                 `流程：${item.process_name} , 节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime}<br/>`;
         });
 
-        setStore(`processlog_by_bs_data_id@${business_data_id}`, htmlInfo, 600);
+        setStore(`processlog_by_bs_data_id@${business_data_id}`, htmlInfo, 100);
     }
 
     return htmlInfo;
@@ -1053,7 +1053,7 @@ export async function queryWorkflows(business_data_id, record) {
         setStore(
             `workflows_by_data_id@${business_data_id}`,
             JSON.stringify(workflows),
-            10
+            100
         );
     }
 
