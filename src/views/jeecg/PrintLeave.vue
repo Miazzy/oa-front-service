@@ -23,9 +23,16 @@
               v-html="curRow.no"
             ></div>
           </a-col>
-          <a-col :span="24" style="margin-top: 10px;margin-bottom:10px;">
-            <span style="float:left;display:block;">{{curRow.fieldName.file_name}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.file_name" />
+          <a-col
+            :span="24"
+            style="margin-top: 30px;margin-bottom:10px;"
+            v-if="typeof curRow.file_name != 'undefined' && curRow.file_name != null"
+          >
+            <span style="float:left;display:block;">档案资料:</span>
+            <div
+              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.file_name"
+            ></div>
           </a-col>
           <a-col :span="24" style="margin-top: 10px; margin-bottom:10px;">
             <span>申请人员:</span>
@@ -70,7 +77,6 @@
               v-html="curRow.location"
             ></div>
           </a-col>
-
           <a-col :span="20" style="margin-top:30px;" v-if="curRow.main_table_status == true">
             <template>
               <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false"></a-table>
@@ -134,7 +140,6 @@ export default {
     };
   },
   async created() {
-    debugger;
     let that = await watchFormLeave(this);
     this.curRow = that.curRow;
     this.depart = that.depart;
@@ -146,7 +151,6 @@ export default {
   mounted() {},
   watch: {
     async $route() {
-      debugger;
       let that = await watchFormLeave(this);
       this.curRow = that.curRow;
       this.depart = that.depart;
