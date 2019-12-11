@@ -94,6 +94,7 @@
                       slot="dot"
                       type="clock-circle-o"
                       style="font-size: 16px;"
+                      v-bind:color="item.color"
                     />
                     {{item.content}}
                   </a-timeline-item>

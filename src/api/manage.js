@@ -1028,7 +1028,7 @@ export async function queryWorkflows(business_data_id, record) {
         _.each(processLogs, (item, index) => {
             let node = {
                 id: item.id,
-                color: '#30A0AE',
+                color: 'pink',
                 content: `节点：${item.process_station} , 待处理人： ${item.employee} , 审批：待处理 , 时间：-- `,
                 status: 'wait',
             };
@@ -1043,7 +1043,7 @@ export async function queryWorkflows(business_data_id, record) {
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
             let node = {
                 id: item.id,
-                color: '#30A0AE',
+                color: 'orange',
                 content: `节点：${item.process_station} , 待处理人： ${item.employee} ,  已处理人： ${item.approve_user} , 审批：知会 , 时间：${optime} `,
                 status: 'wait',
             };
@@ -1053,7 +1053,7 @@ export async function queryWorkflows(business_data_id, record) {
         setStore(
             `workflows_by_data_id@${business_data_id}`,
             JSON.stringify(workflows),
-            600
+            10
         );
     }
 
