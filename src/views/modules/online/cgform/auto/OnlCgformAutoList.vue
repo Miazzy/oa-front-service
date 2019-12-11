@@ -460,7 +460,10 @@ export default {
     this.table.selectedRowKeys = [];
   },
   mounted() {
-    this.cgButtonJsHandler("mounted");
+    //创建页面后，设置选中数据为空
+    this.initAutoList();
+    this.table.selectionRows = [];
+    this.table.selectedRowKeys = [];
   },
   watch: {
     $route() {
