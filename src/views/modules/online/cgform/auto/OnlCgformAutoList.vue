@@ -417,8 +417,8 @@ export default {
         // 分页参数
         pagination: {
           current: 1,
-          pageSize: 20,
-          pageSizeOptions: ["10", "20", "30"],
+          pageSize: 30,
+          pageSizeOptions: ["30"],
           showTotal: (total, range) => {
             return range[0] + "-" + range[1] + " 共" + total + "条";
           },
@@ -469,6 +469,8 @@ export default {
     $route() {
       // 刷新参数放到这里去触发，就可以刷新相同界面了
       this.initAutoList();
+      this.table.selectionRows = [];
+      this.table.selectedRowKeys = [];
     }
   },
   methods: {
@@ -735,7 +737,7 @@ export default {
       ) {
         param.column = "operate_time";
       }
-
+      debugger;
       param.pageNo = this.table.pagination.current;
       param.pageSize = this.table.pagination.pageSize;
       return filterObj(param);
@@ -784,10 +786,22 @@ export default {
       //缓存当前选中数据
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
+      //设置跳转URL
+      var detailURL = `/jeecg/PrintLeave?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
+
+      //如果在审批管理菜单下，跳转到详情页面，则应该设置同意驳回确认等按钮
+      if (this.code == "0b511f234f3847baa50106a14fff6215") {
+        detailURL = `/jeecg/PrintLeave?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=workflow`;
+      } else if (this.code == "d11901bc44f24a66b25b37a7a04c611e") {
+        detailURL = `/jeecg/PrintLeave?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=notify`;
+      } else if (this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96") {
+        detailURL = `/jeecg/PrintLeave?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=history`;
+      } else {
+        detailURL = `${detailURL}&type=view`;
+      }
+
       //跳转到相应页面
-      this.$router.push(
-        `/jeecg/PrintLeave?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`
-      );
+      this.$router.push(detailURL);
     },
 
     /**

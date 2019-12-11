@@ -403,7 +403,7 @@ export async function queryProcessLogToApproved(username, realname, params) {
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
         result.records = res.body;
-        result.total = res.body.length <= 20 ?
+        result.total = count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
 
@@ -419,6 +419,8 @@ export async function queryProcessLogToApproved(username, realname, params) {
 export async function queryProcessLogHisApproved(username, realname, params) {
     //用户对于的中文代码
     //let username_zh = username;
+
+    debugger;
 
     //查询URL
     let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
@@ -437,7 +439,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
             item['operate_time'] = optime;
         });
 
-        result.total = res.body.length <= 20 ?
+        result.total = count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
@@ -466,7 +468,7 @@ export async function queryProcessLogInfApproved(username, realname, params) {
 
         console.log(res);
         result.records = res.body;
-        result.total = res.body.length <= 20 ?
+        result.total = count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
