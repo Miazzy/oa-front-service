@@ -1,7 +1,13 @@
 <template>
   <a-card :bordered="false" :class="{'abcdefg':true}">
     <div class="no-print" style="text-align: right">
-      <a-button v-print="'#printContent'" ghost type="primary">打印</a-button>
+      <a-button v-print="'#printContent'" ghost type="primary" v-if="pageType == 'view'">打印</a-button>
+      <a-button
+        ghost
+        type="primary"
+        @click="handleSubmitWF"
+        v-if="pageType == 'workflowing' || pageType == 'notifying'"
+      >提交</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
@@ -102,11 +108,36 @@
               </a-timeline>
             </template>
           </a-col>
+
+          <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'workflowing'">
+            <template>
+              <a-form :form="form">
+                <a-form-item label="审批用户" style="width: 500px">
+                  <j-select-multi-user v-decorator="['users']" />
+                </a-form-item>
+
+                <a-form-item label="知会用户" style="width: 500px">
+                  <j-select-multi-user v-decorator="['users']" />
+                </a-form-item>
+              </a-form>
+            </template>
+          </a-col>
+
+          <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'notifying'">
+            <template>
+              <a-form :form="form">
+                <a-form-item label="知会用户" style="width: 500px">
+                  <j-select-multi-user v-decorator="['users']" />
+                </a-form-item>
+              </a-form>
+            </template>
+          </a-col>
         </div>
       </a-col>
     </section>
   </a-card>
 </template>
+       
 
        
 <script>
@@ -114,12 +145,15 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import { watchFormLeave } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
+import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
+import { queryUrlString } from "@/utils/util";
 
 export default {
   components: {
     ATextarea,
     ARow,
-    ACol
+    ACol,
+    JSelectMultiUser
   },
   name: "Printgzsld",
   props: {
@@ -145,9 +179,12 @@ export default {
       curRow: {},
       depart: {},
       fileinfo: "",
-      workflows: []
+      workflows: [],
+      pageType: "",
+      form: this.$form.createForm(this)
     };
   },
+
   async created() {
     let that = await watchFormLeave(this);
     this.curRow = that.curRow;
@@ -155,7 +192,7 @@ export default {
     this.workflows = that.workflows;
     this.columns = that.curRow.sub_columns;
     this.data = that.curRow.sub_data;
-    //this.fileinfo = that.curRow.name;
+    this.pageType = queryUrlString("type");
   },
   mounted() {},
   watch: {
@@ -166,12 +203,16 @@ export default {
       this.workflows = that.workflows;
       this.columns = that.curRow.sub_columns;
       this.data = that.curRow.sub_data;
-      //this.fileinfo = that.curRow.name;
+      this.pageType = queryUrlString("type");
     }
   },
   methods: {
     loadData() {},
-    getDate() {}
+    getDate() {},
+    getFormFieldValue(field) {
+      return this.form.getFieldValue(field);
+    },
+    async handleSubmitWF() {}
   }
 };
 </script>

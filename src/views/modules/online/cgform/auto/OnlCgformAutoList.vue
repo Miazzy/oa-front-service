@@ -781,6 +781,62 @@ export default {
     },
 
     /**
+     * @function 自由流知会功能
+     */
+    async handleNotifyWF() {
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //获取此表单，关联的流程业务模块
+      var value = await queryTableName();
+
+      //获取选中记录的所属表单名称
+      var tableName = value["table_name"];
+
+      //当前被选中记录数据
+      var curRow = this.table.selectionRows[0];
+
+      //缓存当前选中数据
+      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
+
+      detailURL = `${detailURL}&type=notifying`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
+    },
+
+    /**
+     * @function 处理自由流程
+     */
+    async handleFreeWF() {
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //获取此表单，关联的流程业务模块
+      var value = await queryTableName();
+
+      //获取选中记录的所属表单名称
+      var tableName = value["table_name"];
+
+      //当前被选中记录数据
+      var curRow = this.table.selectionRows[0];
+
+      //缓存当前选中数据
+      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
+
+      detailURL = `${detailURL}&type=workflowing`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
+    },
+
+    /**
      * @function 分享详情页面
      */
     async handleShareWF() {
@@ -855,11 +911,6 @@ export default {
       //跳转到相应页面
       this.$router.push(detailURL);
     },
-
-    /**
-     * @function 处理自由流程
-     */
-    async handleFreeWF() {},
 
     /**
      * @function 知会确认
