@@ -62,7 +62,6 @@ export function filterNodePermission(el, binding, vnode) {
             }
         }
     }
-    debugger;
     return false;
 }
 

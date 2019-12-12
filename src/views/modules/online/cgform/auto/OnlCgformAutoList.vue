@@ -101,7 +101,7 @@
         <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">流程</a-button>
         <a-button @click="handleNotifyWF" type="primary" icon="sound" style="margin-left:8px">知会</a-button>
         <a-button @click="handleCollection" type="primary" icon="star" style="margin-left:8px">收藏</a-button>
-        <a-button @click="handleShareWF" type="primary" icon="share" style="margin-left:8px">分享</a-button>
+        <a-button @click="handleShareWF" type="primary" icon="compass" style="margin-left:8px">分享</a-button>
       </template>
       <template v-if="code == '0b511f234f3847baa50106a14fff6215' ">
         <a-button
@@ -814,7 +814,9 @@ export default {
       }
 
       //跳转到相应页面
-      window.open(detailURL, "_blank");
+      setTimeout(function() {
+        window.open(detailURL + "&flag=timeout", "_blank");
+      }, 500);
     },
 
     /**
