@@ -113,11 +113,11 @@
             <template>
               <a-form :form="form">
                 <a-form-item label="审批用户" style="width: 500px">
-                  <j-select-multi-user v-decorator="['users']" />
+                  <j-select-multi-user v-model="wflowUsers"></j-select-multi-user>
                 </a-form-item>
 
                 <a-form-item label="知会用户" style="width: 500px">
-                  <j-select-multi-user v-decorator="['users']" />
+                  <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
               </a-form>
             </template>
@@ -127,7 +127,7 @@
             <template>
               <a-form :form="form">
                 <a-form-item label="知会用户" style="width: 500px">
-                  <j-select-multi-user v-decorator="['users']" />
+                  <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
               </a-form>
             </template>
@@ -181,6 +181,8 @@ export default {
       fileinfo: "",
       workflows: [],
       pageType: "",
+      wflowUsers: "",
+      notifyUsers: "",
       form: this.$form.createForm(this)
     };
   },
@@ -212,7 +214,17 @@ export default {
     getFormFieldValue(field) {
       return this.form.getFieldValue(field);
     },
-    async handleSubmitWF() {}
+    async handleSubmitWF() {
+      //获取审批用户记录
+      var wfUsers = this.wflowUsers;
+      //获取知会用户记录
+      var nfUsers = this.notifyUsers;
+
+      //将审批用户记录，知会用户记录，写入相应的自由流程表单中
+
+      //提交自由流程审批
+      //提交知会信息确认
+    }
   }
 };
 </script>
