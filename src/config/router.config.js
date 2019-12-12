@@ -337,27 +337,22 @@ export const constantRouterMap = [{
         ],
     },
     {
-        path: '/workflow',
-        component: BaseLayout,
-        redirect: '/workflow/view',
-        hidden: true,
-        children: [{
-            path: 'workflow',
-            name: 'view',
-            component: () =>
-                import ('@/views/jeecg/PrintLeave'),
-        }, ],
-    },
-    {
-        path: '/test',
+        path: '/basewflow',
         component: BlankLayout,
-        redirect: '/test/home',
+        redirect: '/basewflow/home',
         children: [{
-            path: 'home',
-            name: 'TestHome',
-            component: () =>
-                import ('@/views/Home'),
-        }, ],
+                path: 'home',
+                name: 'TestHome',
+                component: () =>
+                    import ('@/views/Home'),
+            },
+            {
+                path: 'view',
+                name: 'view',
+                component: () =>
+                    import ('@/views/jeecg/PrintLeave'),
+            },
+        ],
     },
     {
         path: '/404',

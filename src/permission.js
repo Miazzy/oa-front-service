@@ -9,13 +9,14 @@ import { generateIndexRouter } from '@/utils/util';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
+//免登陆白名单配置
 const whiteList = [
     '/user/login',
     '/user/register',
     '/user/register-result',
     '/user/alteration',
-    '/user/workflow',
-    '/workflow/view',
+    '/basewflow/home',
+    '/basewflow/view',
 ]; // no redirect whitelist
 
 router.beforeEach((to, from, next) => {
@@ -60,10 +61,10 @@ router.beforeEach((to, from, next) => {
                         });
                     })
                     .catch(() => {
-                        /* notification.error({
-                                                                                      message: '系统提示',
-                                                                                      description: '请求用户信息失败，请重试！'
-                                                                                    })*/
+                        /*  notification.error({
+                         *  message: '系统提示',
+                         *  description: '请求用户信息失败，请重试！' })
+                         */
                         store.dispatch('Logout').then(() => {
                             next({ path: '/user/login', query: { redirect: to.fullPath } });
                         });
