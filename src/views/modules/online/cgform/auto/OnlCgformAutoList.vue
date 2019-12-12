@@ -84,11 +84,21 @@
       >导出</a-button>
       <template v-if="hasBpmStatus">
         <!-- 提交审批操作功能 -->
-        <a-button @click="handleSubmitWF" type="primary" icon style="margin-left:8px">提交审批</a-button>
+        <a-button
+          @click="handleSubmitWF"
+          type="primary"
+          icon="cloud-upload"
+          style="margin-left:8px"
+        >提交</a-button>
         <!-- 撤销审批操作功能 -->
-        <a-button @click="handleCancelWF" type="primary" icon style="margin-left:8px">撤销审批</a-button>
+        <a-button
+          @click="handleCancelWF"
+          type="primary"
+          icon="cloud-download"
+          style="margin-left:8px"
+        >撤销</a-button>
         <!-- 处理自由流程功能 -->
-        <a-button @click="handleFreeWF" type="primary" style="margin-left:8px">自由流程</a-button>
+        <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">自由流</a-button>
       </template>
       <template v-if="code == '0b511f234f3847baa50106a14fff6215' ">
         <a-button
