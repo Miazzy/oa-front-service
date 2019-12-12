@@ -837,15 +837,15 @@ export default {
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
       //设置跳转URL
-      var detailURL = `/basewflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
 
       //如果在审批管理菜单下，跳转到详情页面，则应该设置同意驳回确认等按钮
       if (this.code == "0b511f234f3847baa50106a14fff6215") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=workflow`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=workflow`;
       } else if (this.code == "d11901bc44f24a66b25b37a7a04c611e") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=notify`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=notify`;
       } else if (this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=history`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=history`;
       } else {
         detailURL = `${detailURL}&type=view`;
       }
