@@ -338,6 +338,7 @@ export default {
           process_station: "自由流程知会",
           process_audit: "000000001",
           operate_time: ctime,
+          create_time: ctime,
           proponents: userInfo["username"],
           content: this.curRow["content"],
           business_data: JSON.stringify(this.curRow)

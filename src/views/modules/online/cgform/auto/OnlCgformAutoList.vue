@@ -1194,6 +1194,8 @@ export default {
               employee: employee[0]["employee"],
               process_station: process_station[0]["item_text"],
               process_audit: item,
+              operate_time: date,
+              create_time: date,
               proponents: curRow["proponents"],
               content: curRow["content"],
               business_data: JSON.stringify(curRow)

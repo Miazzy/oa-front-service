@@ -509,7 +509,7 @@ export async function queryProcessLogInfApproved(username, realname, params) {
     //查询URL
     //let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=operate_time`;
     //let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))`;
-    let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=operate_time`;
+    let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
     let result = {};
     try {
