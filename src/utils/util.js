@@ -53,9 +53,9 @@ export function filterObj(obj) {
  */
 export function formatDate(value, fmt) {
     var regPos = /^\d+(\.\d+)?$/;
-    if (regPos.test(value)) {
+    if (regPos.test(value) || value instanceof Date) {
         //如果是数字
-        let getDate = new Date(value);
+        let getDate = value instanceof Date ? value : new Date(value);
         let o = {
             'M+': getDate.getMonth() + 1,
             'd+': getDate.getDate(),

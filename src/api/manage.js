@@ -782,6 +782,27 @@ export async function queryPRLogInfByDataID(business_data_id) {
     }
 }
 
+/**
+ * 获取某业务记录对应的审批日志信息
+ */
+export async function queryPRLogInfTotal(business_data_id) {
+    //提交URL
+    let queryURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
+    let queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
+    let result = {};
+
+    try {
+        const count = await superagent.get(queryURL).set('accept', 'json');
+        const today = await superagent.get(queryTodayURL).set('accept', 'json');
+        result.total = count.body[0].no_of_rows;
+        result.today = today.body[0].no_of_rows;
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export async function queryLoginUser() {
     let queryURL = `${api.domain}/jeecg-boot/api/login/user`;
 

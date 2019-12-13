@@ -136,6 +136,16 @@
               </a-form>
             </template>
           </a-col>
+
+          <a-modal
+            title="温馨提示"
+            :visible="tipVisible"
+            @ok="tipHandleOk"
+            :confirmLoading="tipConfirmLoading"
+            @cancel="tipHandleCancel"
+          >
+            <p>{{tipContent}}</p>
+          </a-modal>
         </div>
       </a-col>
     </section>
@@ -151,6 +161,8 @@ import {
   watchFormLeave,
   postTableData,
   postProcessFreeNode,
+  postProcessLogInformed,
+  queryPRLogInfTotal,
   randomChars,
   queryTableName
 } from "@/api/manage";
@@ -195,6 +207,8 @@ export default {
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
+      tipVisible: false,
+      tipContent: "",
       form: this.$form.createForm(this)
     };
   },
@@ -223,6 +237,18 @@ export default {
   methods: {
     loadData() {},
     getDate() {},
+    tipHandleOk(e) {
+      this.tipConfirmLoading = true;
+      setTimeout(() => {
+        this.loadData(1);
+        this.tipVisible = false;
+        this.tipConfirmLoading = false;
+      }, 300);
+    },
+    tipHandleCancel() {
+      this.loadData(1);
+      this.tipVisible = false;
+    },
     getFormFieldValue(field) {
       return this.form.getFieldValue(field);
     },
@@ -238,12 +264,21 @@ export default {
 
       //审批用户不能为空
       if (deNull(approver) == "" && this.pageType == "workflowing") {
-        this.$message.warning("请选择审批用户!");
+        this.tipVisible = true;
+        this.tipContent = "请选择审批用户!";
         return false;
       }
       //如果审批用户含有多个，则不能提交
       if (approver.includes(",") && this.pageType == "workflowing") {
-        this.$message.warning("审批用户只能选择一个");
+        this.tipVisible = true;
+        this.tipContent = "审批用户只能选择一个!";
+        return false;
+      }
+      //知会用户不能为空
+      if (deNull(nfUsers) == "" && this.pageType == "notifying") {
+        //显示提示信息
+        this.tipVisible = true;
+        this.tipContent = "请选择知会用户!";
         return false;
       }
 
@@ -254,7 +289,7 @@ export default {
       var node = {
         id: randomChars(32),
         create_by: userInfo["username"],
-        create_time: formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        create_time: formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
         table_name: tableName,
         main_key: queryUrlString("id"),
         audit_node: deNull(wfUsers),
@@ -262,15 +297,33 @@ export default {
         notify_node: deNull(nfUsers)
       };
 
-      //将审批用户记录，知会用户记录，写入相应的自由流程表单中
-      var result = await postProcessFreeNode(node);
-
       //提交自由流程审批
       if (deNull(approver) != "" && this.pageType == "workflowing") {
+        //将审批用户记录，知会用户记录，写入相应的自由流程表单中
+        var result = await postProcessFreeNode(node);
+
+        //TODO 提交审批操作
       }
 
       //提交知会信息确认
       if (deNull(nfUsers) != "" && this.pageType == "notifying") {
+        //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
+        let loginfo = await queryPRLogInfTotal(queryUrlString("id"));
+
+        //同一业务数据，每天最多知会3次
+        if (deNull(loginfo) != "" && loginfo.today >= 3) {
+          this.tipVisible = true;
+          this.tipContent = "同一业务数据，每天最多知会3次！";
+          return false;
+        }
+
+        if (deNull(loginfo) != "" && loginfo.total >= 10) {
+          this.tipVisible = true;
+          this.tipContent = "同一业务数据，总计最多知会10次！";
+          return false;
+        }
+
+        debugger;
         //提交审批相关处理信息
         var pnode = {
           id: randomChars(32), //获取随机数
@@ -291,7 +344,8 @@ export default {
         result = await postProcessLogInformed(pnode);
 
         //显示提示信息
-        this.$message.warning("知会操作成功！");
+        this.tipVisible = true;
+        this.tipContent = "知会操作成功！";
         return true;
       }
     }
