@@ -147,10 +147,16 @@
 <script>
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
-import { watchFormLeave, postTableData, randomChars } from "@/api/manage";
+import {
+  watchFormLeave,
+  postTableData,
+  postProcessFreeNode,
+  randomChars,
+  queryTableName
+} from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
-import { queryUrlString, deNull } from "@/utils/util";
+import { queryUrlString, deNull, formatDate } from "@/utils/util";
 import { setStore, getStore } from "@/utils/storage";
 
 export default {
@@ -231,25 +237,25 @@ export default {
       var approver = this.approveUser;
 
       //审批用户不能为空
-      if (deNull(approver) == "" && pageType == "workflowing") {
+      if (deNull(approver) == "" && this.pageType == "workflowing") {
         this.$message.warning("请选择审批用户!");
         return false;
       }
       //如果审批用户含有多个，则不能提交
-      if (approver.includes(",") && pageType == "workflowing") {
+      if (approver.includes(",") && this.pageType == "workflowing") {
         this.$message.warning("审批用户只能选择一个");
         return false;
       }
 
       //获取此表单，关联的流程业务模块
-      var tableInfo = await queryTableName();
+      var tableName = queryUrlString("table_name");
 
       //自由流程节点
       var node = {
         id: randomChars(32),
         create_by: userInfo["username"],
-        create_time: new Date(),
-        table_name: tableInfo["table_name"],
+        create_time: formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        table_name: tableName,
         main_key: queryUrlString("id"),
         audit_node: deNull(wfUsers),
         approve_node: deNull(approver),
@@ -257,14 +263,14 @@ export default {
       };
 
       //将审批用户记录，知会用户记录，写入相应的自由流程表单中
-      var result = postTableData("BS_FREE_PROCESS", node);
+      var result = await postProcessFreeNode(node);
 
       //提交自由流程审批
-      if (deNull(approver) != "" && pageType == "workflowing") {
+      if (deNull(approver) != "" && this.pageType == "workflowing") {
       }
 
       //提交知会信息确认
-      if (deNull(nfUsers) != "" && pageType == "notifying") {
+      if (deNull(nfUsers) != "" && this.pageType == "notifying") {
         //提交审批相关处理信息
         var pnode = {
           id: randomChars(32), //获取随机数
@@ -283,6 +289,10 @@ export default {
 
         //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
         result = await postProcessLogInformed(pnode);
+
+        //显示提示信息
+        this.$message.warning("知会操作成功！");
+        return true;
       }
     }
   }

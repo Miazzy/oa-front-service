@@ -653,6 +653,23 @@ export async function postProcessLog(node, callback) {
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
+export async function postProcessFreeNode(node) {
+    //提交URL
+    let postURL = `${api.domain}/api/BS_FREE_PROCESS`;
+
+    try {
+        const res = await superagent.post(postURL).send(node).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
 export async function postProcessLogHistory(node, callback) {
     //是否批处理
     let bflag = node instanceof Array && node.length > 0 ? '/bulk' : '';
