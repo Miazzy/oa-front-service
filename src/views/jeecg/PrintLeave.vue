@@ -307,6 +307,7 @@ export default {
 
       //提交知会信息确认
       if (deNull(nfUsers) != "" && this.pageType == "notifying") {
+        debugger;
         //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
         let loginfo = await queryPRLogInfTotal(queryUrlString("id"));
 
@@ -323,7 +324,6 @@ export default {
           return false;
         }
 
-        debugger;
         //提交审批相关处理信息
         var pnode = {
           id: randomChars(32), //获取随机数

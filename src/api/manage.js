@@ -788,7 +788,7 @@ export async function queryPRLogInfByDataID(business_data_id) {
 export async function queryPRLogInfTotal(business_data_id) {
     //提交URL
     let queryURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
-    let queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
+    let queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(to_days(operate_time),eq,to_days(now()))`;
     let result = {};
 
     try {
