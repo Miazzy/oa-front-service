@@ -318,9 +318,9 @@ export default {
           return false;
         }
 
-        if (deNull(loginfo) != "" && loginfo.total >= 10) {
+        if (deNull(loginfo) != "" && loginfo.total >= 100) {
           this.tipVisible = true;
-          this.tipContent = "同一业务数据，总计最多知会10次！";
+          this.tipContent = "同一业务数据，总计最多知会100次！";
           return false;
         }
 
