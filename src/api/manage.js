@@ -473,8 +473,6 @@ export async function queryProcessLogHisApproved(username, realname, params) {
     //用户对于的中文代码
     //let username_zh = username;
 
-    debugger;
-
     //查询URL
     let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     let queryCountURL = `${api.domain}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
@@ -786,14 +784,29 @@ export async function queryPRLogInfByDataID(business_data_id) {
  * 获取某业务记录对应的审批日志信息
  */
 export async function queryPRLogInfTotal(business_data_id) {
+    //获取今天日期
+    let ctime = formatDate(new Date(), 'yyyy-MM-dd');
+
     //提交URL
     let queryURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
-    let queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(to_days(operate_time),eq,to_days(now()))`;
+    let queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(operate_time,like,~${ctime}~)`;
     let result = {};
+    var count = 0;
+    var today = 0;
 
     try {
-        const count = await superagent.get(queryURL).set('accept', 'json');
-        const today = await superagent.get(queryTodayURL).set('accept', 'json');
+        //统计知会总数
+        try {
+            count = await superagent.get(queryURL).set('accept', 'json');
+        } catch (error) {
+            console.log('query total loginfo error :' + error);
+        }
+        //统计当天知会次数
+        try {
+            today = await superagent.get(queryTodayURL).set('accept', 'json');
+        } catch (error) {
+            console.log('query today loginfo error :' + error);
+        }
         result.total = count.body[0].no_of_rows;
         result.today = today.body[0].no_of_rows;
         console.log(result);
@@ -1127,10 +1140,11 @@ export async function queryWorkflows(business_data_id, record) {
         _.each(processLogs, (item, index) => {
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+            let appruser = deNull(item.approve_user);
             let node = {
                 id: item.id,
                 color: 'orange',
-                content: `节点：${item.process_station} , 待处理人： ${item.employee} ,  已处理人： ${item.approve_user} , 审批：知会 , 时间：${optime} `,
+                content: `节点：${item.process_station} , 待处理人： ${item.employee} ,  已处理人： ${appruser} , 审批：知会 , 时间：${optime} `,
                 status: 'wait',
             };
             workflows.push(node);

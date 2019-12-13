@@ -261,6 +261,8 @@ export default {
       var nfUsers = this.notifyUsers;
       //获取审批用户，审批用户为终审节点
       var approver = this.approveUser;
+      //当前时间
+      var ctime = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
 
       //审批用户不能为空
       if (deNull(approver) == "" && this.pageType == "workflowing") {
@@ -289,7 +291,7 @@ export default {
       var node = {
         id: randomChars(32),
         create_by: userInfo["username"],
-        create_time: formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+        create_time: ctime,
         table_name: tableName,
         main_key: queryUrlString("id"),
         audit_node: deNull(wfUsers),
@@ -335,6 +337,7 @@ export default {
           employee: deNull(nfUsers),
           process_station: "自由流程知会",
           process_audit: "000000001",
+          operate_time: ctime,
           proponents: userInfo["username"],
           content: this.curRow["content"],
           business_data: JSON.stringify(this.curRow)
