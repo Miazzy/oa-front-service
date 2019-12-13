@@ -7,7 +7,8 @@ function resolve(dir) {
 // vue.config.js
 module.exports = {
     //可以将其设置为 false 以加速生产环境构建。
-    productionSourceMap: true,
+    productionSourceMap: false,
+    //export NODE_ENV=production
 
     pages: {
         index: {
