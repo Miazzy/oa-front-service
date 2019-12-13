@@ -784,6 +784,9 @@ export default {
      * @function 自由流知会功能
      */
     async handleNotifyWF() {
+      //设置this的别名
+      var that = this;
+
       //检测是否为单选
       if (this.table.selectionRows.length != 1) {
         that.$message.warning("请选择一条记录！");
@@ -802,6 +805,12 @@ export default {
       //当前被选中记录数据
       var curRow = this.table.selectionRows[0];
 
+      //如果流程状态不是待提交，则无法进行自由流程选择
+      if (curRow.bpm_status != 3) {
+        this.$message.warning("此记录尚未审批通过，无法进行知会操作！");
+        return false;
+      }
+
       //缓存当前选中数据
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
@@ -818,6 +827,9 @@ export default {
      * @function 处理自由流程
      */
     async handleFreeWF() {
+      //设置this的别名
+      var that = this;
+
       //检测是否为单选
       if (this.table.selectionRows.length != 1) {
         that.$message.warning("请选择一条记录！");
@@ -838,7 +850,7 @@ export default {
 
       //如果流程状态不是待提交，则无法进行自由流程选择
       if (curRow.bpm_status != 1) {
-        that.$message.warning("此记录已进入流程，无法进行自由流程！");
+        this.$message.warning("此记录已进入流程，无法进行自由流程操作！");
         return false;
       }
 
@@ -858,9 +870,12 @@ export default {
      * @function 分享详情页面
      */
     async handleShareWF() {
+      //设置this的别名
+      var that = this;
+
       //检测是否为单选
       if (this.table.selectionRows.length != 1) {
-        that.$message.warning("请选择一条记录！");
+        this.$message.warning("请选择一条记录！");
         return false;
       }
       //获取当前用户
@@ -902,9 +917,12 @@ export default {
      * @function 查看详情页面
      */
     async handleDetailWF() {
+      //设置this的别名
+      var that = this;
+
       //检测是否为单选
       if (this.table.selectionRows.length != 1) {
-        that.$message.warning("请选择一条记录！");
+        this.$message.warning("请选择一条记录！");
         return false;
       }
       //获取当前用户
