@@ -1237,6 +1237,7 @@ export default {
             process_audit: firstAuditor,
             proponents: curRow["proponents"],
             content: curRow["content"],
+            create_time: date,
             business_data: JSON.stringify(curRow)
           };
 
@@ -1366,6 +1367,8 @@ export default {
       //获取当前变量
       let that = this;
       let result = {};
+      //获取当前时间
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       if (that.table.selectionRows.length != 1) {
         that.$message.warning("请选择一条记录！");
@@ -1439,6 +1442,7 @@ export default {
           process_audit: firstAuditor,
           proponents: userInfo["realname"],
           content: curRow["content"],
+          create_time: date,
           business_data: JSON.stringify(curRow)
         };
 
