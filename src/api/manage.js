@@ -212,6 +212,26 @@ export async function insertTableData(tableName, node) {
     }
 }
 
+export async function postTableData(tableName, node) {
+    //Post数据的URL地址
+    let insertURL = `${api.domain}/api/${tableName}`;
+
+    //如果传入数据为数组，则URL添加bulk路径
+    if (typeof node != 'undefined' && node != null && node instanceof Array) {
+        insertURL = insertURL + '/bulk';
+    }
+
+    try {
+        const res = await superagent
+            .post(insertURL)
+            .send(node)
+            .set('accept', 'json');
+        return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 /**
  * 添加数据
  * @param {*} tableName
@@ -391,7 +411,6 @@ export async function queryProcessNodeProcName(node, callback) {
  * 查询审批处理页面的记录
  */
 export async function queryUserList(params) {
-    debugger;
     //用户名称
     let whereFlag =
         deNull(params.name) == '' ?

@@ -112,8 +112,12 @@
           <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'workflowing'">
             <template>
               <a-form :form="form">
-                <a-form-item label="审批用户" style="width: 500px">
+                <a-form-item label="审核用户" style="width: 500px">
                   <j-select-multi-user v-model="wflowUsers"></j-select-multi-user>
+                </a-form-item>
+
+                <a-form-item label="审批用户" style="width: 500px">
+                  <j-select-multi-user v-model="approveUser"></j-select-multi-user>
                 </a-form-item>
 
                 <a-form-item label="知会用户" style="width: 500px">
@@ -143,10 +147,11 @@
 <script>
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
-import { watchFormLeave } from "@/api/manage";
+import { watchFormLeave, postTableData, randomChars } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
-import { queryUrlString } from "@/utils/util";
+import { queryUrlString, deNull } from "@/utils/util";
+import { setStore, getStore } from "@/utils/storage";
 
 export default {
   components: {
@@ -183,6 +188,7 @@ export default {
       pageType: "",
       wflowUsers: "",
       notifyUsers: "",
+      approveUser: "",
       form: this.$form.createForm(this)
     };
   },
@@ -215,16 +221,69 @@ export default {
       return this.form.getFieldValue(field);
     },
     async handleSubmitWF() {
-      //获取审批用户记录
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+      //获取审核用户记录
       var wfUsers = this.wflowUsers;
       //获取知会用户记录
       var nfUsers = this.notifyUsers;
+      //获取审批用户，审批用户为终审节点
+      var approver = this.approveUser;
+
+      //审批用户不能为空
+      if (deNull(approver) == "" && pageType == "workflowing") {
+        this.$message.warning("请选择审批用户!");
+        return false;
+      }
+      //如果审批用户含有多个，则不能提交
+      if (approver.includes(",") && pageType == "workflowing") {
+        this.$message.warning("审批用户只能选择一个");
+        return false;
+      }
+
+      //获取此表单，关联的流程业务模块
+      var tableInfo = await queryTableName();
+
+      //自由流程节点
+      var node = {
+        id: randomChars(32),
+        create_by: userInfo["username"],
+        create_time: new Date(),
+        table_name: tableInfo["table_name"],
+        main_key: queryUrlString("id"),
+        audit_node: deNull(wfUsers),
+        approve_node: deNull(approver),
+        notify_node: deNull(nfUsers)
+      };
 
       //将审批用户记录，知会用户记录，写入相应的自由流程表单中
+      var result = postTableData("BS_FREE_PROCESS", node);
 
       //提交自由流程审批
+      if (deNull(approver) != "" && pageType == "workflowing") {
+      }
 
       //提交知会信息确认
+      if (deNull(nfUsers) != "" && pageType == "notifying") {
+        //提交审批相关处理信息
+        var pnode = {
+          id: randomChars(32), //获取随机数
+          table_name: tableName, //业务表名
+          main_value: queryUrlString("id"), //表主键值
+          business_data_id: queryUrlString("id"), //业务具体数据主键值
+          business_code: "000000001", //业务编号
+          process_name: "自由流程知会", //流程名称
+          employee: deNull(nfUsers),
+          process_station: "自由流程知会",
+          process_audit: "000000001",
+          proponents: userInfo["username"],
+          content: this.curRow["content"],
+          business_data: JSON.stringify(this.curRow)
+        };
+
+        //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+        result = await postProcessLogInformed(pnode);
+      }
     }
   }
 };
