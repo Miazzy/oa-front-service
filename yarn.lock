@@ -841,7 +841,7 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
-"@jeecg/antd-onine@^1.0.2":
+"@jeecg/antd-onine@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/@jeecg/antd-onine/download/@jeecg/antd-onine-1.0.1.tgz#bc9e54e75e8e0eff3ee361a1c022cb8672357a8d"
   integrity sha1-vJ5U516ODv8+42GhwCLLhnI1eo0=

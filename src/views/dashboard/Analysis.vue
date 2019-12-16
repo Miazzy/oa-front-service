@@ -88,23 +88,70 @@
             </div>
             <a-range-picker :style="{width: '256px'}" />
           </div>
-          <a-tab-pane loading="true" tab="销售额" key="1">
+          <a-tab-pane loading="true" tab="我的待办" key="1">
             <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar title="销售额排行" :dataSource="barData" />
-              </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList" />
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="待办列表"></div>
+                <template>
+                  <a-table :columns="columns" :dataSource="data" :pagination="false">
+                    <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
+                    <span slot="customTitle">
+                      <a-icon type="smile-o" />Name
+                    </span>
+                    <span slot="tags" slot-scope="tags">
+                      <a-tag
+                        v-for="tag in tags"
+                        :color="tag==='loser' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+                        :key="tag"
+                      >{{tag.toUpperCase()}}</a-tag>
+                    </span>
+                    <span slot="action" slot-scope="text, record">
+                      <a href="javascript:;">Invite 一 {{record.name}}</a>
+                      <a-divider type="vertical" />
+                      <a href="javascript:;">Delete</a>
+                      <a-divider type="vertical" />
+                      <a href="javascript:;" class="ant-dropdown-link">
+                        More actions
+                        <a-icon type="down" />
+                      </a>
+                    </span>
+                  </a-table>
+                </template>
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane tab="访问量" key="2">
+          <a-tab-pane loading="true" tab="我的已办" key="2">
             <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar title="销售额趋势" :dataSource="barData" />
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="已办列表"></div>
               </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList" />
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="我的消息" key="3">
+            <a-row>
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="消息列表"></div>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="我的收藏" key="4">
+            <a-row>
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="收藏列表"></div>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="行政公告" key="5">
+            <a-row>
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="行政公告"></div>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="红头文件" key="6">
+            <a-row>
+              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
+                <div title="红头文件"></div>
               </a-col>
             </a-row>
           </a-tab-pane>
@@ -154,36 +201,94 @@
 </template>
 
 <script>
-import ChartCard from '@/components/ChartCard'
-import ACol from 'ant-design-vue/es/grid/Col'
-import ATooltip from 'ant-design-vue/es/tooltip/Tooltip'
-import MiniArea from '@/components/chart/MiniArea'
-import MiniBar from '@/components/chart/MiniBar'
-import MiniProgress from '@/components/chart/MiniProgress'
-import RankList from '@/components/chart/RankList'
-import Bar from '@/components/chart/Bar'
-import LineChartMultid from '@/components/chart/LineChartMultid'
-import HeadInfo from '@/components/tools/HeadInfo.vue'
+import ChartCard from "@/components/ChartCard";
+import ACol from "ant-design-vue/es/grid/Col";
+import ATooltip from "ant-design-vue/es/tooltip/Tooltip";
+import MiniArea from "@/components/chart/MiniArea";
+import MiniBar from "@/components/chart/MiniBar";
+import MiniProgress from "@/components/chart/MiniProgress";
+import RankList from "@/components/chart/RankList";
+import Bar from "@/components/chart/Bar";
+import LineChartMultid from "@/components/chart/LineChartMultid";
+import HeadInfo from "@/components/tools/HeadInfo.vue";
 
-import Trend from '@/components/Trend'
-import { getLoginfo, getVisitInfo } from '@/api/api'
+import Trend from "@/components/Trend";
+import { getLoginfo, getVisitInfo } from "@/api/api";
 
-const rankList = []
+import superagent from "superagent";
+
+const rankList = [];
 for (let i = 0; i < 7; i++) {
   rankList.push({
-    name: '白鹭岛 ' + (i + 1) + ' 号店',
+    name: "白鹭岛 " + (i + 1) + " 号店",
     total: 1234.56 - i * 100
-  })
+  });
 }
-const barData = []
+const barData = [];
 for (let i = 0; i < 12; i += 1) {
   barData.push({
     x: `${i + 1}月`,
     y: Math.floor(Math.random() * 1000) + 200
-  })
+  });
 }
+const columns = [
+  {
+    title: "类型",
+    dataIndex: "type",
+    key: "type",
+    slots: { title: "type" },
+    scopedSlots: { customRender: "type" }
+  },
+  {
+    title: "名称",
+    dataIndex: "name",
+    key: "name"
+  },
+  {
+    title: "主题",
+    dataIndex: "topic",
+    key: "topic"
+  },
+  {
+    title: "申请人",
+    key: "username",
+    dataIndex: "username"
+  },
+  {
+    title: "创建时间",
+    key: "create_time"
+  }
+];
+
+const data = [
+  {
+    key: "1",
+    type: "待审核",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+    tags: ["nice", "developer"]
+  },
+  {
+    key: "2",
+    type: "待审核",
+    name: "Jim Green",
+    age: 42,
+    address: "London No. 1 Lake Park",
+    tags: ["loser"]
+  },
+  {
+    key: "3",
+    type: "待审核",
+    name: "Joe Black",
+    age: 32,
+    address: "Sidney No. 1 Lake Park",
+    tags: ["cool", "teacher"]
+  }
+];
+
 export default {
-  name: 'Analysis',
+  name: "Analysis",
   components: {
     ATooltip,
     ACol,
@@ -204,36 +309,51 @@ export default {
       rankList,
       barData,
       loginfo: {},
-      visitFields: ['ip', 'visit'],
+      visitFields: ["ip", "visit"],
       visitInfo: [],
-      indicator: <a-icon type="loading" style="font-size: 24px" spin />
-    }
+      indicator: <a-icon type="loading" style="font-size: 24px" spin />,
+      data,
+      columns,
+      loadingMore: false,
+      showLoadingMore: true,
+      data_list: []
+    };
   },
   created() {
     setTimeout(() => {
-      this.loading = !this.loading
-    }, 1000)
-    this.initLogInfo()
+      this.loading = !this.loading;
+    }, 1000);
+    this.initLogInfo();
+  },
+  mounted() {
+    this.getData(res => {
+      this.loading = false;
+      this.data_list = res.results;
+    });
   },
   methods: {
+    async getData(callback) {
+      const res = await superagent.get(fakeDataUrl).set("accept", "json");
+      callback(res);
+    },
+    onLoadMore() {},
     initLogInfo() {
       getLoginfo(null).then(res => {
         if (res.success) {
           Object.keys(res.result).forEach(key => {
-            res.result[key] = res.result[key] + ''
-          })
-          this.loginfo = res.result
+            res.result[key] = res.result[key] + "";
+          });
+          this.loginfo = res.result;
         }
-      })
+      });
       getVisitInfo().then(res => {
         if (res.success) {
-          console.log('aaaaaa', res.result)
-          this.visitInfo = res.result
+          this.visitInfo = res.result;
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
