@@ -1178,7 +1178,8 @@ export default {
             //根据自由流程配置，获取所有待审核人员列表
             allAudit = freeNode.audit_node + "," + freeNode.approve_node;
             //根据自由流程配置，获取所有待知会人员列表
-            notifyArray = [freeNode.notify_node];
+            notifyArray =
+              deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
             //获取自由流程配置，当前审核节点
             curAuditor = curRow["employee"];
           } catch (error) {
@@ -1207,24 +1208,46 @@ export default {
             var employee = await queryProcessNodeEmployee(item);
             //流程岗位
             var process_station = await queryProcessNodeProcName(item);
+            //审批相关流程节点
+            var pnode = {};
 
-            //提交审批相关处理信息
-            var pnode = {
-              id: randomChars(32), //获取随机数
-              table_name: tableName, //业务表名
-              main_value: curRow["main_value"], //表主键值
-              business_data_id: curRow["business_data_id"], //业务具体数据主键值
-              business_code: that.fixedWFlow["id"], //业务编号
-              process_name: that.fixedWFlow["items"], //流程名称
-              employee: employee[0]["employee"],
-              process_station: process_station[0]["item_text"],
-              process_audit: item,
-              operate_time: date,
-              create_time: date,
-              proponents: curRow["proponents"],
-              content: curRow["content"],
-              business_data: JSON.stringify(curRow)
-            };
+            if (curRow.business_code != "000000000") {
+              //提交审批相关处理信息
+              pnode = {
+                id: randomChars(32), //获取随机数
+                table_name: tableName, //业务表名
+                main_value: curRow["main_value"], //表主键值
+                business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                business_code: that.fixedWFlow["id"], //业务编号
+                process_name: that.fixedWFlow["items"], //流程名称
+                employee: employee[0]["employee"],
+                process_station: process_station[0]["item_text"],
+                process_audit: item,
+                operate_time: date,
+                create_time: date,
+                proponents: curRow["proponents"],
+                content: curRow["content"],
+                business_data: JSON.stringify(curRow)
+              };
+            } else {
+              //提交审批相关处理信息
+              pnode = {
+                id: randomChars(32), //获取随机数
+                table_name: tableName, //业务表名
+                main_value: curRow["business_data_id"], //表主键值
+                business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                business_code: "000000001", //业务编号
+                process_name: "自由流程知会", //流程名称
+                employee: item,
+                process_station: "自由流程知会",
+                process_audit: "000000001",
+                proponents: curRow["proponents"],
+                content: curRow["content"],
+                operate_time: date,
+                create_time: date,
+                business_data: curRow.business_data
+              };
+            }
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
             result = await postProcessLogInformed(pnode);
@@ -1273,8 +1296,8 @@ export default {
             pnode = {
               id: randomChars(32), //获取随机数
               table_name: tableName, //业务表名
-              main_value: queryUrlString("id"), //表主键值
-              business_data_id: queryUrlString("id"), //业务具体数据主键值
+              main_value: curRow["business_data_id"], //表主键值
+              business_data_id: curRow["business_data_id"], //业务具体数据主键值
               business_code: "000000000", //业务编号
               process_name: "自由流程审批", //流程名称
               employee: firstAuditor,
