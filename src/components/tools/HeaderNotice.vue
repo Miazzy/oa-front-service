@@ -6,7 +6,7 @@
     :arrowPointAtCenter="true"
     overlayClassName="header-notice-wrapper"
     @visibleChange="handleHoverChange"
-    :overlayStyle="{ width: '360px', top: '50px' }"
+    :overlayStyle="{ width: '240px', top: '50px' }"
   >
     <template slot="content">
       <a-spin :spinning="loadding">
@@ -39,39 +39,7 @@
                 </div>
               </a-list-item>
               <div style="margin-top: 5px;text-align: center">
-                <a-button @click="toMyApprove()" type="dashed" block>审批处理</a-button>
-              </div>
-            </a-list>
-          </a-tab-pane>
-          <a-tab-pane :tab="msg1Title" key="1">
-            <a-list>
-              <a-list-item :key="index" v-for="(record, index) in announcement1">
-                <div style="margin-left: 5%;width: 80%">
-                  <p>
-                    <a @click="showAnnouncement(record)">标题：{{ record.titile }}</a>
-                  </p>
-                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTime }} 发布</p>
-                </div>
-                <div style="text-align: right">
-                  <a-tag
-                    @click="showAnnouncement(record)"
-                    v-if="record.priority === 'L'"
-                    color="blue"
-                  >一般消息</a-tag>
-                  <a-tag
-                    @click="showAnnouncement(record)"
-                    v-if="record.priority === 'M'"
-                    color="orange"
-                  >重要消息</a-tag>
-                  <a-tag
-                    @click="showAnnouncement(record)"
-                    v-if="record.priority === 'H'"
-                    color="red"
-                  >紧急消息</a-tag>
-                </div>
-              </a-list-item>
-              <div style="margin-top: 5px;text-align: center">
-                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
+                <a-button @click="toMyApprove()" type="dashed" block>查看更多</a-button>
               </div>
             </a-list>
           </a-tab-pane>
@@ -120,12 +88,12 @@
 </template>
 
 <script>
-import { getAction, putAction } from '@/api/manage'
-import ShowAnnouncement from './ShowAnnouncement'
-import store from '@/store/'
+import { getAction, putAction } from "@/api/manage";
+import ShowAnnouncement from "./ShowAnnouncement";
+import store from "@/store/";
 
 export default {
-  name: 'HeaderNotice',
+  name: "HeaderNotice",
   components: {
     ShowAnnouncement
   },
@@ -133,47 +101,51 @@ export default {
     return {
       loadding: false,
       url: {
-        listCementByUser: '/sys/annountCement/listByUser',
-        editCementSend: '/sys/sysAnnouncementSend/editByAnntIdAndUserId',
-        queryById: '/sys/annountCement/queryById'
+        listCementByUser: "/sys/annountCement/listByUser",
+        editCementSend: "/sys/sysAnnouncementSend/editByAnntIdAndUserId",
+        queryById: "/sys/annountCement/queryById"
       },
       hovered: false,
       announcement1: [],
       announcement2: [],
-      msg1Count: '0',
-      msg2Count: '0',
-      msg3Count: '0',
-      msg1Title: '通知(0)',
-      msg2Title: '',
-      msg3Title: '',
+      msg1Count: "0",
+      msg2Count: "0",
+      msg3Count: "0",
+      msg1Title: "通知(0)",
+      msg2Title: "",
+      msg3Title: "",
       stopTimer: false
-    }
+    };
   },
   computed: {
     msgTotal() {
-      return parseInt(this.msg1Count) + parseInt(this.msg2Count) + +parseInt(this.msg3Count)
+      return (
+        parseInt(this.msg1Count) +
+        parseInt(this.msg2Count) +
+        +parseInt(this.msg3Count)
+      );
     }
   },
   mounted() {
-    this.loadData()
+    this.loadData();
     //this.timerFun();
-    this.initWebSocket()
+    this.initWebSocket();
   },
   destroyed: function() {
     // 离开页面生命周期函数
-    this.websocketclose()
+    this.websocketclose();
   },
   methods: {
     timerFun() {
-      this.stopTimer = false
+      this.stopTimer = false;
       let myTimer = setInterval(() => {
         // 停止定时器
         if (this.stopTimer == true) {
-          clearInterval(myTimer)
-          return
+          clearInterval(myTimer);
+          return;
         }
-        this.loadData()
-      }, 6000)
+        this.loadData();
+      }, 6000);
     },
     loadData() {
       try {
@@ -181,138 +153,142 @@ export default {
         getAction(this.url.listCementByUser)
           .then(res => {
             if (res.success) {
-              this.announcement1 = res.result.anntMsgList
-              this.msg1Count = res.result.anntMsgTotal
-              this.msg1Title = '通知(' + res.result.anntMsgTotal + ')'
-              this.announcement2 = res.result.sysMsgList
-              this.msg2Count = res.result.sysMsgTotal
-              this.msg2Title = '消息(' + res.result.sysMsgTotal + ')'
-              this.announcement3 = res.result.sysMsgList
-              this.msg3Count = res.result.sysMsgTotal
-              this.msg3Title = '审批(' + res.result.sysMsgTotal + ')'
+              this.announcement1 = res.result.anntMsgList;
+              this.msg1Count = res.result.anntMsgTotal;
+              this.msg1Title = "通知(" + res.result.anntMsgTotal + ")";
+              this.announcement2 = res.result.sysMsgList;
+              this.msg2Count = res.result.sysMsgTotal;
+              this.msg2Title = "消息(" + res.result.sysMsgTotal + ")";
+              this.announcement3 = res.result.sysMsgList;
+              this.msg3Count = res.result.sysMsgTotal;
+              this.msg3Title = "审批(" + res.result.sysMsgTotal + ")";
             }
           })
           .catch(error => {
-            console.log('系统消息通知异常', error) //这行打印permissionName is undefined
-            this.stopTimer = true
-            console.log('清理timer')
-          })
+            console.log("系统消息通知异常", error); //这行打印permissionName is undefined
+            this.stopTimer = true;
+            console.log("清理timer");
+          });
       } catch (err) {
-        this.stopTimer = true
-        console.log('通知异常', err)
+        this.stopTimer = true;
+        console.log("通知异常", err);
       }
     },
     fetchNotice() {
       if (this.loadding) {
-        this.loadding = false
-        return
+        this.loadding = false;
+        return;
       }
-      this.loadding = true
+      this.loadding = true;
       setTimeout(() => {
-        this.loadding = false
-      }, 200)
+        this.loadding = false;
+      }, 200);
     },
     showAnnouncement(record) {
       putAction(this.url.editCementSend, { anntId: record.id }).then(res => {
         if (res.success) {
-          this.loadData()
+          this.loadData();
         }
-      })
-      this.hovered = false
-      this.$refs.ShowAnnouncement.detail(record)
+      });
+      this.hovered = false;
+      this.$refs.ShowAnnouncement.detail(record);
     },
     toMyAnnouncement() {
       this.$router.push({
-        path: '/isps/userAnnouncement',
-        name: 'isps-userAnnouncement'
-      })
+        path: "/isps/userAnnouncement",
+        name: "isps-userAnnouncement"
+      });
     },
     toMyApprove() {
       this.$router.push({
-        path: '/online/cgformList/0b511f234f3847baa50106a14fff6215',
+        path: "/online/cgformList/0b511f234f3847baa50106a14fff6215",
         meta: {
-          title: '审批处理'
+          title: "审批处理"
         }
-      })
+      });
       // window.location.href = '/online/cgformList/0b511f234f3847baa50106a14fff6215'
     },
     modalFormOk() {},
     handleHoverChange(visible) {
-      this.hovered = visible
+      this.hovered = visible;
     },
 
     initWebSocket: function() {
       // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-      var userId = store.getters.userInfo.id
+      var userId = store.getters.userInfo.id;
       var url =
-        window._CONFIG['domianURL'].replace('https://', 'wss://').replace('http://', 'ws://') + '/websocket/' + userId
+        window._CONFIG["domianURL"]
+          .replace("https://", "wss://")
+          .replace("http://", "ws://") +
+        "/websocket/" +
+        userId;
       //console.log(url);
-      this.websock = new WebSocket(url)
-      this.websock.onopen = this.websocketonopen
-      this.websock.onerror = this.websocketonerror
-      this.websock.onmessage = this.websocketonmessage
-      this.websock.onclose = this.websocketclose
+      this.websock = new WebSocket(url);
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onclose = this.websocketclose;
     },
     websocketonopen: function() {
-      console.log('WebSocket连接成功')
+      console.log("WebSocket连接成功");
     },
     websocketonerror: function(e) {
-      console.log('WebSocket连接发生错误')
+      console.log("WebSocket连接发生错误");
     },
     websocketonmessage: function(e) {
-      console.log('-----接收消息-------', e.data)
-      var data = eval('(' + e.data + ')') //解析对象
-      this.loadData()
+      console.log("-----接收消息-------", e.data);
+      var data = eval("(" + e.data + ")"); //解析对象
+      this.loadData();
       //if(data.cmd == "topic"){
       //系统通知
-      this.openNotification(data)
+      this.openNotification(data);
       //}else if(data.cmd == "user"){
       //用户消息
       //  this.openNotification(data);
       //}
     },
     websocketclose: function(e) {
-      console.log('connection closed (' + e.code + ')')
+      console.log("connection closed (" + e.code + ")");
     },
 
     openNotification(data) {
-      var text = data.msgTxt
-      const key = `open${Date.now()}`
+      var text = data.msgTxt;
+      const key = `open${Date.now()}`;
       this.$notification.open({
-        message: '消息提醒',
-        placement: 'bottomRight',
+        message: "消息提醒",
+        placement: "bottomRight",
         description: text,
         key,
         btn: h => {
           return h(
-            'a-button',
+            "a-button",
             {
               props: {
-                type: 'primary',
-                size: 'small'
+                type: "primary",
+                size: "small"
               },
               on: {
                 click: () => this.showDetail(key, data)
               }
             },
-            '查看详情'
-          )
+            "查看详情"
+          );
         }
-      })
+      });
     },
 
     showDetail(key, data) {
-      this.$notification.close(key)
-      var id = data.msgId
+      this.$notification.close(key);
+      var id = data.msgId;
       getAction(this.url.queryById, { id: id }).then(res => {
         if (res.success) {
-          var record = res.result
-          this.showAnnouncement(record)
+          var record = res.result;
+          this.showAnnouncement(record);
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="css">

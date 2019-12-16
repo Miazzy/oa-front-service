@@ -88,44 +88,25 @@
             </div>
             <a-range-picker :style="{width: '256px'}" />
           </div>
-          <a-tab-pane loading="true" tab="我的待办" key="1">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="待办列表"></div>
-                <template>
-                  <a-table :columns="columns" :dataSource="data" :pagination="false">
-                    <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
-                    <span slot="customTitle">
-                      <a-icon type="smile-o" />Name
-                    </span>
-                    <span slot="tags" slot-scope="tags">
-                      <a-tag
-                        v-for="tag in tags"
-                        :color="tag==='loser' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
-                        :key="tag"
-                      >{{tag.toUpperCase()}}</a-tag>
-                    </span>
-                    <span slot="action" slot-scope="text, record">
-                      <a href="javascript:;">Invite 一 {{record.name}}</a>
-                      <a-divider type="vertical" />
-                      <a href="javascript:;">Delete</a>
-                      <a-divider type="vertical" />
-                      <a href="javascript:;" class="ant-dropdown-link">
-                        More actions
-                        <a-icon type="down" />
-                      </a>
-                    </span>
-                  </a-table>
-                </template>
-              </a-col>
-            </a-row>
+          <a-tab-pane loading="true" tab="我的待办" key="1" style>
+            <template>
+              <a-table
+                :columns="columns"
+                :dataSource="dataWaitList"
+                :pagination="false"
+                style="padding-top:-10px;margin-top:-10px"
+              ></a-table>
+            </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="我的已办" key="2">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="已办列表"></div>
-              </a-col>
-            </a-row>
+            <template>
+              <a-table
+                :columns="columns"
+                :dataSource="dataDoneList"
+                :pagination="false"
+                style="padding-top:-10px;margin-top:-10px"
+              ></a-table>
+            </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="我的消息" key="3">
             <a-row>
@@ -233,30 +214,41 @@ for (let i = 0; i < 12; i += 1) {
 }
 const columns = [
   {
-    title: "类型",
+    title: "状态",
     dataIndex: "type",
     key: "type",
     slots: { title: "type" },
+    width: 100,
+    align: "center",
     scopedSlots: { customRender: "type" }
   },
   {
-    title: "名称",
-    dataIndex: "name",
-    key: "name"
+    title: "业务",
+    width: 100,
+    align: "center",
+    key: "name",
+    dataIndex: "name"
   },
   {
     title: "主题",
-    dataIndex: "topic",
-    key: "topic"
+    width: 500,
+    align: "left",
+    key: "topic",
+    dataIndex: "topic"
   },
   {
     title: "申请人",
     key: "username",
+    width: 100,
+    align: "left",
     dataIndex: "username"
   },
   {
     title: "创建时间",
-    key: "create_time"
+    width: 100,
+    align: "center",
+    key: "create_time",
+    dataIndex: "create_time"
   }
 ];
 
@@ -265,25 +257,9 @@ const data = [
     key: "1",
     type: "待审核",
     name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"]
-  },
-  {
-    key: "2",
-    type: "待审核",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"]
-  },
-  {
-    key: "3",
-    type: "待审核",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"]
+    topic: "New York No. 1 Lake Park",
+    username: "nice",
+    create_time: "2019-10-11"
   }
 ];
 
@@ -312,11 +288,11 @@ export default {
       visitFields: ["ip", "visit"],
       visitInfo: [],
       indicator: <a-icon type="loading" style="font-size: 24px" spin />,
-      data,
+      dataWaitList: data,
+      dataDoneList: data,
       columns,
       loadingMore: false,
-      showLoadingMore: true,
-      data_list: []
+      showLoadingMore: true
     };
   },
   created() {
@@ -333,8 +309,24 @@ export default {
   },
   methods: {
     async getData(callback) {
-      const res = await superagent.get(fakeDataUrl).set("accept", "json");
-      callback(res);
+      //获取用户信息
+      let userInfo = getStore("cur_user");
+      //获取查询参数
+      let params = { pageNo: 1, pageSize: 30 };
+
+      //获取待审批数据
+      let approveResultInfo = await queryProcessLogWait(
+        userInfo["username"],
+        userInfo["realname"],
+        params
+      );
+
+      //获取已办数据
+      let historyResultInfo = await queryProcessLogHisApproved(
+        userInfo["username"],
+        userInfo["realname"],
+        params
+      );
     },
     onLoadMore() {},
     initLogInfo() {
@@ -357,6 +349,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+thead.ant-table-thead {
+  display: none;
+}
 .circle-cust {
   position: relative;
   top: 28px;
