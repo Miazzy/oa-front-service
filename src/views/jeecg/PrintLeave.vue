@@ -304,7 +304,63 @@ export default {
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         var result = await postProcessFreeNode(node);
 
-        //TODO 提交审批操作
+        //TODO 提交审批操作 *******************************************************
+
+        //提交审批相关处理信息
+        var node = {
+          id: randomChars(32), //获取随机数
+          table_name: tableName, //业务表名
+          main_value: queryUrlString("id"), //表主键值
+          business_data_id: queryUrlString("id"), //业务具体数据主键值
+          business_code: "000000000", //业务编号
+          process_name: "自由流程审批", //流程名称
+          employee: deNull(wfUsers),
+          process_station: "自由流程审批",
+          process_audit: deNull(approver),
+          proponents: userInfo["username"],
+          content: this.curRow["content"],
+          operate_time: ctime,
+          create_time: ctime,
+          business_data: JSON.stringify(this.curRow)
+        };
+
+        //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+        let vflag = await queryApprovalExist(tableName, this.curRow["id"]);
+
+        if (vflag) {
+          //数据库中已经存在此记录，提示用户无法提交审批
+          that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
+          return false;
+        } else {
+          //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
+
+          //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+          result = await postProcessLog(node);
+          console.log(" 提交审批返回结果: " + JSON.stringify(result));
+
+          //第三步，根据流程审批节点，向第一个节点推送一条审批信息
+
+          //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
+          result = await patchTableData(tableName, this.curRow["id"], {
+            bpm_status: "2"
+          });
+          //再次执行一次修改流程状态的操作，防止网络异常
+          result = await patchTableData(tableName, this.curRow["id"], {
+            bpm_status: "2"
+          });
+
+          curRow["bpm_status"] = "2";
+          console.log(
+            `修改当前记录审批状态为处理中返回结果${JSON.stringify(result)}`
+          );
+
+          that.tipContent = "提交审批成功！";
+          //弹出审批完成提示框
+          that.tipVisible = true;
+          return true;
+        }
+
+        //TODO 提交审批操作完成  *******************************************************
       }
 
       //提交知会信息确认
@@ -320,9 +376,9 @@ export default {
           return false;
         }
 
-        if (deNull(loginfo) != "" && loginfo.total >= 100) {
+        if (deNull(loginfo) != "" && loginfo.total >= 10) {
           this.tipVisible = true;
-          this.tipContent = "同一业务数据，总计最多知会100次！";
+          this.tipContent = "同一业务数据，总计最多知会10次！";
           return false;
         }
 
