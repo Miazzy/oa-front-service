@@ -1140,32 +1140,59 @@ export default {
       that.rights = rights;
 
       //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
-      if (rights.length > 1) {
+      if (rights.length > 1 && curRow.business_code != "000000000") {
         that.modelModal = true;
-      } else if (rights.length <= 0) {
+      } else if (rights.length <= 0 && curRow.business_code != "000000000") {
         that.tipVisible = true;
         that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
         return false;
       } else {
+        debugger;
         //所有待审核节点
-        var allAudit =
-          that.fixedWFlow["audit"] + "," + that.fixedWFlow["approve"];
+        var allAudit = "";
+        //所有待知会节点
+        var allNotify = "";
         //当前审核节点
         var curAuditor = processAudit;
+        //知会节点数组
+        var notifyArray = deNull(allNotify) == "" ? "" : allNotify.split(",");
+
+        //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
+        if (curRow.business_code != "000000000") {
+          try {
+            //根据权责配置，获取所有待审核人员列表
+            allAudit =
+              that.fixedWFlow["audit"] + "," + that.fixedWFlow["approve"];
+            //根据权责配置，获取所有待知会人员列表
+            allNotify = that.fixedWFlow["notify"];
+          } catch (error) {
+            that.tipVisible = true;
+            that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
+            console.log("固化流程设置节点失败 :" + error);
+            return false;
+          }
+        } else {
+          try {
+            //自由流程配置消息
+            let freeNode = JSON.parse(curRow.business_data);
+            //根据自由流程配置，获取所有待审核人员列表
+            allAudit = freeNode.audit_node + "," + freeNode.approve_node;
+            //根据自由流程配置，获取所有待知会人员列表
+            notifyArray = [freeNode.notify_node];
+            //获取自由流程配置，当前审核节点
+            curAuditor = curRow["employee"];
+          } catch (error) {
+            that.tipVisible = true;
+            that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
+            console.log("自由流程设置节点失败 :" + error);
+            return false;
+          }
+        }
+
         //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
         var auditArray = allAudit.split(curAuditor);
         //如果存在审核人
         var firstAuditor = auditArray[1];
-
-        //所有待知会节点
-        var allNotify = that.fixedWFlow["notify"];
-        //知会节点数组
-        var notifyArray =
-          allNotify == null ||
-          allNotify == "" ||
-          typeof allNotify == "undefiled"
-            ? ""
-            : allNotify.split(",");
 
         //如果待审核节点为空，则表示已经审批通过
         if (firstAuditor == "") {
@@ -1174,9 +1201,7 @@ export default {
             bpm_status: "3"
           });
 
-          //执行知会流程，添加多条知会记录
-
-          //将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
+          //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
           for (let item of notifyArray) {
             //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
             var employee = await queryProcessNodeEmployee(item);
@@ -1219,27 +1244,49 @@ export default {
               : firstAuditor;
           //获取下一审核节点
           firstAuditor = firstAuditor.split(",")[0];
-          //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-          var employee = await queryProcessNodeEmployee(firstAuditor);
-          //流程岗位
-          var process_station = await queryProcessNodeProcName(firstAuditor);
+          //审批相关处理信息
+          var pnode = {};
 
-          //提交审批相关处理信息
-          var pnode = {
-            id: randomChars(32), //获取随机数
-            table_name: tableName, //业务表名
-            main_value: curRow["main_value"], //表主键值
-            business_data_id: curRow["business_data_id"], //业务具体数据主键值
-            business_code: that.fixedWFlow["id"], //业务编号
-            process_name: that.fixedWFlow["items"], //流程名称
-            employee: employee[0]["employee"],
-            process_station: process_station[0]["item_text"],
-            process_audit: firstAuditor,
-            proponents: curRow["proponents"],
-            content: curRow["content"],
-            create_time: date,
-            business_data: JSON.stringify(curRow)
-          };
+          if (curRow.business_code != "000000000") {
+            //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
+            var employee = await queryProcessNodeEmployee(firstAuditor);
+            //流程岗位
+            var process_station = await queryProcessNodeProcName(firstAuditor);
+            //提交审批相关处理信息
+            pnode = {
+              id: randomChars(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: curRow["main_value"], //表主键值
+              business_data_id: curRow["business_data_id"], //业务具体数据主键值
+              business_code: that.fixedWFlow["id"], //业务编号
+              process_name: that.fixedWFlow["items"], //流程名称
+              employee: employee[0]["employee"],
+              process_station: process_station[0]["item_text"],
+              process_audit: firstAuditor,
+              proponents: curRow["proponents"],
+              content: curRow["content"],
+              create_time: date,
+              business_data: curRow.business_data
+            };
+          } else {
+            //提交审批相关处理信息
+            pnode = {
+              id: randomChars(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: queryUrlString("id"), //表主键值
+              business_data_id: queryUrlString("id"), //业务具体数据主键值
+              business_code: "000000000", //业务编号
+              process_name: "自由流程审批", //流程名称
+              employee: firstAuditor,
+              process_station: "自由流程审批",
+              process_audit: "000000000",
+              proponents: curRow["proponents"],
+              content: curRow["content"],
+              operate_time: date,
+              create_time: date,
+              business_data: curRow.business_data
+            };
+          }
 
           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
           let vflag = await queryApprovalExist(

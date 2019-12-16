@@ -166,6 +166,7 @@ import {
   postProcessLog,
   queryPRLogInfTotal,
   queryApprovalExist,
+  patchTableData,
   queryTableName
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -305,11 +306,12 @@ export default {
       if (deNull(approver) != "" && this.pageType == "workflowing") {
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         var result = await postProcessFreeNode(node);
+        //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
+        var firstWflowUser =
+          deNull(wfUsers) == ""
+            ? deNull(approver)
+            : deNull(wfUsers).split(",")[0];
 
-        var firstWflowUser = deNull(wfUsers).split(",")[0];
-
-        //TODO 提交审批操作 *******************************************************
-        debugger;
         //提交审批相关处理信息
         var node = {
           id: randomChars(32), //获取随机数
@@ -333,7 +335,8 @@ export default {
 
         if (vflag) {
           //数据库中已经存在此记录，提示用户无法提交审批
-          that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
+          this.tipVisible = true;
+          this.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
           return false;
         } else {
           //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
@@ -353,18 +356,11 @@ export default {
             bpm_status: "2"
           });
 
-          curRow["bpm_status"] = "2";
-          console.log(
-            `修改当前记录审批状态为处理中返回结果${JSON.stringify(result)}`
-          );
-
-          that.tipContent = "提交审批成功！";
           //弹出审批完成提示框
-          that.tipVisible = true;
+          this.tipVisible = true;
+          this.tipContent = "提交自由流程审批成功！";
           return true;
         }
-
-        //TODO 提交审批操作完成  *******************************************************
       }
 
       //提交知会信息确认
