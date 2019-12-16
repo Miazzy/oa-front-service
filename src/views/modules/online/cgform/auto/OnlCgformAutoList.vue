@@ -601,7 +601,7 @@ export default {
 
         record.processlog_html_info = htmlInfo;
 
-        setStore(`processlog_by_bs_data_id@${business_data_id}`, record, 600);
+        setStore(`processlog_by_bs_data_id@${business_data_id}`, record, 10);
       }
 
       //遍历并设置相应html
@@ -994,6 +994,8 @@ export default {
 
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogInfByID(tableName, processLogID);
+      //设置本次知会确认创建时间
+      curRow["create_time"] = date;
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
       if (
@@ -1009,11 +1011,14 @@ export default {
         return true;
       }
 
+      var employeeList = "," + deNull(curRow["employee"]) + ",";
+      var appoveUserList = "," + deNull(curRow["approve_user"]) + ",";
+
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
-          deNull(curRow["employee"]).includes(userInfo["username"]) ||
-          deNull(curRow["employee"]).includes(userInfo["realname"])
+          employeeList.includes("," + userInfo["username"] + ",") ||
+          employeeList.includes("," + userInfo["realname"] + ",")
         )
       ) {
         that.$message.warning(
@@ -1024,8 +1029,8 @@ export default {
 
       //已经知会确认过的用户，无法再次知会
       if (
-        deNull(curRow["approve_user"]).includes(userInfo["username"]) ||
-        deNull(curRow["approve_user"]).includes(userInfo["realname"])
+        appoveUserList.includes("," + userInfo["username"] + ",") ||
+        appoveUserList.includes("," + userInfo["realname"] + ",")
       ) {
         that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
         return false;
@@ -1047,7 +1052,7 @@ export default {
         `${userInfo["username"]}:${message}`;
 
       //保存当前数据到数据库中
-      patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
+      await patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
       if (curRow["approve_user"].length >= curRow["employee"].length) {
