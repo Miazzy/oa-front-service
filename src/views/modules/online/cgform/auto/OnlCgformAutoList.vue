@@ -98,7 +98,7 @@
           style="margin-left:8px"
         >撤销</a-button>
         <!-- 处理自由流程功能 -->
-        <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">流程</a-button>
+        <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">自由流</a-button>
         <a-button @click="handleNotifyWF" type="primary" icon="sound" style="margin-left:8px">知会</a-button>
         <a-button @click="handleCollection" type="primary" icon="star" style="margin-left:8px">收藏</a-button>
         <a-button @click="handleShareWF" type="primary" icon="compass" style="margin-left:8px">分享</a-button>

@@ -158,12 +158,14 @@
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import {
+  randomChars,
   watchFormLeave,
   postTableData,
   postProcessFreeNode,
   postProcessLogInformed,
+  postProcessLog,
   queryPRLogInfTotal,
-  randomChars,
+  queryApprovalExist,
   queryTableName
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -304,8 +306,10 @@ export default {
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         var result = await postProcessFreeNode(node);
 
-        //TODO 提交审批操作 *******************************************************
+        var firstWflowUser = deNull(wfUsers).split(",")[0];
 
+        //TODO 提交审批操作 *******************************************************
+        debugger;
         //提交审批相关处理信息
         var node = {
           id: randomChars(32), //获取随机数
@@ -314,14 +318,14 @@ export default {
           business_data_id: queryUrlString("id"), //业务具体数据主键值
           business_code: "000000000", //业务编号
           process_name: "自由流程审批", //流程名称
-          employee: deNull(wfUsers),
+          employee: firstWflowUser,
           process_station: "自由流程审批",
-          process_audit: deNull(approver),
+          process_audit: "000000000",
           proponents: userInfo["username"],
           content: this.curRow["content"],
           operate_time: ctime,
           create_time: ctime,
-          business_data: JSON.stringify(this.curRow)
+          business_data: JSON.stringify(node)
         };
 
         //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
