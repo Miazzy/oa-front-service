@@ -196,7 +196,8 @@ import HeadInfo from "@/components/tools/HeadInfo.vue";
 import Trend from "@/components/Trend";
 import { getLoginfo, getVisitInfo } from "@/api/api";
 
-import superagent from "superagent";
+import { queryProcessLogWait, queryProcessLogDone } from "@/api/manage";
+import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
 
 const rankList = [];
 for (let i = 0; i < 7; i++) {
@@ -314,15 +315,15 @@ export default {
       //获取查询参数
       let params = { pageNo: 1, pageSize: 30 };
 
-      //获取待审批数据
-      let approveResultInfo = await queryProcessLogWait(
+      //获取我的待办数据
+      this.dataWaitList = await queryProcessLogWait(
         userInfo["username"],
         userInfo["realname"],
         params
       );
 
-      //获取已办数据
-      let historyResultInfo = await queryProcessLogHisApproved(
+      //获取我的已办数据
+      this.dataDoneList = await queryProcessLogDone(
         userInfo["username"],
         userInfo["realname"],
         params

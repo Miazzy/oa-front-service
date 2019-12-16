@@ -497,6 +497,58 @@ export async function queryProcessLogHisApproved(username, realname, params) {
 }
 
 /**
+ * 查询我的待办数据
+ */
+export async function queryProcessLogWait(username, realname, params) {
+    //查询URL
+    let queryURL = `${api.domain}/api/v_handling_events?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-create_time`;
+    let result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        _.each(result.records, function(item) {
+            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
+            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd HH:mm:ss');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询我的已办数据
+ */
+export async function queryProcessLogDone(username, realname, params) {
+    //查询URL
+    let queryURL = `${api.domain}/api/v_handled_events?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-create_time`;
+    let result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        _.each(result.records, function(item) {
+            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
+            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd HH:mm:ss');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
  * 查询审批知会记录页面的记录
  */
 export async function queryProcessLogInfApproved(username, realname, params) {
