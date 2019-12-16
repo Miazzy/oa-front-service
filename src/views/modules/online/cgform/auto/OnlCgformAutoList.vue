@@ -1162,7 +1162,11 @@ export default {
           try {
             //根据权责配置，获取所有待审核人员列表
             allAudit =
-              that.fixedWFlow["audit"] + "," + that.fixedWFlow["approve"];
+              "," +
+              that.fixedWFlow["audit"] +
+              "," +
+              that.fixedWFlow["approve"] +
+              ",";
             //根据权责配置，获取所有待知会人员列表
             allNotify = that.fixedWFlow["notify"];
           } catch (error) {
@@ -1176,7 +1180,8 @@ export default {
             //自由流程配置消息
             let freeNode = JSON.parse(curRow.business_data);
             //根据自由流程配置，获取所有待审核人员列表
-            allAudit = freeNode.audit_node + "," + freeNode.approve_node;
+            allAudit =
+              "," + freeNode.audit_node + "," + freeNode.approve_node + ",";
             //根据自由流程配置，获取所有待知会人员列表
             notifyArray =
               deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
@@ -1191,7 +1196,7 @@ export default {
         }
 
         //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
-        var auditArray = allAudit.split(curAuditor);
+        var auditArray = allAudit.split("," + curAuditor + ",");
         //如果存在审核人
         var firstAuditor = auditArray[1];
 
