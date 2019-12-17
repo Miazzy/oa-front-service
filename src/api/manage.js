@@ -1359,3 +1359,27 @@ export async function watchFormLeave(that) {
 
     return that;
 }
+
+/**
+ * @function 查询文档对应预览地址
+ * @param {*} text 
+ */
+export function queryFileViewURL(text) {
+    //微软文档预览API
+    let officeURL = window._CONFIG['previewURL'];
+    //文档下载地址
+    let url = window._CONFIG['downloadURL'] + '/' + text;
+    //URL加密，保证中文路径可以被正常解析
+    let xurl = encodeURIComponent(url);
+    //获取文件后缀
+    let suffix = text.substring(text.lastIndexOf('.'), text.length).toLowerCase();
+    //如果word文档，则使用微软API打开
+    url =
+        suffix.includes('doc') || suffix.includes('ppt') || suffix.includes('xls') ?
+        officeURL + xurl :
+        url;
+    //如果pdf文档，则浏览器上直接打开
+    url = suffix.includes('pdf') ? url : url;
+    //返回URL
+    return url;
+}

@@ -190,7 +190,8 @@ import {
   queryPRLogInfTotal,
   queryApprovalExist,
   patchTableData,
-  queryTableName
+  queryTableName,
+  queryFileViewURL
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
@@ -251,7 +252,7 @@ export default {
     this.data = that.curRow.sub_data;
     this.pageType = queryUrlString("type");
     this.curRow.fileStatus = 0;
-    this.curRow.fileURL = `${fileViewURL}https%3A%2F%2Fwww.shengtai.club%2Ffiles%2F20191217%2F%E5%B7%A5%E8%B5%84%E7%BB%93%E7%AE%97%E6%B8%85%E5%8D%95-%E8%B5%B5%E6%A2%93%E5%AE%87_1576577444699.xlsx`;
+    this.curRow.fileURL = queryFileViewURL(this.curRow.files);
   },
   mounted() {},
   watch: {
@@ -264,7 +265,7 @@ export default {
       this.data = that.curRow.sub_data;
       this.pageType = queryUrlString("type");
       this.curRow.fileStatus = 0;
-      this.curRow.fileURL = `${fileViewURL}https%3A%2F%2Fwww.shengtai.club%2Ffiles%2F20191217%2F%E5%B7%A5%E8%B5%84%E7%BB%93%E7%AE%97%E6%B8%85%E5%8D%95-%E8%B5%B5%E6%A2%93%E5%AE%87_1576577444699.xlsx`;
+      this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     }
   },
   methods: {
@@ -302,7 +303,6 @@ export default {
       var approver = this.approveUser;
       //当前时间
       var ctime = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
-
       //审批用户不能为空
       if (deNull(approver) == "" && this.pageType == "workflowing") {
         this.tipVisible = true;
