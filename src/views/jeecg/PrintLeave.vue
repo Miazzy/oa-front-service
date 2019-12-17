@@ -1,7 +1,13 @@
 <template>
   <a-card :bordered="false" :class="{'abcdefg':true}">
     <div class="no-print" style="text-align: right">
-      <a-button v-print="'#printContent'" ghost type="primary" v-if="pageType == 'view'">打印</a-button>
+      <a-button
+        v-print="'#printContent'"
+        ghost
+        type="primary"
+        v-if="pageType == 'print'"
+        @click="handlePrint"
+      >打印</a-button>
       <a-button
         ghost
         type="primary"
@@ -86,6 +92,23 @@
           <a-col :span="20" style="margin-top:30px;" v-if="curRow.main_table_status == true">
             <template>
               <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false"></a-table>
+            </template>
+          </a-col>
+
+          <a-col
+            :span="22"
+            style="margin-top:30px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
+            <template>
+              <div :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']">
+                <iframe
+                  v-print="'#printContent'"
+                  class="no-print"
+                  style="width:100%;height:720px;overflow-y:auto;overflow-x:hidden;border:0px solid #fefefe;"
+                  :src="this.curRow.fileURL"
+                />
+              </div>
             </template>
           </a-col>
 
@@ -174,6 +197,9 @@ import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import { queryUrlString, deNull, formatDate } from "@/utils/util";
 import { setStore, getStore } from "@/utils/storage";
 
+//文档预览URL
+const fileViewURL = "https://view.officeapps.live.com/op/view.aspx?src=";
+
 export default {
   components: {
     ATextarea,
@@ -224,6 +250,8 @@ export default {
     this.columns = that.curRow.sub_columns;
     this.data = that.curRow.sub_data;
     this.pageType = queryUrlString("type");
+    this.curRow.fileStatus = 0;
+    this.curRow.fileURL = `${fileViewURL}https%3A%2F%2Fwww.shengtai.club%2Ffiles%2F20191217%2F%E5%B7%A5%E8%B5%84%E7%BB%93%E7%AE%97%E6%B8%85%E5%8D%95-%E8%B5%B5%E6%A2%93%E5%AE%87_1576577444699.xlsx`;
   },
   mounted() {},
   watch: {
@@ -235,6 +263,8 @@ export default {
       this.columns = that.curRow.sub_columns;
       this.data = that.curRow.sub_data;
       this.pageType = queryUrlString("type");
+      this.curRow.fileStatus = 0;
+      this.curRow.fileURL = `${fileViewURL}https%3A%2F%2Fwww.shengtai.club%2Ffiles%2F20191217%2F%E5%B7%A5%E8%B5%84%E7%BB%93%E7%AE%97%E6%B8%85%E5%8D%95-%E8%B5%B5%E6%A2%93%E5%AE%87_1576577444699.xlsx`;
     }
   },
   methods: {
@@ -254,6 +284,12 @@ export default {
     },
     getFormFieldValue(field) {
       return this.form.getFieldValue(field);
+    },
+    async handlePrint() {
+      this.curRow.fileStatus = 1;
+      setTimeout(() => {
+        this.curRow.fileStatus = 0;
+      }, 10000);
     },
     async handleSubmitWF() {
       //获取当前用户
@@ -365,7 +401,6 @@ export default {
 
       //提交知会信息确认
       if (deNull(nfUsers) != "" && this.pageType == "notifying") {
-        debugger;
         //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
         let loginfo = await queryPRLogInfTotal(queryUrlString("id"));
 
@@ -442,5 +477,11 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+.fileshow {
+  display: block;
+}
+.filenone {
+  display: none;
 }
 </style>
