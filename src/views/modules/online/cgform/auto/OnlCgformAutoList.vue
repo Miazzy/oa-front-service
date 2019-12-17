@@ -1124,10 +1124,18 @@ export default {
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
+        //记录创建时间
+        let ctime = item["create_time"];
+        //设置审批人员
         item["approve_user"] = userInfo["username"];
+        //设置操作类型
         item["action"] = operation;
+        //设置操作时间
         item["operate_time"] = date;
+        //设置操作意见
         item["action_opinion"] = message;
+        //设置创建时间
+        item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
