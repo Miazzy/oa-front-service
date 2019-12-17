@@ -251,7 +251,7 @@ export default {
     this.columns = that.curRow.sub_columns;
     this.data = that.curRow.sub_data;
     this.pageType = queryUrlString("type");
-    this.curRow.fileStatus = 0;
+    this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
   },
   mounted() {},
@@ -264,7 +264,7 @@ export default {
       this.columns = that.curRow.sub_columns;
       this.data = that.curRow.sub_data;
       this.pageType = queryUrlString("type");
-      this.curRow.fileStatus = 0;
+      this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
       this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     }
   },

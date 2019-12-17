@@ -1365,6 +1365,9 @@ export async function watchFormLeave(that) {
  * @param {*} text 
  */
 export function queryFileViewURL(text) {
+    if (text.indexOf(',') > 0) {
+        text = text.substring(0, text.indexOf(','));
+    }
     //微软文档预览API
     let officeURL = window._CONFIG['previewURL'];
     //文档下载地址
