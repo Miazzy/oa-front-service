@@ -720,9 +720,15 @@ export async function postProcessFreeNode(node) {
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
-export async function postProcessLogHistory(node, callback) {
+export async function postProcessLogHistory(node) {
     //是否批处理
-    let bflag = node instanceof Array && node.length > 0 ? '/bulk' : '';
+    let bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
+
+    //如果只有一条数据
+    if (node instanceof Array && node.length == 1) {
+        bflag = '';
+        node = node[0];
+    }
 
     //提交URL
     let postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
@@ -740,9 +746,15 @@ export async function postProcessLogHistory(node, callback) {
 /**
  * 想知会记录列表提交数据
  */
-export async function postProcessLogInformed(node, callback) {
+export async function postProcessLogInformed(node) {
     //是否批处理
-    let bflag = node instanceof Array && node.length > 0 ? '/bulk' : '';
+    let bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
+
+    //如果只有一条数据
+    if (node instanceof Array && node.length == 1) {
+        bflag = '';
+        node = node[0];
+    }
 
     //提交URL
     let postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
