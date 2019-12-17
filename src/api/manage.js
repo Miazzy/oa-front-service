@@ -412,7 +412,8 @@ export async function queryProcessNodeProcName(node, callback) {
  */
 export async function queryUserList(params) {
     //用户名称
-    let whereFlag = deNull(params.name) == '' ?
+    let whereFlag =
+        deNull(params.name) == '' ?
         '' :
         `_where=(username,like,~${params.name}~)~or(realname,like,~${params.name}~)&`;
     //获取排序标识，升序 ‘’ ， 降序 ‘-’
@@ -427,7 +428,8 @@ export async function queryUserList(params) {
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= params.pageSize ?
+        result.total =
+            count.body[0].no_of_rows <= params.pageSize ?
             res.body.length :
             count.body[0].no_of_rows;
 
@@ -453,7 +455,8 @@ export async function queryProcessLogToApproved(username, realname, params) {
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
 
@@ -487,7 +490,8 @@ export async function queryProcessLogHisApproved(username, realname, params) {
             item['operate_time'] = optime;
         });
 
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
@@ -499,9 +503,9 @@ export async function queryProcessLogHisApproved(username, realname, params) {
 /**
  * 查询我的待办数据
  */
-export async function queryProcessLogWait(username, realname, params) {
+export async function queryProcessLogWait(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handling_events?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -509,9 +513,9 @@ export async function queryProcessLogWait(username, realname, params) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result.records, function(item) {
-            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
-            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd HH:mm:ss');
+        _.each(result, function(item) {
+            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
         });
@@ -525,9 +529,9 @@ export async function queryProcessLogWait(username, realname, params) {
 /**
  * 查询我的已办数据
  */
-export async function queryProcessLogDone(username, realname, params) {
+export async function queryProcessLogDone(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handled_events?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -535,9 +539,9 @@ export async function queryProcessLogDone(username, realname, params) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result.records, function(item) {
-            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
-            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd HH:mm:ss');
+        _.each(result, function(item) {
+            let optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            let ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
         });
@@ -568,7 +572,8 @@ export async function queryProcessLogInfApproved(username, realname, params) {
 
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
@@ -686,10 +691,7 @@ export async function postProcessLog(node, callback) {
     let postURL = `${api.domain}/api/PR_LOG`;
 
     try {
-        const res = await superagent
-            .post(postURL)
-            .send(node)
-            .set('accept', 'json');
+        const res = await superagent.post(postURL).send(node).set('accept', 'json');
         console.log(res);
 
         return res.body;
@@ -706,10 +708,7 @@ export async function postProcessFreeNode(node) {
     let postURL = `${api.domain}/api/BS_FREE_PROCESS`;
 
     try {
-        const res = await superagent
-            .post(postURL)
-            .send(node)
-            .set('accept', 'json');
+        const res = await superagent.post(postURL).send(node).set('accept', 'json');
         console.log(res);
 
         return res.body;
@@ -729,10 +728,7 @@ export async function postProcessLogHistory(node, callback) {
     let postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
 
     try {
-        const res = await superagent
-            .post(postURL)
-            .send(node)
-            .set('accept', 'json');
+        const res = await superagent.post(postURL).send(node).set('accept', 'json');
         console.log(res);
 
         return res.body;
@@ -752,10 +748,7 @@ export async function postProcessLogInformed(node, callback) {
     let postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
 
     try {
-        const res = await superagent
-            .post(postURL)
-            .send(node)
-            .set('accept', 'json');
+        const res = await superagent.post(postURL).send(node).set('accept', 'json');
         console.log(res);
 
         return res.body;
@@ -1149,9 +1142,8 @@ export async function queryWorkflows(business_data_id, record) {
         //遍历审批日志
         _.each(processLogs, (item, index) => {
             //获取下一节点
-            let next = index < processLogs.length - 1 ?
-                processLogs[index + 1] :
-                { action: '' };
+            let next =
+                index < processLogs.length - 1 ? processLogs[index + 1] : { action: '' };
             //获取标识
             let flag = index == processLogs.length - 1;
             //获取操作时间
@@ -1159,9 +1151,12 @@ export async function queryWorkflows(business_data_id, record) {
 
             let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime} `;
 
-            let color = item.action == '同意' ?
+            let color =
+                item.action == '同意' ?
                 'green' :
-                item.action == '驳回' ? 'red' : item.action == '知会' ? 'yellow' : 'blue';
+                item.action == '驳回' ?
+                'red' :
+                item.action == '知会' ? 'yellow' : 'blue';
 
             //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
             color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
@@ -1269,8 +1264,7 @@ export async function watchFormLeave(that) {
     that.workflows = await queryWorkflows(that.curRow.id);
 
     that.curRow.leave_type_name =
-        queryLeaveType(that.curRow.leave_off_type) ||
-        queryFormTypeValue(tableName);
+        queryLeaveType(that.curRow.leave_off_type) || queryFormTypeValue(tableName);
 
     //查询当前流程状态
     that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);

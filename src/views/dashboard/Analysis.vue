@@ -95,7 +95,22 @@
                 :dataSource="dataWaitList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <a slot="type" slot-scope="text, record">
+                  <a-menu-item>
+                    <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
+                      <span v-html="record.type"></span>
+                    </a>
+                  </a-menu-item>
+                </a>
+                <a slot="topic" slot-scope="text, record">
+                  <a-menu-item>
+                    <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
+                      <span v-html="record.topic"></span>
+                    </a>
+                  </a-menu-item>
+                </a>
+              </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="我的已办" key="2">
@@ -105,7 +120,22 @@
                 :dataSource="dataDoneList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <a slot="type" slot-scope="text, record">
+                  <a-menu-item>
+                    <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
+                      <span v-html="record.type"></span>
+                    </a>
+                  </a-menu-item>
+                </a>
+                <a slot="topic" slot-scope="text, record">
+                  <a-menu-item>
+                    <a href="javascript:;" @click="handleDetailWF(record)">
+                      <span v-html="record.topic"></span>
+                    </a>
+                  </a-menu-item>
+                </a>
+              </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="我的消息" key="3">
@@ -192,12 +222,10 @@ import RankList from "@/components/chart/RankList";
 import Bar from "@/components/chart/Bar";
 import LineChartMultid from "@/components/chart/LineChartMultid";
 import HeadInfo from "@/components/tools/HeadInfo.vue";
-
 import Trend from "@/components/Trend";
 import { getLoginfo, getVisitInfo } from "@/api/api";
-
 import { queryProcessLogWait, queryProcessLogDone } from "@/api/manage";
-import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
+import { getStore } from "@/utils/storage";
 
 const rankList = [];
 for (let i = 0; i < 7; i++) {
@@ -213,56 +241,9 @@ for (let i = 0; i < 12; i += 1) {
     y: Math.floor(Math.random() * 1000) + 200
   });
 }
-const columns = [
-  {
-    title: "状态",
-    dataIndex: "type",
-    key: "type",
-    slots: { title: "type" },
-    width: 100,
-    align: "center",
-    scopedSlots: { customRender: "type" }
-  },
-  {
-    title: "业务",
-    width: 100,
-    align: "center",
-    key: "name",
-    dataIndex: "name"
-  },
-  {
-    title: "主题",
-    width: 500,
-    align: "left",
-    key: "topic",
-    dataIndex: "topic"
-  },
-  {
-    title: "申请人",
-    key: "username",
-    width: 100,
-    align: "left",
-    dataIndex: "username"
-  },
-  {
-    title: "创建时间",
-    width: 100,
-    align: "center",
-    key: "create_time",
-    dataIndex: "create_time"
-  }
-];
-
-const data = [
-  {
-    key: "1",
-    type: "待审核",
-    name: "John Brown",
-    topic: "New York No. 1 Lake Park",
-    username: "nice",
-    create_time: "2019-10-11"
-  }
-];
+const columns = JSON.parse(
+  '[{"title":"状态","dataIndex":"type","key":"type","slots":{"title":"type"},"width":100,"align":"center","scopedSlots":{"customRender":"type"}},{"title":"业务","width":200,"align":"center","key":"name","dataIndex":"name"},{"title":"主题","width":500,"align":"left","key":"topic","dataIndex":"topic","scopedSlots":{"customRender":"topic"}},{"title":"操作人员","key":"username","width":200,"align":"left","dataIndex":"username"},{"title":"创建时间","width":150,"align":"center","key":"create_time","dataIndex":"create_time"}]'
+);
 
 export default {
   name: "Analysis",
@@ -289,8 +270,8 @@ export default {
       visitFields: ["ip", "visit"],
       visitInfo: [],
       indicator: <a-icon type="loading" style="font-size: 24px" spin />,
-      dataWaitList: data,
-      dataDoneList: data,
+      dataWaitList: [],
+      dataDoneList: [],
       columns,
       loadingMore: false,
       showLoadingMore: true
@@ -303,13 +284,10 @@ export default {
     this.initLogInfo();
   },
   mounted() {
-    this.getData(res => {
-      this.loading = false;
-      this.data_list = res.results;
-    });
+    this.getData();
   },
   methods: {
-    async getData(callback) {
+    async getData() {
       //获取用户信息
       let userInfo = getStore("cur_user");
       //获取查询参数
@@ -329,7 +307,29 @@ export default {
         params
       );
     },
-    onLoadMore() {},
+    /**
+     * @function 查看详情页面
+     */
+    async handleDetailWF(record) {
+      //获取当前操作对象
+      var curRow = JSON.parse(JSON.stringify(record));
+
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //获取选中记录的所属表单名称
+      var tableName = curRow["tname"];
+
+      //获取操作类型
+      var type = curRow["type"] == "知会" ? "notify" : "workflow";
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=${type}`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
+    },
+
     initLogInfo() {
       getLoginfo(null).then(res => {
         if (res.success) {
