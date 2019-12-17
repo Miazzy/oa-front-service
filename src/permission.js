@@ -319,6 +319,10 @@ var isystemNode = {
     id: 'd7d6e2e4e2934f2c9385a623fd98c6f3',
 };
 
+//查看审批详情叶子节点
+const viewSubNode =
+    '{"path":"/workflow/view","component":"jeecg/PrintLeave","route":"1","hidden":true,"meta":{"keepAlive":false,"title":"流程详情"},"name":"workflow-view","id":"423b32588d8a1a41a041ca41828c3335"}';
+
 router.beforeEach((to, from, next) => {
     NProgress.start(); // start progress bar
 
@@ -348,6 +352,7 @@ router.beforeEach((to, from, next) => {
                             }
                             if (item.path == '/approval' && item.name == 'approval') {
                                 workFlowFlag = true;
+                                item.children.push(JSON.parse(viewSubNode));
                             }
                             if (item.path == '/isystem' && item.name == 'isystem') {
                                 isystemFlag = true;
@@ -355,10 +360,7 @@ router.beforeEach((to, from, next) => {
                             if (item.path == '/dashboard/analysis') {
                                 homeFlag = true;
                             }
-                            if (
-                                item.path == '/administration' &&
-                                item.name == 'administration'
-                            ) {
+                            if (item.path == '/administration') {
                                 adminFlag = true;
                             }
                         });

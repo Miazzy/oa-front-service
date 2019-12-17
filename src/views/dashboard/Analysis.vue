@@ -283,8 +283,8 @@ export default {
     }, 1000);
     this.initLogInfo();
   },
-  mounted() {
-    this.getData();
+  async mounted() {
+    await this.getData();
   },
   methods: {
     async getData() {
