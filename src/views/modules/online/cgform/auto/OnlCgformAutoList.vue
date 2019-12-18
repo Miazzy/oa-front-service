@@ -100,6 +100,7 @@
         <!-- 处理自由流程功能 -->
         <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">自由流</a-button>
         <a-button @click="handleNotifyWF" type="primary" icon="sound" style="margin-left:8px">知会</a-button>
+        <a-button @click="handlePrintWF" type="primary" icon="printer" style="margin-left:8px">打印</a-button>
         <a-button @click="handleCollection" type="primary" icon="star" style="margin-left:8px">收藏</a-button>
         <a-button @click="handleShareWF" type="primary" icon="compass" style="margin-left:8px">分享</a-button>
       </template>
@@ -781,6 +782,41 @@ export default {
     },
 
     /**
+     * @function 打印表单功能
+     */
+    async handlePrintWF() {
+      //设置this的别名
+      var that = this;
+
+      //检测是否为单选
+      if (this.table.selectionRows.length != 1) {
+        that.$message.warning("请选择一条记录！");
+        return false;
+      }
+
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //获取此表单，关联的流程业务模块
+      var value = await queryTableName();
+
+      //获取选中记录的所属表单名称
+      var tableName = value["table_name"];
+
+      //当前被选中记录数据
+      var curRow = this.table.selectionRows[0];
+
+      //缓存当前选中数据
+      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=print`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
+    },
+
+    /**
      * @function 自由流知会功能
      */
     async handleNotifyWF() {
@@ -815,9 +851,7 @@ export default {
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
       //设置跳转URL
-      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
-
-      detailURL = `${detailURL}&type=notifying`;
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notifying`;
 
       //跳转到相应页面
       this.$router.push(detailURL);
@@ -858,9 +892,7 @@ export default {
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
       //设置跳转URL
-      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
-
-      detailURL = `${detailURL}&type=workflowing`;
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=workflowing`;
 
       //跳转到相应页面
       this.$router.push(detailURL);
@@ -894,18 +926,7 @@ export default {
       setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
 
       //设置跳转URL
-      var detailURL = `/basewflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
-
-      //如果在审批管理菜单下，跳转到详情页面，则应该设置同意驳回确认等按钮
-      if (this.code == "0b511f234f3847baa50106a14fff6215") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=workflow`;
-      } else if (this.code == "d11901bc44f24a66b25b37a7a04c611e") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=notify`;
-      } else if (this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96") {
-        detailURL = `/basewflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=history`;
-      } else {
-        detailURL = `${detailURL}&type=view`;
-      }
+      var detailURL = `/basewflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=view`;
 
       //跳转到相应页面
       setTimeout(function() {
