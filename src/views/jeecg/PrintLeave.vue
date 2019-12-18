@@ -101,7 +101,10 @@
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
             <template>
-              <div :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']">
+              <div
+                :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
+                v-if="this.curRow.fileType.includes('office')"
+              >
                 <iframe
                   v-print="'#printContent'"
                   class="no-print"
@@ -112,8 +115,11 @@
             </template>
 
             <template>
-              <div :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']">
-                <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
+              <div
+                :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
+                v-if="this.curRow.fileType.includes('image')"
+              >
+                <vue-preview :slides="slides" @close="handleClose"></vue-preview>
               </div>
             </template>
           </a-col>
@@ -195,12 +201,24 @@ import {
   queryPRLogInfTotal,
   queryApprovalExist,
   patchTableData,
+  queryFileType,
   queryFileViewURL
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import { queryUrlString, deNull, formatDate } from "@/utils/util";
 import { setStore, getStore } from "@/utils/storage";
+
+//默认预览图片
+const images = [
+  {
+    src: "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg",
+    msrc: "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg",
+    title: "Image Caption",
+    w: 900,
+    h: 600
+  }
+];
 
 export default {
   components: {
@@ -240,6 +258,7 @@ export default {
       approveUser: "",
       tipVisible: false,
       tipContent: "",
+      slides: images,
       form: this.$form.createForm(this)
     };
   },
@@ -253,6 +272,7 @@ export default {
     this.data = that.curRow.sub_data;
     this.pageType = queryUrlString("type");
     this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
+    this.curRow.fileType = queryFileType(this.curRow.files);
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
   },
   mounted() {},
@@ -266,6 +286,7 @@ export default {
       this.data = that.curRow.sub_data;
       this.pageType = queryUrlString("type");
       this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
+      this.curRow.fileType = queryFileType(this.curRow.files);
       this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     }
   },

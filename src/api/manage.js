@@ -1371,29 +1371,85 @@ export async function watchFormLeave(that) {
  * @param {*} text 
  */
 export function queryFileViewURL(text) {
-    if (text.indexOf(',') > 0) {
-        text = text.substring(0, text.indexOf(','));
+    //如果不含有office文档
+    if (!(text.includes('doc') ||
+            text.includes('ppt') ||
+            text.includes('xls') ||
+            text.includes('pdf'))) {
+        return false;
     }
+
+    //文档数组
+    let fileList = [];
+
+    //文档URL
+    let url = '';
+    if (text.indexOf(',') > 0) {
+        fileList = text.split(',');
+    } else {
+        fileList.push(text);
+    }
+
+    //获取第一个office文档
+    url = _.find(fileList, function(text) {
+        return (
+            text.includes('doc') ||
+            text.includes('ppt') ||
+            text.includes('xls') ||
+            text.includes('pdf')
+        );
+    });
+
     //微软文档预览API
     let officeURL = window._CONFIG['previewURL'];
     //文档下载地址
-    let url = window._CONFIG['downloadURL'] + '/' + text;
+    url = window._CONFIG['downloadURL'] + '/' + text;
     //URL加密，保证中文路径可以被正常解析
     let xurl = encodeURIComponent(url);
+
     //获取文件后缀
     let suffix = text
         .substring(text.lastIndexOf('.'), text.length)
         .toLowerCase();
+
     //如果word文档，则使用微软API打开
     url = suffix.includes('doc') ||
         suffix.includes('ppt') ||
         suffix.includes('xls') ?
         officeURL + xurl :
         url;
-    //此处需要新加一个图片预览URL
 
     //如果pdf文档，则浏览器上直接打开
     url = suffix.includes('pdf') ? url : url;
+
     //返回URL
     return url;
+}
+
+/**
+ * @function 查询文件类型
+ * @param {*} text 
+ */
+export function queryFileType(text) {
+    //获取文件后缀
+    let suffix = text.toLowerCase();
+
+    //如果office文档，则使用微软API打开
+    let type = suffix.includes('jpg') ||
+        suffix.includes('jpeg') ||
+        suffix.includes('bmp') ||
+        suffix.includes('gif') ||
+        suffix.includes('webp') ||
+        suffix.includes('png') ?
+        '@image@' :
+        '';
+
+    type = suffix.includes('doc') ||
+        suffix.includes('xls') ||
+        suffix.includes('ppt') ?
+        `${type}@office@` :
+        type;
+
+    //返回URL
+    return type;
 }
