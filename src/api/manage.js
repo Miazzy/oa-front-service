@@ -1371,11 +1371,13 @@ export async function watchFormLeave(that) {
  * @param {*} text 
  */
 export function queryFileViewURL(text) {
+    //获取小写文档下载地址
+    let textURL = text.toLowerCase();
     //如果不含有office文档
-    if (!(text.includes('doc') ||
-            text.includes('ppt') ||
-            text.includes('xls') ||
-            text.includes('pdf'))) {
+    if (!(textURL.includes('doc') ||
+            textURL.includes('ppt') ||
+            textURL.includes('xls') ||
+            textURL.includes('pdf'))) {
         return false;
     }
 
@@ -1392,6 +1394,8 @@ export function queryFileViewURL(text) {
 
     //获取第一个office文档
     url = _.find(fileList, function(text) {
+        //获取小写字符串
+        text = text.toLowerCase();
         return (
             text.includes('doc') ||
             text.includes('ppt') ||
@@ -1452,4 +1456,55 @@ export function queryFileType(text) {
 
     //返回URL
     return type;
+}
+
+/**
+ * @function 查询附件中的图片地址
+ */
+export function queryImageURL(text) {
+    debugger;
+    //文档数组
+    let fileList = [];
+    let images = [];
+
+    //如果含有多个地址，则split后获取数组
+    if (text.indexOf(',') > 0) {
+        fileList = text.split(',');
+    } else {
+        fileList.push(text);
+    }
+
+    //遍历并筛选出里面的图片信息
+    fileList = _.filter(fileList, function(text) {
+        //获取小写后的路径
+        let ptext = text.toLowerCase();
+
+        //获取图片标识
+        let flag =
+            ptext.includes('jpg') ||
+            ptext.includes('jpeg') ||
+            ptext.includes('bmp') ||
+            ptext.includes('gif') ||
+            ptext.includes('webp') ||
+            ptext.includes('png');
+
+        //获取图片真实下载地址
+        text = window._CONFIG['downloadURL'] + '/' + text;
+
+        //如果文件路径为图片地址，则存入images中
+        if (flag) {
+            //将数据存入images中
+            images.push({
+                src: text,
+                msrc: window._CONFIG['thumborURL'] + text,
+                title: '图片预览',
+                w: 900,
+                h: 600,
+            });
+        }
+        return flag;
+    });
+
+    //返回图片数组信息
+    return images;
 }

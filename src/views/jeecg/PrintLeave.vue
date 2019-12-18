@@ -202,6 +202,7 @@ import {
   queryApprovalExist,
   patchTableData,
   queryFileType,
+  queryImageURL,
   queryFileViewURL
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -210,15 +211,7 @@ import { queryUrlString, deNull, formatDate } from "@/utils/util";
 import { setStore, getStore } from "@/utils/storage";
 
 //默认预览图片
-const images = [
-  {
-    src: "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg",
-    msrc: "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg",
-    title: "Image Caption",
-    w: 900,
-    h: 600
-  }
-];
+const images = [];
 
 export default {
   components: {
@@ -274,6 +267,7 @@ export default {
     this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
     this.curRow.fileType = queryFileType(this.curRow.files);
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
+    this.slides = queryImageURL(this.curRow.files);
   },
   mounted() {},
   watch: {
@@ -288,6 +282,7 @@ export default {
       this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
       this.curRow.fileType = queryFileType(this.curRow.files);
       this.curRow.fileURL = queryFileViewURL(this.curRow.files);
+      this.slides = queryImageURL(this.curRow.files);
     }
   },
   methods: {
