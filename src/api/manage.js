@@ -4,6 +4,7 @@ import superagent from 'superagent';
 import _ from 'underscore';
 import { setStore, getStore, clearStore, clearAll } from '@/utils/storage';
 import { formatDate, queryDateDiff, deNull, queryUrlString } from '@/utils/util';
+import $ from 'jquery';
 
 axios_.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
@@ -1496,7 +1497,7 @@ export function queryImageURL(text) {
             //将数据存入images中
             images.push({
                 src: text,
-                msrc: window._CONFIG['thumborURL'] + text,
+                msrc: window._CONFIG['thumborURL'] + encodeURIComponent(text),
                 title: '图片预览',
                 w: 900,
                 h: 600,
@@ -1507,4 +1508,15 @@ export function queryImageURL(text) {
 
     //返回图片数组信息
     return images;
+}
+
+/**
+ * @function 设置详情页面图片展示样式
+ */
+export function changeImageCSS() {
+    setTimeout(() => {
+        $('figure[itemscope="itemscope"]').css('float', 'left');
+        $('figure[itemscope="itemscope"]').css('margin-right', '10px');
+        $('figure[itemscope="itemscope"]').css('margin-bottom', '5px');
+    }, 10);
 }

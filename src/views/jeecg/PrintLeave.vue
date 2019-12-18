@@ -96,7 +96,7 @@
           </a-col>
 
           <a-col
-            :span="22"
+            :span="24"
             style="margin-top:30px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
@@ -194,6 +194,7 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import {
   randomChars,
+  changeImageCSS,
   watchFormLeave,
   postProcessFreeNode,
   postProcessLogInformed,
@@ -268,6 +269,8 @@ export default {
     this.curRow.fileType = queryFileType(this.curRow.files);
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     this.slides = queryImageURL(this.curRow.files);
+    //修改图片样式
+    changeImageCSS();
   },
   mounted() {},
   watch: {
@@ -283,6 +286,8 @@ export default {
       this.curRow.fileType = queryFileType(this.curRow.files);
       this.curRow.fileURL = queryFileViewURL(this.curRow.files);
       this.slides = queryImageURL(this.curRow.files);
+      //修改图片样式
+      changeImageCSS();
     }
   },
   methods: {
@@ -500,5 +505,9 @@ export default {
 }
 .filenone {
   display: none;
+}
+figure {
+  float: left;
+  margin-right: 10px;
 }
 </style>
