@@ -26,7 +26,8 @@ import 'view-design/dist/styles/iview.css';
 
 import axios from 'axios';
 import qs from 'qs';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] =
+    'application/x-www-form-urlencoded';
 Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
 
@@ -49,6 +50,7 @@ import JDictSelectTag from './components/dict/index.js';
 import hasPermission from '@/utils/hasPermission';
 import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index';
+import VuePreview from 'vue-preview';
 
 Vue.config.productionTip = false;
 Vue.use(Storage, config.storageOptions);
@@ -64,6 +66,7 @@ Vue.use(preview);
 Vue.use(vueBus);
 Vue.use(JeecgComponents);
 Vue.use(ViewUI);
+Vue.use(VuePreview);
 
 new Vue({
     router,

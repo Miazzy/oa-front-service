@@ -110,6 +110,12 @@
                 />
               </div>
             </template>
+
+            <template>
+              <div :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']">
+                <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
+              </div>
+            </template>
           </a-col>
 
           <a-col :span="24" style="margin-top:30px;" v-if="curRow.bpm_status != 1">
@@ -183,23 +189,18 @@ import ARow from "ant-design-vue/es/grid/Row";
 import {
   randomChars,
   watchFormLeave,
-  postTableData,
   postProcessFreeNode,
   postProcessLogInformed,
   postProcessLog,
   queryPRLogInfTotal,
   queryApprovalExist,
   patchTableData,
-  queryTableName,
   queryFileViewURL
 } from "@/api/manage";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import { queryUrlString, deNull, formatDate } from "@/utils/util";
 import { setStore, getStore } from "@/utils/storage";
-
-//文档预览URL
-const fileViewURL = "https://view.officeapps.live.com/op/view.aspx?src=";
 
 export default {
   components: {
