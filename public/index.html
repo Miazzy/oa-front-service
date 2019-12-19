@@ -13,20 +13,25 @@
     <script>
         window._CONFIG = {}
         window._CONFIG['domian'] = 'https://www.shengtai.club'
-        window._CONFIG['previewURL'] =
-            'https://view.officeapps.live.com/op/view.aspx?src='
-        window._CONFIG['imageURL'] =
-            'https://view.officeapps.live.com/op/view.aspx?src='
-        window._CONFIG['videoURL'] =
-            'https://view.officeapps.live.com/op/view.aspx?src='
-        window._CONFIG['thumborURL'] =
-            'http://thumbor.shengtai.club/unsafe/fill/200/120/sm/0/plain/'
+
         window._CONFIG['domianURL'] = window._CONFIG['domian'] + '/jeecg-boot'
         window._CONFIG['downloadURL'] = window._CONFIG['domian']
-        window._CONFIG['casPrefixUrl'] = 'http://cas.example.org:8443/cas'
+
         window._CONFIG['imgDomainURL'] = window._CONFIG['domian']
+
+        window._CONFIG['previewURL'] =
+            'https://fileview.shengtai.club/onlinePreview?url='
+
+        window._CONFIG['thumborURL'] =
+            'https://thumbor.shengtai.club/unsafe/fill/200/120/sm/0/plain/'
+
         window._CONFIG['pdfDomainURL'] =
             window._CONFIG['domianURL'] + '/sys/common/pdf/pdfPreviewIframe'
+
+        window._CONFIG['imageURL'] = window._CONFIG['previewURL']
+        window._CONFIG['videoURL'] = window._CONFIG['previewURL']
+
+        window._CONFIG['casPrefixUrl'] = 'http://cas.example.org:8443/cas'
     </script>
 </head>
 
