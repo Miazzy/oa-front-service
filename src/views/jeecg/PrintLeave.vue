@@ -180,6 +180,51 @@
             </template>
           </a-col>
 
+          <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'workflow'">
+            <template>
+              <div style="width:90%;">
+                <a-textarea
+                  style="align:left;text-align:left;"
+                  placeholder="请输入审批意见"
+                  :value="curRow.idea_content"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                />
+              </div>
+              <div style="width:90%;margin-top:10px;">
+                <a-button
+                  type="primary"
+                  style="margin-right:10px;margin-top:10px;background-color:#2090fe;border: 1px solid #fefefe;"
+                  @click="handleApproveWF"
+                >同意</a-button>
+                <a-button
+                  type="primary"
+                  style="margin-right:10px;margin-top:10px;background-color:#fe5050;border: 1px solid #fefefe;"
+                  @click="handleRejectWF"
+                >驳回</a-button>
+              </div>
+            </template>
+          </a-col>
+
+          <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'notify'">
+            <template>
+              <div style="width:90%;">
+                <a-textarea
+                  style="align:left;text-align:left;"
+                  placeholder="请输入知会意见"
+                  :value="curRow.idea_content"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                />
+              </div>
+              <div style="width:90%;margin-top:10px;">
+                <a-button
+                  type="primary"
+                  style="margin-right:10px;margin-top:10px;background-color:#2090fe;border: 1px solid #fefefe;"
+                  @click="handleConfirmWF"
+                >确认</a-button>
+              </div>
+            </template>
+          </a-col>
+
           <a-modal
             title="温馨提示"
             :visible="tipVisible"
@@ -217,7 +262,7 @@ import {
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import { queryUrlString, deNull, formatDate } from "@/utils/util";
-import { setStore, getStore } from "@/utils/storage";
+import { getStore } from "@/utils/storage";
 
 //默认预览图片
 const images = [];
@@ -277,6 +322,7 @@ export default {
     this.curRow.fileType = queryFileType(this.curRow.files);
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     this.slides = queryImageURL(this.curRow.files);
+    this.curRow.idea_content = "暂无意见，审批通过！";
     //修改图片样式
     changeImageCSS();
   },
@@ -322,6 +368,500 @@ export default {
         this.curRow.fileStatus = 0;
       }, 10000);
     },
+
+    /**
+     * @function 同意审批
+     */
+    async handleApproveWF() {
+      //设置this的别名
+      var that = this;
+      //返回结果
+      var result;
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+      //获取当前时间
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+
+      //审批动作
+      var operation = operation || "同意";
+      //审批意见
+      var message = message || "";
+
+      //当前被选中记录数据
+      var curRow = that.table.selectionRows[0];
+
+      //流程日志编号
+      var processLogID = curRow["id"];
+      //业务代码ID
+      var bussinessCodeID = curRow["business_data_id"];
+      //打印表单名称
+      var tableName = curRow["table_name"];
+
+      var processAudit = curRow["process_audit"];
+
+      //检测是否为单选
+      if (that.table.selectionRows.length != 1) {
+        that.$message.warning("请选择一条记录！");
+        return false;
+      }
+
+      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+      if (
+        !(
+          curRow["employee"].includes(userInfo["username"]) ||
+          curRow["employee"].includes(userInfo["realname"])
+        )
+      ) {
+        that.$message.warning(
+          "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
+        );
+        return false;
+      }
+
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogByID(tableName, processLogID);
+
+      //获取关于此表单的所有当前审批日志信息
+      let node = await queryProcessLog(tableName, bussinessCodeID);
+
+      //遍历node,设置approve_user，action
+      _.each(node, function(item) {
+        //记录创建时间
+        let ctime = item["create_time"];
+        //设置审批人员
+        item["approve_user"] = userInfo["username"];
+        //设置操作类型
+        item["action"] = operation;
+        //设置操作时间
+        item["operate_time"] = date;
+        //设置操作意见
+        item["action_opinion"] = message;
+        //设置创建时间
+        item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
+      });
+
+      //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+      result = await postProcessLogHistory(node);
+
+      //删除当前审批节点中的所有记录
+      result = await deleteProcessLog(tableName, node);
+
+      //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
+      let rights = await queryBusinessInfo(tableName);
+
+      //选定流程权责
+      that.fixedWFlow = rights[0];
+      //设置当前流程审批权责
+      that.rights = rights;
+
+      //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
+      if (rights.length > 1 && curRow.business_code != "000000000") {
+        that.modelModal = true;
+      } else if (rights.length <= 0 && curRow.business_code != "000000000") {
+        that.tipVisible = true;
+        that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
+        return false;
+      } else {
+        debugger;
+        //所有待审核节点
+        var allAudit = "";
+        //所有待知会节点
+        var allNotify = "";
+        //当前审核节点
+        var curAuditor = processAudit;
+        //知会节点数组
+        var notifyArray = deNull(allNotify) == "" ? "" : allNotify.split(",");
+
+        //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
+        if (curRow.business_code != "000000000") {
+          try {
+            //根据权责配置，获取所有待审核人员列表
+            allAudit =
+              "," +
+              that.fixedWFlow["audit"] +
+              "," +
+              that.fixedWFlow["approve"] +
+              ",";
+            //根据权责配置，获取所有待知会人员列表
+            allNotify = that.fixedWFlow["notify"];
+          } catch (error) {
+            that.tipVisible = true;
+            that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
+            console.log("固化流程设置节点失败 :" + error);
+            return false;
+          }
+        } else {
+          try {
+            //自由流程配置消息
+            let freeNode = JSON.parse(curRow.business_data);
+            //根据自由流程配置，获取所有待审核人员列表
+            allAudit =
+              "," + freeNode.audit_node + "," + freeNode.approve_node + ",";
+            //根据自由流程配置，获取所有待知会人员列表
+            notifyArray =
+              deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
+            //获取自由流程配置，当前审核节点
+            curAuditor = curRow["employee"];
+          } catch (error) {
+            that.tipVisible = true;
+            that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
+            console.log("自由流程设置节点失败 :" + error);
+            return false;
+          }
+        }
+
+        //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
+        var auditArray = allAudit.split("," + curAuditor + ",");
+        //如果存在审核人
+        var firstAuditor = auditArray[1];
+
+        //如果待审核节点为空，则表示已经审批通过
+        if (firstAuditor == "") {
+          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "3"
+          });
+
+          //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
+          for (let item of notifyArray) {
+            //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
+            var employee = await queryProcessNodeEmployee(item);
+            //流程岗位
+            var process_station = await queryProcessNodeProcName(item);
+            //审批相关流程节点
+            var pnode = {};
+
+            if (curRow.business_code != "000000000") {
+              //提交审批相关处理信息
+              pnode = {
+                id: randomChars(32), //获取随机数
+                table_name: tableName, //业务表名
+                main_value: curRow["main_value"], //表主键值
+                business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                business_code: that.fixedWFlow["id"], //业务编号
+                process_name: that.fixedWFlow["items"], //流程名称
+                employee: employee[0]["employee"],
+                process_station: process_station[0]["item_text"],
+                process_audit: item,
+                operate_time: date,
+                create_time: date,
+                proponents: curRow["proponents"],
+                content: curRow["content"],
+                business_data: JSON.stringify(curRow)
+              };
+            } else {
+              //提交审批相关处理信息
+              pnode = {
+                id: randomChars(32), //获取随机数
+                table_name: tableName, //业务表名
+                main_value: curRow["business_data_id"], //表主键值
+                business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                business_code: "000000001", //业务编号
+                process_name: "自由流程知会", //流程名称
+                employee: item,
+                process_station: "自由流程知会",
+                process_audit: "000000001",
+                proponents: curRow["proponents"],
+                content: curRow["content"],
+                operate_time: date,
+                create_time: date,
+                business_data: curRow.business_data
+              };
+            }
+
+            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+            result = await postProcessLogInformed(pnode);
+          }
+
+          //当前已经是最后一个审批节点，流程已经处理完毕
+          that.tipContent = "同意审批成功，审批流程处理完毕！";
+        } else {
+          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "2"
+          });
+          //如果firstAuditor是逗号开头，则去掉开头的逗号
+          firstAuditor =
+            firstAuditor.indexOf(",") == 0
+              ? firstAuditor.substring(1)
+              : firstAuditor;
+          //获取下一审核节点
+          firstAuditor = firstAuditor.split(",")[0];
+          //审批相关处理信息
+          var pnode = {};
+
+          if (curRow.business_code != "000000000") {
+            //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
+            var employee = await queryProcessNodeEmployee(firstAuditor);
+            //流程岗位
+            var process_station = await queryProcessNodeProcName(firstAuditor);
+            //提交审批相关处理信息
+            pnode = {
+              id: randomChars(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: curRow["main_value"], //表主键值
+              business_data_id: curRow["business_data_id"], //业务具体数据主键值
+              business_code: that.fixedWFlow["id"], //业务编号
+              process_name: that.fixedWFlow["items"], //流程名称
+              employee: employee[0]["employee"],
+              process_station: process_station[0]["item_text"],
+              process_audit: firstAuditor,
+              proponents: curRow["proponents"],
+              content: curRow["content"],
+              create_time: date,
+              business_data: curRow.business_data
+            };
+          } else {
+            //提交审批相关处理信息
+            pnode = {
+              id: randomChars(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: curRow["business_data_id"], //表主键值
+              business_data_id: curRow["business_data_id"], //业务具体数据主键值
+              business_code: "000000000", //业务编号
+              process_name: "自由流程审批", //流程名称
+              employee: firstAuditor,
+              process_station: "自由流程审批",
+              process_audit: "000000000",
+              proponents: curRow["proponents"],
+              content: curRow["content"],
+              operate_time: date,
+              create_time: date,
+              business_data: curRow.business_data
+            };
+          }
+
+          //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+          let vflag = await queryApprovalExist(
+            tableName,
+            curRow["business_data_id"]
+          );
+
+          if (vflag) {
+            //数据库中已经存在此记录，提示用户无法提交审批
+            that.tipContent =
+              "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
+          } else {
+            //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
+
+            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+            result = await postProcessLog(pnode);
+
+            //第三步，根据流程审批节点，向第一个节点推送一条审批信息；根据流程审批节点，找到当前审批节点，修改节点审批状态为审批通过，增加审批意见
+            console.log(
+              " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
+            );
+
+            //将当前待审核节点，添加至datasource中
+            that.table.dataSource.push(pnode);
+
+            //提示信息
+            that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
+          }
+        }
+
+        //提示用户撤销审批操作成功
+        that.tipVisible = true;
+      }
+
+      that.loadData();
+
+      console.log("同意审批成功！");
+    },
+
+    /**
+     * @function 驳回审批
+     */
+    async handleRejectWF() {
+      //设置this的别名
+      let that = this;
+      //返回结果
+      let result;
+      //获取当前用户
+      let userInfo = getStore("cur_user");
+      //获取当前时间
+      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+
+      //审批动作
+      let operation = operation || "驳回";
+      //审批意见
+      let message = message || "";
+
+      //当前被选中记录数据
+      let curRow = that.table.selectionRows[0];
+
+      //检测是否为单选
+      if (that.table.selectionRows.length != 1) {
+        that.$message.warning("请选择一条记录！");
+        return false;
+      }
+
+      //打印表单名称
+      let tableName = curRow["table_name"];
+
+      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+      if (
+        !(
+          curRow["employee"].includes(userInfo["username"]) ||
+          curRow["employee"].includes(userInfo["realname"])
+        )
+      ) {
+        that.$message.warning(
+          "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
+        );
+        return false;
+      }
+
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogByID(tableName, curRow["id"]);
+
+      //获取关于此表单的所有当前审批日志信息
+      let node = await queryProcessLog(tableName, curRow["business_data_id"]);
+
+      //遍历node,设置approve_user，action
+      _.each(node, function(item) {
+        item["approve_user"] = userInfo["username"];
+        item["action"] = operation;
+        item["operate_time"] = date;
+        item["action_opinion"] = message;
+      });
+
+      //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+      result = await postProcessLogHistory(node);
+
+      //删除当前审批节点中的所有记录
+      result = await deleteProcessLog(tableName, node);
+
+      //修改当前审批状态为待处理
+      result = await patchTableData(tableName, curRow["business_data_id"], {
+        bpm_status: "1"
+      });
+      //再次执行修改流程状态的操作，防止网络异常
+      result = await patchTableData(tableName, curRow["business_data_id"], {
+        bpm_status: "1"
+      });
+
+      //提示用户撤销审批操作成功
+      that.tipVisible = true;
+      that.tipContent = "驳回审批成功！";
+
+      that.loadData();
+      //打印驳回审批处理日志
+      console.log("驳回审批成功");
+    },
+
+    /**
+     * @function 知会确认
+     */
+    async handleConfirmWF() {
+      //设置this的别名
+      var that = this;
+      //返回结果
+      var result;
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+      //获取当前时间
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+
+      //审批动作
+      var operation = operation || "知会";
+      //审批意见
+      var message = message || "已查看此业务流程，知会确认成功！";
+
+      //当前被选中记录数据
+      var curRow = that.table.selectionRows[0];
+
+      //流程日志编号
+      var processLogID = curRow["id"];
+      //业务代码ID
+      var bussinessCodeID = curRow["business_data_id"];
+      //打印表单名称
+      var tableName = curRow["table_name"];
+
+      //检测是否为单选
+      if (that.table.selectionRows.length != 1) {
+        that.$message.warning("请选择一条记录！");
+        return false;
+      }
+
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogInfByID(tableName, processLogID);
+      //设置本次知会确认创建时间
+      curRow["create_time"] = date;
+
+      //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+      if (
+        deNull(curRow["approve_user"]).length >=
+        deNull(curRow["employee"]).length
+      ) {
+        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+        result = await postProcessLogHistory(curRow);
+        //删除当前审批节点中的所有记录
+        result = await deleteProcessLogInf(tableName, [curRow]);
+        that.tipVisible = true;
+        that.tipContent = "知会确认成功！";
+        return true;
+      }
+
+      var employeeList = "," + deNull(curRow["employee"]) + ",";
+      var appoveUserList = "," + deNull(curRow["approve_user"]) + ",";
+
+      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+      if (
+        !(
+          employeeList.includes("," + userInfo["username"] + ",") ||
+          employeeList.includes("," + userInfo["realname"] + ",")
+        )
+      ) {
+        that.$message.warning(
+          "您不在此知会记录的操作职员列中，无法进行确认操作！"
+        );
+        return false;
+      }
+
+      //已经知会确认过的用户，无法再次知会
+      if (
+        appoveUserList.includes("," + userInfo["username"] + ",") ||
+        appoveUserList.includes("," + userInfo["realname"] + ",")
+      ) {
+        that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
+        return false;
+      }
+
+      //设置知会确认人员
+      curRow["approve_user"] =
+        deNull(curRow["approve_user"]) +
+        (deNull(curRow["approve_user"]) == "" ? "" : ",") +
+        userInfo["username"];
+      //设置操作内容
+      curRow["action"] = operation;
+      //设置操作时间
+      curRow["operate_time"] = date;
+      //设置操作意见
+      curRow["action_opinion"] =
+        deNull(curRow["action_opinion"]) +
+        (deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+        `${userInfo["username"]}:${message}`;
+
+      //保存当前数据到数据库中
+      await patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
+
+      //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+      if (curRow["approve_user"].length >= curRow["employee"].length) {
+        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+        result = await postProcessLogHistory(curRow);
+        //删除当前审批节点中的所有记录
+        result = await deleteProcessLogInf(tableName, [curRow]);
+      }
+
+      that.tipVisible = true;
+      that.tipContent = "知会确认成功！";
+      that.loadData();
+    },
+
+    /**
+     * @function 提交自由流程
+     */
     async handleSubmitWF() {
       //获取当前用户
       var userInfo = getStore("cur_user");
