@@ -46,14 +46,22 @@
 
           <a-col :md="6" :sm="8">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchByquery" icon="search">查询</a-button>
+              <a-button
+                type="primary"
+                @click="searchByquery"
+                icon="search"
+                style="margin-left:0px;font-size: 12px;height: 28px;padding: 0 10px;"
+              >查询</a-button>
               <a-button
                 type="primary"
                 @click="searchReset"
                 icon="reload"
-                style="margin-left: 8px"
+                style="margin-left:8px;font-size: 12px;height: 28px;padding: 0 10px;"
               >重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
+              <a
+                @click="handleToggleSearch"
+                style="margin-left:8px;font-size: 12px;height: 28px;padding: 0 10px;"
+              >
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
               </a>
@@ -65,22 +73,33 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button v-if="buttonSwitch.add" @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button
+        v-if="buttonSwitch.add"
+        @click="handleAdd"
+        type="primary"
+        icon="plus"
+        style="margin-left:0px;font-size: 12px;height: 28px;padding: 0 10px;"
+      >新增</a-button>
       <!-- 查看详情页面功能 -->
-      <a-button @click="handleDetailWF" type="primary" icon="book" style="margin-left:8px">详情</a-button>
+      <a-button
+        @click="handleDetailWF"
+        type="primary"
+        icon="book"
+        style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+      >详情</a-button>
       <a-button
         v-if="buttonSwitch.import"
         @click="handleImportXls"
         type="primary"
         icon="upload"
-        style="margin-left:8px"
+        style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
       >导入</a-button>
       <a-button
         v-if="buttonSwitch.export"
         @click="handleExportXls"
         type="primary"
         icon="download"
-        style="margin-left:8px"
+        style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
       >导出</a-button>
       <template v-if="hasBpmStatus">
         <!-- 提交审批操作功能 -->
@@ -88,34 +107,59 @@
           @click="handleSubmitWF"
           type="primary"
           icon="cloud-upload"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >提交</a-button>
         <!-- 撤销审批操作功能 -->
         <a-button
           @click="handleCancelWF"
           type="primary"
           icon="cloud-download"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >撤销</a-button>
         <!-- 处理自由流程功能 -->
-        <a-button @click="handleFreeWF" type="primary" icon="share-alt" style="margin-left:8px">自由流</a-button>
-        <a-button @click="handleNotifyWF" type="primary" icon="sound" style="margin-left:8px">知会</a-button>
-        <a-button @click="handlePrintWF" type="primary" icon="printer" style="margin-left:8px">打印</a-button>
-        <a-button @click="handleCollection" type="primary" icon="star" style="margin-left:8px">收藏</a-button>
-        <a-button @click="handleShareWF" type="primary" icon="compass" style="margin-left:8px">分享</a-button>
+        <a-button
+          @click="handleFreeWF"
+          type="primary"
+          icon="share-alt"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >自由流</a-button>
+        <a-button
+          @click="handleNotifyWF"
+          type="primary"
+          icon="sound"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >知会</a-button>
+        <a-button
+          @click="handlePrintWF"
+          type="primary"
+          icon="printer"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >打印</a-button>
+        <a-button
+          @click="handleCollection"
+          type="primary"
+          icon="star"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >收藏</a-button>
+        <a-button
+          @click="handleShareWF"
+          type="primary"
+          icon="compass"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >分享</a-button>
       </template>
       <template v-if="code == '0b511f234f3847baa50106a14fff6215' ">
         <a-button
           @click="handleApproveWF"
           type="primary"
           icon="check-circle"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >同意</a-button>
         <a-button
           @click="handleRejectWF"
           type="primary"
           icon="close-circle"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >驳回</a-button>
       </template>
       <template v-if="code == 'd11901bc44f24a66b25b37a7a04c611e' ">
@@ -123,7 +167,7 @@
           @click="handleConfirmWF"
           type="primary"
           icon="check-circle"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >确认</a-button>
       </template>
       <template v-if="cgButtonList && cgButtonList.length>0" v-for="(item,index) in cgButtonList">
@@ -133,7 +177,7 @@
           @click="cgButtonJsHandler(item.buttonCode)"
           type="primary"
           :icon="item.buttonIcon"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >{{ item.buttonName }}</a-button>
         <a-button
           v-else-if=" item.optType=='action' "
@@ -141,14 +185,14 @@
           @click="cgButtonActionHandler(item.buttonCode)"
           type="primary"
           :icon="item.buttonIcon"
-          style="margin-left:8px"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >{{ item.buttonName }}</a-button>
       </template>
 
       <a-button
         v-if="buttonSwitch.batch_delete"
         @click="handleDelBatch"
-        style="margin-left:8px"
+        style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         v-show="table.selectionRows.length > 0 && code != '0b511f234f3847baa50106a14fff6215' && code != 'dae6cc0e7a7f4b7e9dc0fc36757fdc96' && code != 'd11901bc44f24a66b25b37a7a04c611e'"
         ghost
         type="primary"
