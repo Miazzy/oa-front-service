@@ -1408,7 +1408,7 @@ export function queryFileViewURL(text) {
     //微软文档预览API
     let officeURL = window._CONFIG['previewURL'];
     //文档下载地址
-    url = window._CONFIG['downloadURL'] + '/' + text;
+    url = window._CONFIG['downloadURL'] + '/' + url;
     //URL加密，保证中文路径可以被正常解析
     let xurl = encodeURIComponent(url);
 
@@ -1517,6 +1517,6 @@ export function changeImageCSS() {
     setTimeout(() => {
         $('figure[itemscope="itemscope"]').css('float', 'left');
         $('figure[itemscope="itemscope"]').css('margin-right', '10px');
-        $('figure[itemscope="itemscope"]').css('margin-bottom', '5px');
+        $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
     }, 10);
 }

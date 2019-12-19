@@ -104,20 +104,28 @@
               <div
                 :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
                 v-if="this.curRow.fileType.includes('office')"
+                style="width:100%;display:block;"
               >
                 <iframe
                   v-print="'#printContent'"
                   class="no-print"
-                  style="width:100%;height:720px;overflow-y:auto;overflow-x:hidden;border:0px solid #fefefe;"
+                  style="display:block;width:90%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;"
                   :src="this.curRow.fileURL"
                 />
               </div>
             </template>
+          </a-col>
 
+          <a-col
+            :span="24"
+            style="margin-top:10px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
             <template>
               <div
                 :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
                 v-if="this.curRow.fileType.includes('image')"
+                style="margin-botton:0px;"
               >
                 <vue-preview :slides="slides" @close="handleClose"></vue-preview>
               </div>
