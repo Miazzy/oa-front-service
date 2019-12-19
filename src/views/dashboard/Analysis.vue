@@ -105,11 +105,35 @@
                 </a>
                 <a slot="topic" slot-scope="text, record">
                   <a-menu-item>
-                    <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
-                      <span v-html="record.topic"></span>
+                    <a
+                      :data-info="JSON.stringify(record)"
+                      @click="handleDetailWF(record)"
+                      style="color:#303030;"
+                    >
+                      <span style="color:#303030;" v-html="record.topic"></span>
                     </a>
                   </a-menu-item>
                 </a>
+
+                <span slot="name" slot-scope="text , record">
+                  <a-tag
+                    :color=" (record.name.length > 5 ? 'geekblue' : 'green')"
+                    :key="record.name"
+                    @click="handleDetailWF(record)"
+                  >{{record.name.toUpperCase()}}</a-tag>
+                </span>
+
+                <span slot="username" slot-scope="username">
+                  <a-tag
+                    v-for="tag in username"
+                    :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+                    :key="tag"
+                  >{{tag.toUpperCase()}}</a-tag>
+                </span>
+
+                <span slot="create_time" slot-scope="text , record">
+                  <a-tag color="red" :key="record.create_time">{{record.create_time}}</a-tag>
+                </span>
               </a-table>
             </template>
           </a-tab-pane>
@@ -128,13 +152,38 @@
                     </a>
                   </a-menu-item>
                 </a>
+
                 <a slot="topic" slot-scope="text, record">
                   <a-menu-item>
-                    <a href="javascript:;" @click="handleDetailWF(record)">
-                      <span v-html="record.topic"></span>
+                    <a
+                      :data-info="JSON.stringify(record)"
+                      @click="handleDetailWF(record)"
+                      style="color:#303030;"
+                    >
+                      <span style="color:#303030;" v-html="record.topic"></span>
                     </a>
                   </a-menu-item>
                 </a>
+
+                <span slot="name" slot-scope="text , record">
+                  <a-tag
+                    :color=" (record.name.length > 5 ? 'geekblue' : 'green')"
+                    :key="record.name"
+                    @click="handleDetailWF(record)"
+                  >{{record.name}}</a-tag>
+                </span>
+
+                <span slot="username" slot-scope="text , record">
+                  <a-tag
+                    v-for="tag in record.username"
+                    :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+                    :key="tag"
+                  >{{tag}}</a-tag>
+                </span>
+
+                <span slot="create_time" slot-scope="text , record">
+                  <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
+                </span>
               </a-table>
             </template>
           </a-tab-pane>
@@ -241,9 +290,49 @@ for (let i = 0; i < 12; i += 1) {
     y: Math.floor(Math.random() * 1000) + 200
   });
 }
-const columns = JSON.parse(
-  '[{"title":"状态","dataIndex":"type","key":"type","slots":{"title":"type"},"width":100,"align":"center","scopedSlots":{"customRender":"type"}},{"title":"业务","width":200,"align":"center","key":"name","dataIndex":"name"},{"title":"主题","width":500,"align":"left","key":"topic","dataIndex":"topic","scopedSlots":{"customRender":"topic"}},{"title":"操作人员","key":"username","width":200,"align":"left","dataIndex":"username"},{"title":"创建时间","width":150,"align":"center","key":"create_time","dataIndex":"create_time"}]'
-);
+const columns = [
+  {
+    title: "办理事项",
+    dataIndex: "type",
+    key: "type",
+    slots: { title: "type" },
+    width: 100,
+    align: "center",
+    scopedSlots: { customRender: "type" }
+  },
+  {
+    title: "业务",
+    width: 200,
+    align: "center",
+    key: "name",
+    dataIndex: "name",
+    scopedSlots: { customRender: "name" }
+  },
+  {
+    title: "主题",
+    width: 400,
+    align: "left",
+    key: "topic",
+    dataIndex: "topic",
+    scopedSlots: { customRender: "topic" }
+  },
+  {
+    title: "操作人员",
+    key: "username",
+    width: 300,
+    align: "left",
+    dataIndex: "username",
+    scopedSlots: { customRender: "username" }
+  },
+  {
+    title: "创建时间",
+    width: 150,
+    align: "center",
+    key: "create_time",
+    dataIndex: "create_time",
+    scopedSlots: { customRender: "create_time" }
+  }
+];
 
 export default {
   name: "Analysis",

@@ -12,6 +12,7 @@
         ghost
         type="primary"
         @click="handleSubmitWF"
+        style="display:none;"
         v-if="pageType == 'workflowing' || pageType == 'notifying'"
       >提交</a-button>
     </div>
@@ -168,6 +169,16 @@
                 </a-form-item>
               </a-form>
             </template>
+            <template>
+              <div style="width:90%;margin-top:10px;">
+                <a-button
+                  ghost
+                  type="primary"
+                  @click="handleSubmitWF"
+                  v-if="pageType == 'workflowing' || pageType == 'notifying'"
+                >提交</a-button>
+              </div>
+            </template>
           </a-col>
 
           <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'notifying'">
@@ -177,6 +188,16 @@
                   <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
               </a-form>
+            </template>
+            <template>
+              <div style="width:90%;margin-top:10px;">
+                <a-button
+                  ghost
+                  type="primary"
+                  @click="handleSubmitWF"
+                  v-if="pageType == 'workflowing' || pageType == 'notifying'"
+                >提交</a-button>
+              </div>
             </template>
           </a-col>
 

@@ -515,6 +515,7 @@ export async function queryProcessLogWait(username, realname) {
             let ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
         });
 
         return result;
@@ -541,6 +542,7 @@ export async function queryProcessLogDone(username, realname) {
             let ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
         });
 
         return result;
