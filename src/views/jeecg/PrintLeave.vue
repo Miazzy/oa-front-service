@@ -306,7 +306,7 @@
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import {
-  randomChars,
+  queryRandomStr,
   colorProcessDetail,
   watchFormLeave,
   postProcessFreeNode,
@@ -597,7 +597,7 @@ export default {
             if (curRow.business_code != "000000000") {
               //提交审批相关处理信息
               pnode = {
-                id: randomChars(32), //获取随机数
+                id: queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["main_value"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -615,7 +615,7 @@ export default {
             } else {
               //提交审批相关处理信息
               pnode = {
-                id: randomChars(32), //获取随机数
+                id: queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["business_data_id"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -660,7 +660,7 @@ export default {
             process_station = await queryProcessNodeProcName(firstAuditor);
             //提交审批相关处理信息
             pnode = {
-              id: randomChars(32), //获取随机数
+              id: queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["main_value"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -677,7 +677,7 @@ export default {
           } else {
             //提交审批相关处理信息
             pnode = {
-              id: randomChars(32), //获取随机数
+              id: queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["business_data_id"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -769,8 +769,8 @@ export default {
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
-          curRow["employee"].includes(userInfo["username"]) ||
-          curRow["employee"].includes(userInfo["realname"])
+          deNull(curRow["employee"]).includes(userInfo["username"]) ||
+          deNull(curRow["employee"]).includes(userInfo["realname"])
         )
       ) {
         that.$message.warning(
@@ -849,7 +849,7 @@ export default {
       //审批动作
       var operation = operation || "知会";
       //审批意见
-      var message = message || that.curRow.idea_content;
+      var message = message || that.curRow.idea_content || "知会确认";
 
       //当前被选中记录数据
       var curRow = that.curRow;
@@ -984,7 +984,7 @@ export default {
 
       //自由流程节点
       var node = {
-        id: randomChars(32),
+        id: queryRandomStr(32),
         create_by: userInfo["username"],
         create_time: ctime,
         table_name: tableName,
@@ -1006,7 +1006,7 @@ export default {
 
         //提交审批相关处理信息
         node = {
-          id: randomChars(32), //获取随机数
+          id: queryRandomStr(32), //获取随机数
           table_name: tableName, //业务表名
           main_value: queryUrlString("id"), //表主键值
           business_data_id: queryUrlString("id"), //业务具体数据主键值
@@ -1029,7 +1029,12 @@ export default {
           //数据库中已经存在此记录，提示用户无法提交审批
           this.tipVisible = true;
           this.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
-          return false;
+
+          //刷新页面数据
+          this.loadData();
+
+          //操作完毕，返回结果
+          return true;
         } else {
           //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
@@ -1051,6 +1056,11 @@ export default {
           //弹出审批完成提示框
           this.tipVisible = true;
           this.tipContent = "提交自由流程审批成功！";
+
+          //刷新页面数据
+          this.loadData();
+
+          //操作完毕，返回结果
           return true;
         }
       }
@@ -1064,18 +1074,18 @@ export default {
         if (deNull(loginfo) != "" && loginfo.today >= 3) {
           this.tipVisible = true;
           this.tipContent = "同一业务数据，每天最多知会3次！";
-          return false;
+          return true;
         }
 
         if (deNull(loginfo) != "" && loginfo.total >= 10) {
           this.tipVisible = true;
           this.tipContent = "同一业务数据，总计最多知会10次！";
-          return false;
+          return true;
         }
 
         //提交审批相关处理信息
         var pnode = {
-          id: randomChars(32), //获取随机数
+          id: queryRandomStr(32), //获取随机数
           table_name: tableName, //业务表名
           main_value: queryUrlString("id"), //表主键值
           business_data_id: queryUrlString("id"), //业务具体数据主键值
@@ -1105,7 +1115,7 @@ export default {
         this.loadData();
 
         //返回操作结果
-        return result;
+        return true;
       }
     }
   }

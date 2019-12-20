@@ -379,7 +379,7 @@ import {
   queryBusinessInfo,
   queryProcessNodeEmployee,
   queryProcessNodeProcName,
-  randomChars,
+  queryRandomStr,
   queryApprovalExist,
   patchTableData,
   queryProcessLog,
@@ -1298,7 +1298,7 @@ export default {
             if (curRow.business_code != "000000000") {
               //提交审批相关处理信息
               pnode = {
-                id: randomChars(32), //获取随机数
+                id: queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["main_value"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1316,7 +1316,7 @@ export default {
             } else {
               //提交审批相关处理信息
               pnode = {
-                id: randomChars(32), //获取随机数
+                id: queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["business_data_id"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1361,7 +1361,7 @@ export default {
             var process_station = await queryProcessNodeProcName(firstAuditor);
             //提交审批相关处理信息
             pnode = {
-              id: randomChars(32), //获取随机数
+              id: queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["main_value"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1378,7 +1378,7 @@ export default {
           } else {
             //提交审批相关处理信息
             pnode = {
-              id: randomChars(32), //获取随机数
+              id: queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["business_data_id"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1585,7 +1585,7 @@ export default {
 
         //提交审批相关处理信息
         var node = {
-          id: randomChars(32), //获取随机数
+          id: queryRandomStr(32), //获取随机数
           table_name: tableName, //业务表名
           main_value: value["id"], //表主键值
           business_data_id: curRow["id"], //业务具体数据主键值

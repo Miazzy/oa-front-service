@@ -555,11 +555,7 @@ export async function queryProcessLogDone(username, realname) {
  * 查询审批知会记录页面的记录
  */
 export async function queryProcessLogInfApproved(username, realname, params) {
-    //用户对于的中文代码
-    //let username_zh = username;
     //查询URL
-    //let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=operate_time`;
-    //let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))~and((approve_user,nlike,~${username}~)~and(approve_user,nlike,~${realname}~))`;
     let queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     let queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
     let result = {};
@@ -684,7 +680,7 @@ export async function deleteProcessLogInf(tableName, node) {
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
-export async function postProcessLog(node, callback) {
+export async function postProcessLog(node) {
     //提交URL
     let postURL = `${api.domain}/api/PR_LOG`;
 
@@ -779,7 +775,11 @@ export async function postProcessLogInformed(node) {
     }
 }
 
-export async function queryProcessLogHtml(business_data_id, record) {
+/**
+ * @function 获取审批日历的HTMl文本
+ * @param {*} business_data_id 
+ */
+export async function queryProcessLogHtml(business_data_id) {
     //获取html信息
     let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
 
@@ -890,6 +890,9 @@ export async function queryPRLogInfTotal(business_data_id) {
     }
 }
 
+/**
+ * @function 获取登录用户
+ */
 export async function queryLoginUser() {
     let queryURL = `${api.domain}/jeecg-boot/api/login/user`;
 
@@ -906,7 +909,7 @@ export async function queryLoginUser() {
 /**
  * 获取n位随机数,随机来源chars
  */
-export function randomChars(n) {
+export function queryRandomStr(n) {
     var chars = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(
         ','
     );
@@ -1145,7 +1148,7 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
 /**
  * @function 查询审批流程信息
  */
-export async function queryWorkflows(business_data_id, record) {
+export async function queryWorkflows(business_data_id) {
     //待返回审批流程数据
     let workflows = getStore(`workflows_by_data_id@${business_data_id}`);
 
@@ -1375,7 +1378,7 @@ export async function watchFormLeave(that) {
  */
 export function queryFileViewURL(text) {
     //获取小写文档下载地址
-    let textURL = text.toLowerCase();
+    let textURL = deNull(text).toLowerCase();
     //如果不含有office文档
     if (!(textURL.includes('doc') ||
             textURL.includes('ppt') ||
@@ -1398,7 +1401,7 @@ export function queryFileViewURL(text) {
     //获取第一个office文档
     url = _.find(fileList, function(text) {
         //获取小写字符串
-        text = text.toLowerCase();
+        text = deNull(text).toLowerCase();
         return (
             text.includes('doc') ||
             text.includes('ppt') ||
@@ -1415,12 +1418,12 @@ export function queryFileViewURL(text) {
     let xurl = encodeURIComponent(url);
 
     //获取文件后缀
-    let suffix = text
+    let suffix = deNull(text)
         .substring(text.lastIndexOf('.'), text.length)
         .toLowerCase();
 
     //如果word文档，则使用微软API打开
-    url = suffix.includes('doc') ||
+    url = deNull(suffix).includes('doc') ||
         suffix.includes('ppt') ||
         suffix.includes('xls') ?
         officeURL + xurl :
@@ -1439,7 +1442,7 @@ export function queryFileViewURL(text) {
  */
 export function queryFileType(text) {
     //获取文件后缀
-    let suffix = text.toLowerCase();
+    let suffix = deNull(text).toLowerCase();
 
     //如果office文档，则使用微软API打开
     let type = suffix.includes('jpg') ||
@@ -1479,7 +1482,7 @@ export function queryImageURL(text) {
     //遍历并筛选出里面的图片信息
     fileList = _.filter(fileList, function(text) {
         //获取小写后的路径
-        let ptext = text.toLowerCase();
+        let ptext = deNull(text).toLowerCase();
 
         //获取图片标识
         let flag =
