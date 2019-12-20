@@ -502,7 +502,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
  */
 export async function queryProcessLogWait(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=30&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -529,7 +529,7 @@ export async function queryProcessLogWait(username, realname) {
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=30&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');

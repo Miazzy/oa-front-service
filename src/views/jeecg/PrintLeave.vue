@@ -130,7 +130,7 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('image')"
           >
             <div style="width:90%;">
               <a-divider style="width:90%;" dashed>·</a-divider>
@@ -157,14 +157,18 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
           >
             <div style="width:90%;">
               <a-divider style="width:90%;" dashed>·</a-divider>
             </div>
           </a-col>
 
-          <a-col :span="24" style="margin-top:10px;" v-if="curRow.bpm_status != 1">
+          <a-col
+            :span="24"
+            style="margin-top:10px;"
+            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
+          >
             <div style="margin-bottom:20px;">审批流程</div>
             <template>
               <a-timeline>
@@ -449,7 +453,7 @@ export default {
       //审批动作
       var operation = operation || "同意";
       //审批意见
-      var message = message || this.curRow.idea_content;
+      var message = message || this.curRow.idea_content || "同意";
 
       //当前被选中记录数据
       var curRow = that.curRow;
@@ -480,9 +484,6 @@ export default {
         );
         return false;
       }
-
-      //获取当前审批节点的所有数据
-      //curRow = await queryProcessLogByID(tableName, processLogID);
 
       //获取关于此表单的所有当前审批日志信息
       let node = await queryProcessLog(tableName, bussinessCodeID);
@@ -751,7 +752,7 @@ export default {
       //审批动作
       let operation = operation || "驳回";
       //审批意见
-      let message = message || that.curRow.idea_content;
+      let message = message || that.curRow.idea_content || "驳回";
 
       //当前被选中记录数据
       let curRow = that.curRow;
@@ -786,10 +787,18 @@ export default {
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
+        //获取创建时间
+        let ctime = item["create_time"];
+        //设置审批人员
         item["approve_user"] = userInfo["username"];
+        //设置操作动作
         item["action"] = operation;
+        //设置操作时间
         item["operate_time"] = date;
+        //设置操作意见
         item["action_opinion"] = message;
+        //设置创建时间
+        item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息

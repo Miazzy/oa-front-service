@@ -75,8 +75,10 @@
     <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
       <div class="salesCard">
         <a-tabs
-          default-active-key="1"
           size="large"
+          defaultActiveKey="1"
+          v-model="activeKey"
+          @change="getData"
           :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}"
         >
           <a-tab-pane loading="true" tab="我的待办" key="1" style>
@@ -353,39 +355,36 @@ export default {
       dataWaitList: [],
       dataDoneList: [],
       columns,
+      activeKey: "1",
       loadingMore: false,
       showLoadingMore: true
     };
   },
-  created() {
+  async created() {
     setTimeout(() => {
       this.loading = !this.loading;
     }, 1000);
     this.initLogInfo();
+    await this.getData(1);
   },
   async mounted() {
     await this.getData();
   },
   methods: {
-    async getData() {
-      //获取用户信息
-      let userInfo = getStore("cur_user");
-      //获取查询参数
-      let params = { pageNo: 1, pageSize: 30 };
-
-      //获取我的待办数据
-      this.dataWaitList = await queryProcessLogWait(
-        userInfo["username"],
-        userInfo["realname"],
-        params
-      );
-
-      //获取我的已办数据
-      this.dataDoneList = await queryProcessLogDone(
-        userInfo["username"],
-        userInfo["realname"],
-        params
-      );
+    async getData(key) {
+      if (this.activeKey == 1 || this.activeKey == 2 || key == 1 || key == 2) {
+        //获取用户信息
+        let userInfo = getStore("cur_user");
+        let username = userInfo["username"];
+        let realname = userInfo["realname"];
+        if (this.activeKey == 1 || key == 1) {
+          //获取我的待办数据
+          this.dataWaitList = await queryProcessLogWait(username, realname);
+        } else if (this.activeKey == 2 || key == 2) {
+          //获取我的已办数据
+          this.dataDoneList = await queryProcessLogDone(username, realname);
+        }
+      }
     },
     /**
      * @function 查看详情页面
