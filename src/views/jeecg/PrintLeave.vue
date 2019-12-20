@@ -98,7 +98,17 @@
 
           <a-col
             :span="24"
-            style="margin-top:30px;"
+            style="margin-top:10px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
+            <div style="width:90%;">
+              <a-divider style="width:90%;" dashed></a-divider>
+            </div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:2px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
             <template>
@@ -110,7 +120,7 @@
                 <iframe
                   v-print="'#printContent'"
                   class="no-print"
-                  style="display:block;width:90%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;"
+                  style="display:block;width:90%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
                   :src="this.curRow.fileURL"
                 />
               </div>
@@ -122,18 +132,39 @@
             style="margin-top:10px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
+            <div style="width:90%;">
+              <a-divider style="width:90%;" dashed>·</a-divider>
+            </div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:2px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
             <template>
               <div
                 :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
                 v-if="this.curRow.fileType.includes('image')"
                 style="margin-botton:0px;"
               >
+                <div style="margin-bottom:10px;">图片附件</div>
                 <vue-preview :slides="slides" @close="handleClose"></vue-preview>
               </div>
             </template>
           </a-col>
 
-          <a-col :span="24" style="margin-top:30px;" v-if="curRow.bpm_status != 1">
+          <a-col
+            :span="24"
+            style="margin-top:10px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
+            <div style="width:90%;">
+              <a-divider style="width:90%;" dashed>·</a-divider>
+            </div>
+          </a-col>
+
+          <a-col :span="24" style="margin-top:10px;" v-if="curRow.bpm_status != 1">
             <div style="margin-bottom:20px;">审批流程</div>
             <template>
               <a-timeline>
@@ -404,6 +435,7 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
+      debugger;
       //设置this的别名
       var that = this;
       //返回结果
@@ -426,7 +458,7 @@ export default {
       //业务代码ID
       var bussinessCodeID = curRow["business_data_id"];
       //打印表单名称
-      var tableName = curRow["table_name"];
+      var tableName = curRow["table_name"] || queryUrlString("table_name");
 
       var processAudit = curRow["process_audit"];
 
@@ -713,7 +745,7 @@ export default {
       let curRow = that.curRow;
 
       //打印表单名称
-      let tableName = curRow["table_name"];
+      let tableName = curRow["table_name"] || queryUrlString("table_name");
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -791,13 +823,13 @@ export default {
 
       //流程日志编号
       var processLogID = curRow["id"];
-      //业务代码ID
-      var bussinessCodeID = curRow["business_data_id"];
+
       //打印表单名称
-      var tableName = curRow["table_name"];
+      var tableName = curRow["table_name"] || queryUrlString("table_name");
 
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogInfByID(tableName, processLogID);
+
       //设置本次知会确认创建时间
       curRow["create_time"] = date;
 

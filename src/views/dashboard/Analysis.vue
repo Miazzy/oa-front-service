@@ -79,15 +79,6 @@
           size="large"
           :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}"
         >
-          <div class="extra-wrapper" slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>今日</a>
-              <a>本周</a>
-              <a>本月</a>
-              <a>本年</a>
-            </div>
-            <a-range-picker :style="{width: '256px'}" />
-          </div>
           <a-tab-pane loading="true" tab="我的待办" key="1" style>
             <template>
               <a-table
@@ -128,7 +119,7 @@
                     v-for="tag in username"
                     :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
                     :key="tag"
-                  >{{tag.toUpperCase()}}</a-tag>
+                  >{{tag}}</a-tag>
                 </span>
 
                 <span slot="create_time" slot-scope="text , record">
