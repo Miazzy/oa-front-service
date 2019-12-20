@@ -374,7 +374,6 @@ import {
   getAction,
   deleteAction,
   downFile,
-  queryURLTableParam,
   queryTableName,
   queryBusinessInfo,
   queryProcessNodeEmployee,
@@ -385,14 +384,12 @@ import {
   queryProcessLog,
   postProcessLog,
   deleteProcessLog,
-  queryLoginUser,
   queryProcessLogByID,
   queryProcessLogToApproved,
   queryProcessLogHisApproved,
   queryProcessLogInfApproved,
   postProcessLogInformed,
   postProcessLogHistory,
-  queryProcessLogHtml,
   deleteProcessLogInf,
   queryProcessLogInfByID,
   queryPRLogHistoryByDataID
@@ -400,16 +397,10 @@ import {
 import Vue from "vue";
 import { getLoginfo, getVisitInfo } from "@/api/api";
 import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
-import {
-  filterObj,
-  formatDate,
-  existChinese,
-  deNull,
-  queryUrlString
-} from "@/utils/util";
+import { filterObj, formatDate, deNull, queryUrlString } from "@/utils/util";
 import JImportModal from "@/components/jeecg/JImportModal";
 import _ from "underscore";
-import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
+import { setStore, getStore, clearStore } from "@/utils/storage";
 import {
   ACCESS_TOKEN,
   USER_NAME,
@@ -1610,8 +1601,32 @@ export default {
         } else {
           //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
+          var firstNode = {
+            id: queryRandomStr(32), //获取随机数
+            table_name: tableName, //业务表名
+            main_value: value["id"], //表主键值
+            business_data_id: curRow["id"], //业务具体数据主键值
+            business_code: that.fixedWFlow["id"], //业务编号
+            process_name: that.fixedWFlow["items"], //流程名称
+            employee: userInfo["username"],
+            process_station: process_station[0]["item_text"],
+            process_audit: "000000003",
+            proponents: userInfo["realname"],
+            action: "发起",
+            action_opinion: "发起固化流程",
+            content: curRow["content"],
+            operate_time: date,
+            create_time: date,
+            business_data: JSON.stringify(curRow)
+          };
+
+          //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+          result = await postProcessLogHistory(firstNode);
+
           //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
           result = await postProcessLog(node);
+
+          //打印提交审批返回结果
           console.log(" 提交审批返回结果: " + JSON.stringify(result));
 
           //第三步，根据流程审批节点，向第一个节点推送一条审批信息
@@ -1636,6 +1651,7 @@ export default {
         //弹出审批完成提示框
         that.tipVisible = true;
 
+        //刷新页面
         that.loadData();
 
         //打印获取到的流程权责信息
