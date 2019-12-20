@@ -1172,7 +1172,7 @@ export async function queryWorkflows(business_data_id, record) {
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
 
-            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 审批意见：${item.action_opinion} , 时间：${optime} `;
+            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 审批意见：${item.action_opinion}  时间：${optime} `;
 
             let color = item.action == '同意' ?
                 'green' :
@@ -1550,7 +1550,7 @@ export async function queryCurNodePageType(pageType) {
 
         //获取页面类型
         pageType = deNull(flag) == '' ? 'view' : pageType;
-    }
+    } else if (type == 'workflowing') {}
 
     //返回pageType
     return pageType;

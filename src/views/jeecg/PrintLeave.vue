@@ -184,7 +184,11 @@
             </template>
           </a-col>
 
-          <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'workflowing'">
+          <a-col
+            :span="24"
+            style="margin-top:30px;"
+            v-if="pageType == 'workflowing' && curRow.bpm_status == 1"
+          >
             <template>
               <a-form :form="form">
                 <a-form-item label="审核用户" style="width: 500px">
@@ -710,9 +714,6 @@ export default {
               " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
             );
 
-            //将当前待审核节点，添加至datasource中
-            //that.table.dataSource.push(pnode);
-
             //提示信息
             that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
           }
@@ -724,8 +725,14 @@ export default {
 
       console.log("同意审批成功！");
 
+      //刷新页面数据
+      this.loadData();
+
       //设置为view预览模式
       this.pageType = "view";
+
+      //同意审批成功
+      return true;
     },
 
     /**
@@ -809,6 +816,9 @@ export default {
 
       //设置为view预览模式
       this.pageType = "view";
+
+      //刷新页面数据
+      this.loadData();
 
       //返回操作结果
       return result;
@@ -917,6 +927,9 @@ export default {
 
       //设置为view预览模式
       this.pageType = "view";
+
+      //刷新页面数据
+      this.loadData();
 
       //返回结果
       return result;
@@ -1076,6 +1089,13 @@ export default {
         this.tipVisible = true;
         this.tipContent = "知会操作成功！";
 
+        //设置为view预览模式
+        this.pageType = "view";
+
+        //刷新页面数据
+        this.loadData();
+
+        //返回操作结果
         return result;
       }
     }
