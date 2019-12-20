@@ -2,7 +2,7 @@ import { axios } from '@/utils/request';
 import axios_ from 'axios';
 import superagent from 'superagent';
 import _ from 'underscore';
-import { setStore, getStore, clearStore, clearAll } from '@/utils/storage';
+import { setStore, getStore } from '@/utils/storage';
 import { formatDate, queryDateDiff, deNull, queryUrlString } from '@/utils/util';
 import $ from 'jquery';
 

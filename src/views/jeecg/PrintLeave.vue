@@ -273,13 +273,23 @@ import {
   postProcessFreeNode,
   postProcessLogInformed,
   postProcessLog,
+  postProcessLogHistory,
+  patchTableData,
+  deleteProcessLog,
+  deleteProcessLogInf,
   queryPRLogInfTotal,
   queryApprovalExist,
-  patchTableData,
+  queryProcessLogByID,
+  queryProcessLog,
+  queryBusinessInfo,
   queryFileType,
   queryImageURL,
+  queryProcessNodeProcName,
+  queryProcessNodeEmployee,
+  queryProcessLogInfByID,
   queryFileViewURL
 } from "@/api/manage";
+import _ from "underscore";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import { queryUrlString, deNull, formatDate } from "@/utils/util";
@@ -406,10 +416,10 @@ export default {
       //审批动作
       var operation = operation || "同意";
       //审批意见
-      var message = message || "";
+      var message = message || this.curRow.idea_content;
 
       //当前被选中记录数据
-      var curRow = that.table.selectionRows[0];
+      var curRow = that.curRow;
 
       //流程日志编号
       var processLogID = curRow["id"];
@@ -419,12 +429,6 @@ export default {
       var tableName = curRow["table_name"];
 
       var processAudit = curRow["process_audit"];
-
-      //检测是否为单选
-      if (that.table.selectionRows.length != 1) {
-        that.$message.warning("请选择一条记录！");
-        return false;
-      }
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -483,7 +487,6 @@ export default {
         that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
         return false;
       } else {
-        debugger;
         //所有待审核节点
         var allAudit = "";
         //所有待知会节点
@@ -609,13 +612,13 @@ export default {
           //获取下一审核节点
           firstAuditor = firstAuditor.split(",")[0];
           //审批相关处理信息
-          var pnode = {};
+          pnode = {};
 
           if (curRow.business_code != "000000000") {
             //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            var employee = await queryProcessNodeEmployee(firstAuditor);
+            employee = await queryProcessNodeEmployee(firstAuditor);
             //流程岗位
-            var process_station = await queryProcessNodeProcName(firstAuditor);
+            process_station = await queryProcessNodeProcName(firstAuditor);
             //提交审批相关处理信息
             pnode = {
               id: randomChars(32), //获取随机数
@@ -685,8 +688,6 @@ export default {
         that.tipVisible = true;
       }
 
-      that.loadData();
-
       console.log("同意审批成功！");
     },
 
@@ -706,16 +707,10 @@ export default {
       //审批动作
       let operation = operation || "驳回";
       //审批意见
-      let message = message || "";
+      let message = message || that.curRow.idea_content;
 
       //当前被选中记录数据
-      let curRow = that.table.selectionRows[0];
-
-      //检测是否为单选
-      if (that.table.selectionRows.length != 1) {
-        that.$message.warning("请选择一条记录！");
-        return false;
-      }
+      let curRow = that.curRow;
 
       //打印表单名称
       let tableName = curRow["table_name"];
@@ -766,9 +761,11 @@ export default {
       that.tipVisible = true;
       that.tipContent = "驳回审批成功！";
 
-      that.loadData();
       //打印驳回审批处理日志
       console.log("驳回审批成功");
+
+      //返回操作结果
+      return result;
     },
 
     /**
@@ -787,10 +784,10 @@ export default {
       //审批动作
       var operation = operation || "知会";
       //审批意见
-      var message = message || "已查看此业务流程，知会确认成功！";
+      var message = message || that.curRow.idea_content;
 
       //当前被选中记录数据
-      var curRow = that.table.selectionRows[0];
+      var curRow = that.curRow;
 
       //流程日志编号
       var processLogID = curRow["id"];
@@ -798,12 +795,6 @@ export default {
       var bussinessCodeID = curRow["business_data_id"];
       //打印表单名称
       var tableName = curRow["table_name"];
-
-      //检测是否为单选
-      if (that.table.selectionRows.length != 1) {
-        that.$message.warning("请选择一条记录！");
-        return false;
-      }
 
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogInfByID(tableName, processLogID);
@@ -877,7 +868,9 @@ export default {
 
       that.tipVisible = true;
       that.tipContent = "知会确认成功！";
-      that.loadData();
+
+      //返回结果
+      return result;
     },
 
     /**
@@ -894,6 +887,7 @@ export default {
       var approver = this.approveUser;
       //当前时间
       var ctime = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
+
       //审批用户不能为空
       if (deNull(approver) == "" && this.pageType == "workflowing") {
         this.tipVisible = true;
@@ -940,7 +934,7 @@ export default {
             : deNull(wfUsers).split(",")[0];
 
         //提交审批相关处理信息
-        var node = {
+        node = {
           id: randomChars(32), //获取随机数
           table_name: tableName, //业务表名
           main_value: queryUrlString("id"), //表主键值
@@ -1032,7 +1026,8 @@ export default {
         //显示提示信息
         this.tipVisible = true;
         this.tipContent = "知会操作成功！";
-        return true;
+
+        return result;
       }
     }
   }
