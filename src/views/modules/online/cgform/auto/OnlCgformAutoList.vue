@@ -795,7 +795,6 @@ export default {
       ) {
         param.column = "operate_time";
       }
-      debugger;
       param.pageNo = this.table.pagination.current;
       param.pageSize = this.table.pagination.pageSize;
       return filterObj(param);
@@ -950,8 +949,8 @@ export default {
       var that = this;
 
       //检测是否为单选
-      if (this.table.selectionRows.length != 1) {
-        this.$message.warning("请选择一条记录！");
+      if (that.table.selectionRows.length != 1) {
+        that.$message.warning("请选择一条记录！");
         return false;
       }
       //获取当前用户
@@ -987,7 +986,7 @@ export default {
 
       //检测是否为单选
       if (this.table.selectionRows.length != 1) {
-        this.$message.warning("请选择一条记录！");
+        that.$message.warning("请选择一条记录！");
         return false;
       }
       //获取当前用户
@@ -1010,11 +1009,11 @@ export default {
 
       //如果在审批管理菜单下，跳转到详情页面，则应该设置同意驳回确认等按钮
       if (this.code == "0b511f234f3847baa50106a14fff6215") {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=workflow`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=workflow`;
       } else if (this.code == "d11901bc44f24a66b25b37a7a04c611e") {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=notify`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=notify`;
       } else if (this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96") {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&user=${userInfo.username}&type=history`;
+        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=history`;
       } else {
         detailURL = `${detailURL}&type=view`;
       }
@@ -1047,7 +1046,7 @@ export default {
       //流程日志编号
       var processLogID = curRow["id"];
       //业务代码ID
-      var bussinessCodeID = curRow["business_data_id"];
+      //var bussinessCodeID = curRow["business_data_id"];
       //打印表单名称
       var tableName = curRow["table_name"];
 
@@ -1130,6 +1129,8 @@ export default {
       that.tipVisible = true;
       that.tipContent = "知会确认成功！";
       that.loadData();
+
+      return result;
     },
 
     /**
@@ -1168,6 +1169,9 @@ export default {
         return false;
       }
 
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogByID(tableName, processLogID);
+
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
@@ -1180,9 +1184,6 @@ export default {
         );
         return false;
       }
-
-      //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, processLogID);
 
       //获取关于此表单的所有当前审批日志信息
       let node = await queryProcessLog(tableName, bussinessCodeID);

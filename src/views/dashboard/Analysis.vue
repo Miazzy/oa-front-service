@@ -404,7 +404,7 @@ export default {
       var type = curRow["type"] == "知会" ? "notify" : "workflow";
 
       //设置跳转URL
-      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=${type}`;
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&processLogID=${curRow.pid}&user=${userInfo.username}&type=${type}`;
 
       //跳转到相应页面
       this.$router.push(detailURL);

@@ -454,19 +454,24 @@ export default {
       var curRow = that.curRow;
 
       //流程日志编号
-      var processLogID = curRow["id"];
-      //业务代码ID
-      var bussinessCodeID = curRow["business_data_id"];
+      var processLogID = queryUrlString("processLogID");
+
       //打印表单名称
       var tableName = curRow["table_name"] || queryUrlString("table_name");
+
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogByID(tableName, processLogID);
+
+      //业务代码ID
+      var bussinessCodeID = curRow["business_data_id"];
 
       var processAudit = curRow["process_audit"];
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
-          curRow["employee"].includes(userInfo["username"]) ||
-          curRow["employee"].includes(userInfo["realname"])
+          deNull(curRow["employee"]).includes(userInfo["username"]) ||
+          deNull(curRow["employee"]).includes(userInfo["realname"])
         )
       ) {
         that.$message.warning(
@@ -744,8 +749,14 @@ export default {
       //当前被选中记录数据
       let curRow = that.curRow;
 
+      //流程日志编号
+      var processLogID = queryUrlString("processLogID");
+
       //打印表单名称
       let tableName = curRow["table_name"] || queryUrlString("table_name");
+
+      //获取当前审批节点的所有数据
+      curRow = await queryProcessLogByID(tableName, processLogID);
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -822,7 +833,7 @@ export default {
       var curRow = that.curRow;
 
       //流程日志编号
-      var processLogID = curRow["id"];
+      var processLogID = queryUrlString("processLogID");
 
       //打印表单名称
       var tableName = curRow["table_name"] || queryUrlString("table_name");
