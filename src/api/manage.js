@@ -1555,3 +1555,25 @@ export async function queryCurNodePageType(pageType) {
     //返回pageType
     return pageType;
 }
+
+/**
+ * @function 渲染审批流程详情
+ */
+export async function colorProcessDetail(that, main) {
+    main.curRow = that.curRow;
+    main.depart = that.depart;
+    main.workflows = that.workflows;
+    main.columns = that.curRow.sub_columns;
+    main.data = that.curRow.sub_data;
+    main.pageType = queryUrlString('type');
+    main.curRow.fileStatus = deNull(main.curRow.files) == '' ? 1 : 0;
+    main.curRow.fileType = queryFileType(main.curRow.files);
+    main.curRow.fileURL = queryFileViewURL(main.curRow.files);
+    main.slides = queryImageURL(main.curRow.files);
+    //检查是否可以进行审批/同意等操作
+    main.pageType = await queryCurNodePageType(main.pageType);
+    //修改图片样式
+    changeImageCSS();
+    //返回设置结果
+    return main;
+}

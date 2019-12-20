@@ -299,7 +299,7 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import {
   randomChars,
-  changeImageCSS,
+  colorProcessDetail,
   watchFormLeave,
   postProcessFreeNode,
   postProcessLogInformed,
@@ -313,13 +313,9 @@ import {
   queryProcessLogByID,
   queryProcessLog,
   queryBusinessInfo,
-  queryFileType,
-  queryImageURL,
   queryProcessNodeProcName,
   queryProcessNodeEmployee,
-  queryProcessLogInfByID,
-  queryCurNodePageType,
-  queryFileViewURL
+  queryProcessLogInfByID
 } from "@/api/manage";
 import _ from "underscore";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -362,7 +358,7 @@ export default {
       depart: {},
       fileinfo: "",
       workflows: [],
-      pageType: "",
+      pageType: "view",
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
@@ -376,72 +372,51 @@ export default {
   async created() {
     //查询当前节点信息
     let that = await watchFormLeave(this);
-    this.curRow = that.curRow;
-    this.depart = that.depart;
-    this.workflows = that.workflows;
-    this.columns = that.curRow.sub_columns;
-    this.data = that.curRow.sub_data;
-    this.pageType = queryUrlString("type");
-    this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
-    this.curRow.fileType = queryFileType(this.curRow.files);
-    this.curRow.fileURL = queryFileViewURL(this.curRow.files);
-    this.slides = queryImageURL(this.curRow.files);
-    //检查是否可以进行审批/同意等操作
-    this.pageType = await queryCurNodePageType(this.pageType);
-    //修改图片样式
-    changeImageCSS();
+    //获取返回结果
+    let result = await colorProcessDetail(that, this);
+    //返回结果
+    return result;
   },
-  mounted() {},
+
+  async mounted() {
+    //查询当前节点信息
+    let that = await watchFormLeave(this);
+    //获取返回结果
+    let result = await colorProcessDetail(that, this);
+    //返回结果
+    return result;
+  },
+
   watch: {
     async $route() {
       //查询当前节点信息
       let that = await watchFormLeave(this);
-      this.curRow = that.curRow;
-      this.depart = that.depart;
-      this.workflows = that.workflows;
-      this.columns = that.curRow.sub_columns;
-      this.data = that.curRow.sub_data;
-      this.pageType = queryUrlString("type");
-      this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
-      this.curRow.fileType = queryFileType(this.curRow.files);
-      this.curRow.fileURL = queryFileViewURL(this.curRow.files);
-      this.slides = queryImageURL(this.curRow.files);
-      //检查是否可以进行审批/同意等操作
-      this.pageType = await queryCurNodePageType(this.pageType);
-      //修改图片样式
-      changeImageCSS();
+      //获取返回结果
+      let result = await colorProcessDetail(that, this);
+      //返回结果
+      return result;
     }
   },
   methods: {
     async loadData() {
       //查询当前节点信息
       let that = await watchFormLeave(this);
-      this.curRow = that.curRow;
-      this.depart = that.depart;
-      this.workflows = that.workflows;
-      this.columns = that.curRow.sub_columns;
-      this.data = that.curRow.sub_data;
-      this.pageType = queryUrlString("type");
-      this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
-      this.curRow.fileType = queryFileType(this.curRow.files);
-      this.curRow.fileURL = queryFileViewURL(this.curRow.files);
-      this.slides = queryImageURL(this.curRow.files);
-      //检查是否可以进行审批/同意等操作
-      this.pageType = await queryCurNodePageType(this.pageType);
-      //修改图片样式
-      changeImageCSS();
+      //获取返回结果
+      let result = await colorProcessDetail(that, this);
+      //返回结果
+      return result;
     },
     getDate() {},
     tipHandleOk(e) {
       this.tipConfirmLoading = true;
       setTimeout(() => {
-        this.loadData(1);
+        this.loadData();
         this.tipVisible = false;
         this.tipConfirmLoading = false;
       }, 300);
     },
     tipHandleCancel() {
-      this.loadData(1);
+      this.loadData();
       this.tipVisible = false;
     },
     getFormFieldValue(field) {
