@@ -502,7 +502,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
  */
 export async function queryProcessLogWait(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=30&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -529,7 +529,7 @@ export async function queryProcessLogWait(username, realname) {
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
-    let queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    let queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=30&_sort=-create_time`;
     let result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1172,7 +1172,7 @@ export async function queryWorkflows(business_data_id, record) {
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
 
-            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime} `;
+            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 审批意见：${item.action_opinion} , 时间：${optime} `;
 
             let color = item.action == '同意' ?
                 'green' :
@@ -1465,7 +1465,6 @@ export function queryFileType(text) {
  * @function 查询附件中的图片地址
  */
 export function queryImageURL(text) {
-    debugger;
     //文档数组
     let fileList = [];
     let images = [];
@@ -1517,8 +1516,42 @@ export function queryImageURL(text) {
  */
 export function changeImageCSS() {
     setTimeout(() => {
+        //图片预览，Css设置Float:left
         $('figure[itemscope="itemscope"]').css('float', 'left');
         $('figure[itemscope="itemscope"]').css('margin-right', '10px');
         $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
+        //图片预览，文件名称展示位置Center
+        $('.pswp__caption__center').css('text-align', 'center');
     }, 10);
+}
+
+/**
+ * @function 获取当前节点是否有知会或者审批节点信息
+ */
+export async function queryCurNodePageType(pageType) {
+    //获取页面类型
+    let type = queryUrlString('type');
+
+    //如果审批详情或者知会详情页面，则设置pageType
+    if (type == 'workflow' || type == 'notify') {
+        //获取当前节点审批流程数据）
+        let flag = await queryProcessLogByID(
+            queryUrlString('table_name'),
+            queryUrlString('processLogID')
+        );
+
+        //获取当前节点知会流程数据
+        if (deNull(flag) == '') {
+            flag = await queryProcessLogInfByID(
+                queryUrlString('table_name'),
+                queryUrlString('processLogID')
+            );
+        }
+
+        //获取页面类型
+        pageType = deNull(flag) == '' ? 'view' : pageType;
+    }
+
+    //返回pageType
+    return pageType;
 }

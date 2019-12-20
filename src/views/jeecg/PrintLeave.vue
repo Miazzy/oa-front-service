@@ -99,7 +99,7 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('office')"
           >
             <div style="width:90%;">
               <a-divider style="width:90%;" dashed></a-divider>
@@ -238,7 +238,7 @@
                 <a-textarea
                   style="align:left;text-align:left;"
                   placeholder="请输入审批意见"
-                  :value="curRow.idea_content"
+                  v-model="curRow.idea_content"
                   :autosize="{ minRows: 2, maxRows: 10 }"
                 />
               </div>
@@ -263,7 +263,7 @@
                 <a-textarea
                   style="align:left;text-align:left;"
                   placeholder="请输入知会意见"
-                  :value="curRow.idea_content"
+                  v-model="curRow.idea_content"
                   :autosize="{ minRows: 2, maxRows: 10 }"
                 />
               </div>
@@ -318,6 +318,7 @@ import {
   queryProcessNodeProcName,
   queryProcessNodeEmployee,
   queryProcessLogInfByID,
+  queryCurNodePageType,
   queryFileViewURL
 } from "@/api/manage";
 import _ from "underscore";
@@ -373,6 +374,7 @@ export default {
   },
 
   async created() {
+    //查询当前节点信息
     let that = await watchFormLeave(this);
     this.curRow = that.curRow;
     this.depart = that.depart;
@@ -384,13 +386,15 @@ export default {
     this.curRow.fileType = queryFileType(this.curRow.files);
     this.curRow.fileURL = queryFileViewURL(this.curRow.files);
     this.slides = queryImageURL(this.curRow.files);
-    this.curRow.idea_content = "暂无意见，审批通过！";
+    //检查是否可以进行审批/同意等操作
+    this.pageType = await queryCurNodePageType(this.pageType);
     //修改图片样式
     changeImageCSS();
   },
   mounted() {},
   watch: {
     async $route() {
+      //查询当前节点信息
       let that = await watchFormLeave(this);
       this.curRow = that.curRow;
       this.depart = that.depart;
@@ -402,12 +406,31 @@ export default {
       this.curRow.fileType = queryFileType(this.curRow.files);
       this.curRow.fileURL = queryFileViewURL(this.curRow.files);
       this.slides = queryImageURL(this.curRow.files);
+      //检查是否可以进行审批/同意等操作
+      this.pageType = await queryCurNodePageType(this.pageType);
       //修改图片样式
       changeImageCSS();
     }
   },
   methods: {
-    loadData() {},
+    async loadData() {
+      //查询当前节点信息
+      let that = await watchFormLeave(this);
+      this.curRow = that.curRow;
+      this.depart = that.depart;
+      this.workflows = that.workflows;
+      this.columns = that.curRow.sub_columns;
+      this.data = that.curRow.sub_data;
+      this.pageType = queryUrlString("type");
+      this.curRow.fileStatus = deNull(this.curRow.files) == "" ? 1 : 0;
+      this.curRow.fileType = queryFileType(this.curRow.files);
+      this.curRow.fileURL = queryFileViewURL(this.curRow.files);
+      this.slides = queryImageURL(this.curRow.files);
+      //检查是否可以进行审批/同意等操作
+      this.pageType = await queryCurNodePageType(this.pageType);
+      //修改图片样式
+      changeImageCSS();
+    },
     getDate() {},
     tipHandleOk(e) {
       this.tipConfirmLoading = true;
@@ -435,7 +458,6 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
-      debugger;
       //设置this的别名
       var that = this;
       //返回结果
@@ -481,7 +503,7 @@ export default {
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, processLogID);
+      //curRow = await queryProcessLogByID(tableName, processLogID);
 
       //获取关于此表单的所有当前审批日志信息
       let node = await queryProcessLog(tableName, bussinessCodeID);
@@ -714,7 +736,7 @@ export default {
             );
 
             //将当前待审核节点，添加至datasource中
-            that.table.dataSource.push(pnode);
+            //that.table.dataSource.push(pnode);
 
             //提示信息
             that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
@@ -726,6 +748,9 @@ export default {
       }
 
       console.log("同意审批成功！");
+
+      //设置为view预览模式
+      this.pageType = "view";
     },
 
     /**
@@ -806,6 +831,9 @@ export default {
 
       //打印驳回审批处理日志
       console.log("驳回审批成功");
+
+      //设置为view预览模式
+      this.pageType = "view";
 
       //返回操作结果
       return result;
@@ -911,6 +939,9 @@ export default {
 
       that.tipVisible = true;
       that.tipContent = "知会确认成功！";
+
+      //设置为view预览模式
+      this.pageType = "view";
 
       //返回结果
       return result;
@@ -1116,5 +1147,14 @@ export default {
 figure {
   float: left;
   margin-right: 10px;
+}
+.pswp__caption__center {
+  text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
+  font-size: 13px;
+  padding: 10px;
+  line-height: 20px;
+  color: #ccc;
 }
 </style>
