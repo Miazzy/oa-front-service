@@ -998,6 +998,31 @@ export default {
       if (deNull(approver) != "" && this.pageType == "workflowing") {
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         var result = await postProcessFreeNode(node);
+
+        //提交发起人审批相关处理信息
+        node = {
+          id: queryRandomStr(32), //获取随机数
+          table_name: tableName, //业务表名
+          main_value: queryUrlString("id"), //表主键值
+          business_data_id: queryUrlString("id"), //业务具体数据主键值
+          business_code: "000000000", //业务编号
+          process_name: "自由流程审批", //流程名称
+          employee: userInfo["username"],
+          process_station: "自由流程审批",
+          process_audit: "000000000",
+          proponents: userInfo["username"],
+          approve_user: userInfo["username"],
+          action: "发起",
+          action_opinion: "发起自由流程",
+          content: this.curRow["content"],
+          operate_time: ctime,
+          create_time: ctime,
+          business_data: JSON.stringify(node)
+        };
+
+        //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+        result = await postProcessLogHistory(node);
+
         //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
         var firstWflowUser =
           deNull(wfUsers) == ""
