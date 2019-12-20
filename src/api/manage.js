@@ -1190,7 +1190,8 @@ export async function queryWorkflows(business_data_id) {
             color = flag && item.action == '同意' ? 'blue' : color;
             color = flag && item.action == '知会' ? 'orange' : color;
 
-            var status = flag ?
+            var status = (item.action == '同意' && next.action == '知会') ||
+                (flag && item.action == '同意') ?
                 'over' :
                 item.action == '发起' ?
                 'start' :
