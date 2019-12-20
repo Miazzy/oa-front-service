@@ -179,6 +179,62 @@
                       slot="dot"
                       type="clock-circle-o"
                       style="font-size: 16px;"
+                      theme="twoTone"
+                      twoToneColor="#eb2f2f"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'start'"
+                      slot="dot"
+                      type="tag"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      twoToneColor="#5599FF"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'cancel'"
+                      slot="dot"
+                      type="close-circle"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      twoToneColor="#ff0000"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'agree'"
+                      slot="dot"
+                      type="check-circle"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      twoToneColor="#52ce1a"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'message'"
+                      slot="dot"
+                      type="mail"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      :twoToneColor="item.color"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'over'"
+                      slot="dot"
+                      type="flag"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      :twoToneColor="item.color"
+                      v-bind:color="item.color"
+                    />
+                    <a-icon
+                      v-if="item.status == 'sound'"
+                      slot="dot"
+                      type="sound"
+                      style="font-size: 16px;"
+                      theme="twoTone"
+                      twoToneColor="orange"
                       v-bind:color="item.color"
                     />
                     {{item.content}}

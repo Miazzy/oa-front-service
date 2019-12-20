@@ -1175,22 +1175,36 @@ export async function queryWorkflows(business_data_id) {
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
 
-            let content = `节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 审批意见：${item.action_opinion}  时间：${optime} `;
+            let content = `节点：${deNull (item.process_station)} , 处理人： ${deNull (item.approve_user)} , 审批：${deNull (item.action)} , 审批意见：${deNull (item.action_opinion)}  时间：${deNull (optime)} `;
 
             let color = item.action == '同意' ?
                 'green' :
-                item.action == '驳回' ? 'red' : item.action == '知会' ? 'yellow' : 'blue';
+                item.action == '驳回' || item.action == '撤销' ?
+                'red' :
+                item.action == '知会' ?
+                'yellow' :
+                item.action == '发起' ? '#00DD77' : 'blue';
 
             //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
             color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
             color = flag && item.action == '同意' ? 'blue' : color;
             color = flag && item.action == '知会' ? 'orange' : color;
 
+            var status = flag ?
+                'over' :
+                item.action == '发起' ?
+                'start' :
+                item.action == '同意' ?
+                'agree' :
+                item.action == '驳回' || item.action == '撤销' ?
+                'cancel' :
+                item.action == '知会' ? 'message' : 'over';
+
             let node = {
                 id: item.id,
                 color: color,
                 content: content,
-                status: 'over',
+                status: status,
             };
 
             workflows.push(node);
@@ -1203,7 +1217,7 @@ export async function queryWorkflows(business_data_id) {
             let node = {
                 id: item.id,
                 color: 'pink',
-                content: `节点：${item.process_station} , 待处理人： ${item.employee} , 审批：待处理 , 时间：-- `,
+                content: `节点：${deNull (item.process_station)} , 待处理人： ${deNull (item.employee)} , 审批：待处理 , 时间：-- `,
                 status: 'wait',
             };
             workflows.push(node);
@@ -1219,8 +1233,8 @@ export async function queryWorkflows(business_data_id) {
             let node = {
                 id: item.id,
                 color: 'orange',
-                content: `节点：${item.process_station} , 待处理人： ${item.employee} ,  已处理人： ${appruser} , 审批：知会 , 时间：${optime} `,
-                status: 'wait',
+                content: `节点：${deNull (item.process_station)} , 待处理人： ${deNull (item.employee)} ,  已处理人： ${deNull (appruser)} , 审批：知会 , 时间：${deNull (optime)} `,
+                status: 'sound',
             };
             workflows.push(node);
         });
