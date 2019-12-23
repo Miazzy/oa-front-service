@@ -973,6 +973,8 @@ export function queryFormName(tableName) {
         BS_RECORD_BORROW: '档案及证照借阅申请单',
         BS_SEAL_NORMAL: '用印申请(非合同)流程申请单',
         BS_SEAL_CONTRACT: '用印申请(合同)流程申请单',
+        BS_SEAL_DECLARE: '印章借用申请单',
+        BS_TRAVEL: '出差申请单',
     };
 
     return config[tableName];
@@ -990,6 +992,8 @@ export function queryFormTypeName(tableName) {
         BS_RECORD_BORROW: '借阅',
         BS_SEAL_NORMAL: '申请',
         BS_SEAL_CONTRACT: '申请',
+        BS_SEAL_DECLARE: '申请',
+        BS_TRAVEL: '申请',
     };
 
     return config[tableName];
@@ -1007,6 +1011,8 @@ export function queryFormTypeValue(tableName) {
         BS_RECORD_BORROW: '普通',
         BS_SEAL_NORMAL: '非合同',
         BS_SEAL_CONTRACT: '合同',
+        BS_SEAL_DECLARE: '普通',
+        BS_TRAVEL: '普通',
     };
 
     return config[tableName];
@@ -1024,6 +1030,8 @@ export function queryFormMainTable(tableName) {
         BS_RECORD_BORROW: false,
         BS_SEAL_NORMAL: false,
         BS_SEAL_CONTRACT: false,
+        BS_SEAL_DECLARE: false,
+        BS_TRAVEL: false,
     };
 
     return config[tableName];
@@ -1041,6 +1049,8 @@ export function queryFormMTStarttimeName(tableName) {
         BS_RECORD_BORROW: '借阅',
         BS_SEAL_NORMAL: '开始',
         BS_SEAL_CONTRACT: '开始',
+        BS_SEAL_DECLARE: '开始',
+        BS_TRAVEL: '开始',
     };
 
     return config[tableName];
@@ -1058,6 +1068,8 @@ export function queryFormMTEndtimeName(tableName) {
         BS_RECORD_BORROW: '归还',
         BS_SEAL_NORMAL: '结束',
         BS_SEAL_CONTRACT: '结束',
+        BS_SEAL_DECLARE: '结束',
+        BS_TRAVEL: '结束',
     };
 
     return config[tableName];
@@ -1075,6 +1087,8 @@ export function queryFormMTFileName(tableName) {
         BS_RECORD_BORROW: '档案资料',
         BS_SEAL_NORMAL: '文件名称',
         BS_SEAL_CONTRACT: '文件名称',
+        BS_SEAL_DECLARE: '文件名称',
+        BS_TRAVEL: '文件名称',
     };
 
     return config[tableName];
@@ -1116,6 +1130,8 @@ export function queryFormMTSubColumns(tableName) {
         BS_RECORD_BORROW: [],
         BS_SEAL_NORMAL: [],
         BS_SEAL_CONTRACT: [],
+        BS_SEAL_DECLARE: [],
+        BS_TRAVEL: [],
     };
 
     return config[tableName];
@@ -1133,6 +1149,8 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
         BS_RECORD_BORROW: [],
         BS_SEAL_NORMAL: [],
         BS_SEAL_CONTRACT: [],
+        BS_SEAL_DECLARE: [],
+        BS_TRAVEL: [],
     };
     if (tableName == 'BS_ATTENDANCE') {
         let data = await queryTableDataByField(
@@ -1281,6 +1299,8 @@ export async function watchFormLeave(that) {
     that.username = username;
 
     that.curRow = await queryTableData(tableName, id);
+
+    debugger;
 
     //获取部门信息
     var department = '';
@@ -1588,6 +1608,7 @@ export async function colorProcessDetail(that, main) {
     main.curRow.fileType = queryFileType(main.curRow.files);
     main.curRow.fileURL = queryFileViewURL(main.curRow.files);
     main.slides = queryImageURL(main.curRow.files);
+    main.tableName = queryUrlString('table_name');
     //检查是否可以进行审批/同意等操作
     main.pageType = await queryCurNodePageType(main.pageType);
     //修改图片样式

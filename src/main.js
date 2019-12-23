@@ -24,6 +24,13 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+import EleForm from 'vue-ele-form';
+
+import F2 from '@antv/f2';
+
 import axios from 'axios';
 import qs from 'qs';
 axios.defaults.headers.post['Content-Type'] =
@@ -67,6 +74,9 @@ Vue.use(vueBus);
 Vue.use(JeecgComponents);
 Vue.use(ViewUI);
 Vue.use(VuePreview);
+Vue.use(ElementUI);
+Vue.use(EleForm);
+Vue.use(F2);
 
 new Vue({
     router,

@@ -47,6 +47,17 @@
               v-html="curRow.file_name"
             ></div>
           </a-col>
+          <a-col
+            :span="24"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="typeof curRow.seal_name != 'undefined' && curRow.seal_name != null"
+          >
+            <span style="float:left;display:block;">印章名称:</span>
+            <div
+              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.seal_name"
+            ></div>
+          </a-col>
           <a-col :span="24" style="margin-top: 10px; margin-bottom:10px;">
             <span>申请人员:</span>
             <a-input style="width: 30%" readonly v-model="curRow.create_by" />
@@ -423,6 +434,7 @@ export default {
       fileinfo: "",
       workflows: [],
       pageType: "view",
+      tableName: "",
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
