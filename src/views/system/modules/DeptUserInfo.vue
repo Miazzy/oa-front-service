@@ -135,10 +135,10 @@
             width: 170
           }],
         url: {
-          list: "/sys/user/departUserList",
-          edit: "/sys/user/editSysDepartWithUser",
-          delete: "/sys/user/deleteUserInDepart",
-          deleteBatch: "/sys/user/deleteUserInDepartBatch",
+          list: `${window._CONFIG['domian']}/sys/user/departUserList`,
+          edit: `${window._CONFIG['domian']}/sys/user/editSysDepartWithUser`,
+          delete: `${window._CONFIG['domian']}/sys/user/deleteUserInDepart`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/user/deleteUserInDepartBatch`,
         }
       }
     },
@@ -182,7 +182,7 @@
           }
           var that = this;
           console.log(this.currentDeptId);
-          this.$confirm({
+          this.$confirm_({
             title: "确认删除",
             content: "是否删除选中数据?",
             onOk: function () {

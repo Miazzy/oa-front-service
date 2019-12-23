@@ -84,26 +84,31 @@ export default {
     },
     handleLogout() {
       const that = this
-
-      this.$confirm({
-        title: '提示',
-        content: '真的要注销登录吗 ?',
-        onOk() {
-          return that
-            .Logout({})
-            .then(() => {
-              window.location.href = '/'
-              //window.location.reload()
-            })
-            .catch(err => {
+      this.$confirm('真的要注销登录吗 ?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            that.Logout({}).then(() => {
+              that.$message({
+                type: 'success',
+                message: '注销登陆成功！'
+              });
+              setTimeout(() => {
+                window.location.href = '/'
+              }, 300)
+            }).catch(err => {
               that.$message.error({
                 title: '错误',
                 description: err.message
               })
-            })
-        },
-        onCancel() {}
-      })
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'warning',
+            message: '取消操作！'
+          });          
+        });
     },
     updatePassword() {
       let username = this.userInfo().username

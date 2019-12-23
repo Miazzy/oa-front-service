@@ -101,9 +101,9 @@ export default {
     return {
       loadding: false,
       url: {
-        listCementByUser: "/sys/annountCement/listByUser",
-        editCementSend: "/sys/sysAnnouncementSend/editByAnntIdAndUserId",
-        queryById: "/sys/annountCement/queryById"
+        listCementByUser: `${window._CONFIG['domian']}/sys/annountCement/listByUser`,
+        editCementSend: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        queryById: `${window._CONFIG['domian']}/sys/annountCement/queryById`
       },
       hovered: false,
       announcement1: [],
@@ -223,11 +223,15 @@ export default {
         "/websocket/" +
         userId;
       //console.log(url);
-      this.websock = new WebSocket(url);
-      this.websock.onopen = this.websocketonopen;
-      this.websock.onerror = this.websocketonerror;
-      this.websock.onmessage = this.websocketonmessage;
-      this.websock.onclose = this.websocketclose;
+      try {
+        this.websock = new WebSocket(url);
+        this.websock.onopen = this.websocketonopen;
+        this.websock.onerror = this.websocketonerror;
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketclose;
+      } catch (error) {
+        console.log('init websock error:' + error);
+      }
     },
     websocketonopen: function() {
       console.log("WebSocket连接成功");
@@ -236,19 +240,16 @@ export default {
       console.log("WebSocket连接发生错误");
     },
     websocketonmessage: function(e) {
+
       console.log("-----接收消息-------", e.data);
+
       var data = eval("(" + e.data + ")"); //解析对象
       this.loadData();
-      //if(data.cmd == "topic"){
-      //系统通知
       this.openNotification(data);
-      //}else if(data.cmd == "user"){
-      //用户消息
-      //  this.openNotification(data);
-      //}
+
     },
     websocketclose: function(e) {
-      console.log("connection closed (" + e.code + ")");
+      console.log("connection closed (" + JSON.stringify(e) + ")");
     },
 
     openNotification(data) {

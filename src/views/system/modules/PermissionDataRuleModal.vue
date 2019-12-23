@@ -82,9 +82,9 @@
           ruleColumn: {rules: []}
         },
         url: {
-          list: '/sys/dictItem/list',
-          add: '/sys/permission/addPermissionRule',
-          edit: '/sys/permission/editPermissionRule'
+          list: `${window._CONFIG['domian']}/sys/dictItem/list`,
+          add: `${window._CONFIG['domian']}/sys/permission/addPermissionRule`,
+          edit: `${window._CONFIG['domian']}/sys/permission/editPermissionRule`
         },
         showRuleColumn:true
       }

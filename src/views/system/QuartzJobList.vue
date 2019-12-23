@@ -180,13 +180,13 @@
           }
         ],
 		url: {
-          list: "/sys/quartzJob/list",
-          delete: "/sys/quartzJob/delete",
-          deleteBatch: "/sys/quartzJob/deleteBatch",
-          pause: "/sys/quartzJob/pause",
-          resume: "/sys/quartzJob/resume",
-          exportXlsUrl: "sys/quartzJob/exportXls",
-          importExcelUrl: "sys/quartzJob/importExcel",
+          list: `${window._CONFIG['domian']}/sys/quartzJob/list`,
+          delete: `${window._CONFIG['domian']}/sys/quartzJob/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/quartzJob/deleteBatch`,
+          pause: `${window._CONFIG['domian']}/sys/quartzJob/pause`,
+          resume: `${window._CONFIG['domian']}/sys/quartzJob/resume`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/quartzJob/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/quartzJob/importExcel`,
         },
       }
     },
@@ -214,7 +214,7 @@
       pauseJob: function(record){
         var that = this;
         //暂停定时任务
-        this.$confirm({
+        this.$confirm_({
           title:"确认暂停",
           content:"是否暂停选中任务?",
           onOk: function(){
@@ -234,7 +234,7 @@
       resumeJob: function(record){
         var that = this;
         //恢复定时任务
-        this.$confirm({
+        this.$confirm_({
           title:"确认启动",
           content:"是否启动选中任务?",
           onOk: function(){

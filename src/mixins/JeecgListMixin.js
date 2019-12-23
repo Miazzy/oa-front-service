@@ -145,7 +145,7 @@ export const JeecgListMixin = {
           ids += this.selectedRowKeys[a] + ",";
         }
         var that = this;
-        this.$confirm({
+        this.$confirm_({
           title: "确认删除",
           content: "是否删除选中数据?",
           onOk: function () {

@@ -548,7 +548,7 @@
           that.selectedRowKeys.forEach(function(val) {
             ids+=val+",";
           });
-          that.$confirm({
+          that.$confirm_({
             title:"确认删除",
             content:"是否删除选中数据?",
             onOk: function(){

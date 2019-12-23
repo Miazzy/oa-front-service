@@ -101,7 +101,7 @@
           }
         ],
         url: {
-          list: "/sys/dataLog/list",
+          list: `${window._CONFIG['domian']}/sys/dataLog/list`,
         },
       }
     },

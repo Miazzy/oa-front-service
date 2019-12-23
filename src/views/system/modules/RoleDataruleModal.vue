@@ -54,7 +54,7 @@
         }],
         activeTabKey: '1',
         url:{
-          datarule:"/sys/role/datarule",
+          datarule:`${window._CONFIG['domian']}/sys/role/datarule`,
         },
         dataruleList:[],
         dataruleChecked:[]

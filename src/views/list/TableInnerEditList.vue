@@ -196,7 +196,7 @@
       },
       // eslint-disable-next-line
       del (row) {
-        this.$confirm({
+        this.$confirm_({
           title: '警告',
           content: '真的要删除吗?',
           okText: '删除',

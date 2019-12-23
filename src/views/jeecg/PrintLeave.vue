@@ -954,8 +954,8 @@ export default {
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
         !(
-          employeeList.includes("," + userInfo["username"] + ",") ||
-          employeeList.includes("," + userInfo["realname"] + ",")
+          deNull(employeeList).includes("," + userInfo["username"] + ",") ||
+          deNull(employeeList).includes("," + userInfo["realname"] + ",")
         )
       ) {
         that.$message.warning(
@@ -966,8 +966,8 @@ export default {
 
       //已经知会确认过的用户，无法再次知会
       if (
-        appoveUserList.includes("," + userInfo["username"] + ",") ||
-        appoveUserList.includes("," + userInfo["realname"] + ",")
+        deNull(appoveUserList).includes("," + userInfo["username"] + ",") ||
+        deNull(appoveUserList).includes("," + userInfo["realname"] + ",")
       ) {
         that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
         return false;
@@ -1029,21 +1029,27 @@ export default {
 
       //审批用户不能为空
       if (deNull(approver) == "" && this.pageType == "workflowing") {
-        this.tipVisible = true;
-        this.tipContent = "请选择审批用户!";
+        this.$confirm_({
+          title: "温馨提示",
+          content: "请选择审批用户!",
+        });
         return false;
       }
       //如果审批用户含有多个，则不能提交
-      if (approver.includes(",") && this.pageType == "workflowing") {
-        this.tipVisible = true;
-        this.tipContent = "审批用户只能选择一个!";
+      if (deNull(approver).includes(",") && this.pageType == "workflowing") {
+        this.$confirm_({
+          title: "温馨提示",
+          content: "审批用户只能选择一个!",
+        });
         return false;
       }
       //知会用户不能为空
       if (deNull(nfUsers) == "" && this.pageType == "notifying") {
         //显示提示信息
-        this.tipVisible = true;
-        this.tipContent = "请选择知会用户!";
+        this.$confirm_({
+          title: "温馨提示",
+          content: "请选择知会用户!",
+        });
         return false;
       }
 
@@ -1119,9 +1125,12 @@ export default {
         let vflag = await queryApprovalExist(tableName, this.curRow["id"]);
 
         if (vflag) {
+
           //数据库中已经存在此记录，提示用户无法提交审批
-          this.tipVisible = true;
-          this.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
+          this.$confirm_({
+            title: "温馨提示",
+            content:"待审记录中，已经存在此记录，无法再次提交审批！",
+          });
 
           //刷新页面数据
           this.loadData();
@@ -1146,9 +1155,11 @@ export default {
             bpm_status: "2"
           });
 
-          //弹出审批完成提示框
-          this.tipVisible = true;
-          this.tipContent = "提交自由流程审批成功！";
+          //弹出审批完成提示框s
+          this.$confirm("提交自由流程审批成功！", '操作成功', {type: 'success'})
+
+          //设置为view预览模式
+          this.pageType = "view";
 
           //刷新页面数据
           this.loadData();
@@ -1165,14 +1176,18 @@ export default {
 
         //同一业务数据，每天最多知会3次
         if (deNull(loginfo) != "" && loginfo.today >= 3) {
-          this.tipVisible = true;
-          this.tipContent = "同一业务数据，每天最多知会3次！";
+          this.$confirm_({
+            title: "温馨提示",
+            content:"同一业务数据，每天最多知会3次！"
+          });
           return true;
         }
 
         if (deNull(loginfo) != "" && loginfo.total >= 10) {
-          this.tipVisible = true;
-          this.tipContent = "同一业务数据，总计最多知会10次！";
+          this.$confirm_({
+            title: "温馨提示",
+            content:"同一业务数据，总计最多知会10次！"
+          });
           return true;
         }
 
@@ -1198,8 +1213,7 @@ export default {
         result = await postProcessLogInformed(pnode);
 
         //显示提示信息
-        this.tipVisible = true;
-        this.tipContent = "知会操作成功！";
+        this.$confirm("知会操作成功！", '操作成功', {type: 'success'})
 
         //设置为view预览模式
         this.pageType = "view";

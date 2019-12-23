@@ -1911,7 +1911,7 @@ export default {
         });
 
         //点击确认删除，执行删除操作
-        that.$confirm({
+        that.$confirm_({
           title: "确认删除",
           content: "是否删除选中数据?",
           onOk: function() {

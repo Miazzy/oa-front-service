@@ -63,8 +63,8 @@
       return {
         treeValue:"",
         treeData:[],
-        url:"/sys/dict/loadTreeData",
-        view:'/sys/dict/loadDictItem/',
+        url:`${window._CONFIG['domian']}/sys/dict/loadTreeData`,
+        view:`${window._CONFIG['domian']}/sys/dict/loadDictItem/`,
         tableName:"",
         text:"",
         code:"",

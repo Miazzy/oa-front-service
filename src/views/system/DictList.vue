@@ -124,10 +124,10 @@
           sm: {span: 19},
         },
         url: {
-          list: "/sys/dict/list",
-          delete: "/sys/dict/delete",
-          exportXlsUrl: "sys/dict/exportXls",
-          importExcelUrl: "sys/dict/importExcel",
+          list: `${window._CONFIG['domian']}/sys/dict/list`,
+          delete: `${window._CONFIG['domian']}/sys/dict/delete`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/dict/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/dict/importExcel`,
         },
       }
     },

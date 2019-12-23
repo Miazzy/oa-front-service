@@ -34,8 +34,8 @@
         model: {},
         confirmLoading: false,
         url: {
-          add: "/act/model/create",
-          list: "/sys/user/list"
+          add: `${window._CONFIG['domian']}/act/model/create`,
+          list: `${window._CONFIG['domian']}/sys/user/list`
         },
         columns: [
           {

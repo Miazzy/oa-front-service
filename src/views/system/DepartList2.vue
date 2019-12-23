@@ -148,9 +148,9 @@
         selectedRowKeys: [],
         selectedRows: [],
         url: {
-          list: "/sys/sysDepart/list",
-          delete: "/sys/sysDepart/delete",
-          deleteBatch: "/sys/sysDepart/deleteBatch",
+          list: `${window._CONFIG['domian']}/sys/sysDepart/list`,
+          delete: `${window._CONFIG['domian']}/sys/sysDepart/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/sysDepart/deleteBatch`,
         },
 
       }
@@ -212,7 +212,7 @@
             ids += this.selectedRowKeys[a] + ",";
           }
           var that = this;
-          this.$confirm({
+          this.$confirm_({
             title: "确认删除",
             content: "是否删除选中数据?",
             onOk: function () {

@@ -205,11 +205,11 @@
           mobile: {rules: [{validator: this.validateMobile}]}
         },
         url: {
-          delete: '/sys/sysDepart/delete',
-          edit: '/sys/sysDepart/edit',
-          deleteBatch: '/sys/sysDepart/deleteBatch',
-          exportXlsUrl: "sys/sysDepart/exportXls",
-          importExcelUrl: "sys/sysDepart/importExcel",
+          delete: `${window._CONFIG['domian']}/sys/sysDepart/delete`,
+          edit: `${window._CONFIG['domian']}/sys/sysDepart/edit`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/sysDepart/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/sysDepart/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/sysDepart/importExcel`,
         },
       }
     },
@@ -290,7 +290,7 @@
             ids += this.checkedKeys[a] + ','
           }
           var that = this
-          this.$confirm({
+          this.$confirm_({
             title: '确认删除',
             content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据，以及子节点数据吗?',
             onOk: function () {

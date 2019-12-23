@@ -308,7 +308,7 @@
       },
       handleRemoveRecord(id) {
         let that = this
-        this.$confirm({
+        this.$confirm_({
           title: '确认要移除此记录?',
           onOk() {
             deleteAction(that.url.removeRecord, { id: id }).then((res) => {

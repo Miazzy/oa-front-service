@@ -23,9 +23,9 @@
       return {
         treeData:[],
         treeValue:"",
-        url_root:"/sys/category/loadTreeRoot",
-        url_children:"/sys/category/loadTreeChildren",
-        url_view:'/sys/category/loadOne',
+        url_root:`${window._CONFIG['domian']}/sys/category/loadTreeRoot`,
+        url_children:`${window._CONFIG['domian']}/sys/category/loadTreeChildren`,
+        url_view:`${window._CONFIG['domian']}/sys/category/loadOne`,
       }
     },
     props:{

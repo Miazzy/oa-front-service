@@ -153,9 +153,9 @@
         columns: columns,
         loading: false,
         url: {
-          list: '/sys/permission/list',
-          delete: '/sys/permission/delete',
-          deleteBatch: '/sys/permission/deleteBatch'
+          list: `${window._CONFIG['domian']}/sys/permission/list`,
+          delete: `${window._CONFIG['domian']}/sys/permission/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/permission/deleteBatch`
         }
       }
     },

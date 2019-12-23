@@ -73,7 +73,7 @@
           }else{
             params.username=username;
           }
-            getAction("/sys/user/querySysUser",params).then((res)=>{
+            getAction(`${window._CONFIG['domian']}/sys/user/querySysUser`,params).then((res)=>{
               if(res.success){
             var userList={
               username:res.result.username,

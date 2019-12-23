@@ -11,11 +11,11 @@ axios_.defaults.headers.post['Content-Type'] =
 
 const api = {
     domain: window._CONFIG['domian'],
-    user: '/api/user',
-    role: '/api/role',
-    service: '/api/service',
-    permission: '/api/permission',
-    permissionNoPager: '/api/permission/no-pager',
+    user: `${window._CONFIG['domian']}/jeecg-boot/api/user`,
+    role: `${window._CONFIG['domian']}/jeecg-boot/api/role`,
+    service: `${window._CONFIG['domian']}/jeecg-boot/api/service`,
+    permission: `${window._CONFIG['domian']}/jeecg-boot/api/permission`,
+    permissionNoPager: `${window._CONFIG['domian']}/jeecg-boot/api/permission/no-pager`,
     PROCESS_NODE_DICT_ID: '095a5c3fed5b29706cdfc6d9cb32cd4c', //流程节点，对应的字典的ID,根据这个查询流程节点的名称
 };
 

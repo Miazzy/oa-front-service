@@ -164,11 +164,11 @@
           }
         ],
         url: {
-          list: "/sys/role/list",
-          delete: "/sys/role/delete",
-          deleteBatch: "/sys/role/deleteBatch",
-          exportXlsUrl: "/sys/role/exportXls",
-          importExcelUrl: "sys/role/importExcel",
+          list: `${window._CONFIG['domian']}/sys/role/list`,
+          delete: `${window._CONFIG['domian']}/sys/role/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/role/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/role/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}sys/role/importExcel`,
         },
       }
     },

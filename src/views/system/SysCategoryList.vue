@@ -86,12 +86,12 @@
           }
         ],
         url: {
-          list: "/sys/category/rootList",
-          childList: "/sys/category/childList",
-          delete: "/sys/category/delete",
-          deleteBatch: "/sys/category/deleteBatch",
-          exportXlsUrl: "/sys/category/exportXls",
-          importExcelUrl: "sys/category/importExcel",
+          list: `${window._CONFIG['domian']}/sys/category/rootList`,
+          childList: `${window._CONFIG['domian']}/sys/category/childList`,
+          delete: `${window._CONFIG['domian']}/sys/category/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/category/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/category/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/category/importExcel`,
         },
         expandedRowKeys:[],
         hasChildrenField:"hasChild",

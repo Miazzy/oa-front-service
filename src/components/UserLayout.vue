@@ -5,10 +5,10 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo" />
-            <span class="title">鹏程晟泰OA平台</span>
+            <span class="title">鹏程综合管理平台</span>
           </a>
         </div>
-        <div class="desc">鹏程晟泰OA平台</div>
+        <div class="desc">鹏程综合管理平台</div>
       </div>
 
       <route-view></route-view>

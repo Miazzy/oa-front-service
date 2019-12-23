@@ -266,14 +266,14 @@
 
 
         url: {
-          list: '/sys/role/list',
-          delete: '/sys/role/delete',
-          list2: '/sys/user/userRoleList',
-          addUserRole: '/sys/user/addSysUserRole',
-          delete2: '/sys/user/deleteUserRole',
-          deleteBatch2: '/sys/user/deleteUserRoleBatch',
-          exportXlsUrl: 'sys/role/exportXls',
-          importExcelUrl: 'sys/role/importExcel'
+          list: `${window._CONFIG['domian']}/sys/role/list`,
+          delete: `${window._CONFIG['domian']}/sys/role/delete`,
+          list2: `${window._CONFIG['domian']}/sys/user/userRoleList`,
+          addUserRole: `${window._CONFIG['domian']}/sys/user/addSysUserRole`,
+          delete2: `${window._CONFIG['domian']}/sys/user/deleteUserRole`,
+          deleteBatch2: `${window._CONFIG['domian']}/sys/user/deleteUserRoleBatch`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/role/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/role/importExcel`
         }
       }
     },
@@ -412,7 +412,7 @@
           }
           var that = this
           console.log(this.currentDeptId)
-          this.$confirm({
+          this.$confirm_({
             title: '确认删除',
             content: '是否删除选中数据?',
             onOk: function() {

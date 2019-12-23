@@ -102,7 +102,7 @@
                 var params={}
                 params.phone=this.userList.phone;
                 params.smscode=values.captcha;
-                postAction("/sys/user/phoneVerification",params).then((res)=>{
+                postAction(`${window._CONFIG['domian']}/sys/user/phoneVerification`,params).then((res)=>{
                   if(res.success){
                   console.log(res);
                   var userList={
@@ -146,7 +146,7 @@
           mobile: this.userList.phone,
           smsmode: "2"
         };
-        postAction("/sys/sms", smsParams).then(res => {
+        postAction(`${window._CONFIG['domian']}/sys/sms`, smsParams).then(res => {
           if(!res.success ){
           setTimeout(hide, 1);
           this.cmsFailed(res.message);

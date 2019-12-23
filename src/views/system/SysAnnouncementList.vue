@@ -234,13 +234,13 @@
           }
         ],
         url: {
-          list: "/sys/annountCement/list",
-          delete: "/sys/annountCement/delete",
-          deleteBatch: "/sys/annountCement/deleteBatch",
-          releaseDataUrl: "/sys/annountCement/doReleaseData",
-          reovkeDataUrl: "sys/annountCement/doReovkeData",
-          exportXlsUrl: "sys/annountCement/exportXls",
-          importExcelUrl: "sys/annountCement/importExcel",
+          list: `${window._CONFIG['domian']}/sys/annountCement/list`,
+          delete: `${window._CONFIG['domian']}/sys/annountCement/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/annountCement/deleteBatch`,
+          releaseDataUrl: `${window._CONFIG['domian']}/sys/annountCement/doReleaseData`,
+          reovkeDataUrl: `${window._CONFIG['domian']}/sys/annountCement/doReovkeData`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/annountCement/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/annountCement/importExcel`,
         },
       }
     },

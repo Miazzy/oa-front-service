@@ -60,8 +60,13 @@ import JeecgComponents from '@/components/jeecg/index';
 import VuePreview from 'vue-preview';
 
 Vue.config.productionTip = false;
+
+//Vue注册组件
 Vue.use(Storage, config.storageOptions);
+
+//注册AntDVue前端组件
 Vue.use(Antd);
+
 Vue.use(VueAxios, router);
 Vue.use(Viser);
 Vue.use(hasPermission);
@@ -72,10 +77,20 @@ Vue.component('apexchart', VueApexCharts);
 Vue.use(preview);
 Vue.use(vueBus);
 Vue.use(JeecgComponents);
+
+//注册ViewUI前端组件
 Vue.use(ViewUI);
 Vue.use(VuePreview);
+
+//ElementUI也会注册这个函数，提前改名
+Vue.prototype.$confirm_ = Vue.prototype.$confirm;
+Vue.prototype.$message_  = Vue.prototype.$message;
+
+//注册ElementUI
 Vue.use(ElementUI);
 Vue.use(EleForm);
+
+//注册F2可视化组件
 Vue.use(F2);
 
 new Vue({

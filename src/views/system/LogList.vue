@@ -172,7 +172,7 @@
           sm: { span: 16 },
         },
         url: {
-          list: "/sys/log/list",
+          list: `${window._CONFIG['domian']}/sys/log/list`,
         },
       }
     },

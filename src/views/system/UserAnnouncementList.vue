@@ -137,9 +137,9 @@ export default {
         }
       ],
       url: {
-        list: '/sys/sysAnnouncementSend/getMyAnnouncementSend',
-        editCementSend: 'sys/sysAnnouncementSend/editByAnntIdAndUserId',
-        readAllMsg: 'sys/sysAnnouncementSend/readAll'
+        list: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/getMyAnnouncementSend`,
+        editCementSend: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        readAllMsg: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/readAll`
       },
       loading: false
     }
@@ -162,7 +162,7 @@ export default {
     },
     readAll() {
       var that = this
-      that.$confirm({
+      that.$confirm_({
         title: '确认操作',
         content: '是否全部标注已读?',
         onOk: function() {

@@ -259,9 +259,9 @@ export default {
       url: {
         fileUpload: window._CONFIG['domianURL'] + '/sys/common/upload',
         imgerver: window._CONFIG['imgDomainURL'],
-        userWithDepart: '/sys/user/userDepartList', // 引入为指定用户查看部门信息需要的url
-        userId: '/sys/user/generateUserId', // 引入生成添加用户情况下的url
-        syncUserByUserName: '/process/extActProcess/doSyncUserByUserName' //同步用户到工作流
+        userWithDepart: `${window._CONFIG['domian']}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
+        userId: `${window._CONFIG['domian']}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
+        syncUserByUserName: `${window._CONFIG['domian']}/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
       }
     }
   },

@@ -272,12 +272,12 @@
         ],
         url: {
           imgerver: window._CONFIG['imgDomainURL'],
-          syncUser: "/process/extActProcess/doSyncUser",
-          list: "/sys/user/list",
-          delete: "/sys/user/delete",
-          deleteBatch: "/sys/user/deleteBatch",
-          exportXlsUrl: "/sys/user/exportXls",
-          importExcelUrl: "sys/user/importExcel",
+          syncUser: `${window._CONFIG['domian']}/jeecg-boot/process/extActProcess/doSyncUser`,
+          list: `${window._CONFIG['domian']}/sys/user/list`,
+          delete: `${window._CONFIG['domian']}/sys/user/delete`,
+          deleteBatch: `${window._CONFIG['domian']}/sys/user/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domian']}/sys/user/exportXls`,
+          importExcelUrl: `${window._CONFIG['domian']}/sys/user/importExcel`,
         },
       }
     },
@@ -311,11 +311,13 @@
           that.selectedRowKeys.forEach(function (val) {
             ids += val + ",";
           });
-          that.$confirm({
-            title: "确认操作",
-            content: "是否" + (status == 1 ? "解冻" : "冻结") + "选中账号?",
-            onOk: function () {
-              frozenBatch({ids: ids, status: status}).then((res) => {
+
+          this.$confirm("是否" + (status == 1 ? "解冻" : "冻结") + "选中账号?", '确认操作', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            frozenBatch({ids: ids, status: status}).then((res) => {
                 if (res.success) {
                   that.$message.success(res.message);
                   that.loadData();
@@ -324,8 +326,13 @@
                   that.$message.warning(res.message);
                 }
               });
-            }
+          }).catch(() => {
+            this.$message({
+              type: 'warning',
+              message: '取消操作！'
+            });          
           });
+
         }
       },
       handleMenuClick(e) {
