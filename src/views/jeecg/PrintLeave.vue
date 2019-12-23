@@ -30,7 +30,7 @@
             style="margin-top: 10px;margin-bottom:10px;"
             v-if="typeof curRow.no != 'undefined' && curRow.no != null"
           >
-            <span style="float:left;display:block;">表单编号:</span>
+            <span style="float:left;display:block;">{{tableInfo.no}}:</span>
             <div
               style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.no"
@@ -52,39 +52,39 @@
             style="margin-top: 10px; margin-bottom:10px;"
             v-if="typeof curRow.seal_name != 'undefined' && curRow.seal_name != null"
           >
-            <span style="float:left;display:block;">印章名称:</span>
+            <span style="float:left;display:block;">{{tableInfo.seal_name}}:</span>
             <div
               style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.seal_name"
             ></div>
           </a-col>
           <a-col :span="24" style="margin-top: 10px; margin-bottom:10px;">
-            <span>申请人员:</span>
+            <span>{{tableInfo.create_by}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.create_by" />
-            <span style="margin-left: 12.5%">申请时间:</span>
+            <span style="margin-left: 12.5%">{{tableInfo.create_time}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.create_time" />
           </a-col>
           <a-col :span="24" style="margin-bottom:10px;">
-            <span>所属部门:</span>
+            <span>{{tableInfo.depart_name}}:</span>
             <a-input style="width: 30%" readonly v-model="depart.depart_name" />
             <span style="margin-left: 12.5%">{{curRow.formTypeName}}类型:</span>
             <a-input style="width: 30%" readonly v-model="curRow.leave_type_name" />
           </a-col>
           <a-col :span="24" style="margin-bottom:10px;">
-            <span>{{curRow.startTimeName}}时间:</span>
+            <span>{{tableInfo.starttime}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.starttime" />
-            <span style="margin-left: 12.5%">{{curRow.endTimeName}}时间:</span>
+            <span style="margin-left: 12.5%">{{tableInfo.endtime}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.endtime" />
           </a-col>
           <a-col :span="24" style="margin-bottom:10px;">
-            <span>{{curRow.formTypeName}}天数:</span>
+            <span>{{tableInfo.total_days}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.total_days" />
-            <span style="margin-left: 12.5%">流程状态:</span>
+            <span style="margin-left: 12.5%">{{tableInfo.bpm_status}}:</span>
             <a-input style="width: 30%" readonly v-model="curRow.bpm_status_name" />
           </a-col>
           <a-col :span="24"></a-col>
           <a-col :span="24" style="margin-top: 20px">
-            <span style="float:left;display:block;">{{curRow.formTypeName}}内容:</span>
+            <span style="float:left;display:block;">{{tableInfo.content}}:</span>
             <div
               style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.content"
@@ -438,6 +438,7 @@ export default {
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
+      tableInfo:{},
       tipVisible: false,
       tipContent: "",
       slides: images,
