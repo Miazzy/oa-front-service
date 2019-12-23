@@ -9,7 +9,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: '/jeecg-boot', // api base_url
+  baseURL: `${window._CONFIG['domian']}/jeecg-boot`, // api base_url
   timeout: 6000 // 请求超时时间
 })
 
