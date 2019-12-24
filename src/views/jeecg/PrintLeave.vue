@@ -32,10 +32,11 @@
           >
             <span style="float:left;display:block;">{{tableInfo.no}}:</span>
             <div
-              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.no"
             ></div>
           </a-col>
+
           <a-col
             :span="24"
             style="margin-top: 10px;margin-bottom:10px;"
@@ -43,10 +44,105 @@
           >
             <span style="float:left;display:block;">{{curRow.fileNameTitle}}:</span>
             <div
-              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.file_name"
             ></div>
           </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="typeof curRow.sigillum_name != 'undefined' && curRow.sigillum_name != null"
+          >
+            <span style="float:left;display:block;">{{tableInfo.sigillum_name}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.sigillum_name"
+            ></div>
+          </a-col>
+
+          <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
+            <span>{{tableInfo.create_by}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.create_by" />
+          </a-col>
+
+          <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
+            <span style="margin-left: 0%">{{tableInfo.create_time}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.create_time" />
+          </a-col>
+
+          <a-col :span="12" style="margin-bottom:10px;">
+            <span>{{tableInfo.depart_name}}:</span>
+            <a-input style="width: 70%" readonly v-model="depart.depart_name" />
+          </a-col>
+
+          <a-col :span="12" style="margin-bottom:10px;">
+            <span style="margin-left: 0%">{{curRow.formTypeName}}类型:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.leave_type_name" />
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.employee_rank != 'undefined' && tableInfo.employee_rank != null"
+          >
+            <a-col :span="12">
+              <span>{{tableInfo.employee_rank}}:</span>
+              <a-input style="width: 70%" readonly v-model="curRow.employee_rank" />
+            </a-col>
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.starttime != 'undefined' && tableInfo.starttime != null"
+          >
+            <span>{{tableInfo.starttime}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.starttime" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.endtime != 'undefined' && tableInfo.endtime != null"
+          >
+            <span style="margin-left: 0%">{{tableInfo.endtime}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.endtime" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.total_days != 'undefined' && tableInfo.total_days != null"
+          >
+            <span>{{tableInfo.total_days}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.total_days" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.seal_copies != 'undefined' && tableInfo.seal_copies != null"
+          >
+            <span>{{tableInfo.seal_copies}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.seal_copies" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.declare_type != 'undefined' && tableInfo.declare_type != null"
+          >
+            <span>{{tableInfo.declare_type}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.declare_type" />
+          </a-col>
+
+          <a-col :span="12" style="margin-bottom:10px;">
+            <span style="margin-left: 0%">{{tableInfo.bpm_status}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.bpm_status_name" />
+          </a-col>
+          <a-col :span="24"></a-col>
+
           <a-col
             :span="24"
             style="margin-top: 10px; margin-bottom:10px;"
@@ -54,42 +150,88 @@
           >
             <span style="float:left;display:block;">{{tableInfo.seal_name}}:</span>
             <div
-              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.seal_name"
             ></div>
           </a-col>
-          <a-col :span="24" style="margin-top: 10px; margin-bottom:10px;">
-            <span>{{tableInfo.create_by}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.create_by" />
-            <span style="margin-left: 12.5%">{{tableInfo.create_time}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.create_time" />
-          </a-col>
-          <a-col :span="24" style="margin-bottom:10px;">
-            <span>{{tableInfo.depart_name}}:</span>
-            <a-input style="width: 30%" readonly v-model="depart.depart_name" />
-            <span style="margin-left: 12.5%">{{curRow.formTypeName}}类型:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.leave_type_name" />
-          </a-col>
-          <a-col :span="24" style="margin-bottom:10px;">
-            <span>{{tableInfo.starttime}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.starttime" />
-            <span style="margin-left: 12.5%">{{tableInfo.endtime}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.endtime" />
-          </a-col>
-          <a-col :span="24" style="margin-bottom:10px;">
-            <span>{{tableInfo.total_days}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.total_days" />
-            <span style="margin-left: 12.5%">{{tableInfo.bpm_status}}:</span>
-            <a-input style="width: 30%" readonly v-model="curRow.bpm_status_name" />
-          </a-col>
-          <a-col :span="24"></a-col>
-          <a-col :span="24" style="margin-top: 20px">
+
+          <a-col :span="24" style="margin-top: 20px;margin-bottom: 10px;">
             <span style="float:left;display:block;">{{tableInfo.content}}:</span>
             <div
-              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.content"
             ></div>
           </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
+            v-if="typeof tableInfo.entourage != 'undefined' && tableInfo.entourage != null"
+          >
+            <span style="float:left;display:block;">{{tableInfo.entourage}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.entourage"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top:10px;margin-bottom:10px;"
+            v-if="typeof tableInfo.travel_address != 'undefined' && tableInfo.travel_address != null"
+          >
+            <span>{{tableInfo.travel_address}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.travel_address" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top:10px;margin-bottom:10px;"
+            v-if="typeof tableInfo.predict_fee != 'undefined' && tableInfo.predict_fee != null"
+          >
+            <span>{{tableInfo.predict_fee}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.predict_fee" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.drive_type != 'undefined' && tableInfo.drive_type != null"
+          >
+            <span>{{tableInfo.drive_type}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.drive_type" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.predict_mileage != 'undefined' && tableInfo.predict_mileage != null"
+          >
+            <span>{{tableInfo.predict_mileage}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.predict_mileage" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.travel_transport != 'undefined' && tableInfo.travel_transport != null"
+          >
+            <span>{{tableInfo.travel_transport}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.travel_transport" />
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
+            v-if="typeof tableInfo.travel_remarks != 'undefined' && tableInfo.travel_remarks != null"
+          >
+            <span style="float:left;display:block;">{{tableInfo.travel_remarks}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.travel_remarks"
+            ></div>
+          </a-col>
+
           <a-col
             :span="24"
             style="margin-top: 30px"
@@ -97,11 +239,12 @@
           >
             <span style="float:left;display:block;">{{curRow.formTypeName}}地址:</span>
             <div
-              style="float:left; width:78%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.location"
             ></div>
           </a-col>
-          <a-col :span="20" style="margin-top:30px;" v-if="curRow.main_table_status == true">
+
+          <a-col :span="24" style="margin-top:30px;" v-if="curRow.main_table_status == true">
             <template>
               <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false"></a-table>
             </template>
@@ -112,8 +255,8 @@
             style="margin-top:10px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('office')"
           >
-            <div style="width:90%;">
-              <a-divider style="width:90%;" dashed></a-divider>
+            <div style="width:98%;">
+              <a-divider style="width:98%;" dashed></a-divider>
             </div>
           </a-col>
 
@@ -131,7 +274,7 @@
                 <iframe
                   v-print="'#printContent'"
                   class="no-print"
-                  style="display:block;width:90%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
+                  style="display:block;width:88%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
                   :src="this.curRow.fileURL"
                 />
               </div>
@@ -143,8 +286,8 @@
             style="margin-top:10px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('image')"
           >
-            <div style="width:90%;">
-              <a-divider style="width:90%;" dashed>·</a-divider>
+            <div style="width:98%;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
             </div>
           </a-col>
 
@@ -170,8 +313,8 @@
             style="margin-top:10px;"
             v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
           >
-            <div style="width:90%;">
-              <a-divider style="width:90%;" dashed>·</a-divider>
+            <div style="width:98%;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
             </div>
           </a-col>
 
@@ -276,7 +419,7 @@
               </a-form>
             </template>
             <template>
-              <div style="width:90%;margin-top:10px;">
+              <div style="width:88%;margin-top:10px;">
                 <a-button
                   ghost
                   type="primary"
@@ -296,7 +439,7 @@
               </a-form>
             </template>
             <template>
-              <div style="width:90%;margin-top:10px;">
+              <div style="width:88%;margin-top:10px;">
                 <a-button
                   ghost
                   type="primary"
@@ -309,7 +452,7 @@
 
           <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'workflow'">
             <template>
-              <div style="width:90%;">
+              <div style="width:88%;">
                 <a-textarea
                   style="align:left;text-align:left;"
                   placeholder="请输入审批意见"
@@ -317,7 +460,7 @@
                   :autosize="{ minRows: 2, maxRows: 10 }"
                 />
               </div>
-              <div style="width:90%;margin-top:10px;">
+              <div style="width:88%;margin-top:10px;">
                 <a-button
                   type="primary"
                   style="margin-right:10px;margin-top:10px;background-color:#2090fe;border: 1px solid #fefefe;"
@@ -334,7 +477,7 @@
 
           <a-col :span="24" style="margin-top:30px;" v-if="pageType == 'notify'">
             <template>
-              <div style="width:90%;">
+              <div style="width:88%;">
                 <a-textarea
                   style="align:left;text-align:left;"
                   placeholder="请输入知会意见"
@@ -342,7 +485,7 @@
                   :autosize="{ minRows: 2, maxRows: 10 }"
                 />
               </div>
-              <div style="width:90%;margin-top:10px;">
+              <div style="width:88%;margin-top:10px;">
                 <a-button
                   type="primary"
                   style="margin-right:10px;margin-top:10px;background-color:#2090fe;border: 1px solid #fefefe;"
@@ -438,7 +581,7 @@ export default {
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
-      tableInfo:{},
+      tableInfo: {},
       tipVisible: false,
       tipContent: "",
       slides: images,
@@ -536,6 +679,14 @@ export default {
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogByID(tableName, processLogID);
 
+      //未获取当前审批流程
+      if (deNull(curRow) == "") {
+        that.$message.warning(
+          "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
+        );
+        return false;
+      }
+
       //业务代码ID
       var bussinessCodeID = curRow["business_data_id"];
 
@@ -572,6 +723,8 @@ export default {
         //设置创建时间
         item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
+
+      debugger;
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
       result = await postProcessLogHistory(node);
@@ -626,12 +779,30 @@ export default {
           try {
             //自由流程配置消息
             let freeNode = JSON.parse(curRow.business_data);
+
+            //检查是否存在自由流程节点audit_node & approve_node & notify_node , 如果不存在，在下级节点中寻找
+            if (
+              !("audit_node" in freeNode) &&
+              !("approve_node" in freeNode) &&
+              !("notify_node" in freeNode)
+            ) {
+              freeNode = JSON.parse(freeNode.business_data);
+            }
+
+            //如果仍然为获取到自由流程节点，则从自由流程表中找
+
             //根据自由流程配置，获取所有待审核人员列表
             allAudit =
-              "," + freeNode.audit_node + "," + freeNode.approve_node + ",";
+              "," +
+              deNull(freeNode.audit_node) +
+              "," +
+              deNull(freeNode.approve_node) +
+              ",";
+
             //根据自由流程配置，获取所有待知会人员列表
             notifyArray =
               deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
+
             //获取自由流程配置，当前审核节点
             curAuditor = curRow["employee"];
           } catch (error) {
@@ -707,6 +878,10 @@ export default {
 
           //当前已经是最后一个审批节点，流程已经处理完毕
           that.tipContent = "同意审批成功，审批流程处理完毕！";
+
+          //TODO 以前此表单的自由流程进入历史
+
+          //TODO 删除以前此表单对应的自由流程
         } else {
           //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
           result = await patchTableData(tableName, curRow["business_data_id"], {
@@ -885,6 +1060,10 @@ export default {
         bpm_status: "1"
       });
 
+      //TODO 以前此表单的自由流程进入历史
+
+      //TODO 删除以前此表单对应的自由流程
+
       //提示用户撤销审批操作成功
       that.tipVisible = true;
       that.tipContent = "驳回审批成功！";
@@ -998,6 +1177,10 @@ export default {
         result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
         result = await deleteProcessLogInf(tableName, [curRow]);
+
+        //TODO 以前此表单的自由流程进入历史
+
+        //TODO 删除以前此表单对应的自由流程
       }
 
       that.tipVisible = true;
@@ -1032,7 +1215,7 @@ export default {
       if (deNull(approver) == "" && this.pageType == "workflowing") {
         this.$confirm_({
           title: "温馨提示",
-          content: "请选择审批用户!",
+          content: "请选择审批用户!"
         });
         return false;
       }
@@ -1040,7 +1223,7 @@ export default {
       if (deNull(approver).includes(",") && this.pageType == "workflowing") {
         this.$confirm_({
           title: "温馨提示",
-          content: "审批用户只能选择一个!",
+          content: "审批用户只能选择一个!"
         });
         return false;
       }
@@ -1049,7 +1232,7 @@ export default {
         //显示提示信息
         this.$confirm_({
           title: "温馨提示",
-          content: "请选择知会用户!",
+          content: "请选择知会用户!"
         });
         return false;
       }
@@ -1069,10 +1252,16 @@ export default {
         notify_node: deNull(nfUsers)
       };
 
+      //TODO 以前此表单的自由流程进入历史
+
+      //TODO 删除以前此表单对应的自由流程
+
       //提交自由流程审批
       if (deNull(approver) != "" && this.pageType == "workflowing") {
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         var result = await postProcessFreeNode(node);
+
+        const freeWFNode = JSON.parse(JSON.stringify(node));
 
         //提交发起人审批相关处理信息
         node = {
@@ -1092,7 +1281,7 @@ export default {
           content: this.curRow["content"],
           operate_time: ctime,
           create_time: ctime,
-          business_data: JSON.stringify(node)
+          business_data: JSON.stringify(freeWFNode)
         };
 
         //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
@@ -1126,11 +1315,10 @@ export default {
         let vflag = await queryApprovalExist(tableName, this.curRow["id"]);
 
         if (vflag) {
-
           //数据库中已经存在此记录，提示用户无法提交审批
           this.$confirm_({
             title: "温馨提示",
-            content:"待审记录中，已经存在此记录，无法再次提交审批！",
+            content: "待审记录中，已经存在此记录，无法再次提交审批！"
           });
 
           //刷新页面数据
@@ -1157,7 +1345,9 @@ export default {
           });
 
           //弹出审批完成提示框s
-          this.$confirm("提交自由流程审批成功！", '操作成功', {type: 'success'})
+          this.$confirm("提交自由流程审批成功！", "操作成功", {
+            type: "success"
+          });
 
           //设置为view预览模式
           this.pageType = "view";
@@ -1179,7 +1369,7 @@ export default {
         if (deNull(loginfo) != "" && loginfo.today >= 3) {
           this.$confirm_({
             title: "温馨提示",
-            content:"同一业务数据，每天最多知会3次！"
+            content: "同一业务数据，每天最多知会3次！"
           });
           return true;
         }
@@ -1187,7 +1377,7 @@ export default {
         if (deNull(loginfo) != "" && loginfo.total >= 10) {
           this.$confirm_({
             title: "温馨提示",
-            content:"同一业务数据，总计最多知会10次！"
+            content: "同一业务数据，总计最多知会10次！"
           });
           return true;
         }
@@ -1214,7 +1404,7 @@ export default {
         result = await postProcessLogInformed(pnode);
 
         //显示提示信息
-        this.$confirm("知会操作成功！", '操作成功', {type: 'success'})
+        this.$confirm("知会操作成功！", "操作成功", { type: "success" });
 
         //设置为view预览模式
         this.pageType = "view";

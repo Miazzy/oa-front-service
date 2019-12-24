@@ -811,7 +811,7 @@ export async function queryProcessLogHtml(business_data_id) {
  */
 export async function queryPRLogHistoryByDataID(business_data_id) {
     //提交URL
-    let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=1&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -971,8 +971,8 @@ export function queryFormName(tableName) {
         BS_OVERTIME: '加班流程申请单',
         BS_ATTENDANCE: '考勤异常流程申请单',
         BS_RECORD_BORROW: '档案及证照借阅申请单',
-        BS_SEAL_NORMAL: '用印申请(非合同)流程申请单',
-        BS_SEAL_CONTRACT: '用印申请(合同)流程申请单',
+        BS_SEAL_NORMAL: '用印申请流程申请单',
+        BS_SEAL_CONTRACT: '用印申请流程申请单',
         BS_SEAL_DECLARE: '印章借用申请单',
         BS_TRAVEL: '出差申请单',
     };
@@ -990,10 +990,10 @@ export function queryFormTypeName(tableName) {
         BS_OVERTIME: '加班',
         BS_ATTENDANCE: '考勤',
         BS_RECORD_BORROW: '借阅',
-        BS_SEAL_NORMAL: '申请',
-        BS_SEAL_CONTRACT: '申请',
-        BS_SEAL_DECLARE: '申请',
-        BS_TRAVEL: '申请',
+        BS_SEAL_NORMAL: '用印',
+        BS_SEAL_CONTRACT: '用印',
+        BS_SEAL_DECLARE: '印章',
+        BS_TRAVEL: '出差',
     };
 
     return config[tableName];
@@ -1011,8 +1011,8 @@ export function queryFormTypeValue(tableName) {
         BS_RECORD_BORROW: '普通',
         BS_SEAL_NORMAL: '非合同',
         BS_SEAL_CONTRACT: '合同',
-        BS_SEAL_DECLARE: '普通',
-        BS_TRAVEL: '普通',
+        BS_SEAL_DECLARE: '印章',
+        BS_TRAVEL: '出差',
     };
 
     return config[tableName];
@@ -1300,8 +1300,6 @@ export async function watchFormLeave(that) {
 
     that.curRow = await queryTableData(tableName, id);
 
-    debugger;
-
     //获取部门信息
     var department = '';
 
@@ -1507,8 +1505,13 @@ export function queryImageURL(text) {
     let fileList = [];
     let images = [];
 
+    //如果text为空，则返回空数组
+    if (deNull(text) == '') {
+        return [];
+    }
+
     //如果含有多个地址，则split后获取数组
-    if (text.indexOf(',') > 0) {
+    if (deNull(text).indexOf(',') > 0) {
         fileList = text.split(',');
     } else {
         fileList.push(text);
@@ -1611,8 +1614,28 @@ export async function colorProcessDetail(that, main) {
     main.tableName = queryUrlString('table_name');
     //检查是否可以进行审批/同意等操作
     main.pageType = await queryCurNodePageType(main.pageType);
+    //查询表字段信息
+    main.tableInfo = await queryTableFieldInfoJSON(main.tableName);
     //修改图片样式
     changeImageCSS();
     //返回设置结果
     return main;
+}
+
+/**
+ * @function 查询表字段信息
+ * @param {*} tableName 
+ */
+export async function queryTableFieldInfoJSON(tableName) {
+    //查询表单信息
+    let tableInfo = await queryTableDataByField('v_table_info', 'id', tableName);
+    //解析表单信息
+    if (deNull(tableInfo) != '' && tableInfo.length > 0) {
+        tableInfo = deNull(tableInfo[0]['value']);
+    }
+    if (deNull(tableInfo) != '') {
+        console.log('tabale info :' + tableInfo);
+        tableInfo = JSON.parse(tableInfo);
+    }
+    return tableInfo;
 }
