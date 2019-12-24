@@ -253,7 +253,7 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('office')"
+            v-if="this.curRow != null && this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('office')"
           >
             <div style="width:98%;">
               <a-divider style="width:98%;" dashed></a-divider>
@@ -594,6 +594,8 @@ export default {
     let that = await watchFormLeave(this);
     //获取返回结果
     let result = await colorProcessDetail(that, this);
+
+    debugger;
     //返回结果
     return result;
   },
@@ -623,6 +625,7 @@ export default {
       let that = await watchFormLeave(this);
       //获取返回结果
       let result = await colorProcessDetail(that, this);
+      debugger;
       //返回结果
       return result;
     },

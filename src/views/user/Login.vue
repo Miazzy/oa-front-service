@@ -3,30 +3,34 @@
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
       <a-tabs
         :activeKey="customActiveKey"
-        :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
+        :tabBarStyle="{textAlign: 'center', borderBottom: 'unset'}"
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" tab="账号密码登陆">
           <a-form-item>
             <a-input
               size="large"
-              v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
+              v-decorator="[
+                'username',
+                validatorRules.username,
+                {validator: this.handleUsernameOrEmail},
+              ]"
               type="text"
               placeholder="请输入帐户名"
             >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon slot="prefix" type="user" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
           <a-form-item>
             <a-input
-              v-decorator="['password',validatorRules.password]"
+              v-decorator="['password', validatorRules.password]"
               size="large"
               type="password"
               autocomplete="false"
               placeholder="密码"
             >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon slot="prefix" type="lock" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
@@ -34,7 +38,7 @@
             <a-col :span="14">
               <a-form-item>
                 <a-input
-                  v-decorator="['inputCode',validatorRules.inputCode]"
+                  v-decorator="['inputCode', validatorRules.inputCode]"
                   size="large"
                   type="text"
                   @change="inputCodeChange"
@@ -42,11 +46,11 @@
                 >
                   <a-icon
                     slot="prefix"
-                    v-if=" inputCodeContent==verifiedCode "
+                    v-if="inputCodeContent == verifiedCode"
                     type="smile"
-                    :style="{ color: 'rgba(0,0,0,.25)' }"
+                    :style="{color: 'rgba(0,0,0,.25)'}"
                   />
-                  <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                  <a-icon slot="prefix" v-else type="frown" :style="{color: 'rgba(0,0,0,.25)'}" />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -58,12 +62,12 @@
         <a-tab-pane key="tab2" tab="手机号登陆">
           <a-form-item>
             <a-input
-              v-decorator="['mobile',validatorRules.mobile]"
+              v-decorator="['mobile', validatorRules.mobile]"
               size="large"
               type="text"
               placeholder="手机号"
             >
-              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon slot="prefix" type="mobile" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
@@ -71,12 +75,12 @@
             <a-col class="gutter-row" :span="16">
               <a-form-item>
                 <a-input
-                  v-decorator="['captcha',validatorRules.captcha]"
+                  v-decorator="['captcha', validatorRules.captcha]"
                   size="large"
                   type="text"
                   placeholder="请输入验证码"
                 >
-                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                  <a-icon slot="prefix" type="mail" :style="{color: 'rgba(0,0,0,.25)'}" />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -86,7 +90,9 @@
                 tabindex="-1"
                 :disabled="state.smsSendBtn"
                 @click.stop.prevent="getCaptcha"
-                v-text="!state.smsSendBtn && '获取验证码' || (state.time+' s')"
+                v-text="
+                  (!state.smsSendBtn && '获取验证码') || state.time + ' s'
+                "
               ></a-button>
             </a-col>
           </a-row>
@@ -148,8 +154,8 @@
 
       <a-form>
         <a-form-item
-          :labelCol="{span:4}"
-          :wrapperCol="{span:20}"
+          :labelCol="{span: 4}"
+          :wrapperCol="{span: 20}"
           style="margin-bottom:10px"
           :validate-status="validate_status"
         >
@@ -161,7 +167,7 @@
           </a-tooltip>
           <a-select
             @change="departChange"
-            :class="{'valid-error':validate_status=='error'}"
+            :class="{'valid-error': validate_status == 'error'}"
             placeholder="请选择登录部门"
             style="margin-left:10px;width: 80%"
           >
@@ -180,19 +186,19 @@
 
 <script>
 //import md5 from "md5"
-import api from '@/api'
-import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
-import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
-import Vue from 'vue'
-import { ACCESS_TOKEN, ENCRYPTED_STRING } from '@/store/mutation-types'
-import JGraphicCode from '@/components/jeecg/JGraphicCode'
-import { putAction } from '@/api/manage'
-import { postAction } from '@/api/manage'
-import { encryption, getEncryptedString } from '@/utils/encryption/aesEncrypt'
-import store from '@/store/'
-import { setStore, getStore, clearStore, clearAll } from '@/utils/storage'
-import { USER_INFO } from '@/store/mutation-types'
+import api from "@/api";
+import TwoStepCaptcha from "@/components/tools/TwoStepCaptcha";
+import { mapActions } from "vuex";
+import { timeFix, deNull } from "@/utils/util";
+import Vue from "vue";
+import { ACCESS_TOKEN, ENCRYPTED_STRING } from "@/store/mutation-types";
+import JGraphicCode from "@/components/jeecg/JGraphicCode";
+import { putAction } from "@/api/manage";
+import { postAction } from "@/api/manage";
+import { encryption, getEncryptedString } from "@/utils/encryption/aesEncrypt";
+import store from "@/store/";
+import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
+import { USER_INFO } from "@/store/mutation-types";
 
 export default {
   components: {
@@ -201,7 +207,7 @@ export default {
   },
   data() {
     return {
-      customActiveKey: 'tab1',
+      customActiveKey: "tab1",
       loginBtn: false,
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
@@ -209,290 +215,341 @@ export default {
       stepCaptchaVisible: false,
       form: this.$form.createForm(this),
       encryptedString: {
-        key: '',
-        iv: ''
+        key: "",
+        iv: ""
       },
       state: {
         time: 60,
         smsSendBtn: false
       },
       formLogin: {
-        username: '',
-        password: '',
-        captcha: '',
-        mobile: '',
+        username: "",
+        password: "",
+        captcha: "",
+        mobile: "",
         rememberMe: true
       },
       validatorRules: {
-        username: { rules: [{ required: true, message: '请输入用户名!', validator: 'click' }] },
-        password: { rules: [{ required: true, message: '请输入密码!', validator: 'click' }] },
+        username: {
+          rules: [
+            { required: true, message: "请输入用户名!", validator: "click" }
+          ]
+        },
+        password: {
+          rules: [
+            { required: true, message: "请输入密码!", validator: "click" }
+          ]
+        },
         mobile: { rules: [{ validator: this.validateMobile }] },
-        captcha: { rule: [{ required: true, message: '请输入验证码!' }] },
-        inputCode: { rules: [{ required: true, message: '请输入验证码!' }, { validator: this.validateInputCode }] }
+        captcha: { rule: [{ required: true, message: "请输入验证码!" }] },
+        inputCode: {
+          rules: [
+            { required: true, message: "请输入验证码!" },
+            { validator: this.validateInputCode }
+          ]
+        }
       },
-      verifiedCode: '',
-      inputCodeContent: '',
+      verifiedCode: "",
+      inputCodeContent: "",
       inputCodeNull: true,
 
       departList: [],
       departVisible: false,
-      departSelected: '',
-      currentUsername: '',
-      validate_status: ''
-    }
+      departSelected: "",
+      currentUsername: "",
+      validate_status: ""
+    };
   },
   created() {
-    Vue.ls.remove(ACCESS_TOKEN)
-    this.getRouterData()
+    Vue.ls.remove(ACCESS_TOKEN);
+    this.getRouterData();
     // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
     //this.getEncrypte();
     // update-end- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
   },
   methods: {
-    ...mapActions(['Login', 'Logout', 'PhoneLogin']),
+    ...mapActions(["Login", "Logout", "PhoneLogin"]),
     // handler
     handleUsernameOrEmail(rule, value, callback) {
-      const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
+      const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
       if (regex.test(value)) {
-        this.loginType = 0
+        this.loginType = 0;
       } else {
-        this.loginType = 1
+        this.loginType = 1;
       }
-      callback()
+      callback();
     },
     handleTabClick(key) {
-      this.customActiveKey = key
+      this.customActiveKey = key;
       // this.form.resetFields()
     },
     handleSubmit() {
-      let that = this
+      let that = this;
       let loginParams = {
         remember_me: that.formLogin.rememberMe
-      }
-      that.loginBtn = true
+      };
+      that.loginBtn = true;
       // 使用账户密码登陆
-      if (that.customActiveKey === 'tab1') {
-        that.form.validateFields(['username', 'password', 'inputCode'], { force: true }, (err, values) => {
-          if (!err) {
-            loginParams.username = values.username
-            // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
-            //loginParams.password = md5(values.password)
-            //loginParams.password = encryption(values.password,that.encryptedString.key,that.encryptedString.iv)
-            loginParams.password = values.password
-            // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
+      if (that.customActiveKey === "tab1") {
+        that.form.validateFields(
+          ["username", "password", "inputCode"],
+          { force: true },
+          (err, values) => {
+            if (!err) {
+              loginParams.username = values.username;
+              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
+              //loginParams.password = md5(values.password)
+              //loginParams.password = encryption(values.password,that.encryptedString.key,that.encryptedString.iv)
+              loginParams.password = values.password;
+              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
 
-            that
-              .Login(loginParams)
-              .then(res => {
-                debugger
-                console.log(' 登录返回信息: ' + JSON.stringify(res))
-                setStore('cur_user', res['result']['userInfo'], 36000)
-                this.departConfirm(res)
-              })
-              .catch(err => {
-                that.requestFailed(err)
-              })
-          } else {
-            that.loginBtn = false
+              that
+                .Login(loginParams)
+                .then(res => {
+                  try {
+                    setStore("cur_user", res["result"]["userInfo"], 36000);
+                    this.departConfirm(res);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                })
+                .catch(err => {
+                  that.requestFailed(err);
+                });
+            } else {
+              that.loginBtn = false;
+            }
           }
-        })
+        );
         // 使用手机号登陆
       } else {
-        that.form.validateFields(['mobile', 'captcha'], { force: true }, (err, values) => {
-          if (!err) {
-            loginParams.mobile = values.mobile
-            loginParams.captcha = values.captcha
-            that
-              .PhoneLogin(loginParams)
-              .then(res => {
-                console.log(res.result)
-                this.departConfirm(res)
-              })
-              .catch(err => {
-                that.requestFailed(err)
-              })
+        that.form.validateFields(
+          ["mobile", "captcha"],
+          { force: true },
+          (err, values) => {
+            if (!err) {
+              loginParams.mobile = values.mobile;
+              loginParams.captcha = values.captcha;
+              that
+                .PhoneLogin(loginParams)
+                .then(res => {
+                  console.log(res.result);
+                  this.departConfirm(res);
+                })
+                .catch(err => {
+                  that.requestFailed(err);
+                });
+            }
           }
-        })
+        );
       }
     },
     getCaptcha(e) {
-      e.preventDefault()
-      let that = this
-      this.form.validateFields(['mobile'], { force: true }, (err, values) => {
+      e.preventDefault();
+      let that = this;
+      this.form.validateFields(["mobile"], { force: true }, (err, values) => {
         if (!values.mobile) {
-          that.cmsFailed('请输入手机号')
+          that.cmsFailed("请输入手机号");
         } else if (!err) {
-          this.state.smsSendBtn = true
+          this.state.smsSendBtn = true;
           let interval = window.setInterval(() => {
             if (that.state.time-- <= 0) {
-              that.state.time = 60
-              that.state.smsSendBtn = false
-              window.clearInterval(interval)
+              that.state.time = 60;
+              that.state.smsSendBtn = false;
+              window.clearInterval(interval);
             }
-          }, 1000)
+          }, 1000);
 
-          const hide = this.$message.loading('验证码发送中..', 0)
-          let smsParams = {}
-          smsParams.mobile = values.mobile
-          smsParams.smsmode = '0'
-          postAction(`${window._CONFIG['domian']}/sys/sms`, smsParams)
+          const hide = this.$message.loading("验证码发送中..", 0);
+          let smsParams = {};
+          smsParams.mobile = values.mobile;
+          smsParams.smsmode = "0";
+          postAction(`${window._CONFIG["domian"]}/sys/sms`, smsParams)
             .then(res => {
               if (!res.success) {
-                setTimeout(hide, 0)
-                this.cmsFailed(res.message)
+                setTimeout(hide, 0);
+                this.cmsFailed(res.message);
               }
-              console.log(res)
-              setTimeout(hide, 500)
+              console.log(res);
+              setTimeout(hide, 500);
             })
             .catch(err => {
-              setTimeout(hide, 1)
-              clearInterval(interval)
-              that.state.time = 60
-              that.state.smsSendBtn = false
-              this.requestFailed(err)
-            })
+              setTimeout(hide, 1);
+              clearInterval(interval);
+              that.state.time = 60;
+              that.state.smsSendBtn = false;
+              this.requestFailed(err);
+            });
         }
-      })
+      });
     },
     stepCaptchaSuccess() {
-      this.loginSuccess()
+      this.loginSuccess();
     },
     stepCaptchaCancel() {
       this.Logout().then(() => {
-        this.loginBtn = false
-        this.stepCaptchaVisible = false
-      })
+        this.loginBtn = false;
+        this.stepCaptchaVisible = false;
+      });
     },
     loginSuccess() {
       // update-begin- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
       // this.loginBtn = false
       // update-end- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
-      this.$router.push({ name: 'dashboard' })
+      this.$router.push({ name: "dashboard" });
       this.$notification.success({
-        message: '欢迎',
+        message: "欢迎",
         description: `${timeFix()}，欢迎回来`
-      })
+      });
+      //如果登录5000秒没有响应，则刷新页面
+      setTimeout(function() {
+        //当前URL路径
+        var url = window.location.href;
+        //当前域名
+        var domain = window.location.host;
+        try {
+          //获取相对路径
+          url = url.substring(url.indexOf(domain) + domain.length);
+          debugger;
+          //如果3秒后，还在登录页面，则刷新页面
+          if (url.includes("/user/login") || url == "/user/login") {
+            location.reload();
+          }
+        } catch (error) {
+          console.log("query url :" + error);
+        }
+      }, 3000);
     },
     cmsFailed(err) {
-      this.$notification['error']({
-        message: '登录失败',
+      this.$notification["error"]({
+        message: "登录失败",
         description: err,
         duration: 4
-      })
+      });
     },
     requestFailed(err) {
-      this.$notification['error']({
-        message: '登录失败',
-        description: ((err.response || {}).data || {}).message || err.message || '请求出现错误，请稍后再试',
+      this.$notification["error"]({
+        message: "登录失败",
+        description:
+          ((err.response || {}).data || {}).message ||
+          err.message ||
+          "请求出现错误，请稍后再试",
         duration: 4
-      })
-      this.loginBtn = false
+      });
+      this.loginBtn = false;
     },
     validateMobile(rule, value, callback) {
-      if (!value || new RegExp(/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/).test(value)) {
-        callback()
+      if (
+        !value ||
+        new RegExp(
+          /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+        ).test(value)
+      ) {
+        callback();
       } else {
-        callback('您的手机号码格式不正确!')
+        callback("您的手机号码格式不正确!");
       }
     },
     validateInputCode(rule, value, callback) {
       if (!value || this.verifiedCode == this.inputCodeContent) {
-        callback()
+        callback();
       } else {
-        callback('您输入的验证码不正确!')
+        callback("您输入的验证码不正确!");
       }
     },
     generateCode(value) {
-      this.verifiedCode = value.toLowerCase()
+      this.verifiedCode = value.toLowerCase();
     },
     inputCodeChange(e) {
-      this.inputCodeContent = e.target.value
+      this.inputCodeContent = e.target.value;
       if (!e.target.value || 0 == e.target.value) {
-        this.inputCodeNull = true
+        this.inputCodeNull = true;
       } else {
-        this.inputCodeContent = this.inputCodeContent.toLowerCase()
-        this.inputCodeNull = false
+        this.inputCodeContent = this.inputCodeContent.toLowerCase();
+        this.inputCodeNull = false;
       }
     },
     departConfirm(res) {
       if (res.success) {
-        let multi_depart = res.result.multi_depart
+        let multi_depart = res.result.multi_depart;
         //0:无部门 1:一个部门 2:多个部门
         if (multi_depart == 0) {
-          this.loginSuccess()
+          this.loginSuccess();
           this.$notification.warn({
-            message: '提示',
+            message: "提示",
             description: `您尚未归属部门,请确认账号信息`,
             duration: 3
-          })
+          });
         } else if (multi_depart == 2) {
-          this.departVisible = true
-          this.currentUsername = this.form.getFieldValue('username')
-          this.departList = res.result.departs
+          this.departVisible = true;
+          this.currentUsername = this.form.getFieldValue("username");
+          this.departList = res.result.departs;
         } else {
-          this.loginSuccess()
+          this.loginSuccess();
         }
       } else {
-        this.requestFailed(res)
-        this.Logout()
+        this.requestFailed(res);
+        this.Logout();
       }
     },
     departOk() {
       if (!this.departSelected) {
-        this.validate_status = 'error'
-        return false
+        this.validate_status = "error";
+        return false;
       }
       let obj = {
         orgCode: this.departSelected,
-        username: this.form.getFieldValue('username')
-      }
-      putAction(`${window._CONFIG['domian']}/sys/selectDepart`, obj).then(res => {
-        if (res.success) {
-          const userInfo = res.result.userInfo
-          Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000)
-          store.commit('SET_INFO', userInfo)
-          //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
-          this.departClear()
-          this.loginSuccess()
-        } else {
-          this.requestFailed(res)
-          this.Logout().then(() => {
-            this.departClear()
-          })
+        username: this.form.getFieldValue("username")
+      };
+      putAction(`${window._CONFIG["domian"]}/sys/selectDepart`, obj).then(
+        res => {
+          if (res.success) {
+            const userInfo = res.result.userInfo;
+            Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
+            store.commit("SET_INFO", userInfo);
+            //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
+            this.departClear();
+            this.loginSuccess();
+          } else {
+            this.requestFailed(res);
+            this.Logout().then(() => {
+              this.departClear();
+            });
+          }
         }
-      })
+      );
     },
     departClear() {
-      this.departList = []
-      this.departSelected = ''
-      this.currentUsername = ''
-      this.departVisible = false
-      this.validate_status = ''
+      this.departList = [];
+      this.departSelected = "";
+      this.currentUsername = "";
+      this.departVisible = false;
+      this.validate_status = "";
     },
     departChange(value) {
-      this.validate_status = 'success'
-      this.departSelected = value
+      this.validate_status = "success";
+      this.departSelected = value;
     },
     getRouterData() {
       this.$nextTick(() => {
         this.form.setFieldsValue({
           username: this.$route.params.username
-        })
-      })
+        });
+      });
     },
     //获取密码加密规则
     getEncrypte() {
-      var encryptedString = Vue.ls.get(ENCRYPTED_STRING)
+      var encryptedString = Vue.ls.get(ENCRYPTED_STRING);
       if (encryptedString == null) {
         getEncryptedString().then(data => {
-          this.encryptedString = data
-        })
+          this.encryptedString = data;
+        });
       } else {
-        this.encryptedString = encryptedString
+        this.encryptedString = encryptedString;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

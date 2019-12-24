@@ -81,8 +81,18 @@
           @change="getData"
           :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}"
         >
+          <div class="extra-wrapper" slot="tabBarExtraContent">
+            <div class="extra-item">
+              <a-tag color="cyan" @click="reloadData()">刷新</a-tag>
+            </div>
+          </div>
           <a-tab-pane loading="true" tab="我的待办" key="1" style>
             <template>
+              <div style="top:50px;">
+                <a-spin :spinning="spinning" style="top:50px;">
+                  <div class="spin-content"></div>
+                </a-spin>
+              </div>
               <a-table
                 :columns="columns"
                 :dataSource="dataWaitList"
@@ -132,6 +142,11 @@
           </a-tab-pane>
           <a-tab-pane loading="true" tab="我的已办" key="2">
             <template>
+              <div style="top:50px;">
+                <a-spin :spinning="spinning" style="top:50px;">
+                  <div class="spin-content"></div>
+                </a-spin>
+              </div>
               <a-table
                 :columns="columns"
                 :dataSource="dataDoneList"
@@ -357,7 +372,8 @@ export default {
       columns,
       activeKey: "1",
       loadingMore: false,
-      showLoadingMore: true
+      showLoadingMore: true,
+      spinning: false
     };
   },
   async created() {
@@ -385,6 +401,23 @@ export default {
           this.dataDoneList = await queryProcessLogDone(username, realname);
         }
       }
+    },
+    /**
+     * @function 刷新页面
+     */
+    async reloadData() {
+      this.spinning = true;
+      let userInfo = getStore("cur_user");
+      let username = userInfo["username"];
+      let realname = userInfo["realname"];
+      if (this.activeKey == 1) {
+        //获取我的待办数据
+        this.dataWaitList = await queryProcessLogWait(username, realname);
+      } else if (this.activeKey == 2) {
+        //获取我的已办数据
+        this.dataDoneList = await queryProcessLogDone(username, realname);
+      }
+      this.spinning = false;
     },
     /**
      * @function 查看详情页面
