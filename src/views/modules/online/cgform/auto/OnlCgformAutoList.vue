@@ -344,12 +344,14 @@
         </span>
       </a-table>
 
+      <!--
       <Modal v-model="modelModal" title="请指定具体流程权责配置！" @on-ok="modalOk" width="360">
         <span style="margin-left:25px;margin-right:10px;">流程权责:</span>
         <Select v-model="modelWFlowSelection" style="width:180px">
           <Option v-for="item in rights" :value="item.id" :key="item.id">{{ item.items }}</Option>
         </Select>
       </Modal>
+      -->
 
       <a-modal
         title="温馨提示"

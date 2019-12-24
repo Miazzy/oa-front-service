@@ -21,15 +21,14 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-import ViewUI from 'view-design';
-import 'view-design/dist/styles/iview.css';
+//import ViewUI from 'view-design';
+//import 'view-design/dist/styles/iview.css';
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import EleForm from 'vue-ele-form';
-
-import F2 from '@antv/f2';
+//import EleForm from 'vue-ele-form';
+//import F2 from '@antv/f2';
 
 import axios from 'axios';
 import qs from 'qs';
@@ -57,7 +56,7 @@ import JDictSelectTag from './components/dict/index.js';
 import hasPermission from '@/utils/hasPermission';
 import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index';
-import VuePreview from 'vue-preview';
+//import VuePreview from 'vue-preview';
 
 Vue.config.productionTip = false;
 
@@ -79,19 +78,19 @@ Vue.use(vueBus);
 Vue.use(JeecgComponents);
 
 //注册ViewUI前端组件
-Vue.use(ViewUI);
-Vue.use(VuePreview);
+//Vue.use(ViewUI);
+//Vue.use(VuePreview);
 
 //ElementUI也会注册这个函数，提前改名
 Vue.prototype.$confirm_ = Vue.prototype.$confirm;
-Vue.prototype.$message_  = Vue.prototype.$message;
+Vue.prototype.$message_ = Vue.prototype.$message;
 
 //注册ElementUI
 Vue.use(ElementUI);
-Vue.use(EleForm);
+//Vue.use(EleForm);
 
 //注册F2可视化组件
-Vue.use(F2);
+//Vue.use(F2);
 
 new Vue({
     router,
