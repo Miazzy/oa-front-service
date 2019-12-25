@@ -401,8 +401,8 @@ export default {
         message: "欢迎",
         description: `${timeFix()}，欢迎回来`
       });
-      //如果登录5000秒没有响应，则刷新页面
-      setTimeout(function() {
+      //如果登录3000秒没有响应，则刷新页面
+      setTimeout(() => {
         //当前URL路径
         var url = window.location.href;
         //当前域名
@@ -410,13 +410,25 @@ export default {
         try {
           //获取相对路径
           url = url.substring(url.indexOf(domain) + domain.length);
-          debugger;
           //如果3秒后，还在登录页面，则刷新页面
           if (url.includes("/user/login") || url == "/user/login") {
             location.reload();
           }
         } catch (error) {
           console.log("query url :" + error);
+        }
+      }, 3000);
+      //如果登录3000秒没有响应,同时进入首页和工作台
+      setTimeout(() => {
+        try {
+          //跳转到工作台
+          this.$router.push(`/dashboard/analysis`);
+          //跳转到个人中心
+          this.$ourter.push(`/account/center`);
+          //跳转到工作台
+          this.$router.push(`/dashboard/workplace`);
+        } catch (error) {
+          console.log("$router go to error :" + error);
         }
       }, 3000);
     },

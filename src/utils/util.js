@@ -119,11 +119,19 @@ export function generateIndexRouter(data) {
     let indexRouter = [{
             path: '/',
             name: 'dashboard',
-            //component: () => import('@/components/layouts/BasicLayout'),
             component: resolve =>
                 require(['@/components/layouts/TabLayout'], resolve),
             meta: { title: '首页' },
             redirect: '/dashboard/analysis',
+            children: [...generateChildRouters(data)],
+        },
+        {
+            path: '/',
+            name: 'dashboard',
+            component: resolve =>
+                require(['@/components/layouts/TabLayout'], resolve),
+            meta: { title: '工作台' },
+            redirect: '/dashboard/workplace',
             children: [...generateChildRouters(data)],
         },
         {
