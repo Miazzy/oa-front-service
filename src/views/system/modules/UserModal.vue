@@ -53,6 +53,10 @@
           <a-input placeholder="请输入用户名称" v-decorator="[ 'realname', validatorRules.realname]" />
         </a-form-item>
 
+        <a-form-item label="用户昵称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请输入用户昵称" v-decorator="[ 'nickname', validatorRules.nickname]" />
+        </a-form-item>
+
         <a-form-item
           label="角色分配"
           :labelCol="labelCol"
@@ -128,8 +132,16 @@
           </a-select>
         </a-form-item>
 
+        <a-form-item label="标签" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请输入标签内容，多个标签用逗号隔开！" v-decorator="[ 'tags', validatorRules.tags]" />
+        </a-form-item>
+
         <a-form-item label="邮箱" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入邮箱" v-decorator="[ 'email', validatorRules.email]" />
+        </a-form-item>
+
+        <a-form-item label="描述信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请输入描述信息！" v-decorator="[ 'bio', validatorRules.bio]" />
         </a-form-item>
 
         <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -252,7 +264,10 @@ export default {
         },
         roles: {},
         post: {},
-        address: {}
+        address: {},
+        nickname: {},
+        bio: {},
+        tags: {}
         //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
       },
       title: "操作",
@@ -353,6 +368,9 @@ export default {
         let user = await queryTableData("sys_user", this.model.id);
         this.model.post = user.post;
         this.model.address = user.address;
+        this.model.tags = user.tags;
+        this.model.bio = user.bio;
+        this.model.nickname = user.nickname;
         that.form.setFieldsValue(
           pick(
             this.model,
@@ -363,6 +381,9 @@ export default {
             "phone",
             "post",
             "address",
+            "nickname",
+            "bio",
+            "tags",
             "activitiSync"
           )
         );
@@ -432,11 +453,15 @@ export default {
           } else {
             obj = editUser(formData);
           }
+          debugger;
           //此次设置用户岗位
           await patchTableData("sys_user", formData.id, {
             id: formData.id,
             post: formData.post,
-            address: formData.address
+            address: formData.address,
+            nickname: formData.nickname,
+            bio: formData.bio,
+            tags: formData.tags
           });
           obj
             .then(async res => {

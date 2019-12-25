@@ -221,14 +221,6 @@
         @change="handleTableChange"
         style="min-height: 300px"
       >
-        <div
-          slot="expandedRowRender"
-          slot-scope="record"
-          style="margin: 0; margin-left:60px;"
-          @click="processLog(record.id , record)"
-          v-html=" (typeof record.content != 'undefined') ? ('<span style=\'float:left;\'>具体内容：</span>' + record.content + '<br/>' + deStringNull(record.log_info_html) ) : '' "
-        ></div>
-
         <template slot="dateSlot" slot-scope="text">
           <span>{{ getFormatDate(text) }}</span>
         </template>

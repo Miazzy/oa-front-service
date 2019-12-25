@@ -8,7 +8,7 @@
               <img :src="getAvatar()" />
             </div>
             <div class="username">{{ nickname() }}</div>
-            <div class="bio">海纳百川，有容乃大</div>
+            <div class="bio">{{bio}}</div>
           </div>
           <div class="account-center-detail">
             <p>
@@ -40,7 +40,7 @@
                 <a-tag
                   v-else
                   :key="tag"
-                  :closable="index !== 0"
+                  :closable="index == 1000"
                   :afterClose="() => handleTagClose(tag)"
                 >{{ tag }}</a-tag>
               </template>
@@ -113,10 +113,11 @@ export default {
   },
   data() {
     return {
-      tags: ["很有想法的", "专注设计", "辣~", "大长腿", "川妹子", "海纳百川"],
+      tags: [],
       postName: "",
       departName: "",
       address: "",
+      bio: "",
       tagInputVisible: false,
       tagInputValue: "",
 
@@ -158,6 +159,12 @@ export default {
       this.postName = this.v_user[0]["post"];
       this.departName = this.v_user[0]["name"];
       this.address = this.v_user[0]["address"];
+      this.bio = this.v_user[0]["bio"];
+      if (this.v_user[0]["tags"].indexOf("，")) {
+        this.tags = this.v_user[0]["tags"].split("，");
+      } else if (this.v_user[0]["tags"].indexOf(",")) {
+        this.tags = this.v_user[0]["tags"].split(",");
+      }
     } catch (error) {
       console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
