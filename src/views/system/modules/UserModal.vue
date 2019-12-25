@@ -140,6 +140,10 @@
           />
         </a-form-item>
 
+        <a-form-item label="地址信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请输入地址信息" v-decorator="[ 'address', validatorRules.address]" />
+        </a-form-item>
+
         <a-form-item label="工作流引擎" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag
             v-decorator="['activitiSync', {}]"
@@ -247,7 +251,8 @@ export default {
           ]
         },
         roles: {},
-        post: {}
+        post: {},
+        address: {}
         //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
       },
       title: "操作",
@@ -347,6 +352,7 @@ export default {
       that.$nextTick(async () => {
         let user = await queryTableData("sys_user", this.model.id);
         this.model.post = user.post;
+        this.model.address = user.address;
         that.form.setFieldsValue(
           pick(
             this.model,
@@ -356,6 +362,7 @@ export default {
             "email",
             "phone",
             "post",
+            "address",
             "activitiSync"
           )
         );
@@ -428,7 +435,8 @@ export default {
           //此次设置用户岗位
           await patchTableData("sys_user", formData.id, {
             id: formData.id,
-            post: formData.post
+            post: formData.post,
+            address: formData.address
           });
           obj
             .then(async res => {

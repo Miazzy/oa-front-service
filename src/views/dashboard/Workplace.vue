@@ -5,7 +5,7 @@
         {{ timeFix }}，{{ nickname() }}童鞋，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
+      <div>{{postName}} | {{departName}}</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
@@ -137,7 +137,11 @@ import { mapGetters } from "vuex";
 import PageLayout from "@/components/page/PageLayout";
 import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
-import { getRoleList, getServiceList } from "@/api/manage";
+import {
+  getRoleList,
+  getServiceList,
+  queryTableDataByField
+} from "@/api/manage";
 
 const DataSet = require("@antv/data-set");
 
@@ -152,6 +156,8 @@ export default {
     return {
       timeFix: timeFix(),
       welcome: welcome(),
+      postName: "",
+      departName: "",
       avatar: "",
       user: {},
 
@@ -207,7 +213,7 @@ export default {
       return this.$store.getters.userInfo;
     }
   },
-  created() {
+  async created() {
     this.user = this.userInfo;
     this.avatar = window._CONFIG["imgDomainURL"] + "/" + this.userInfo.avatar;
     console.log("this.avatar :" + this.avatar);
@@ -219,6 +225,19 @@ export default {
     getServiceList().then(res => {
       console.log("workplace -> call getServiceList()", res);
     });
+
+    //设置员工岗位信息/部门信息
+    try {
+      this.v_user = await queryTableDataByField(
+        "v_user",
+        "username",
+        this.user.username
+      );
+      this.postName = this.v_user[0]["post"];
+      this.departName = this.v_user[0]["name"];
+    } catch (error) {
+      console.log("工作台设置员工岗位信息/部门信息异常：" + error);
+    }
   },
   mounted() {
     this.getProjects();
