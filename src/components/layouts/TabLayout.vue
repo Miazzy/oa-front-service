@@ -28,14 +28,17 @@
 </template>
 
 <script>
-import GlobalLayout from '@/components/page/GlobalLayout'
-import Contextmenu from '@/components/menu/Contextmenu'
-import { mixin, mixinDevice } from '@/utils/mixin.js'
+import GlobalLayout from "@/components/page/GlobalLayout";
+import Contextmenu from "@/components/menu/Contextmenu";
+import { mixin, mixinDevice } from "@/utils/mixin.js";
+import _ from "underscore";
 
-const indexKey = '/dashboard/analysis'
+const indexKey = `/dashboard/analysis`;
+const workplaceKey = `/dashboard/workplace`;
+const centerKey = `/account/center`;
 
 export default {
-  name: 'TabLayout',
+  name: "TabLayout",
   components: {
     GlobalLayout,
     Contextmenu
@@ -45,191 +48,259 @@ export default {
     return {
       pageList: [],
       linkList: [],
-      activePage: '',
+      activePage: "",
       menuVisible: false,
       menuItemList: [
-        { key: '1', icon: 'arrow-left', text: '关闭左侧' },
-        { key: '2', icon: 'arrow-right', text: '关闭右侧' },
-        { key: '3', icon: 'close', text: '关闭其它' }
+        { key: "1", icon: "arrow-left", text: "关闭左侧" },
+        { key: "2", icon: "arrow-right", text: "关闭右侧" },
+        { key: "3", icon: "close", text: "关闭其它" }
       ]
-    }
+    };
   },
   computed: {
     multipage() {
       //判断如果是手机模式，自动切换为单页面模式
       if (this.isMobile()) {
-        return false
+        return false;
       } else {
-        return this.$store.state.app.multipage
+        return this.$store.state.app.multipage;
       }
     }
   },
   created() {
-    if (this.$route.path != indexKey) {
+    //是否存在路径标识,检查pageList中是否含有indexKey
+    let flag = _.find(this.pageList, item => {
+      return item.path == indexKey;
+    });
+    if (flag == null || typeof flag == "undefined") {
       this.pageList.push({
-        name: 'dashboard-analysis',
+        name: "dashboard-analysis",
         path: indexKey,
         fullPath: indexKey,
         meta: {
-          icon: 'dashboard',
-          title: '首页'
+          icon: "dashboard",
+          title: "首页"
         }
-      })
-      this.linkList.push(indexKey)
+      });
+      this.linkList.push(indexKey);
     }
-    this.pageList.push(this.$route)
-    this.linkList.push(this.$route.fullPath)
-    this.activePage = this.$route.fullPath
+    //是否存在路径标识,检查pageList中是否含有workplaceKey
+    flag = _.find(this.pageList, item => {
+      return item.path == centerKey;
+    });
+    if (flag == null || typeof flag == "undefined") {
+      this.pageList.push({
+        name: "account-center",
+        path: centerKey,
+        fullPath: centerKey,
+        meta: {
+          icon: "account",
+          title: "个人中心"
+        }
+      });
+      this.linkList.push(centerKey);
+    }
+    //是否存在路径标识,检查pageList中是否含有workplaceKey
+    flag = _.find(this.pageList, item => {
+      return item.path == workplaceKey;
+    });
+    if (flag == null || typeof flag == "undefined") {
+      this.pageList.push({
+        name: "dashboard-workplace",
+        path: workplaceKey,
+        fullPath: workplaceKey,
+        meta: {
+          icon: "dashboard",
+          title: "工作台"
+        }
+      });
+      this.linkList.push(workplaceKey);
+    }
+    if (
+      this.$route.fullPath != indexKey &&
+      this.$route.fullPath != workplaceKey &&
+      this.$route.fullPath != centerKey
+    ) {
+      this.pageList.push(this.$route);
+      this.linkList.push(this.$route.fullPath);
+    }
+
+    this.activePage = this.$route.fullPath;
   },
+
   watch: {
     $route: function(newRoute) {
       //debugger
-      if (newRoute.params.code == '0b511f234f3847baa50106a14fff6215') {
-        newRoute.meta.title = '审批处理'
-      } else if (newRoute.params.code == 'b0ceb7cfb2b0487a96e03f50c413d762') {
-        newRoute.meta.title = '请假'
+      if (newRoute.params.code == "0b511f234f3847baa50106a14fff6215") {
+        newRoute.meta.title = "审批处理";
+      } else if (newRoute.params.code == "b0ceb7cfb2b0487a96e03f50c413d762") {
+        newRoute.meta.title = "请假";
       }
-      this.activePage = newRoute.fullPath
+      this.activePage = newRoute.fullPath;
       if (!this.multipage) {
-        this.linkList = [newRoute.fullPath]
-        this.pageList = [Object.assign({}, newRoute)]
+        this.linkList = [newRoute.fullPath];
+        this.pageList = [Object.assign({}, newRoute)];
       } else if (this.linkList.indexOf(newRoute.fullPath) < 0) {
-        this.linkList.push(newRoute.fullPath)
-        this.pageList.push(Object.assign({}, newRoute))
+        this.linkList.push(newRoute.fullPath);
+        this.pageList.push(Object.assign({}, newRoute));
       } else if (this.linkList.indexOf(newRoute.fullPath) >= 0) {
-        let oldIndex = this.linkList.indexOf(newRoute.fullPath)
-        let oldPositionRoute = this.pageList[oldIndex]
-        this.pageList.splice(oldIndex, 1, Object.assign({}, newRoute, { meta: oldPositionRoute.meta }))
+        let oldIndex = this.linkList.indexOf(newRoute.fullPath);
+        let oldPositionRoute = this.pageList[oldIndex];
+        this.pageList.splice(
+          oldIndex,
+          1,
+          Object.assign({}, newRoute, { meta: oldPositionRoute.meta })
+        );
       }
     },
     activePage: function(key) {
-      let index = this.linkList.lastIndexOf(key)
-      let waitRouter = this.pageList[index]
+      let index = this.linkList.lastIndexOf(key);
+      let waitRouter = this.pageList[index];
       //debugger
-      this.$router.push(Object.assign({}, waitRouter))
+      this.$router.push(Object.assign({}, waitRouter));
     },
     multipage: function(newVal) {
       if (!newVal) {
-        this.linkList = [this.$route.fullPath]
-        this.pageList = [this.$route]
+        this.linkList = [this.$route.fullPath];
+        this.pageList = [this.$route];
       }
     }
   },
   methods: {
     changePage(key) {
       //debugger
-      this.activePage = key
+      this.activePage = key;
     },
     editPage(key, action) {
       //debugger
-      this[action](key)
+      this[action](key);
     },
     remove(key) {
-      //debugger
+      debugger;
       if (key == indexKey) {
-        this.$message.warning('首页不能关闭!')
-        return
+        this.$message.warning("首页不能关闭!");
+        return;
+      }
+      if (key == workplaceKey) {
+        this.$message.warning("工作台不能关闭!");
+        return;
+      }
+      if (key == centerKey) {
+        this.$message.warning("个人中心不能关闭!");
+        return;
       }
       if (this.pageList.length === 1) {
-        this.$message.warning('这是最后一页，不能再关闭了啦')
-        return
+        this.$message.warning("这是最后一页，不能再关闭了啦");
+        return;
       }
-      this.pageList = this.pageList.filter(item => item.fullPath !== key)
-      let index = this.linkList.indexOf(key)
-      this.linkList = this.linkList.filter(item => item !== key)
-      index = index >= this.linkList.length ? this.linkList.length - 1 : index
-      this.activePage = this.linkList[index]
+      this.pageList = this.pageList.filter(item => item.fullPath !== key);
+      let index = this.linkList.indexOf(key);
+      this.linkList = this.linkList.filter(item => item !== key);
+      index = index >= this.linkList.length ? this.linkList.length - 1 : index;
+      this.activePage = this.linkList[index];
     },
     onContextmenu(e) {
       //debugger
-      const pagekey = this.getPageKey(e.target)
+      const pagekey = this.getPageKey(e.target);
       if (pagekey !== null) {
-        e.preventDefault()
-        this.menuVisible = true
+        e.preventDefault();
+        this.menuVisible = true;
       }
     },
     getPageKey(target, depth) {
       //debugger
-      depth = depth || 0
+      depth = depth || 0;
       if (depth > 2) {
-        return null
+        return null;
       }
-      let pageKey = target.getAttribute('pagekey')
+      let pageKey = target.getAttribute("pagekey");
       pageKey =
-        pageKey || (target.previousElementSibling ? target.previousElementSibling.getAttribute('pagekey') : null)
-      return pageKey || (target.firstElementChild ? this.getPageKey(target.firstElementChild, ++depth) : null)
+        pageKey ||
+        (target.previousElementSibling
+          ? target.previousElementSibling.getAttribute("pagekey")
+          : null);
+      return (
+        pageKey ||
+        (target.firstElementChild
+          ? this.getPageKey(target.firstElementChild, ++depth)
+          : null)
+      );
     },
     onMenuSelect(key, target) {
       //debugger
-      let pageKey = this.getPageKey(target)
+      let pageKey = this.getPageKey(target);
       switch (key) {
-        case '1':
-          this.closeLeft(pageKey)
-          break
-        case '2':
-          this.closeRight(pageKey)
-          break
-        case '3':
-          this.closeOthers(pageKey)
-          break
+        case "1":
+          this.closeLeft(pageKey);
+          break;
+        case "2":
+          this.closeRight(pageKey);
+          break;
+        case "3":
+          this.closeOthers(pageKey);
+          break;
         default:
-          break
+          break;
       }
     },
     closeOthers(pageKey) {
       //debugger
-      let index = this.linkList.indexOf(pageKey)
+      let index = this.linkList.indexOf(pageKey);
       if (pageKey == indexKey) {
-        this.linkList = this.linkList.slice(index, index + 1)
-        this.pageList = this.pageList.slice(index, index + 1)
-        this.activePage = this.linkList[0]
+        this.linkList = this.linkList.slice(index, index + 1);
+        this.pageList = this.pageList.slice(index, index + 1);
+        this.activePage = this.linkList[0];
       } else {
-        let indexContent = this.pageList.slice(0, 1)[0]
-        this.linkList = this.linkList.slice(index, index + 1)
-        this.pageList = this.pageList.slice(index, index + 1)
-        this.linkList.unshift(indexKey)
-        this.pageList.unshift(indexContent)
-        this.activePage = this.linkList[1]
+        let indexContent = this.pageList.slice(0, 1)[0];
+        this.linkList = this.linkList.slice(index, index + 1);
+        this.pageList = this.pageList.slice(index, index + 1);
+        this.linkList.unshift(indexKey);
+        this.pageList.unshift(indexContent);
+        this.activePage = this.linkList[1];
       }
     },
     closeLeft(pageKey) {
       //debugger
       if (pageKey == indexKey) {
-        return
+        return;
       }
-      let tempList = [...this.pageList]
-      let indexContent = tempList.slice(0, 1)[0]
-      let index = this.linkList.indexOf(pageKey)
-      this.linkList = this.linkList.slice(index)
-      this.pageList = this.pageList.slice(index)
-      this.linkList.unshift(indexKey)
-      this.pageList.unshift(indexContent)
+      let tempList = [...this.pageList];
+      let indexContent = tempList.slice(0, 1)[0];
+      let index = this.linkList.indexOf(pageKey);
+      this.linkList = this.linkList.slice(index);
+      this.pageList = this.pageList.slice(index);
+      this.linkList.unshift(indexKey);
+      this.pageList.unshift(indexContent);
       if (this.linkList.indexOf(this.activePage) < 0) {
-        this.activePage = this.linkList[0]
+        this.activePage = this.linkList[0];
       }
     },
     closeRight(pageKey) {
       //debugger
-      let index = this.linkList.indexOf(pageKey)
-      this.linkList = this.linkList.slice(0, index + 1)
-      this.pageList = this.pageList.slice(0, index + 1)
+      let index = this.linkList.indexOf(pageKey);
+      this.linkList = this.linkList.slice(0, index + 1);
+      this.pageList = this.pageList.slice(0, index + 1);
       if (this.linkList.indexOf(this.activePage < 0)) {
-        this.activePage = this.linkList[this.linkList.length - 1]
+        this.activePage = this.linkList[this.linkList.length - 1];
       }
     },
     //update-begin-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
     dynamicRouterShow(key, title) {
       //debugger
-      let keyIndex = this.linkList.indexOf(key)
+      let keyIndex = this.linkList.indexOf(key);
       if (keyIndex >= 0) {
-        let currRouter = this.pageList[keyIndex]
-        let meta = Object.assign({}, currRouter.meta, { title: title })
-        this.pageList.splice(keyIndex, 1, Object.assign({}, currRouter, { meta: meta }))
+        let currRouter = this.pageList[keyIndex];
+        let meta = Object.assign({}, currRouter.meta, { title: title });
+        this.pageList.splice(
+          keyIndex,
+          1,
+          Object.assign({}, currRouter, { meta: meta })
+        );
       }
     }
     //update-end-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
   }
-}
+};
 </script>
 
 <style lang="scss">

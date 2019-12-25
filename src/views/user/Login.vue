@@ -418,19 +418,33 @@ export default {
           console.log("query url :" + error);
         }
       }, 3000);
-      //如果登录3000秒没有响应,同时进入首页和工作台
+      //如果登录3000秒没有响应,同时进入首页
       setTimeout(() => {
         try {
           //跳转到工作台
           this.$router.push(`/dashboard/analysis`);
+        } catch (error) {
+          console.log("$router go to error :" + error);
+        }
+      }, 1000);
+      //如果登录3000秒没有响应,同时进入个人中心
+      setTimeout(() => {
+        try {
           //跳转到个人中心
-          this.$ourter.push(`/account/center`);
+          this.$router.push(`/account/center`);
+        } catch (error) {
+          console.log("$router go to error :" + error);
+        }
+      }, 1000);
+      //如果登录3000秒没有响应,同时进入工作台
+      setTimeout(() => {
+        try {
           //跳转到工作台
           this.$router.push(`/dashboard/workplace`);
         } catch (error) {
           console.log("$router go to error :" + error);
         }
-      }, 3000);
+      }, 1000);
     },
     cmsFailed(err) {
       this.$notification["error"]({

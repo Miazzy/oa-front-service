@@ -1,5 +1,7 @@
 import { isURL } from '@/utils/validate';
 
+export const TokenKey = 'Access-Token';
+
 export function timeFix() {
     const time = new Date();
     const hour = time.getHours();
@@ -9,8 +11,25 @@ export function timeFix() {
 }
 
 export function welcome() {
-    const arr = ['休息一会儿吧', '准备吃什么呢?', '要不要打一把 DOTA', '我猜你可能累了'];
+    const arr = [
+        '待办任务处理好了不👌？',
+        '处理完毕的任务，可以在我的已办中查看哦😁！',
+        '工作台右侧有快捷导航哦😊！',
+        '休息一会儿吧😴！',
+        '准备吃什么呢🍚?',
+        '加油💪！',
+        '要不要喝杯茶，休息一下😝？',
+        '来杯咖啡不☕️？',
+        '眼睛是心灵的窗户，别忘了做做眼保健操🤗！',
+        '身体是革命的本钱，记得多做运动🏃！',
+        '我猜你可能累了😢！',
+        '来泡杯枸杞茶吧🍵！',
+        '来杯浓咖啡☕️，醒醒脑⏰！',
+        '中午点外卖不🤩？',
+        '老板来了，赶紧工作💪！',
+    ];
     let index = Math.floor(Math.random() * arr.length);
+    index = index < arr.length ? index : arr.length - 1;
     return arr[index];
 }
 
@@ -106,6 +125,10 @@ export function formatDate(value, fmt) {
     }
 }
 
+/**
+ * @function 过滤空对象
+ * @param {*} data 
+ */
 export function deNull(data) {
     if (typeof data == 'undefined' || data == null || data == '') {
         return '';
@@ -203,6 +226,14 @@ function generateChildRouters(data) {
  * @return 克隆后的对象
  */
 export function cloneObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * @function clone对象
+ * @param {*} obj 被克隆对象
+ */
+export function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
@@ -403,4 +434,17 @@ export function parseDate(date) {
     } else {
         return new Date();
     }
+}
+
+/**
+ * @function 解析JSON对象
+ * @param {*} json 
+ */
+export function parseJSON(json) {
+    try {
+        return JSON.parse(json);
+    } catch (e) {
+        console.log('err', e);
+    }
+    return [];
 }

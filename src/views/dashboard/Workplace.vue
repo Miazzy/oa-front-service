@@ -2,8 +2,8 @@
   <page-layout :avatar="avatar">
     <div slot="headerContent">
       <div class="title">
-        {{ timeFix }}，{{ nickname() }}
-        <span class="welcome-text">，{{ welcome() }}</span>
+        {{ timeFix }}，{{ nickname() }}童鞋，
+        <span class="welcome-text">{{ welcome }}</span>
       </div>
       <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
     </div>
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { timeFix } from "@/utils/util";
+import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
 
 import PageLayout from "@/components/page/PageLayout";
@@ -151,6 +151,7 @@ export default {
   data() {
     return {
       timeFix: timeFix(),
+      welcome: welcome(),
       avatar: "",
       user: {},
 
