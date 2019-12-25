@@ -37,6 +37,20 @@ const indexKey = `/dashboard/analysis`;
 const workplaceKey = `/dashboard/workplace`;
 const centerKey = `/account/center`;
 
+//Tab标题
+const titleKV = {
+  "0b511f234f3847baa50106a14fff6215": "审批处理",
+  b0ceb7cfb2b0487a96e03f50c413d762: "请假申请",
+  "933e21cf445440abb8cfdae366082a62": "外出申请",
+  "9ed5bc42eb934bbe8dac16ed1a3b103f": "加班申请",
+  b0fee76c2ee84baeb9494b196b779e3e: "考勤异常",
+  "3da23c7955d84465a759d0f1830a0d00": "档案及证照借阅",
+  cfd4ee2d60fa48f585c157d524b0a108: "用印申请(非合同)",
+  dd78c4c8a59e4ee3bd93ec011a3f6b4c: "用印申请(合同)",
+  e412b58db17b4cbf8cb9833c118c2d3b: "印章借用",
+  "62f7122c73c244119e5d4ec8aa170a3d": "出差申请"
+};
+
 export default {
   name: "TabLayout",
   components: {
@@ -130,11 +144,13 @@ export default {
 
   watch: {
     $route: function(newRoute) {
-      //debugger
-      if (newRoute.params.code == "0b511f234f3847baa50106a14fff6215") {
-        newRoute.meta.title = "审批处理";
-      } else if (newRoute.params.code == "b0ceb7cfb2b0487a96e03f50c413d762") {
-        newRoute.meta.title = "请假";
+      //设置Tab栏标题
+      if (
+        typeof titleKV[newRoute.params.code] != "undefined" &&
+        titleKV[newRoute.params.code] != "" &&
+        titleKV[newRoute.params.code] != null
+      ) {
+        newRoute.meta.title = titleKV[newRoute.params.code];
       }
       this.activePage = newRoute.fullPath;
       if (!this.multipage) {

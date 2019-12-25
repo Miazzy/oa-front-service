@@ -86,17 +86,17 @@
                 <a-tag color="red" @click="handleMyCenter()">个人中心</a-tag>
               </div>
               <div style="margin:10px 0px;">
-                <a-tag color="green" @click="handleWait()">请假申请</a-tag>
-                <a-tag color="blue" @click="handleDone()">外出申请</a-tag>
-                <a-tag color="orange" @click="handleMessage()">加班申请</a-tag>
-                <a-tag color="pink" @click="handleCollect()">考勤异常</a-tag>
-                <a-tag color="cyan" @click="handleCollect()">档案借阅</a-tag>
+                <a-tag color="green" @click="handleLeave()">请假申请</a-tag>
+                <a-tag color="blue" @click="handleGoOut()">外出申请</a-tag>
+                <a-tag color="orange" @click="handleOvertime()">加班申请</a-tag>
+                <a-tag color="pink" @click="handleAttendance()">考勤异常</a-tag>
+                <a-tag color="cyan" @click="handleFileBorrow()">档案借阅</a-tag>
               </div>
               <div style="margin:10px 0px;">
-                <a-tag color="blue" @click="handleWait()">用印(合同)</a-tag>
-                <a-tag color="red" @click="handleDone()">用印(非合同)</a-tag>
-                <a-tag color="green" @click="handleMessage()">印章借用</a-tag>
-                <a-tag color="orange" @click="handleCollect()">出差申请</a-tag>
+                <a-tag color="blue" @click="handleUseSealCon()">用印(合同)</a-tag>
+                <a-tag color="red" @click="handleUseSealCom()">用印(非合同)</a-tag>
+                <a-tag color="green" @click="handleSealDeclare()">印章借用</a-tag>
+                <a-tag color="orange" @click="handleTravel()">出差申请</a-tag>
               </div>
             </div>
           </a-card>
@@ -258,9 +258,117 @@ export default {
       //跳转到相应页面
       this.$router.push(`/account/settings/notification`);
     },
+    /**
+     * @function 跳转到请假申请列表
+     */
+    handleLeave() {
+      var path = `/online/cgformList/b0ceb7cfb2b0487a96e03f50c413d762`;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "请假申请" }
+      });
+    },
+    /**
+     * @function 跳转到外出申请列表
+     */
+    handleGoOut() {
+      let path = `/online/cgformList/933e21cf445440abb8cfdae366082a62`;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "外出申请" }
+      });
+    },
+    /**
+     * @function 跳转到加班申请列表
+     */
+    handleOvertime() {
+      let path = `/online/cgformList/9ed5bc42eb934bbe8dac16ed1a3b103f`;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "加班申请" }
+      });
+    },
+    /**
+     * @function 跳转到考勤异常申请列表
+     */
+    handleAttendance() {
+      var path = "/online/cgformList/b0fee76c2ee84baeb9494b196b779e3e";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "考勤异常" }
+      });
+    },
+    /**
+     * @function 跳转到档案及证照借阅申请列表
+     */
+    handleFileBorrow() {
+      var path = "/online/cgformList/3da23c7955d84465a759d0f1830a0d00";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "档案及证照借阅" }
+      });
+    },
+
+    /**
+     * @function 跳转到用印申请(合同)列表
+     */
+    handleUseSealCon() {
+      var path = "/online/cgformList/dd78c4c8a59e4ee3bd93ec011a3f6b4c";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "用印申请(合同)" }
+      });
+    },
+    /**
+     * @function 跳转到用印申请(非合同)列表
+     */
+    handleUseSealCom() {
+      var path = "/online/cgformList/cfd4ee2d60fa48f585c157d524b0a108";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "用印申请(非合同)" }
+      });
+    },
+    /**
+     * @function 跳转到用印申请(非合同)列表
+     */
+    handleSealDeclare() {
+      var path = "/online/cgformList/e412b58db17b4cbf8cb9833c118c2d3b";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "印章借阅" }
+      });
+    },
+    /**
+     * @function 跳转到用印申请(非合同)列表
+     */
+    handleTravel() {
+      var path = "/online/cgformList/62f7122c73c244119e5d4ec8aa170a3d";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "出差申请" }
+      });
+    },
     initRadar() {
       this.radarLoading = true;
-
       this.$http.get("/api/workplace/radar").then(res => {
         const dv = new DataSet.View().source(res.result);
         dv.transform({
@@ -269,7 +377,6 @@ export default {
           key: "user",
           value: "score"
         });
-
         this.radarData = dv.rows;
         this.radarLoading = false;
       });

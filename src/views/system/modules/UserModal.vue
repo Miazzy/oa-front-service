@@ -74,6 +74,10 @@
           </a-select>
         </a-form-item>
 
+        <a-form-item label="工作岗位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请输入岗位名称" v-decorator="[ 'post', validatorRules.post]" />
+        </a-form-item>
+
         <!--部门分配-->
         <a-form-item
           label="部门分配"
@@ -159,19 +163,19 @@
 </template>
 
 <script>
-import pick from 'lodash.pick'
-import moment from 'moment'
-import Vue from 'vue'
+import pick from "lodash.pick";
+import moment from "moment";
+import Vue from "vue";
 // 引入搜索部门弹出框的组件
-import departWindow from './DepartWindow'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { getAction } from '@/api/manage'
-import { addUser, editUser, queryUserRole, queryall } from '@/api/api'
-import { disabledAuthFilter } from '@/utils/authFilter'
-import { duplicateCheck } from '@/api/api'
+import departWindow from "./DepartWindow";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
+import { getAction, patchTableData, queryTableData } from "@/api/manage";
+import { addUser, editUser, queryUserRole, queryall } from "@/api/api";
+import { disabledAuthFilter } from "@/utils/authFilter";
+import { duplicateCheck } from "@/api/api";
 
 export default {
-  name: 'RoleModal',
+  name: "RoleModal",
   components: {
     departWindow
   },
@@ -186,17 +190,17 @@ export default {
       selectedDepartKeys: [], //保存用户选择部门id
       checkedDepartKeys: [],
       checkedDepartNames: [], // 保存部门的名称 =>title
-      checkedDepartNameString: '', // 保存部门的名称 =>title
-      userId: '', //保存用户id
+      checkedDepartNameString: "", // 保存部门的名称 =>title
+      userId: "", //保存用户id
       disableSubmit: false,
-      userDepartModel: { userId: '', departIdList: [] }, // 保存SysUserDepart的用户部门中间表数据需要的对象
-      dateFormat: 'YYYY-MM-DD',
+      userDepartModel: { userId: "", departIdList: [] }, // 保存SysUserDepart的用户部门中间表数据需要的对象
+      dateFormat: "YYYY-MM-DD",
       validatorRules: {
         username: {
           rules: [
             {
               required: true,
-              message: '请输入用户账号!'
+              message: "请输入用户账号!"
             },
             {
               validator: this.validateUsername
@@ -208,7 +212,7 @@ export default {
             {
               required: true,
               pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
-              message: '密码由8位数字、大小写字母和特殊符号组成!'
+              message: "密码由8位数字、大小写字母和特殊符号组成!"
             },
             {
               validator: this.validateToNextPassword
@@ -219,14 +223,21 @@ export default {
           rules: [
             {
               required: true,
-              message: '请重新输入登陆密码!'
+              message: "请重新输入登陆密码!"
             },
             {
               validator: this.compareToFirstPassword
             }
           ]
         },
-        realname: { rules: [{ required: true, message: '请输入用户名称!' }] },
+        realname: {
+          rules: [
+            { required: true, message: "请输入用户名称!" },
+            {
+              validator: this.validateRealname
+            }
+          ]
+        },
         phone: { rules: [{ validator: this.validatePhone }] },
         email: {
           rules: [
@@ -235,10 +246,11 @@ export default {
             }
           ]
         },
-        roles: {}
+        roles: {},
+        post: {}
         //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
       },
-      title: '操作',
+      title: "操作",
       visible: false,
       model: {},
       roleList: [],
@@ -255,214 +267,240 @@ export default {
       confirmLoading: false,
       headers: {},
       form: this.$form.createForm(this),
-      picUrl: '',
+      picUrl: "",
       url: {
-        fileUpload: window._CONFIG['domianURL'] + '/sys/common/upload',
-        imgerver: window._CONFIG['imgDomainURL'],
-        userWithDepart: `${window._CONFIG['domian']}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
-        userId: `${window._CONFIG['domian']}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
-        syncUserByUserName: `${window._CONFIG['domian']}/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
+        fileUpload: window._CONFIG["domianURL"] + "/sys/common/upload",
+        imgerver: window._CONFIG["imgDomainURL"],
+        userWithDepart: `${window._CONFIG["domian"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
+        userId: `${window._CONFIG["domian"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
+        syncUserByUserName: `${
+          window._CONFIG["domian"]
+        }/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
       }
-    }
+    };
   },
   created() {
-    const token = Vue.ls.get(ACCESS_TOKEN)
-    this.headers = { 'X-Access-Token': token }
+    const token = Vue.ls.get(ACCESS_TOKEN);
+    this.headers = { "X-Access-Token": token };
   },
   computed: {
     uploadAction: function() {
-      return this.url.fileUpload
+      return this.url.fileUpload;
     }
   },
   methods: {
     isDisabledAuth(code) {
-      return disabledAuthFilter(code)
+      return disabledAuthFilter(code);
     },
     //窗口最大化切换
     toggleScreen() {
       if (this.modaltoggleFlag) {
-        this.modalWidth = window.innerWidth
+        this.modalWidth = window.innerWidth;
       } else {
-        this.modalWidth = 800
+        this.modalWidth = 800;
       }
-      this.modaltoggleFlag = !this.modaltoggleFlag
+      this.modaltoggleFlag = !this.modaltoggleFlag;
     },
     initialRoleList() {
       queryall().then(res => {
         if (res.success) {
-          this.roleList = res.result
+          this.roleList = res.result;
         } else {
-          console.log(res.message)
+          console.log(res.message);
         }
-      })
+      });
     },
     loadUserRoles(userid) {
       queryUserRole({ userid: userid }).then(res => {
         if (res.success) {
-          this.selectedRole = res.result
+          this.selectedRole = res.result;
         } else {
-          console.log(res.message)
+          console.log(res.message);
         }
-      })
+      });
     },
     refresh() {
-      this.selectedDepartKeys = []
-      this.checkedDepartKeys = []
-      this.checkedDepartNames = []
-      this.checkedDepartNameString = ''
-      this.userId = ''
+      this.selectedDepartKeys = [];
+      this.checkedDepartKeys = [];
+      this.checkedDepartNames = [];
+      this.checkedDepartNameString = "";
+      this.userId = "";
     },
     add() {
-      this.picUrl = ''
-      this.refresh()
-      this.edit({ activitiSync: '1' })
+      this.picUrl = "";
+      this.refresh();
+      this.edit({ activitiSync: "1" });
     },
     edit(record) {
-      this.resetScreenSize() // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
-      let that = this
-      that.initialRoleList()
-      that.checkedDepartNameString = ''
-      that.form.resetFields()
-      if (record.hasOwnProperty('id')) {
-        that.loadUserRoles(record.id)
-        this.picUrl = 'Has no pic url yet'
+      this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
+      let that = this;
+      that.initialRoleList();
+      that.checkedDepartNameString = "";
+      that.form.resetFields();
+      if (record.hasOwnProperty("id")) {
+        that.loadUserRoles(record.id);
+        this.picUrl = "Has no pic url yet";
       }
-      that.userId = record.id
-      that.visible = true
-      that.model = Object.assign({}, record)
-      that.$nextTick(() => {
-        that.form.setFieldsValue(pick(this.model, 'username', 'sex', 'realname', 'email', 'phone', 'activitiSync'))
-      })
+      that.userId = record.id;
+      that.visible = true;
+      that.model = Object.assign({}, record);
+      that.$nextTick(async () => {
+        let user = await queryTableData("sys_user", this.model.id);
+        this.model.post = user.post;
+        that.form.setFieldsValue(
+          pick(
+            this.model,
+            "username",
+            "sex",
+            "realname",
+            "email",
+            "phone",
+            "post",
+            "activitiSync"
+          )
+        );
+      });
       // 调用查询用户对应的部门信息的方法
-      that.checkedDepartKeys = []
-      that.loadCheckedDeparts()
+      that.checkedDepartKeys = [];
+      that.loadCheckedDeparts();
     },
     //
     loadCheckedDeparts() {
-      let that = this
+      let that = this;
       if (!that.userId) {
-        return
+        return;
       }
       getAction(that.url.userWithDepart, { userId: that.userId }).then(res => {
-        that.checkedDepartNames = []
+        that.checkedDepartNames = [];
         if (res.success) {
           for (let i = 0; i < res.result.length; i++) {
-            that.checkedDepartNames.push(res.result[i].title)
-            this.checkedDepartNameString = this.checkedDepartNames.join(',')
-            that.checkedDepartKeys.push(res.result[i].key)
+            that.checkedDepartNames.push(res.result[i].title);
+            this.checkedDepartNameString = this.checkedDepartNames.join(",");
+            that.checkedDepartKeys.push(res.result[i].key);
           }
-          that.userDepartModel.departIdList = that.checkedDepartKeys
+          that.userDepartModel.departIdList = that.checkedDepartKeys;
         } else {
-          console.log(res.message)
+          console.log(res.message);
         }
-      })
+      });
     },
     close() {
-      this.$emit('close')
-      this.visible = false
-      this.disableSubmit = false
-      this.selectedRole = []
-      this.userDepartModel = { userId: '', departIdList: [] }
-      this.checkedDepartNames = []
-      this.checkedDepartNameString = ''
-      this.checkedDepartKeys = []
-      this.selectedDepartKeys = []
+      this.$emit("close");
+      this.visible = false;
+      this.disableSubmit = false;
+      this.selectedRole = [];
+      this.userDepartModel = { userId: "", departIdList: [] };
+      this.checkedDepartNames = [];
+      this.checkedDepartNameString = "";
+      this.checkedDepartKeys = [];
+      this.selectedDepartKeys = [];
     },
     moment,
-    handleSubmit() {
-      const that = this
+    async handleSubmit() {
+      const that = this;
       // 触发表单验证
-      this.form.validateFields((err, values) => {
+      this.form.validateFields(async (err, values) => {
         if (!err) {
-          that.confirmLoading = true
-          let avatar = that.model.avatar
+          that.confirmLoading = true;
+          let avatar = that.model.avatar;
           if (!values.birthday) {
-            values.birthday = ''
+            values.birthday = "";
           } else {
-            values.birthday = values.birthday.format(this.dateFormat)
+            values.birthday = values.birthday.format(this.dateFormat);
           }
-          let formData = Object.assign(this.model, values)
-          formData.avatar = avatar
-          formData.selectedroles = this.selectedRole.length > 0 ? this.selectedRole.join(',') : ''
+          let formData = Object.assign(this.model, values);
+          formData.avatar = avatar;
+          formData.selectedroles =
+            this.selectedRole.length > 0 ? this.selectedRole.join(",") : "";
           formData.selecteddeparts =
-            this.userDepartModel.departIdList.length > 0 ? this.userDepartModel.departIdList.join(',') : ''
+            this.userDepartModel.departIdList.length > 0
+              ? this.userDepartModel.departIdList.join(",")
+              : "";
 
           // that.addDepartsToUser(that,formData); // 调用根据当前用户添加部门信息的方法
-          let obj
+          let obj;
           if (!this.model.id) {
-            formData.id = this.userId
-            obj = addUser(formData)
+            formData.id = this.userId;
+            obj = addUser(formData);
           } else {
-            obj = editUser(formData)
+            obj = editUser(formData);
           }
+          //此次设置用户岗位
+          await patchTableData("sys_user", formData.id, {
+            id: formData.id,
+            post: formData.post
+          });
           obj
-            .then(res => {
+            .then(async res => {
               if (res.success) {
-                that.$message.success(res.message)
-                that.$emit('ok')
+                that.$message.success(res.message);
+                that.$emit("ok");
               } else {
-                that.$message.warning(res.message)
+                that.$message.warning(res.message);
               }
             })
             .finally(() => {
-              that.confirmLoading = false
-              that.checkedDepartNames = []
-              that.userDepartModel.departIdList = { userId: '', departIdList: [] }
+              that.confirmLoading = false;
+              that.checkedDepartNames = [];
+              that.userDepartModel.departIdList = {
+                userId: "",
+                departIdList: []
+              };
 
-              that.close()
-            })
+              that.close();
+            });
         }
-      })
+      });
     },
     handleCancel() {
-      this.close()
+      this.close();
     },
     validateToNextPassword(rule, value, callback) {
-      const form = this.form
-      const confirmpassword = form.getFieldValue('confirmpassword')
+      const form = this.form;
+      const confirmpassword = form.getFieldValue("confirmpassword");
 
       if (value && confirmpassword && value !== confirmpassword) {
-        callback('两次输入的密码不一样！')
+        callback("两次输入的密码不一样！");
       }
       if (value && this.confirmDirty) {
-        form.validateFields(['confirm'], { force: true })
+        form.validateFields(["confirm"], { force: true });
       }
-      callback()
+      callback();
     },
     compareToFirstPassword(rule, value, callback) {
-      const form = this.form
-      if (value && value !== form.getFieldValue('password')) {
-        callback('两次输入的密码不一样！')
+      const form = this.form;
+      if (value && value !== form.getFieldValue("password")) {
+        callback("两次输入的密码不一样！");
       } else {
-        callback()
+        callback();
       }
     },
     validatePhone(rule, value, callback) {
       if (!value) {
-        callback()
+        callback();
       } else {
         if (new RegExp(/^1[3|4|5|7|8][0-9]\d{8}$/).test(value)) {
           var params = {
-            tableName: 'sys_user',
-            fieldName: 'phone',
+            tableName: "sys_user",
+            fieldName: "phone",
             fieldVal: value,
             dataId: this.userId
-          }
+          };
           duplicateCheck(params).then(res => {
             if (res.success) {
-              callback()
+              callback();
             } else {
-              callback('手机号已存在!')
+              callback("手机号已存在!");
             }
-          })
+          });
         } else {
-          callback('请输入正确格式的手机号码!')
+          callback("请输入正确格式的手机号码!");
         }
       }
     },
     validateEmail(rule, value, callback) {
       if (!value) {
-        callback()
+        callback();
       } else {
         if (
           new RegExp(
@@ -470,111 +508,126 @@ export default {
           ).test(value)
         ) {
           var params = {
-            tableName: 'sys_user',
-            fieldName: 'email',
+            tableName: "sys_user",
+            fieldName: "email",
             fieldVal: value,
             dataId: this.userId
-          }
+          };
           duplicateCheck(params).then(res => {
-            console.log(res)
+            console.log(res);
             if (res.success) {
-              callback()
+              callback();
             } else {
-              callback('邮箱已存在!')
+              callback("邮箱已存在!");
             }
-          })
+          });
         } else {
-          callback('请输入正确格式的邮箱!')
+          callback("请输入正确格式的邮箱!");
         }
       }
     },
     validateUsername(rule, value, callback) {
       var params = {
-        tableName: 'sys_user',
-        fieldName: 'username',
+        tableName: "sys_user",
+        fieldName: "username",
         fieldVal: value,
         dataId: this.userId
-      }
+      };
       duplicateCheck(params).then(res => {
         if (res.success) {
-          callback()
+          callback();
         } else {
-          callback('用户名已存在!')
+          callback("用户名已存在!");
         }
-      })
+      });
+    },
+    validateRealname(rule, value, callback) {
+      var params = {
+        tableName: "sys_user",
+        fieldName: "realname",
+        fieldVal: value,
+        dataId: this.userId
+      };
+      duplicateCheck(params).then(res => {
+        if (res.success) {
+          callback();
+        } else {
+          callback("用户名已存在!");
+        }
+      });
     },
     handleConfirmBlur(e) {
-      const value = e.target.value
-      this.confirmDirty = this.confirmDirty || !!value
+      const value = e.target.value;
+      this.confirmDirty = this.confirmDirty || !!value;
     },
 
     normFile(e) {
-      console.log('Upload event:', e)
+      console.log("Upload event:", e);
       if (Array.isArray(e)) {
-        return e
+        return e;
       }
-      return e && e.fileList
+      return e && e.fileList;
     },
     beforeUpload: function(file) {
-      var fileType = file.type
-      if (fileType.indexOf('image') < 0) {
-        this.$message.warning('请上传图片')
-        return false
+      var fileType = file.type;
+      if (fileType.indexOf("image") < 0) {
+        this.$message.warning("请上传图片");
+        return false;
       }
       //TODO 验证文件大小
     },
     handleChange(info) {
-      this.picUrl = ''
-      if (info.file.status === 'uploading') {
-        this.uploadLoading = true
-        return
+      this.picUrl = "";
+      if (info.file.status === "uploading") {
+        this.uploadLoading = true;
+        return;
       }
-      if (info.file.status === 'done') {
-        var response = info.file.response
-        this.uploadLoading = false
-        console.log(response)
+      if (info.file.status === "done") {
+        var response = info.file.response;
+        this.uploadLoading = false;
+        console.log(response);
         if (response.success) {
-          this.model.avatar = response.message
-          this.picUrl = 'Has no pic url yet'
+          this.model.avatar = response.message;
+          this.picUrl = "Has no pic url yet";
         } else {
-          this.$message.warning(response.message)
+          this.$message.warning(response.message);
         }
       }
     },
     getAvatarView() {
-      return this.url.imgerver + '/' + this.model.avatar
+      return this.url.imgerver + "/" + this.model.avatar;
     },
     // 搜索用户对应的部门API
     onSearch() {
-      this.$refs.departWindow.add(this.checkedDepartKeys, this.userId)
+      this.$refs.departWindow.add(this.checkedDepartKeys, this.userId);
     },
 
     // 获取用户对应部门弹出框提交给返回的数据
     modalFormOk(formData) {
-      this.checkedDepartNames = []
-      this.selectedDepartKeys = []
-      this.checkedDepartNameString = ''
-      this.userId = formData.userId
-      this.userDepartModel.userId = formData.userId
+      this.checkedDepartNames = [];
+      this.selectedDepartKeys = [];
+      this.checkedDepartNameString = "";
+      this.userId = formData.userId;
+      this.userDepartModel.userId = formData.userId;
       for (let i = 0; i < formData.departIdList.length; i++) {
-        this.selectedDepartKeys.push(formData.departIdList[i].key)
-        this.checkedDepartNames.push(formData.departIdList[i].title)
-        this.checkedDepartNameString = this.checkedDepartNames.join(',')
+        this.selectedDepartKeys.push(formData.departIdList[i].key);
+        this.checkedDepartNames.push(formData.departIdList[i].title);
+        this.checkedDepartNameString = this.checkedDepartNames.join(",");
       }
-      this.userDepartModel.departIdList = this.selectedDepartKeys
-      this.checkedDepartKeys = this.selectedDepartKeys //更新当前的选择keys
+      this.userDepartModel.departIdList = this.selectedDepartKeys;
+      this.checkedDepartKeys = this.selectedDepartKeys; //更新当前的选择keys
     },
     // 根据屏幕变化,设置抽屉尺寸
     resetScreenSize() {
-      let screenWidth = document.body.clientWidth
+      let screenWidth = document.body.clientWidth;
       if (screenWidth < 500) {
-        this.drawerWidth = screenWidth
+        this.drawerWidth = screenWidth;
       } else {
-        this.drawerWidth = 700
+        this.drawerWidth = 700;
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
