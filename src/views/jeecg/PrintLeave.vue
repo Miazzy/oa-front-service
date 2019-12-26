@@ -320,6 +320,34 @@
 
           <a-col
             :span="24"
+            style="margin-top:10px;margin-bottom:20px;"
+            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
+          >
+            <div style="margin-bottom:20px;">流程进度</div>
+            <template>
+              <a-steps style="width:80%;margin-bottom:10px;">
+                <a-step status="finish" title="发起" >
+                  <a-icon type="user" slot="icon" style="color:skyblue;" />
+                </a-step>
+                <a-step status="finish" title="审核">
+                  <a-icon type="solution" slot="icon" style="color:orange;"/>
+                </a-step>
+                <a-step status="process" title="审批">
+                  <a-icon type="audit" slot="icon" />
+                </a-step>
+                <a-step status="wait" title="知会">
+                  <a-icon type="mail" slot="icon" style="color:pink;"/>
+                </a-step>
+              </a-steps>
+              <br />
+            </template>
+            <div style="width:98%;margin-top:10px;margin-bottom:10px;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
+          </a-col>
+
+          <a-col
+            :span="24"
             style="margin-top:10px;"
             v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
           >

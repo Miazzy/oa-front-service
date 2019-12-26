@@ -313,6 +313,24 @@ export async function queryTableDataByField(tableName, field, value) {
 }
 
 /**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} foreignKey
+ * @param {*} id
+ */
+export async function queryTableDataAll(tableName) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    let queryURL = `${api.domain}/api/${tableName}`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
  * 查询表单字段数据
  * @param {*} tableName
  * @param {*} foreignKey
@@ -413,7 +431,8 @@ export async function queryProcessNodeProcName(node, callback) {
  */
 export async function queryUserList(params) {
     //用户名称
-    let whereFlag = deNull(params.name) == '' ?
+    let whereFlag =
+        deNull(params.name) == '' ?
         '' :
         `_where=(username,like,~${params.name}~)~or(realname,like,~${params.name}~)&`;
     //获取排序标识，升序 ‘’ ， 降序 ‘-’
@@ -428,7 +447,8 @@ export async function queryUserList(params) {
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= params.pageSize ?
+        result.total =
+            count.body[0].no_of_rows <= params.pageSize ?
             res.body.length :
             count.body[0].no_of_rows;
 
@@ -454,7 +474,8 @@ export async function queryProcessLogToApproved(username, realname, params) {
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
 
@@ -488,7 +509,8 @@ export async function queryProcessLogHisApproved(username, realname, params) {
             item['operate_time'] = optime;
         });
 
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
@@ -567,7 +589,8 @@ export async function queryProcessLogInfApproved(username, realname, params) {
 
         console.log(res);
         result.records = res.body;
-        result.total = count.body[0].no_of_rows <= 30 ?
+        result.total =
+            count.body[0].no_of_rows <= 30 ?
             res.body.length :
             count.body[0].no_of_rows;
         return result;
@@ -777,7 +800,7 @@ export async function postProcessLogInformed(node) {
 
 /**
  * @function 获取审批日历的HTMl文本
- * @param {*} business_data_id 
+ * @param {*} business_data_id
  */
 export async function queryProcessLogHtml(business_data_id) {
     //获取html信息
@@ -1185,30 +1208,37 @@ export async function queryWorkflows(business_data_id) {
         //遍历审批日志
         _.each(processLogs, (item, index) => {
             //获取下一节点
-            let next = index < processLogs.length - 1 ?
-                processLogs[index + 1] :
-                { action: '' };
+            let next =
+                index < processLogs.length - 1 ? processLogs[index + 1] : { action: '' };
             //获取标识
             let flag = index == processLogs.length - 1;
             //获取操作时间
             let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
 
-            let content = `节点：${deNull (item.process_station)} , 处理人： ${deNull (item.approve_user)} , 审批：${deNull (item.action)} , 审批意见：${deNull (item.action_opinion)}  时间：${deNull (optime)} `;
+            let content = `节点：${deNull(item.process_station)} , 处理人： ${deNull(
+        item.approve_user
+      )} , 审批：${deNull(item.action)} , 审批意见：${deNull(
+        item.action_opinion
+      )}  时间：${deNull(optime)} `;
 
-            let color = item.action == '同意' ?
+            let color =
+                item.action == '同意' ?
                 'green' :
                 item.action == '驳回' || item.action == '撤销' ?
                 'red' :
                 item.action == '知会' ?
                 'yellow' :
-                item.action == '发起' ? '#00DD77' : 'blue';
+                item.action == '发起' ?
+                '#00DD77' :
+                'blue';
 
             //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
             color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
             color = flag && item.action == '同意' ? 'blue' : color;
             color = flag && item.action == '知会' ? 'orange' : color;
 
-            var status = (item.action == '同意' && next.action == '知会') ||
+            var status =
+                (item.action == '同意' && next.action == '知会') ||
                 (flag && item.action == '同意') ?
                 'over' :
                 item.action == '发起' ?
@@ -1217,7 +1247,9 @@ export async function queryWorkflows(business_data_id) {
                 'agree' :
                 item.action == '驳回' || item.action == '撤销' ?
                 'cancel' :
-                item.action == '知会' ? 'message' : 'over';
+                item.action == '知会' ?
+                'message' :
+                'over';
 
             let node = {
                 id: item.id,
@@ -1236,7 +1268,9 @@ export async function queryWorkflows(business_data_id) {
             let node = {
                 id: item.id,
                 color: 'pink',
-                content: `节点：${deNull (item.process_station)} , 待处理人： ${deNull (item.employee)} , 审批：待处理 , 时间：-- `,
+                content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+          item.employee
+        )} , 审批：待处理 , 时间：-- `,
                 status: 'wait',
             };
             workflows.push(node);
@@ -1252,7 +1286,11 @@ export async function queryWorkflows(business_data_id) {
             let node = {
                 id: item.id,
                 color: 'orange',
-                content: `节点：${deNull (item.process_station)} , 待处理人： ${deNull (item.employee)} ,  已处理人： ${deNull (appruser)} , 审批：知会 , 时间：${deNull (optime)} `,
+                content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+          item.employee
+        )} ,  已处理人： ${deNull(appruser)} , 审批：知会 , 时间：${deNull(
+          optime
+        )} `,
                 status: 'sound',
             };
             workflows.push(node);
@@ -1320,8 +1358,7 @@ export async function watchFormLeave(that) {
     that.workflows = await queryWorkflows(that.curRow.id);
 
     that.curRow.leave_type_name =
-        queryLeaveType(that.curRow.leave_off_type) ||
-        queryFormTypeValue(tableName);
+        queryLeaveType(that.curRow.leave_off_type) || queryFormTypeValue(tableName);
 
     //查询当前流程状态
     that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);
@@ -1407,16 +1444,18 @@ export async function watchFormLeave(that) {
 
 /**
  * @function 查询文档对应预览地址
- * @param {*} text 
+ * @param {*} text
  */
 export function queryFileViewURL(text) {
     //获取小写文档下载地址
     let textURL = deNull(text).toLowerCase();
     //如果不含有office文档
-    if (!(textURL.includes('doc') ||
+    if (!(
+            textURL.includes('doc') ||
             textURL.includes('ppt') ||
             textURL.includes('xls') ||
-            textURL.includes('pdf'))) {
+            textURL.includes('pdf')
+        )) {
         return false;
     }
 
@@ -1456,7 +1495,8 @@ export function queryFileViewURL(text) {
         .toLowerCase();
 
     //如果word文档，则使用微软API打开
-    url = deNull(suffix).includes('doc') ||
+    url =
+        deNull(suffix).includes('doc') ||
         suffix.includes('ppt') ||
         suffix.includes('xls') ?
         officeURL + xurl :
@@ -1471,14 +1511,15 @@ export function queryFileViewURL(text) {
 
 /**
  * @function 查询文件类型
- * @param {*} text 
+ * @param {*} text
  */
 export function queryFileType(text) {
     //获取文件后缀
     let suffix = deNull(text).toLowerCase();
 
     //如果office文档，则使用微软API打开
-    let type = suffix.includes('jpg') ||
+    let type =
+        suffix.includes('jpg') ||
         suffix.includes('jpeg') ||
         suffix.includes('bmp') ||
         suffix.includes('gif') ||
@@ -1487,9 +1528,8 @@ export function queryFileType(text) {
         '@image@' :
         '';
 
-    type = suffix.includes('doc') ||
-        suffix.includes('xls') ||
-        suffix.includes('ppt') ?
+    type =
+        suffix.includes('doc') || suffix.includes('xls') || suffix.includes('ppt') ?
         `${type}@office@` :
         type;
 
@@ -1624,7 +1664,7 @@ export async function colorProcessDetail(that, main) {
 
 /**
  * @function 查询表字段信息
- * @param {*} tableName 
+ * @param {*} tableName
  */
 export async function queryTableFieldInfoJSON(tableName) {
     //查询表单信息
@@ -1638,4 +1678,36 @@ export async function queryTableFieldInfoJSON(tableName) {
         tableInfo = JSON.parse(tableInfo);
     }
     return tableInfo;
+}
+
+/**
+ * @function 查询工作流节点状态
+ */
+export async function queryWorkflowStatus(tableName, id) {
+    //节点状态信息
+    let node = {
+        start: {
+            status: 'finish',
+            name: '发起',
+            color: 'skyblue',
+        },
+        audit: {
+            status: 'finish',
+            name: '审核',
+            color: 'orange',
+        },
+        approve: {
+            status: 'process',
+            name: '审批',
+            color: '',
+        },
+        message: {
+            status: 'wait',
+            name: '知会',
+            color: 'pink',
+        },
+    };
+
+    //返回节点信息
+    return node;
 }

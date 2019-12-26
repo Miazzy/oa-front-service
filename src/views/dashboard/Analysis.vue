@@ -23,7 +23,7 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
+        <chart-card :loading="loading" title="总访问量" :total="vtotal| NumberFormat">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -32,7 +32,7 @@
           </div>
           <template slot="footer">
             日访问量
-            <span>{{ '1234' | NumberFormat }}</span>
+            <span>{{ ctotal | NumberFormat }}</span>
           </template>
         </chart-card>
       </a-col>
@@ -281,7 +281,12 @@ import LineChartMultid from "@/components/chart/LineChartMultid";
 import HeadInfo from "@/components/tools/HeadInfo.vue";
 import Trend from "@/components/Trend";
 import { getLoginfo, getVisitInfo } from "@/api/api";
-import { queryProcessLogWait, queryProcessLogDone } from "@/api/manage";
+//import neo4j from "neo4j";
+import {
+  queryProcessLogWait,
+  queryProcessLogDone,
+  queryTableDataAll
+} from "@/api/manage";
 import { getStore } from "@/utils/storage";
 
 const rankList = [];
@@ -298,6 +303,7 @@ for (let i = 0; i < 12; i += 1) {
     y: Math.floor(Math.random() * 1000) + 200
   });
 }
+debugger;
 const columns = [
   {
     title: "办理事项",
@@ -360,6 +366,8 @@ export default {
   data() {
     return {
       loading: true,
+      vtotal: 0,
+      ctotal: 0,
       center: null,
       rankList,
       barData,
@@ -388,6 +396,7 @@ export default {
   },
   methods: {
     async getData(key) {
+      //查询我的已办，我的待办
       if (this.activeKey == 1 || this.activeKey == 2 || key == 1 || key == 2) {
         //获取用户信息
         let userInfo = getStore("cur_user");
@@ -400,6 +409,15 @@ export default {
           //获取我的已办数据
           this.dataDoneList = await queryProcessLogDone(username, realname);
         }
+      }
+      //获取日访问量/总访问量
+      try {
+        var total = await queryTableDataAll("v_visit_total");
+        total = total[0];
+        this.ctotal = total["ctotal"];
+        this.vtotal = total["vtotal"];
+      } catch (error) {
+        console.log("error :" + error);
       }
     },
     /**
@@ -423,6 +441,7 @@ export default {
      * @function 查看详情页面
      */
     async handleDetailWF(record) {
+
       //获取当前操作对象
       var curRow = JSON.parse(JSON.stringify(record));
 
