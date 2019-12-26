@@ -6,8 +6,7 @@ import { setStore, getStore } from '@/utils/storage';
 import { formatDate, queryDateDiff, deNull, queryUrlString } from '@/utils/util';
 import $ from 'jquery';
 
-axios_.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded';
+axios_.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const api = {
     domain: window._CONFIG['domian'],
