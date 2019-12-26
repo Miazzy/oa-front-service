@@ -799,37 +799,6 @@ export async function postProcessLogInformed(node) {
 }
 
 /**
- * @function 获取审批日历的HTMl文本
- * @param {*} business_data_id
- */
-export async function queryProcessLogHtml(business_data_id) {
-    //获取html信息
-    let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
-
-    if (htmlInfo == null || htmlInfo == '') {
-        //清空htmlInfo数据
-        htmlInfo = '';
-        //获取审批日志信息
-        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
-
-        //遍历审批日志
-        processLogs.forEach(item => {
-            //获取操作时间
-            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm');
-            optime = optime.replace('T', ' ');
-            //获取html文本
-            htmlInfo =
-                htmlInfo +
-                `流程：${item.process_name} , 节点：${item.process_station} , 处理人： ${item.approve_user} , 审批：${item.action} , 时间：${optime}<br/>`;
-        });
-
-        setStore(`processlog_by_bs_data_id@${business_data_id}`, htmlInfo, 10);
-    }
-
-    return htmlInfo;
-}
-
-/**
  * 获取某业务记录对应的审批日志信息
  */
 export async function queryPRLogHistoryByDataID(business_data_id) {
