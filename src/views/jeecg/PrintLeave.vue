@@ -561,7 +561,8 @@ import {
   queryBusinessInfo,
   queryProcessNodeProcName,
   queryProcessNodeEmployee,
-  queryProcessLogInfByID
+  queryProcessLogInfByID,
+  queryWorkflowStatus
 } from "@/api/manage";
 import _ from "underscore";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -613,6 +614,7 @@ export default {
       tipVisible: false,
       tipContent: "",
       slides: images,
+      wflowstatus:{},
       form: this.$form.createForm(this)
     };
   },
@@ -622,8 +624,8 @@ export default {
     let that = await watchFormLeave(this);
     //获取返回结果
     let result = await colorProcessDetail(that, this);
-
-    debugger;
+    //查询工作流程状态
+    this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
     //返回结果
     return result;
   },
@@ -633,6 +635,8 @@ export default {
     let that = await watchFormLeave(this);
     //获取返回结果
     let result = await colorProcessDetail(that, this);
+     //查询工作流程状态
+    this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
     //返回结果
     return result;
   },
@@ -643,6 +647,8 @@ export default {
       let that = await watchFormLeave(this);
       //获取返回结果
       let result = await colorProcessDetail(that, this);
+       //查询工作流程状态
+      this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
       //返回结果
       return result;
     }
@@ -653,7 +659,8 @@ export default {
       let that = await watchFormLeave(this);
       //获取返回结果
       let result = await colorProcessDetail(that, this);
-      debugger;
+       //查询工作流程状态
+      this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
       //返回结果
       return result;
     },
@@ -754,8 +761,6 @@ export default {
         //设置创建时间
         item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
-
-      debugger;
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
       result = await postProcessLogHistory(node);

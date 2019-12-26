@@ -1708,6 +1708,9 @@ export async function queryWorkflowStatus(tableName, id) {
         },
     };
 
+    //打印查询参数
+    console.log(`tableName: ${tableName} \n\r id: ${id}`);
+
     //返回节点信息
     return node;
 }
