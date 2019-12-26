@@ -909,7 +909,7 @@ export async function queryPRLogInfTotal(business_data_id) {
         console.log(result);
         return result;
     } catch (err) {
-        console.error(err);
+        console.error('获取某业务记录对应的审批日志信息' , err);
     }
 }
 
@@ -917,6 +917,7 @@ export async function queryPRLogInfTotal(business_data_id) {
  * @function 获取登录用户
  */
 export async function queryLoginUser() {
+
     let queryURL = `${api.domain}/jeecg-boot/api/login/user`;
 
     try {
@@ -925,7 +926,7 @@ export async function queryLoginUser() {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.error('获取登录用户' , err);
     }
 }
 
@@ -933,15 +934,21 @@ export async function queryLoginUser() {
  * 获取n位随机数,随机来源chars
  */
 export function queryRandomStr(n) {
-    var chars = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(
-        ','
-    );
 
+    var temp = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
     var res = '';
-    for (var i = 0; i < n; i++) {
-        var id = Math.ceil(Math.random() * 35);
-        res += chars[id];
+
+    try {
+        var chars = temp.split(',');
+        for (var i = 0; i < n; i++) {
+            var id = Math.ceil(Math.random() * 35);
+            res += chars[id];
+        }
+    } catch (error) {
+        console.log('获取n位随机数异常：' + error);
     }
+
+    //返回随机数
     return res;
 }
 
@@ -1007,6 +1014,7 @@ export function queryFormName(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormTypeName(tableName) {
+
     var config = {
         BS_LEAVE: '请假',
         BS_EGRESS: '外出',
@@ -1026,6 +1034,7 @@ export function queryFormTypeName(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormTypeValue(tableName) {
+
     var config = {
         BS_LEAVE: '--',
         BS_EGRESS: '普通',
@@ -1045,6 +1054,7 @@ export function queryFormTypeValue(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormMainTable(tableName) {
+
     var config = {
         BS_LEAVE: false,
         BS_EGRESS: false,
@@ -1064,6 +1074,7 @@ export function queryFormMainTable(tableName) {
  * @function 开始日期表单显示名称
  */
 export function queryFormMTStarttimeName(tableName) {
+
     var config = {
         BS_LEAVE: '开始',
         BS_EGRESS: '开始',
@@ -1083,6 +1094,7 @@ export function queryFormMTStarttimeName(tableName) {
  * @function 结束日期表单显示名称
  */
 export function queryFormMTEndtimeName(tableName) {
+
     var config = {
         BS_LEAVE: '结束',
         BS_EGRESS: '结束',
@@ -1102,6 +1114,7 @@ export function queryFormMTEndtimeName(tableName) {
  * @function 结束日期表单显示名称
  */
 export function queryFormMTFileName(tableName) {
+
     var config = {
         BS_LEAVE: '文件名称',
         BS_EGRESS: '文件名称',
@@ -1175,14 +1188,20 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
         BS_SEAL_DECLARE: [],
         BS_TRAVEL: [],
     };
+    //查询考勤异常表的子表信息
     if (tableName == 'BS_ATTENDANCE') {
-        let data = await queryTableDataByField(
-            tableName + '_DETAILS',
-            foreignKey,
-            id
-        );
-        config['BS_ATTENDANCE'] = data;
+        try {
+            let data = await queryTableDataByField(
+                tableName + '_DETAILS',
+                foreignKey,
+                id
+            );
+            config['BS_ATTENDANCE'] = data;
+        } catch (error) {
+            console.log('查询考勤异常表的子表信息异常：' + error);
+        }
     }
+    //返回考勤异常表的子表信息
     return config[tableName];
 }
 
@@ -1190,9 +1209,18 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
  * @function 查询审批流程信息
  */
 export async function queryWorkflows(business_data_id) {
-    //待返回审批流程数据
-    let workflows = getStore(`workflows_by_data_id@${business_data_id}`);
 
+    //待返回审批流程数据
+    let workflows = null;
+
+    //从浏览器缓存中获取审批日志数据
+    try {
+        workflows = getStore(`workflows_by_data_id@${business_data_id}`);
+    } catch (error) {
+        console.log('query store info of workflows error :' + error );
+    }
+
+    //没有从缓存中获取到审批日志信息，则从数据中获取数据
     if (
         workflows == null ||
         workflows == '' ||
@@ -1203,106 +1231,130 @@ export async function queryWorkflows(business_data_id) {
         workflows = [];
 
         //获取审批日志信息
-        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
+        let processLogs = {}
+        
+        try {
+            
+            //查询审批日志信息
+            processLogs = await queryPRLogHistoryByDataID(business_data_id);
 
-        //遍历审批日志
-        _.each(processLogs, (item, index) => {
-            //获取下一节点
-            let next =
-                index < processLogs.length - 1 ? processLogs[index + 1] : { action: '' };
-            //获取标识
-            let flag = index == processLogs.length - 1;
-            //获取操作时间
-            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+            //遍历审批日志
+            _.each(processLogs, (item, index) => {
+                //获取下一节点
+                let next =
+                    index < processLogs.length - 1 ? processLogs[index + 1] : { action: '' };
+                //获取标识
+                let flag = index == processLogs.length - 1;
+                //获取操作时间
+                let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
 
-            let content = `节点：${deNull(item.process_station)} , 处理人： ${deNull(
-        item.approve_user
-      )} , 审批：${deNull(item.action)} , 审批意见：${deNull(
-        item.action_opinion
-      )}  时间：${deNull(optime)} `;
+                let content = `节点：${deNull(item.process_station)} , 处理人： ${deNull(
+            item.approve_user
+        )} , 审批：${deNull(item.action)} , 审批意见：${deNull(
+            item.action_opinion
+        )}  时间：${deNull(optime)} `;
 
-            let color =
-                item.action == '同意' ?
-                'green' :
-                item.action == '驳回' || item.action == '撤销' ?
-                'red' :
-                item.action == '知会' ?
-                'yellow' :
-                item.action == '发起' ?
-                '#00DD77' :
-                'blue';
+                let color =
+                    item.action == '同意' ?
+                    'green' :
+                    item.action == '驳回' || item.action == '撤销' ?
+                    'red' :
+                    item.action == '知会' ?
+                    'yellow' :
+                    item.action == '发起' ?
+                    '#00DD77' :
+                    'blue';
 
-            //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
-            color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
-            color = flag && item.action == '同意' ? 'blue' : color;
-            color = flag && item.action == '知会' ? 'orange' : color;
+                //默认认为最靠近知会的节点为审批节点，颜色标识为蓝色
+                color = item.action == '同意' && next.action == '知会' ? 'blue' : color;
+                color = flag && item.action == '同意' ? 'blue' : color;
+                color = flag && item.action == '知会' ? 'orange' : color;
 
-            var status =
-                (item.action == '同意' && next.action == '知会') ||
-                (flag && item.action == '同意') ?
-                'over' :
-                item.action == '发起' ?
-                'start' :
-                item.action == '同意' ?
-                'agree' :
-                item.action == '驳回' || item.action == '撤销' ?
-                'cancel' :
-                item.action == '知会' ?
-                'message' :
-                'over';
+                var status =
+                    (item.action == '同意' && next.action == '知会') ||
+                    (flag && item.action == '同意') ?
+                    'over' :
+                    item.action == '发起' ?
+                    'start' :
+                    item.action == '同意' ?
+                    'agree' :
+                    item.action == '驳回' || item.action == '撤销' ?
+                    'cancel' :
+                    item.action == '知会' ?
+                    'message' :
+                    'over';
 
-            let node = {
-                id: item.id,
-                color: color,
-                content: content,
-                status: status,
-            };
+                let node = {
+                    id: item.id,
+                    color: color,
+                    content: content,
+                    status: status,
+                };
 
-            workflows.push(node);
-        });
+                workflows.push(node);
+            });
 
-        //获取正在审批的审批日志信息
-        processLogs = await queryPRLogByDataID(business_data_id);
+        } catch (error) {
+            console.log('获取已处理的审批日志信息异常 :' + error);
+        }
 
-        _.each(processLogs, (item, index) => {
-            let node = {
-                id: item.id,
-                color: 'pink',
-                content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
-          item.employee
-        )} , 审批：待处理 , 时间：-- `,
-                status: 'wait',
-            };
-            workflows.push(node);
-        });
+        try {
+            //获取正在审批的审批日志信息
+            processLogs = await queryPRLogByDataID(business_data_id);
+            //遍历数据
+            _.each(processLogs, (item, index) => {
+                let node = {
+                    id: item.id,
+                    color: 'pink',
+                    content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+            item.employee
+            )} , 审批：待处理 , 时间：-- `,
+                    status: 'wait',
+                };
+                workflows.push(node);
+            });
+        } catch (error) {
+            console.log('获取正在审批的审批日志信息失败 :' + error);
+        }
 
-        //获取正在审批的审批日志信息
-        processLogs = await queryPRLogInfByDataID(business_data_id);
+        try {
+            //获取正在审批的知会日志信息
+            processLogs = await queryPRLogInfByDataID(business_data_id);
 
-        _.each(processLogs, (item, index) => {
-            //获取操作时间
-            let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
-            let appruser = deNull(item.approve_user);
-            let node = {
-                id: item.id,
-                color: 'orange',
-                content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
-          item.employee
-        )} ,  已处理人： ${deNull(appruser)} , 审批：知会 , 时间：${deNull(
-          optime
-        )} `,
-                status: 'sound',
-            };
-            workflows.push(node);
-        });
+            _.each(processLogs, (item, index) => {
+                //获取操作时间
+                let optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+                let appruser = deNull(item.approve_user);
+                let node = {
+                    id: item.id,
+                    color: 'orange',
+                    content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+            item.employee
+            )} ,  已处理人： ${deNull(appruser)} , 审批：知会 , 时间：${deNull(
+            optime
+            )} `,
+                    status: 'sound',
+                };
+                workflows.push(node);
+            });
+            
+        } catch (error) {
+            console.log('获取正在审批的知会日志信息异常：' + error);
+        }
 
-        setStore(
-            `workflows_by_data_id@${business_data_id}`,
-            JSON.stringify(workflows),
-            10
-        );
+        try {
+            setStore(
+                `workflows_by_data_id@${business_data_id}`,
+                JSON.stringify(workflows),
+                10
+            );
+        } catch (error) {
+            console.log('save workflows data error :' + error);
+        }
+
     }
 
+    //返回工作流程数据
     return workflows;
 }
 
@@ -1312,7 +1364,7 @@ export async function queryWorkflows(business_data_id) {
 export async function queryDepartNameByCode(code) {
     //提交URL
     let queryURL = `${api.domain}/api/sys_depart?_where=(org_code,eq,${code})`;
-
+    //根据部门编号，查询部门信息
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
@@ -1326,6 +1378,8 @@ export async function queryDepartNameByCode(code) {
  * @function 查询表单详情页面
  */
 export async function watchFormLeave(that) {
+    //获取部门信息
+    var department = '';
     //获取对应表单信息
     let tableName = queryUrlString('table_name');
     //查询主键ID
@@ -1333,13 +1387,46 @@ export async function watchFormLeave(that) {
     //获取用户名称
     let username = queryUrlString('user');
 
-    that.formName = queryFormName(tableName);
-    that.username = username;
+    try {
+        //查询表单信息
+        that.formName = queryFormName(tableName);
+        //查询用户名称信息
+        that.username = username;
+    } catch (error) {
+        console.log('query base info error :' + error)
+    }
 
-    that.curRow = await queryTableData(tableName, id);
+    try {
+        //查询对应表单数据
+        that.curRow = await queryTableData(tableName, id);
+    } catch (error) {
+        console.log('query cur row info error :' + error);
+    }
 
-    //获取部门信息
-    var department = '';
+    //此表单数据已经被删除，无法查看
+    if (typeof that.curRow == 'undefined' || that.curRow == null) {
+        try {
+            //显示提示信息
+            var path = window.location.href.split(window.location.host)[1];
+            //提示信息
+            var message = '此表单数据已经被删除，无法查看此数据！';
+            //显示并确认提示信息
+            that
+                .$confirm(message, '提示', {
+                    type: 'error',
+                })
+                .then(() => {
+                    that.$root.$tabs.closeTab(path);
+                })
+                .catch(() => {
+                    that.$root.$tabs.closeTab(path);
+                });
+            console.log('此表单数据已经被删除，无法查看此数据！');
+        } catch (error) {
+            console.log('message confirm error :' + error);
+        }
+        return false;
+    }
 
     try {
         department = await queryTableData(
@@ -1351,70 +1438,115 @@ export async function watchFormLeave(that) {
     }
 
     //如果没查询到部门信息，则通过org_code字段查询部门信息
-    department =
-        department || (await queryDepartNameByCode(that.curRow.sys_org_code));
+    try {
+        department =
+            department || (await queryDepartNameByCode(that.curRow.sys_org_code));
+    } catch (error) {
+        console.log('query department error :' + error);
+    }
 
-    //查询审批流程信息
-    that.workflows = await queryWorkflows(that.curRow.id);
+    try {
+        //查询审批流程信息
+        that.workflows = await queryWorkflows(that.curRow.id);
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
 
-    that.curRow.leave_type_name =
-        queryLeaveType(that.curRow.leave_off_type) || queryFormTypeValue(tableName);
+    try {
+        that.curRow.leave_type_name =
+            queryLeaveType(that.curRow.leave_off_type) || queryFormTypeValue(tableName);
+        //查询当前流程状态
+        that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
 
-    //查询当前流程状态
-    that.curRow.bpm_status_name = queryBpmStatus(that.curRow.bpm_status);
-
-    //查询申请开始日期
-    that.curRow.starttime = formatDate(
-        that.curRow.starttime,
-        'yyyy-MM-dd HH:mm:ss'
-    );
-
-    //如果未查询到开始日期，则使用申请日期
-    if (that.curRow.starttime == '--') {
+    try {
+        //查询申请开始日期
         that.curRow.starttime = formatDate(
+            that.curRow.starttime,
+            'yyyy-MM-dd HH:mm:ss'
+        );
+
+        //如果未查询到开始日期，则使用申请日期
+        if (that.curRow.starttime == '--') {
+            that.curRow.starttime = formatDate(
+                that.curRow.create_time,
+                'yyyy-MM-dd HH:mm:ss'
+            );
+        }
+    } catch (error) {
+        console.log('watch form leave error :' + error);  
+    }
+
+    try {
+        //查询申请结束日期
+        that.curRow.endtime = formatDate(that.curRow.endtime, 'yyyy-MM-dd HH:mm:ss');
+        //查询申请创建日期
+        that.curRow.create_time = formatDate(
             that.curRow.create_time,
             'yyyy-MM-dd HH:mm:ss'
         );
+    } catch (error) {
+        console.log('watch form leave error :' + error);  
     }
 
-    //查询申请结束日期
-    that.curRow.endtime = formatDate(that.curRow.endtime, 'yyyy-MM-dd HH:mm:ss');
+    try {
+        //查询表单类型名称
+        that.curRow.formTypeName = queryFormTypeName(tableName);
+        //查询日期之间的天数
+        that.curRow.total_days = queryDateDiff(
+            that.curRow.starttime,
+            that.curRow.endtime
+        );
+    } catch (error) {
+        console.log('watch form leave error :' + error);   
+    }
 
-    //查询申请创建日期
-    that.curRow.create_time = formatDate(
-        that.curRow.create_time,
-        'yyyy-MM-dd HH:mm:ss'
-    );
+    try {
+        //查询此表单是否为主表单
+        that.curRow.main_table_status = queryFormMainTable(tableName);
+        //查询此表单的附表字段
+        that.curRow.sub_columns = queryFormMTSubColumns(tableName);
+    } catch (error) {
+        console.log('watch form leave error :' + error);   
+    }
 
-    //查询表单类型名称
-    that.curRow.formTypeName = queryFormTypeName(tableName);
-    //查询日期之间的天数
-    that.curRow.total_days = queryDateDiff(
-        that.curRow.starttime,
-        that.curRow.endtime
-    );
+    try {
+        //查询此表单的附表数据
+        that.curRow.sub_data = await queryFormMTSubData(
+            tableName,
+            'foreign_key_id',
+            id
+        );
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
 
-    //查询此表单是否为主表单
-    that.curRow.main_table_status = queryFormMainTable(tableName);
-    //查询此表单的附表字段
-    that.curRow.sub_columns = queryFormMTSubColumns(tableName);
-    //查询此表单的附表数据
-    that.curRow.sub_data = await queryFormMTSubData(
-        tableName,
-        'foreign_key_id',
-        id
-    );
+    try {
+        //查询结束时间表单显示名称
+        that.curRow.startTimeName = queryFormMTStarttimeName(tableName) || '开始';
+        //查询结束时间表单显示名称
+        that.curRow.endTimeName = queryFormMTEndtimeName(tableName) || '结束';
+        //查询文件名称显示标题
+        that.curRow.fileNameTitle = queryFormMTFileName(tableName) || '文件名称';
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
 
-    //查询结束时间表单显示名称
-    that.curRow.startTimeName = queryFormMTStarttimeName(tableName) || '开始';
-    //查询结束时间表单显示名称
-    that.curRow.endTimeName = queryFormMTEndtimeName(tableName) || '结束';
+    try {
+        //查询字段中文名称
+        that.curRow.fieldName = {};
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
 
-    //查询文件名称显示标题
-    that.curRow.fileNameTitle = queryFormMTFileName(tableName) || '文件名称';
-
-    //查询字段中文名称
-    that.curRow.fieldName = {};
+    try {
+        //查询工作流程状态
+        that.wflowstatus = await queryWorkflowStatus(tableName,id);
+    } catch (error) {
+        console.log('query workflow status error :' + error);
+    }
 
     try {
         //设置字段名称
@@ -1437,7 +1569,6 @@ export async function watchFormLeave(that) {
     } catch (error) {
         console.log('setup department error : ' + error);
     }
-    console.log(that.curRow.department_name);
 
     return that;
 }
@@ -1447,63 +1578,69 @@ export async function watchFormLeave(that) {
  * @param {*} text
  */
 export function queryFileViewURL(text) {
-    //获取小写文档下载地址
-    let textURL = deNull(text).toLowerCase();
-    //如果不含有office文档
-    if (!(
-            textURL.includes('doc') ||
-            textURL.includes('ppt') ||
-            textURL.includes('xls') ||
-            textURL.includes('pdf')
-        )) {
-        return false;
-    }
-
-    //文档数组
-    let fileList = [];
-
     //文档URL
     let url = '';
-    if (text.indexOf(',') > 0) {
-        fileList = text.split(',');
-    } else {
-        fileList.push(text);
+
+    //查询文档对应预览地址
+    try {
+        //获取小写文档下载地址
+        let textURL = deNull(text).toLowerCase();
+        //如果不含有office文档
+        if (!(
+                textURL.includes('doc') ||
+                textURL.includes('ppt') ||
+                textURL.includes('xls') ||
+                textURL.includes('pdf')
+            )) {
+            return false;
+        }
+
+        //文档数组
+        let fileList = [];
+
+        if (text.indexOf(',') > 0) {
+            fileList = text.split(',');
+        } else {
+            fileList.push(text);
+        }
+
+        //获取第一个office文档
+        url = _.find(fileList, function(text) {
+            //获取小写字符串
+            text = deNull(text).toLowerCase();
+            return (
+                text.includes('doc') ||
+                text.includes('ppt') ||
+                text.includes('xls') ||
+                text.includes('pdf')
+            );
+        });
+
+        //微软文档预览API
+        let officeURL = window._CONFIG['previewURL'];
+        //文档下载地址
+        url = window._CONFIG['downloadURL'] + '/' + url;
+        //URL加密，保证中文路径可以被正常解析
+        let xurl = encodeURIComponent(url);
+
+        //获取文件后缀
+        let suffix = deNull(text)
+            .substring(text.lastIndexOf('.'), text.length)
+            .toLowerCase();
+
+        //如果word文档，则使用微软API打开
+        url =
+            deNull(suffix).includes('doc') ||
+            suffix.includes('ppt') ||
+            suffix.includes('xls') ?
+            officeURL + xurl :
+            url;
+
+        //如果pdf文档，则浏览器上直接打开
+        url = suffix.includes('pdf') ? url : url;
+    } catch (error) {
+        console.log("query file view url error :" + error);
     }
-
-    //获取第一个office文档
-    url = _.find(fileList, function(text) {
-        //获取小写字符串
-        text = deNull(text).toLowerCase();
-        return (
-            text.includes('doc') ||
-            text.includes('ppt') ||
-            text.includes('xls') ||
-            text.includes('pdf')
-        );
-    });
-
-    //微软文档预览API
-    let officeURL = window._CONFIG['previewURL'];
-    //文档下载地址
-    url = window._CONFIG['downloadURL'] + '/' + url;
-    //URL加密，保证中文路径可以被正常解析
-    let xurl = encodeURIComponent(url);
-
-    //获取文件后缀
-    let suffix = deNull(text)
-        .substring(text.lastIndexOf('.'), text.length)
-        .toLowerCase();
-
-    //如果word文档，则使用微软API打开
-    url =
-        deNull(suffix).includes('doc') ||
-        suffix.includes('ppt') ||
-        suffix.includes('xls') ?
-        officeURL + xurl :
-        url;
-
-    //如果pdf文档，则浏览器上直接打开
-    url = suffix.includes('pdf') ? url : url;
 
     //返回URL
     return url;
@@ -1511,27 +1648,42 @@ export function queryFileViewURL(text) {
 
 /**
  * @function 查询文件类型
+ * @description 查询表单含有的文件的文档类型
  * @param {*} text
  */
 export function queryFileType(text) {
-    //获取文件后缀
-    let suffix = deNull(text).toLowerCase();
+    //文档类型
+    var type = '';
+    //文件后缀
+    var suffix = '';
 
-    //如果office文档，则使用微软API打开
-    let type =
-        suffix.includes('jpg') ||
-        suffix.includes('jpeg') ||
-        suffix.includes('bmp') ||
-        suffix.includes('gif') ||
-        suffix.includes('webp') ||
-        suffix.includes('png') ?
-        '@image@' :
-        '';
+    try {
+        //获取文件后缀
+        suffix = deNull(text).toLowerCase();
+    } catch (error) {
+        suffix = `${text}`;
+    }
 
-    type =
-        suffix.includes('doc') || suffix.includes('xls') || suffix.includes('ppt') ?
-        `${type}@office@` :
-        type;
+    try {
+
+        //如果office文档，则使用微软API打开
+        type =
+            suffix.includes('jpg') ||
+            suffix.includes('jpeg') ||
+            suffix.includes('bmp') ||
+            suffix.includes('gif') ||
+            suffix.includes('webp') ||
+            suffix.includes('png') ?
+            '@image@' :
+            '';
+
+        type =
+            suffix.includes('doc') || suffix.includes('xls') || suffix.includes('ppt') ?
+            `${type}@office@` :
+            type;
+    } catch (error) {
+        console.log("query file type error :" + error);
+    }
 
     //返回URL
     return type;
@@ -1545,48 +1697,55 @@ export function queryImageURL(text) {
     let fileList = [];
     let images = [];
 
-    //如果text为空，则返回空数组
-    if (deNull(text) == '') {
-        return [];
-    }
-
-    //如果含有多个地址，则split后获取数组
-    if (deNull(text).indexOf(',') > 0) {
-        fileList = text.split(',');
-    } else {
-        fileList.push(text);
-    }
-
-    //遍历并筛选出里面的图片信息
-    fileList = _.filter(fileList, function(text) {
-        //获取小写后的路径
-        let ptext = deNull(text).toLowerCase();
-
-        //获取图片标识
-        let flag =
-            ptext.includes('jpg') ||
-            ptext.includes('jpeg') ||
-            ptext.includes('bmp') ||
-            ptext.includes('gif') ||
-            ptext.includes('webp') ||
-            ptext.includes('png');
-
-        //获取图片真实下载地址
-        text = window._CONFIG['downloadURL'] + '/' + text;
-
-        //如果文件路径为图片地址，则存入images中
-        if (flag) {
-            //将数据存入images中
-            images.push({
-                src: text,
-                msrc: window._CONFIG['thumborURL'] + encodeURIComponent(text),
-                title: '图片预览',
-                w: 900,
-                h: 600,
-            });
+    try {
+        //如果text为空，则返回空数组
+        if (deNull(text) == '') {
+            return [];
         }
-        return flag;
-    });
+        //如果含有多个地址，则split后获取数组
+        if (deNull(text).indexOf(',') > 0) {
+            fileList = text.split(',');
+        } else {
+            fileList.push(text);
+        }
+    } catch (error) {
+        console.log("query image url error :" + error);
+    }
+
+    try {
+        //遍历并筛选出里面的图片信息
+        fileList = _.filter(fileList, function(text) {
+            //获取小写后的路径
+            let ptext = deNull(text).toLowerCase();
+
+            //获取图片标识
+            let flag =
+                ptext.includes('jpg') ||
+                ptext.includes('jpeg') ||
+                ptext.includes('bmp') ||
+                ptext.includes('gif') ||
+                ptext.includes('webp') ||
+                ptext.includes('png');
+
+            //获取图片真实下载地址
+            text = window._CONFIG['downloadURL'] + '/' + text;
+
+            //如果文件路径为图片地址，则存入images中
+            if (flag) {
+                //将数据存入images中
+                images.push({
+                    src: text,
+                    msrc: window._CONFIG['thumborURL'] + encodeURIComponent(text),
+                    title: '图片预览',
+                    w: 900,
+                    h: 600,
+                });
+            }
+            return flag;
+        });
+    } catch (error) {
+        console.log("query image url error :" + error);
+    }
 
     //返回图片数组信息
     return images;
@@ -1596,14 +1755,18 @@ export function queryImageURL(text) {
  * @function 设置详情页面图片展示样式
  */
 export function changeImageCSS() {
-    setTimeout(() => {
-        //图片预览，Css设置Float:left
-        $('figure[itemscope="itemscope"]').css('float', 'left');
-        $('figure[itemscope="itemscope"]').css('margin-right', '10px');
-        $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
-        //图片预览，文件名称展示位置Center
-        $('.pswp__caption__center').css('text-align', 'center');
-    }, 10);
+    try {
+        setTimeout(() => {
+            //图片预览，Css设置Float:left
+            $('figure[itemscope="itemscope"]').css('float', 'left');
+            $('figure[itemscope="itemscope"]').css('margin-right', '10px');
+            $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
+            //图片预览，文件名称展示位置Center
+            $('.pswp__caption__center').css('text-align', 'center');
+        }, 10);
+    } catch (error) {
+        console.log("change image css error :" + error);
+    }
 }
 
 /**
@@ -1613,25 +1776,31 @@ export async function queryCurNodePageType(pageType) {
     //获取页面类型
     let type = queryUrlString('type');
 
-    //如果审批详情或者知会详情页面，则设置pageType
-    if (type == 'workflow' || type == 'notify') {
-        //获取当前节点审批流程数据）
-        let flag = await queryProcessLogByID(
-            queryUrlString('table_name'),
-            queryUrlString('processLogID')
-        );
-
-        //获取当前节点知会流程数据
-        if (deNull(flag) == '') {
-            flag = await queryProcessLogInfByID(
+    try {
+        //如果审批详情或者知会详情页面，则设置pageType
+        if (type == 'workflow' || type == 'notify') {
+            //获取当前节点审批流程数据）
+            let flag = await queryProcessLogByID(
                 queryUrlString('table_name'),
                 queryUrlString('processLogID')
             );
-        }
 
-        //获取页面类型
-        pageType = deNull(flag) == '' ? 'view' : pageType;
-    } else if (type == 'workflowing') {}
+            //获取当前节点知会流程数据
+            if (deNull(flag) == '') {
+                flag = await queryProcessLogInfByID(
+                    queryUrlString('table_name'),
+                    queryUrlString('processLogID')
+                );
+            }
+
+            //获取页面类型
+            pageType = deNull(flag) == '' ? 'view' : pageType;
+        } else if (type == 'workflowing') {
+
+        }
+    } catch (error) {
+        console.log('获取当前节点是否有知会或者审批节点信息异常:' + error)
+    }
 
     //返回pageType
     return pageType;
@@ -1641,23 +1810,79 @@ export async function queryCurNodePageType(pageType) {
  * @function 渲染审批流程详情
  */
 export async function colorProcessDetail(that, main) {
-    main.curRow = that.curRow;
-    main.depart = that.depart;
-    main.workflows = that.workflows;
-    main.columns = that.curRow.sub_columns;
-    main.data = that.curRow.sub_data;
-    main.pageType = queryUrlString('type');
-    main.curRow.fileStatus = deNull(main.curRow.files) == '' ? 1 : 0;
-    main.curRow.fileType = queryFileType(main.curRow.files);
-    main.curRow.fileURL = queryFileViewURL(main.curRow.files);
-    main.slides = queryImageURL(main.curRow.files);
-    main.tableName = queryUrlString('table_name');
+    try {
+        main.curRow = that.curRow;
+    } catch (error) {
+        console.log("set curRow error :" + error);
+    }
+    try {
+        main.depart = that.depart;
+    } catch (error) {
+        console.log("set depart error :" + error);
+    }
+    try {
+        main.workflows = that.workflows;
+    } catch (error) {
+        console.log("set curRow workflows error :" + error);
+    }
+    try {
+        main.columns = that.curRow.sub_columns;
+    } catch (error) {
+        console.log("set curRow sub_columns error :" + error);
+    }
+    try {
+        main.data = that.curRow.sub_data;
+    } catch (error) {
+        console.log("set curRow sub_data error :" + error);
+    }
+    try {
+        main.pageType = queryUrlString('type');
+    } catch (error) {
+        console.log("set curRow pageType error :" + error);
+    }
+    try {
+        main.curRow.fileStatus = deNull(main.curRow.files) == '' ? 1 : 0;
+    } catch (error) {
+        console.log("set curRow fileStatus error :" + error);
+    }
+    try {
+        main.curRow.fileType = queryFileType(main.curRow.files);
+    } catch (error) {
+        console.log("set curRow fileType error :" + error);
+    }
+    try {
+        main.curRow.fileURL = queryFileViewURL(main.curRow.files);
+    } catch (error) {
+        console.log("set curRow fileURL error :" + error);
+    }
+    try {
+        main.slides = queryImageURL(main.curRow.files);
+    } catch (error) {
+        console.log("set curRow slides error :" + error);
+    }
+    try {
+        main.tableName = queryUrlString('table_name');
+    } catch (error) {
+        console.log("set curRow tableName error :" + error);
+    }
     //检查是否可以进行审批/同意等操作
-    main.pageType = await queryCurNodePageType(main.pageType);
+    try {
+        main.pageType = await queryCurNodePageType(main.pageType);
+    } catch (error) {
+        console.log("set curRow pageType error :" + error);
+    }
     //查询表字段信息
-    main.tableInfo = await queryTableFieldInfoJSON(main.tableName);
+    try {
+        main.tableInfo = await queryTableFieldInfoJSON(main.tableName);
+    } catch (error) {
+        console.log("set curRow tableInfo error :" + error);
+    }
     //修改图片样式
-    changeImageCSS();
+    try {
+        changeImageCSS();
+    } catch (error) {
+        console.log("change image css error :" + error);
+    }
     //返回设置结果
     return main;
 }
@@ -1667,15 +1892,27 @@ export async function colorProcessDetail(that, main) {
  * @param {*} tableName
  */
 export async function queryTableFieldInfoJSON(tableName) {
-    //查询表单信息
-    let tableInfo = await queryTableDataByField('v_table_info', 'id', tableName);
-    //解析表单信息
-    if (deNull(tableInfo) != '' && tableInfo.length > 0) {
-        tableInfo = deNull(tableInfo[0]['value']);
-    }
-    if (deNull(tableInfo) != '') {
-        console.log('tabale info :' + tableInfo);
-        tableInfo = JSON.parse(tableInfo);
+    try {    
+        //查询表单信息
+        let tableInfo = await queryTableDataByField('v_table_info', 'id', tableName);
+        //如果信息不为空，则解析表单信息
+        if (deNull(tableInfo) != '' && tableInfo.length > 0) {
+            try {
+                tableInfo = deNull(tableInfo[0]['value']);
+            } catch (error) {
+                console.log('tabale info :' + tableInfo);
+            }
+        }
+        //如果信息不为空，则进行解析数据
+        if (deNull(tableInfo) != '') {
+            try {
+                tableInfo = JSON.parse(tableInfo);
+            } catch (error) {
+                console.log('tabale info :' + tableInfo);
+            }
+        }
+    } catch (error) {
+        console.log("query table field info json error :" + error);
     }
     return tableInfo;
 }

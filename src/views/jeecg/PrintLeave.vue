@@ -326,17 +326,17 @@
             <div style="margin-bottom:20px;">流程进度</div>
             <template>
               <a-steps style="width:80%;margin-bottom:10px;">
-                <a-step status="finish" title="发起" >
+                <a-step status="finish" title="发起">
                   <a-icon type="user" slot="icon" style="color:skyblue;" />
                 </a-step>
                 <a-step status="finish" title="审核">
-                  <a-icon type="solution" slot="icon" style="color:orange;"/>
+                  <a-icon type="solution" slot="icon" style="color:orange;" />
                 </a-step>
                 <a-step status="process" title="审批">
                   <a-icon type="audit" slot="icon" />
                 </a-step>
                 <a-step status="wait" title="知会">
-                  <a-icon type="mail" slot="icon" style="color:pink;"/>
+                  <a-icon type="mail" slot="icon" style="color:pink;" />
                 </a-step>
               </a-steps>
               <br />
@@ -614,20 +614,13 @@ export default {
       tipVisible: false,
       tipContent: "",
       slides: images,
-      wflowstatus:{},
+      wflowstatus: {},
       form: this.$form.createForm(this)
     };
   },
 
   async created() {
-    //查询当前节点信息
-    let that = await watchFormLeave(this);
-    //获取返回结果
-    let result = await colorProcessDetail(that, this);
-    //查询工作流程状态
-    this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
-    //返回结果
-    return result;
+
   },
 
   async mounted() {
@@ -635,8 +628,6 @@ export default {
     let that = await watchFormLeave(this);
     //获取返回结果
     let result = await colorProcessDetail(that, this);
-     //查询工作流程状态
-    this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
     //返回结果
     return result;
   },
@@ -647,8 +638,6 @@ export default {
       let that = await watchFormLeave(this);
       //获取返回结果
       let result = await colorProcessDetail(that, this);
-       //查询工作流程状态
-      this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
       //返回结果
       return result;
     }
@@ -659,8 +648,6 @@ export default {
       let that = await watchFormLeave(this);
       //获取返回结果
       let result = await colorProcessDetail(that, this);
-       //查询工作流程状态
-      this.wflowstatus = await queryWorkflowStatus(this.tableName , this.curRow["id"]);
       //返回结果
       return result;
     },

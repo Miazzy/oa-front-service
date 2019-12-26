@@ -1,5 +1,5 @@
 <template>
-  <global-layout @dynamicRouterShow="dynamicRouterShow">
+  <global-layout @dynamicRouterShow="dynamicRouterShow" @closeTabPage="closeTabPage">
     <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
     <a-tabs
       @contextmenu.native="e => onContextmenu(e)"
@@ -140,6 +140,10 @@ export default {
     }
 
     this.activePage = this.$route.fullPath;
+    
+    //把remove函数，设置到$root上
+    this.$root.$tabs = this;
+    this.$root.$tabs.closeTab = this.$options.methods.closeTabPage;
   },
 
   watch: {
@@ -180,7 +184,11 @@ export default {
         this.linkList = [this.$route.fullPath];
         this.pageList = [this.$route];
       }
-    }
+    },
+    $root:()=>{
+      debugger
+    },
+    
   },
   methods: {
     changePage(key) {
@@ -313,41 +321,51 @@ export default {
           Object.assign({}, currRouter, { meta: meta })
         );
       }
+    },
+    closeTabPage(key){
+      debugger;
+      if (key == indexKey) {
+        this.$message.warning("首页不能关闭!");
+        return;
+      }
+      if (key == workplaceKey) {
+        this.$message.warning("工作台不能关闭!");
+        return;
+      }
+      if (key == centerKey) {
+        this.$message.warning("个人中心不能关闭!");
+        return;
+      }
+      if (this.$root.$tabs.pageList.length === 1) {
+        this.$message.warning("这是最后一页，不能再关闭了啦");
+        return;
+      }
+      this.$root.$tabs.pageList = this.$root.$tabs.pageList.filter(item => item.fullPath !== key);
+      let index = this.$root.$tabs.linkList.indexOf(key);
+      this.$root.$tabs.linkList = this.$root.$tabs.linkList.filter(item => item !== key);
+      index = index >= this.$root.$tabs.linkList.length ? this.$root.$tabs.linkList.length - 1 : index;
+      this.$root.$tabs.activePage = this.$root.$tabs.linkList[index];
     }
-    //update-end-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
   }
 };
 </script>
 
 <style lang="scss">
-/*
- * The following styles are auto-applied to elements with
- * transition="page-transition" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the page transition by editing
- * these styles.
- */
-
 .page-transition-enter {
   opacity: 0;
 }
-
 .page-transition-leave-active {
   opacity: 0;
 }
-
 .page-transition-enter .page-transition-container,
 .page-transition-leave-active .page-transition-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-
 /*美化弹出Tab样式*/
 .ant-tabs-nav-container {
   margin-top: 4px;
 }
-
 /* 修改 ant-tabs 样式 */
 .tab-layout-tabs.ant-tabs {
   border-bottom: 1px solid #ccc;
@@ -360,7 +378,6 @@ export default {
     border: none;
   }
 }
-
 .ant-tabs {
   &.ant-tabs-card .ant-tabs-tab {
     padding: 0 24px !important;
@@ -384,7 +401,6 @@ export default {
     }
   }
 }
-
 .ant-tabs.ant-tabs-card > .ant-tabs-bar {
   .ant-tabs-tab {
     border: none !important;
