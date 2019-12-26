@@ -23,89 +23,127 @@ export default api;
 
 //post
 export async function postAction(url, parameter) {
-    return axios({
-        url: url,
-        method: 'post',
-        data: parameter,
-    });
+    try {
+        return axios({
+            url: url,
+            method: 'post',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //post method= {post | put}
 export async function httpAction(url, parameter, method) {
-    return axios({
-        url: url,
-        method: method,
-        data: parameter,
-    });
+    try {
+        return axios({
+            url: url,
+            method: method,
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //put
 export async function putAction(url, parameter) {
-    return axios({
-        url: url,
-        method: 'put',
-        data: parameter,
-    });
+    try {
+        return axios({
+            url: url,
+            method: 'put',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //get
 export async function getAction(url, parameter) {
-    return axios({
-        url: url,
-        method: 'get',
-        params: parameter,
-    });
+    try {    
+        return axios({
+            url: url,
+            method: 'get',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //deleteAction
 export async function deleteAction(url, parameter) {
-    return axios({
-        url: url,
-        method: 'delete',
-        params: parameter,
-    });
+    try {
+        return axios({
+            url: url,
+            method: 'delete',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function getUserList(parameter) {
-    return axios({
-        url: api.user,
-        method: 'get',
-        params: parameter,
-    });
+    try {
+        return axios({
+            url: api.user,
+            method: 'get',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function getRoleList(parameter) {
-    return axios({
-        url: api.role,
-        method: 'get',
-        params: parameter,
-    });
+    try {
+        return axios({
+            url: api.role,
+            method: 'get',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function getServiceList(parameter) {
-    return axios({
-        url: api.service,
-        method: 'get',
-        params: parameter,
-    });
+    try {
+        return axios({
+            url: api.service,
+            method: 'get',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function getPermissions(parameter) {
-    return axios({
-        url: api.permissionNoPager,
-        method: 'get',
-        params: parameter,
-    });
+    try {
+        return axios({
+            url: api.permissionNoPager,
+            method: 'get',
+            params: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-// id == 0 add     post
-// id != 0 update  put
 export async function saveService(parameter) {
-    return axios({
-        url: api.service,
-        method: parameter.id == 0 ? 'post' : 'put',
-        data: parameter,
-    });
+    try {
+        return axios({
+            url: api.service,
+            method: parameter.id == 0 ? 'post' : 'put',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 /**
@@ -117,22 +155,32 @@ export async function saveService(parameter) {
 export async function downFile(url, parameter) {
     //检查此处的URL,改成Nginx服务器对应的下载地址
     console.log(' download url :' + url);
-    return axios({
-        url: url,
-        params: parameter,
-        method: 'get',
-        responseType: 'blob',
-    });
+
+    try {
+        return axios({
+            url: url,
+            params: parameter,
+            method: 'get',
+            responseType: 'blob',
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 /**
  * 查询URL地址TableID变量
  */
 export function queryURLTableParam() {
-    let url = document.location.toString();
-    url = url.substring(url.lastIndexOf('/') + 1, url.length);
-    console.log('tableID : ' + url);
-    return url;
+    let url = null;
+    try {
+        url = document.location.toString();
+        url = url.substring(url.lastIndexOf('/') + 1, url.length);
+        console.log('tableID : ' + url);
+        return url;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 /**
@@ -142,7 +190,6 @@ export function queryURLTableParam() {
 export async function queryTableName(callback) {
     //获取主键ID
     let tableID = queryURLTableParam();
-
     //查询URL
     let queryURL = `${api.domain}/api/onl_cgform_head/${tableID}`;
 
@@ -462,8 +509,6 @@ export async function queryUserList(params) {
  * 查询审批处理页面的记录
  */
 export async function queryProcessLogToApproved(username, realname, params) {
-    //用户对于的中文代码
-    //let realname = username;
 
     //查询URL
     let queryURL = `${api.domain}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
@@ -489,13 +534,12 @@ export async function queryProcessLogToApproved(username, realname, params) {
  * 查询审批历史记录页面的记录
  */
 export async function queryProcessLogHisApproved(username, realname, params) {
-    //用户对于的中文代码
-    //let username_zh = username;
 
     //查询URL
     let queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     let queryCountURL = `${api.domain}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
     let result = {};
+    
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
         const count = await superagent.get(queryCountURL).set('accept', 'json');
@@ -526,6 +570,7 @@ export async function queryProcessLogWait(username, realname) {
     //查询URL
     let queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     let result = {};
+    
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
@@ -652,17 +697,27 @@ export async function queryProcessLogByID(tableName, id) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function deleteProcessLog(tableName, node) {
+    //提交URL
+    let deleteURL = '';
     //遍历node,取出里面的ids
     var ids = '';
 
-    _.each(node, function(item) {
-        ids = ids + ',' + item['id'];
-    });
+    try {
+        _.each(node, function(item) {
+            ids = ids + ',' + item['id'];
+        });
 
-    ids = ids.substring(1);
+        //去掉开头的逗号
+        ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
+    } catch (error) {
+        console.error(err);
+    }
 
-    //提交URL
-    let deleteURL = `${api.domain}/api/PR_LOG/bulk?_ids=${ids}`;
+    try {
+        deleteURL = `${api.domain}/api/PR_LOG/bulk?_ids=${ids}`;
+    } catch (error) {
+        console.error(err);
+    }
 
     try {
         const res = await superagent.delete(deleteURL).set('accept', 'json');
@@ -680,15 +735,25 @@ export async function deleteProcessLog(tableName, node) {
 export async function deleteProcessLogInf(tableName, node) {
     //遍历node,取出里面的ids
     var ids = '';
-
-    _.each(node, function(item) {
-        ids = ids + ',' + item['id'];
-    });
-
-    ids = ids.substring(1);
-
     //提交URL
-    let deleteURL = `${api.domain}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
+    let deleteURL = '';
+
+    try {
+        _.each(node, function(item) {
+            ids = ids + ',' + item['id'];
+        });
+
+        //去掉开头的逗号
+        ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
+    } catch (error) {
+        console.error(err);
+    }
+
+    try {
+        deleteURL = `${api.domain}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
+    } catch (error) {
+        console.error(err);
+    }
 
     try {
         const res = await superagent.delete(deleteURL).set('accept', 'json');
@@ -744,25 +809,35 @@ export async function postProcessFreeNode(node) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function postProcessLogHistory(node) {
+    //提交URL
+    let postURL = null;
     //是否批处理
     let bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
 
-    //如果只有一条数据
-    if (node instanceof Array && node.length == 1) {
-        bflag = '';
-        node = node[0];
+    //如果只有一条数据,则URL中不需要/bulk路径
+    try {
+        if (node instanceof Array && node.length == 1) {
+            bflag = '';
+            node = node[0];
+        }
+    } catch (error) {
+        console.log(error);
     }
 
-    //提交URL
-    let postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
+    //构建流程历史表提交数据的URL
+    try {
+        postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
+    } catch (error) {
+        console.log(error);
+    }
 
+    //发送post请求，保存数据
     try {
         const res = await superagent
             .post(postURL)
             .send(node)
             .set('accept', 'json');
         console.log(res);
-
         return res.body;
     } catch (err) {
         console.error(err);
@@ -773,18 +848,29 @@ export async function postProcessLogHistory(node) {
  * 想知会记录列表提交数据
  */
 export async function postProcessLogInformed(node) {
+    //提交URL
+    let postURL = null;
     //是否批处理
     let bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
 
-    //如果只有一条数据
-    if (node instanceof Array && node.length == 1) {
-        bflag = '';
-        node = node[0];
+    //如果只有一条数据,则URL中不需要/bulk路径
+    try {
+        if (node instanceof Array && node.length == 1) {
+            bflag = '';
+            node = node[0];
+        }
+    } catch (error) {
+        console.error(err);
     }
 
-    //提交URL
-    let postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
+    //构建知会表提交数据的URL
+    try {
+        postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
+    } catch (error) {
+        console.error(err);
+    }
 
+    //发送post请求，保存数据
     try {
         const res = await superagent
             .post(postURL)
