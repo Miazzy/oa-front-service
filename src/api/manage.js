@@ -8,7 +8,7 @@ import $ from 'jquery';
 
 axios_.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-const api = {
+export const api = {
     domain: window._CONFIG['domian'],
     user: `${window._CONFIG['domian']}/jeecg-boot/api/user`,
     role: `${window._CONFIG['domian']}/jeecg-boot/api/role`,
@@ -18,7 +18,7 @@ const api = {
     PROCESS_NODE_DICT_ID: '095a5c3fed5b29706cdfc6d9cb32cd4c', //流程节点，对应的字典的ID,根据这个查询流程节点的名称
 };
 
-export default api;
+//export default api;
 
 //post
 export async function postAction(url, parameter) {
