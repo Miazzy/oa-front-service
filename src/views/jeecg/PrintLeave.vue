@@ -326,17 +326,17 @@
             <div style="margin-bottom:20px;">流程进度</div>
             <template>
               <a-steps style="width:80%;margin-bottom:10px;">
-                <a-step status="finish" title="发起">
-                  <a-icon type="user" slot="icon" style="color:skyblue;" />
+                <a-step :status="wflowstatus.start.status" title="发起">
+                  <a-icon type="user" slot="icon" />
                 </a-step>
-                <a-step status="finish" title="审核">
-                  <a-icon type="solution" slot="icon" style="color:orange;" />
+                <a-step :status="wflowstatus.audit.status" title="审核">
+                  <a-icon type="solution" slot="icon" />
                 </a-step>
-                <a-step status="process" title="审批">
+                <a-step :status="wflowstatus.approve.status" title="审批">
                   <a-icon type="audit" slot="icon" />
                 </a-step>
-                <a-step status="wait" title="知会">
-                  <a-icon type="mail" slot="icon" style="color:pink;" />
+                <a-step :status="wflowstatus.message.status" title="知会">
+                  <a-icon type="mail" slot="icon" />
                 </a-step>
               </a-steps>
               <br />
@@ -626,6 +626,8 @@ export default {
     let that = await watchFormLeave(this);
     //获取返回结果
     let result = await colorProcessDetail(that, this);
+    //
+    console.log(this.wflowstatus);
     //返回结果
     return result;
   },
@@ -684,26 +686,27 @@ export default {
       var userInfo = getStore("cur_user");
       //获取当前时间
       var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
-
       //审批动作
       var operation = operation || "同意";
       //审批意见
       var message = message || this.curRow.idea_content || "同意";
-
       //当前被选中记录数据
       var curRow = that.curRow;
-
       //流程日志编号
       var processLogID = queryUrlString("processLogID");
-
       //打印表单名称
       var tableName = curRow["table_name"] || queryUrlString("table_name");
-
       //审批节点信息
       var approveNode = null;
+      //定义当前审批日志信息
+      var node = [];
 
-      //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, processLogID);
+      try {
+        //获取当前审批节点的所有数据
+        curRow = await queryProcessLogByID(tableName, processLogID);
+      } catch (error) {
+        console.log(error);
+      }
 
       //未获取当前审批流程
       if (deNull(curRow) == "") {
@@ -715,7 +718,7 @@ export default {
 
       //业务代码ID
       var bussinessCodeID = curRow["business_data_id"];
-
+      //获取流程审批信息
       var processAudit = curRow["process_audit"];
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
@@ -731,8 +734,12 @@ export default {
         return false;
       }
 
-      //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, bussinessCodeID);
+      try {
+        //获取关于此表单的所有当前审批日志信息
+        node = await queryProcessLog(tableName, bussinessCodeID);
+      } catch (error) {
+        console.log(error);
+      }
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
@@ -750,14 +757,11 @@ export default {
         item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
 
-      //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node);
-
-      //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node);
+      //转历史日志节点
+      var prLogHisNode = JSON.parse(JSON.stringify(node));
 
       //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      let rights = await queryBusinessInfo(tableName);
+      var rights = await queryBusinessInfo(tableName);
 
       //选定流程权责
       that.fixedWFlow = rights[0];
@@ -849,14 +853,13 @@ export default {
         //如果存在审核人
         var firstAuditor = auditArray[1];
 
-        //如果待审核节点为空，则表示已经审批通过
-        if (firstAuditor == "") {
-          //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
+        //流程状态
+        var bpmStatus = {};
 
-          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "4"
-          });
+        //如果待审核节点为空，则表示已经审批通过 //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
+        if (firstAuditor == "") {
+          //设置流程状态 审批节点已经走完，流程状态为4：已完成
+          bpmStatus = { bpm_status: "4" };
 
           //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
           for (let item of notifyArray) {
@@ -909,12 +912,23 @@ export default {
             result = await postProcessLogInformed(pnode);
           }
 
+          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+          result = await postProcessLogHistory(prLogHisNode);
+
+          //删除当前审批节点中的所有记录
+          result = await deleteProcessLog(tableName, prLogHisNode);
+
+          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
+          result = await patchTableData(
+            tableName,
+            curRow["business_data_id"],
+            bpmStatus
+          );
+
           //当前已经是最后一个审批节点，流程已经处理完毕
           that.tipContent = "同意审批成功，审批流程处理完毕！";
 
-          //TODO 以前此表单的自由流程进入历史
-
-          //TODO 删除以前此表单对应的自由流程
+          //TODO 以前此表单的自由流程进入历史 //TODO 删除以前此表单对应的自由流程
         } else {
           //如果firstAuditor是逗号开头，则去掉开头的逗号
           firstAuditor =
@@ -925,18 +939,10 @@ export default {
           //获取下一审核节点
           firstAuditor = firstAuditor.split(",")[0];
 
-          //设置流程状态为2：审核中
-          let bpm_status_code = "2";
-
-          //检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中
-          if (approveNode == firstAuditor) {
-            bpm_status_code = "3";
-          }
-
-          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: bpm_status_code
-          });
+          //设置流程 检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中，否则，状态为 状态为2：审核中
+          approveNode == firstAuditor
+            ? (bpmStatus = { bpm_status: "3" })
+            : (bpmStatus = { bpm_status: "2" });
 
           //审批相关处理信息
           pnode = {};
@@ -983,7 +989,7 @@ export default {
           }
 
           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-          let vflag = await queryApprovalExist(
+          var vflag = await queryApprovalExist(
             tableName,
             curRow["business_data_id"]
           );
@@ -993,26 +999,29 @@ export default {
             that.tipContent =
               "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
           } else {
-            //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
-
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
             result = await postProcessLog(pnode);
 
-            //第三步，根据流程审批节点，向第一个节点推送一条审批信息；根据流程审批节点，找到当前审批节点，修改节点审批状态为审批通过，增加审批意见
-            console.log(
-              " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
+            //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+            result = await postProcessLogHistory(prLogHisNode);
+
+            //删除当前审批节点中的所有记录
+            result = await deleteProcessLog(tableName, prLogHisNode);
+
+            //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
+            result = await patchTableData(
+              tableName,
+              curRow["business_data_id"],
+              bpmStatus
             );
 
-            //提示信息
+            //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
             that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
           }
         }
-
-        //提示用户撤销审批操作成功
-        that.tipVisible = true;
       }
-
-      console.log("同意审批成功！");
+      //提示用户撤销审批操作成功
+      that.tipVisible = true;
 
       //刷新页面数据
       this.loadData();
@@ -1021,7 +1030,7 @@ export default {
       this.pageType = "view";
 
       //同意审批成功
-      return true;
+      return result;
     },
 
     /**
@@ -1029,27 +1038,26 @@ export default {
      */
     async handleRejectWF() {
       //设置this的别名
-      let that = this;
+      var that = this;
       //返回结果
-      let result;
+      var result;
       //获取当前用户
-      let userInfo = getStore("cur_user");
+      var userInfo = getStore("cur_user");
       //获取当前时间
-      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
-      let operation = operation || "驳回";
+      var operation = operation || "驳回";
       //审批意见
-      let message = message || that.curRow.idea_content || "驳回";
-
+      var message = message || that.curRow.idea_content || "驳回";
       //当前被选中记录数据
-      let curRow = that.curRow;
-
+      var curRow = that.curRow;
       //流程日志编号
       var processLogID = queryUrlString("processLogID");
-
       //打印表单名称
-      let tableName = curRow["table_name"] || queryUrlString("table_name");
+      var tableName = curRow["table_name"] || queryUrlString("table_name");
+      //流程状态
+      var bpmStatus = { bpm_status: "1" };
 
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogByID(tableName, processLogID);
@@ -1096,13 +1104,11 @@ export default {
       result = await deleteProcessLog(tableName, node);
 
       //修改当前审批状态为待处理
-      result = await patchTableData(tableName, curRow["business_data_id"], {
-        bpm_status: "1"
-      });
-      //再次执行修改流程状态的操作，防止网络异常
-      result = await patchTableData(tableName, curRow["business_data_id"], {
-        bpm_status: "1"
-      });
+      result = await patchTableData(
+        tableName,
+        curRow["business_data_id"],
+        bpmStatus
+      );
 
       //TODO 以前此表单的自由流程进入历史
 
@@ -1111,9 +1117,6 @@ export default {
       //提示用户撤销审批操作成功
       that.tipVisible = true;
       that.tipContent = "驳回审批成功！";
-
-      //打印驳回审批处理日志
-      console.log("驳回审批成功");
 
       //设置为view预览模式
       this.pageType = "view";

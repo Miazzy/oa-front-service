@@ -2100,20 +2100,22 @@ export async function queryWorkflowStatus(tableName, id) {
     var node_4 = JSON.parse('{"start":{"status":"finish","name":"发起","color":"skyblue"},"audit":{"status":"finish","name":"审核","color":""},"approve":{"status":"finish","name":"审批","color":""},"message":{"status":"finish","name":"知会","color":"pink"}}');
 
     //获取当前表单信息
-    var curRow = queryTableData(tableName , id);
+    var curRow = await queryTableData(tableName , id);
 
     //根据流程状态，设置流程图渲染状态
-    if(deNull(curRow)!='' && curRow.bpm_status == 0){
-        node = node_0
-    } else if(deNull(curRow)!='' && curRow.bpm_status == 1){
-        node = node_1
+    if(deNull(curRow)!='' && curRow.bpm_status == 1){
+        node = node_0;
     } else if(deNull(curRow)!='' && curRow.bpm_status == 2){
-        node = node_2
+        node = node_1;
     } else if(deNull(curRow)!='' && curRow.bpm_status == 3){
-        node = node_3
+        node = node_2;
     } else if(deNull(curRow)!='' && curRow.bpm_status == 4){
-        node = node_4
-    } 
+        node = node_3;
+    } else if(deNull(curRow)!='' && curRow.bpm_status == 5){
+        node = node_4;
+    } else {
+        node = node_0;
+    }
 
     //打印查询参数
     console.log(`tableName: ${tableName} \n\r id: ${id}`);
