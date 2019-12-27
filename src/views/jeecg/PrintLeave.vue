@@ -1167,10 +1167,14 @@ export default {
         result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
         result = await deleteProcessLogInf(tableName, [curRow]);
-        //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
-        result = await patchTableData(tableName, curRow["business_data_id"], {
-          bpm_status: "5"
-        });
+        try {
+          //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "5"
+          });
+        } catch (error) {
+          console.log(error);
+        }
         //显示弹框，提示知会成功
         that.tipVisible = true;
         that.tipContent = "知会确认成功！";
@@ -1226,6 +1230,15 @@ export default {
         result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
         result = await deleteProcessLogInf(tableName, [curRow]);
+
+        try {
+          //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: "5"
+          });
+        } catch (error) {
+          console.log(error);
+        }
 
         //TODO 以前此表单的自由流程进入历史
 
