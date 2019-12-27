@@ -1,5 +1,5 @@
-import api from './index'
-import { axios } from '@/utils/request'
+import api from './index';
+import { axios } from '@/utils/request';
 
 /**
  * login func
@@ -13,46 +13,66 @@ import { axios } from '@/utils/request'
  * @returns {*}
  */
 export function login(parameter) {
-  return axios({
-    url: `${window._CONFIG['domian']}/sys/login`,
-    method: 'post',
-    data: parameter
-  })
+    try {
+        return axios({
+            url: `${window._CONFIG['domian']}/sys/login`,
+            method: 'post',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export function phoneLogin(parameter) {
-  return axios({
-    url: `${window._CONFIG['domian']}/sys/phoneLogin`,
-    method: 'post',
-    data: parameter
-  })
+    try {
+        return axios({
+            url: `${window._CONFIG['domian']}/sys/phoneLogin`,
+            method: 'post',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export function getSmsCaptcha(parameter) {
-  return axios({
-    url: api.SendSms,
-    method: 'post',
-    data: parameter
-  })
+    try {
+        return axios({
+            url: api.SendSms,
+            method: 'post',
+            data: parameter,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export function getInfo() {
-  return axios({
-    url: `${window._CONFIG['domian']}/api/user/info`,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
+    try {
+        return axios({
+            url: `${window._CONFIG['domian']}/api/user/info`,
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+            },
+        });
+    } catch (error) {
+        console.log(error);
     }
-  })
 }
 
 export function logout(logoutToken) {
-  return axios({
-    url: `${window._CONFIG['domian']}/sys/logout`,
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'X-Access-Token':  logoutToken
+    try {
+        return axios({
+            url: `${window._CONFIG['domian']}/sys/logout`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                'X-Access-Token': logoutToken,
+            },
+        });
+    } catch (error) {
+        console.log(error);
     }
-  })
 }

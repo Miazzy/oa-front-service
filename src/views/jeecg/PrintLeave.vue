@@ -610,7 +610,7 @@ export default {
       wflowUsers: "",
       notifyUsers: "",
       approveUser: "",
-      tableInfo: {},
+      tableInfo: "",
       tipVisible: false,
       tipContent: "",
       slides: images,
