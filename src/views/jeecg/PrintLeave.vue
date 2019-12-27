@@ -562,7 +562,7 @@ import {
   queryProcessNodeProcName,
   queryProcessNodeEmployee,
   queryProcessLogInfByID,
-  queryWorkflowStatus
+  queryTableData
 } from "@/api/manage";
 import _ from "underscore";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -619,9 +619,7 @@ export default {
     };
   },
 
-  async created() {
-
-  },
+  async created() {},
 
   async mounted() {
     //查询当前节点信息
@@ -652,7 +650,7 @@ export default {
       return result;
     },
     getDate() {},
-    tipHandleOk(e) {
+    tipHandleOk() {
       this.tipConfirmLoading = true;
       setTimeout(() => {
         this.loadData();
@@ -700,6 +698,9 @@ export default {
 
       //打印表单名称
       var tableName = curRow["table_name"] || queryUrlString("table_name");
+
+      //审批节点信息
+      var approveNode = null;
 
       //获取当前审批节点的所有数据
       curRow = await queryProcessLogByID(tableName, processLogID);
@@ -790,8 +791,12 @@ export default {
               "," +
               that.fixedWFlow["approve"] +
               ",";
+
             //根据权责配置，获取所有待知会人员列表
             allNotify = that.fixedWFlow["notify"];
+
+            //设置审批节点
+            approveNode = that.fixedWFlow["approve"];
           } catch (error) {
             that.tipVisible = true;
             that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
@@ -826,6 +831,9 @@ export default {
             notifyArray =
               deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
 
+            //设置审批节点
+            approveNode = freeNode.approve_node;
+
             //获取自由流程配置，当前审核节点
             curAuditor = curRow["employee"];
           } catch (error) {
@@ -843,9 +851,11 @@ export default {
 
         //如果待审核节点为空，则表示已经审批通过
         if (firstAuditor == "") {
+          //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
+
           //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
           result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "3"
+            bpm_status: "4"
           });
 
           //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
@@ -906,17 +916,28 @@ export default {
 
           //TODO 删除以前此表单对应的自由流程
         } else {
-          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "2"
-          });
           //如果firstAuditor是逗号开头，则去掉开头的逗号
           firstAuditor =
             firstAuditor.indexOf(",") == 0
               ? firstAuditor.substring(1)
               : firstAuditor;
+
           //获取下一审核节点
           firstAuditor = firstAuditor.split(",")[0];
+
+          //设置流程状态为2：审核中
+          let bpm_status_code = "2";
+
+          //检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中
+          if (approveNode == firstAuditor) {
+            bpm_status_code = "3";
+          }
+
+          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: bpm_status_code
+          });
+
           //审批相关处理信息
           pnode = {};
 
@@ -1146,6 +1167,11 @@ export default {
         result = await postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
         result = await deleteProcessLogInf(tableName, [curRow]);
+        //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+        result = await patchTableData(tableName, curRow["business_data_id"], {
+          bpm_status: "5"
+        });
+        //显示弹框，提示知会成功
         that.tipVisible = true;
         that.tipContent = "知会确认成功！";
         return true;
@@ -1356,8 +1382,6 @@ export default {
           result = await postProcessLog(node);
           console.log(" 提交审批返回结果: " + JSON.stringify(result));
 
-          //第三步，根据流程审批节点，向第一个节点推送一条审批信息
-
           //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
           result = await patchTableData(tableName, this.curRow["id"], {
             bpm_status: "2"
@@ -1385,8 +1409,20 @@ export default {
 
       //提交知会信息确认
       if (deNull(nfUsers) != "" && this.pageType == "notifying") {
+        //获取当前表单信息
+        let curRow = await queryTableData(tableName, queryUrlString("id"));
+
         //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
         let loginfo = await queryPRLogInfTotal(queryUrlString("id"));
+
+        //如果当前流程状态没有审批通过，则无法发送知会信息
+        if (curRow["bpm_status"] != 4 && curRow["bpm_status"] != 5) {
+          this.$confirm_({
+            title: "温馨提示",
+            content: "此表单业务尚未审批通过，无法进行知会操作！"
+          });
+          return true;
+        }
 
         //同一业务数据，每天最多知会3次
         if (deNull(loginfo) != "" && loginfo.today >= 3) {
@@ -1397,6 +1433,7 @@ export default {
           return true;
         }
 
+        //同一业务数据，总计最多知会10次
         if (deNull(loginfo) != "" && loginfo.total >= 10) {
           this.$confirm_({
             title: "温馨提示",

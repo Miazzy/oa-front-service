@@ -728,13 +728,13 @@ export async function deleteProcessLog(tableName, node) {
         //去掉开头的逗号
         ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     try {
         deleteURL = `${api.domain}/api/PR_LOG/bulk?_ids=${ids}`;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     try {
@@ -1061,9 +1061,11 @@ export function queryLeaveType(leave) {
 export function queryBpmStatus(status) {
     var config = {
         '1': '待提交',
-        '2': '处理中',
-        '3': '已完成',
-        '4': '已作废',
+        '2': '审核中',
+        '3': '审批中',
+        '4': '已完成',
+        '5': '已完成',
+        '6': '已作废',
     };
 
     return config[status];

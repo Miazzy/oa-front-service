@@ -870,7 +870,7 @@ export default {
       var curRow = this.table.selectionRows[0];
 
       //如果流程状态不是待提交，则无法进行自由流程选择
-      if (curRow.bpm_status != 3) {
+      if (curRow.bpm_status != 4 && curRow.bpm_status != 5) {
         this.$message.warning("此记录尚未审批通过，无法进行知会操作！");
         return false;
       }
@@ -1148,6 +1148,9 @@ export default {
 
       var processAudit = curRow["process_audit"];
 
+      //定义审批节点信息
+      var approveNode = null;
+
       //检测是否为单选
       if (that.table.selectionRows.length != 1) {
         that.$message.warning("请选择一条记录！");
@@ -1211,7 +1214,6 @@ export default {
         that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
         return false;
       } else {
-        debugger;
         //所有待审核节点
         var allAudit = "";
         //所有待知会节点
@@ -1233,6 +1235,8 @@ export default {
               ",";
             //根据权责配置，获取所有待知会人员列表
             allNotify = that.fixedWFlow["notify"];
+            //设置审批节点信息
+            approveNode = that.fixedWFlow["approve"];
           } catch (error) {
             that.tipVisible = true;
             that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
@@ -1251,6 +1255,8 @@ export default {
               deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
             //获取自由流程配置，当前审核节点
             curAuditor = curRow["employee"];
+            //设置审批节点信息
+            approveNode = freeNode.approve_node;
           } catch (error) {
             that.tipVisible = true;
             that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
@@ -1266,9 +1272,11 @@ export default {
 
         //如果待审核节点为空，则表示已经审批通过
         if (firstAuditor == "") {
-          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
+          //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
+
+          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为4：已完成，修改当前审批状态为待处理
           result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "3"
+            bpm_status: "4"
           });
 
           //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
@@ -1325,10 +1333,6 @@ export default {
           //当前已经是最后一个审批节点，流程已经处理完毕
           that.tipContent = "同意审批成功，审批流程处理完毕！";
         } else {
-          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "2"
-          });
           //如果firstAuditor是逗号开头，则去掉开头的逗号
           firstAuditor =
             firstAuditor.indexOf(",") == 0
@@ -1336,6 +1340,20 @@ export default {
               : firstAuditor;
           //获取下一审核节点
           firstAuditor = firstAuditor.split(",")[0];
+
+          //设置流程状态为2：审核中
+          let bpm_status_code = "2";
+
+          //检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中
+          if (approveNode == firstAuditor) {
+            bpm_status_code = "3";
+          }
+
+          //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
+          result = await patchTableData(tableName, curRow["business_data_id"], {
+            bpm_status: bpm_status_code
+          });
+
           //审批相关处理信息
           var pnode = {};
 
@@ -1520,15 +1538,15 @@ export default {
       let curRow = that.table.selectionRows[0];
 
       //已经提交审批，无法再次提交
-      if (curRow["bpm_status"] == "2") {
+      if (curRow["bpm_status"] == "2" || curRow["bpm_status"] == "3") {
         that.tipVisible = true;
         that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
         return false;
-      } else if (curRow["bpm_status"] == "3") {
+      } else if (curRow["bpm_status"] == "4" || curRow["bpm_status"] == "5") {
         that.tipVisible = true;
         that.tipContent = "此记录的审批流程，已经完成审批，无法再次提交审批！";
         return false;
-      } else if (curRow["bpm_status"] == "4") {
+      } else if (curRow["bpm_status"] == "10") {
         that.tipVisible = true;
         that.tipContent = "此记录的审批流程，已经作废，无法再次提交审批！";
         return false;
@@ -1635,11 +1653,15 @@ export default {
             bpm_status: "2"
           });
 
+          //设置流程状态为审核中
           curRow["bpm_status"] = "2";
-          console.log(
-            " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result)
-          );
 
+          //打印审批日志信息
+          let logging =
+            " 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result);
+          console.log(logging);
+
+          //提示审批提交成功
           that.tipContent = "提交审批成功！";
         }
 
@@ -1691,11 +1713,11 @@ export default {
         that.tipVisible = true;
         that.tipContent = "该记录尚未提交审批，无法撤销审批！";
         return false;
-      } else if (curRow["bpm_status"] == "3") {
+      } else if (curRow["bpm_status"] == "4" || curRow["bpm_status"] == "5") {
         that.tipVisible = true;
         that.tipContent = "该记录已完成审批，无法撤销审批！";
         return false;
-      } else if (curRow["bpm_status"] == "4") {
+      } else if (curRow["bpm_status"] == "10") {
         that.tipVisible = true;
         that.tipContent = "该记录审批流程已作废，无法撤销审批！";
         return false;
