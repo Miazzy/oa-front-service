@@ -604,8 +604,6 @@ export default {
     let that = await manageAPI.watchFormLeave(this);
     //获取返回结果
     let result = await manageAPI.colorProcessDetail(that, this);
-    //
-    console.log(this.wflowstatus);
     //返回结果
     return result;
   },
@@ -629,8 +627,8 @@ export default {
       //返回结果
       return result;
     },
-    getDate() {},
-    tipHandleOk() {
+    async getDate() {},
+    async tipHandleOk() {
       this.tipConfirmLoading = true;
       setTimeout(() => {
         this.loadData();
@@ -638,11 +636,11 @@ export default {
         this.tipConfirmLoading = false;
       }, 300);
     },
-    tipHandleCancel() {
+    async tipHandleCancel() {
       this.loadData();
       this.tipVisible = false;
     },
-    getFormFieldValue(field) {
+    async getFormFieldValue(field) {
       return this.form.getFieldValue(field);
     },
     async handlePrint() {
@@ -651,7 +649,6 @@ export default {
         this.curRow.fileStatus = 0;
       }, 10000);
     },
-
     /**
      * @function 同意审批
      */
@@ -673,12 +670,19 @@ export default {
       //流程日志编号
       var processLogID = tools.queryUrlString("processLogID");
       //打印表单名称
-      var tableName =
-        curRow["table_name"] || tools.queryUrlString("table_name");
+      var tableName = tools.queryUrlString("table_name");
       //审批节点信息
       var approveNode = null;
       //定义当前审批日志信息
       var node = [];
+      //业务代码ID
+      var bussinessCodeID = null;
+      //获取流程审批信息
+      var processAudit = null;
+      //转历史日志节点
+      var prLogHisNode = null;
+      //流程权责
+      var rights = null;
 
       try {
         //获取当前审批节点的所有数据
@@ -696,9 +700,9 @@ export default {
       }
 
       //业务代码ID
-      var bussinessCodeID = curRow["business_data_id"];
+      bussinessCodeID = curRow["business_data_id"];
       //获取流程审批信息
-      var processAudit = curRow["process_audit"];
+      processAudit = curRow["process_audit"];
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -737,11 +741,9 @@ export default {
       });
 
       //转历史日志节点
-      var prLogHisNode = JSON.parse(JSON.stringify(node));
-
+      prLogHisNode = JSON.parse(JSON.stringify(node));
       //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      var rights = await manageAPI.queryBusinessInfo(tableName);
-
+      rights = await manageAPI.queryBusinessInfo(tableName);
       //选定流程权责
       that.fixedWFlow = rights[0];
       //设置当前流程审批权责
@@ -749,7 +751,11 @@ export default {
 
       //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
       if (rights.length > 1 && curRow.business_code != "000000000") {
-        that.modelModal = true;
+        //that.modelModal = true;
+        that.tipVisible = true;
+        that.tipContent =
+          "获取到此业务含有多个流程权责，请联系管理员进行配置！";
+        return false;
       } else if (rights.length <= 0 && curRow.business_code != "000000000") {
         that.tipVisible = true;
         that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
@@ -775,10 +781,8 @@ export default {
               "," +
               that.fixedWFlow["approve"] +
               ",";
-
             //根据权责配置，获取所有待知会人员列表
             allNotify = that.fixedWFlow["notify"];
-
             //设置审批节点
             approveNode = that.fixedWFlow["approve"];
           } catch (error) {
@@ -790,8 +794,7 @@ export default {
         } else {
           try {
             //自由流程配置消息
-            let freeNode = JSON.parse(curRow.business_data);
-
+            var freeNode = JSON.parse(curRow.business_data);
             //检查是否存在自由流程节点audit_node & approve_node & notify_node , 如果不存在，在下级节点中寻找
             if (
               !("audit_node" in freeNode) &&
@@ -834,7 +837,6 @@ export default {
         var auditArray = allAudit.split("," + curAuditor + ",");
         //如果存在审核人
         var firstAuditor = auditArray[1];
-
         //流程状态
         var bpmStatus = {};
 
