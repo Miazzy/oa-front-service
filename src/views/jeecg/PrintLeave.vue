@@ -1132,25 +1132,20 @@ export default {
       var userInfo = storage.getStore("cur_user");
       //获取当前时间
       var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
-
       //审批动作
       var operation = operation || "知会";
       //审批意见
       var message = message || that.curRow.idea_content || "知会确认";
-
       //当前被选中记录数据
       var curRow = that.curRow;
-
       //流程日志编号
       var processLogID = tools.queryUrlString("processLogID");
-
       //打印表单名称
-      var tableName =
-        curRow["table_name"] || tools.queryUrlString("table_name");
-
+      var tableName = tools.queryUrlString("table_name");
+      //定义流程状态
+      var bpmStatus = { bpm_status: "5" };
       //获取当前审批节点的所有数据
       curRow = await manageAPI.queryProcessLogInfByID(tableName, processLogID);
-
       //设置本次知会确认创建时间
       curRow["create_time"] = date;
 
@@ -1159,22 +1154,22 @@ export default {
         tools.deNull(curRow["approve_user"]).length >=
         tools.deNull(curRow["employee"]).length
       ) {
-        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await manageAPI.postProcessLogHistory(curRow);
-        //删除当前审批节点中的所有记录
-        result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
+        //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
         try {
-          //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+          result = await manageAPI.postProcessLogHistory(curRow);
+          //删除当前审批节点中的所有记录
+          result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
+          //如果当前已经进入流程，则需要将流程状态设置为5：已完成
           result = await manageAPI.patchTableData(
             tableName,
             curRow["business_data_id"],
-            {
-              bpm_status: "5"
-            }
+            bpmStatus
           );
         } catch (error) {
           console.log(error);
         }
+
         //显示弹框，提示知会成功
         that.tipVisible = true;
         that.tipContent = "知会确认成功！";
@@ -1230,14 +1225,12 @@ export default {
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
       if (curRow["approve_user"].length >= curRow["employee"].length) {
-        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await manageAPI.postProcessLogHistory(curRow);
-        //删除当前审批节点中的所有记录
-        result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
-
+        
         try {
-          //流程状态
-          let bpmStatus = { bpm_status: "5" };
+          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+          result = await manageAPI.postProcessLogHistory(curRow);
+          //删除当前审批节点中的所有记录
+          result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
           //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
           result = await manageAPI.patchTableData(
             tableName,
