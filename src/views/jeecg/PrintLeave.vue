@@ -619,6 +619,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @function 加载数据函数
+     */
     async loadData() {
       //查询当前节点信息
       let that = await manageAPI.watchFormLeave(this);
@@ -627,7 +630,15 @@ export default {
       //返回结果
       return result;
     },
+
+    /**
+     * @function 获取数据函数
+     */
     async getDate() {},
+
+    /**
+     * @function 弹出框确认函数
+     */
     async tipHandleOk() {
       this.tipConfirmLoading = true;
       setTimeout(() => {
@@ -636,793 +647,536 @@ export default {
         this.tipConfirmLoading = false;
       }, 300);
     },
+
+    /**
+     * @function 弹出框取消操作
+     */
     async tipHandleCancel() {
       this.loadData();
       this.tipVisible = false;
     },
+
+    /**
+     * @function 获取字段值
+     */
     async getFormFieldValue(field) {
       return this.form.getFieldValue(field);
     },
+
+    /**
+     * @function 处理打印操作
+     */
     async handlePrint() {
       this.curRow.fileStatus = 1;
       setTimeout(() => {
         this.curRow.fileStatus = 0;
       }, 10000);
     },
+
     /**
      * @function 同意审批
      */
     async handleApproveWF() {
-      //设置this的别名
-      var that = this;
-      //返回结果
-      var result;
-      //获取当前用户
-      var userInfo = storage.getStore("cur_user");
-      //获取当前时间
-      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
-      //审批动作
-      var operation = operation || "同意";
-      //审批意见
-      var message = message || this.curRow.idea_content || "同意";
-      //当前被选中记录数据
-      var curRow = that.curRow;
-      //流程日志编号
-      var processLogID = tools.queryUrlString("processLogID");
-      //打印表单名称
-      var tableName = tools.queryUrlString("table_name");
-      //审批节点信息
-      var approveNode = null;
-      //定义当前审批日志信息
-      var node = [];
-      //业务代码ID
-      var bussinessCodeID = null;
-      //获取流程审批信息
-      var processAudit = null;
-      //转历史日志节点
-      var prLogHisNode = null;
-      //流程权责
-      var rights = null;
-
-      try {
-        //获取当前审批节点的所有数据
-        curRow = await manageAPI.queryProcessLogByID(tableName, processLogID);
-      } catch (error) {
-        console.log(error);
-      }
-
-      //未获取当前审批流程
-      if (tools.deNull(curRow) == "") {
-        that.$message.warning(
-          "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
-        );
-        return false;
-      }
-
-      //业务代码ID
-      bussinessCodeID = curRow["business_data_id"];
-      //获取流程审批信息
-      processAudit = curRow["process_audit"];
-
-      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
-      if (
-        !(
-          tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-          tools.deNull(curRow["employee"]).includes(userInfo["realname"])
-        )
-      ) {
-        that.$message.warning(
-          "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
-        );
-        return false;
-      }
-
-      try {
-        //获取关于此表单的所有当前审批日志信息
-        node = await manageAPI.queryProcessLog(tableName, bussinessCodeID);
-      } catch (error) {
-        console.log(error);
-      }
-
-      //遍历node,设置approve_user，action
-      _.each(node, function(item) {
-        //记录创建时间
-        let ctime = item["create_time"];
-        //设置审批人员
-        item["approve_user"] = userInfo["username"];
-        //设置操作类型
-        item["action"] = operation;
-        //设置操作时间
-        item["operate_time"] = date;
-        //设置操作意见
-        item["action_opinion"] = message;
-        //设置创建时间
-        item["create_time"] = tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
-      });
-
-      //转历史日志节点
-      prLogHisNode = JSON.parse(JSON.stringify(node));
-      //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      rights = await manageAPI.queryBusinessInfo(tableName);
-      //选定流程权责
-      that.fixedWFlow = rights[0];
-      //设置当前流程审批权责
-      that.rights = rights;
-
-      //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
-      if (rights.length > 1 && curRow.business_code != "000000000") {
-        //that.modelModal = true;
-        that.tipVisible = true;
-        that.tipContent =
-          "获取到此业务含有多个流程权责，请联系管理员进行配置！";
-        return false;
-      } else if (rights.length <= 0 && curRow.business_code != "000000000") {
-        that.tipVisible = true;
-        that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
-        return false;
-      } else {
-        //所有待审核节点
-        var allAudit = "";
-        //所有待知会节点
-        var allNotify = "";
-        //当前审核节点
-        var curAuditor = processAudit;
-        //知会节点数组
-        var notifyArray =
-          tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
-
-        //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
-        if (curRow.business_code != "000000000") {
-          try {
-            //根据权责配置，获取所有待审核人员列表
-            allAudit =
-              "," +
-              that.fixedWFlow["audit"] +
-              "," +
-              that.fixedWFlow["approve"] +
-              ",";
-            //根据权责配置，获取所有待知会人员列表
-            allNotify = that.fixedWFlow["notify"];
-            //设置审批节点
-            approveNode = that.fixedWFlow["approve"];
-          } catch (error) {
-            that.tipVisible = true;
-            that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
-            console.log("固化流程设置节点失败 :" + error);
-            return false;
-          }
-        } else {
-          try {
-            //自由流程配置消息
-            var freeNode = JSON.parse(curRow.business_data);
-            //检查是否存在自由流程节点audit_node & approve_node & notify_node , 如果不存在，在下级节点中寻找
-            if (
-              !("audit_node" in freeNode) &&
-              !("approve_node" in freeNode) &&
-              !("notify_node" in freeNode)
-            ) {
-              freeNode = JSON.parse(freeNode.business_data);
-            }
-
-            //如果仍然为获取到自由流程节点，则从自由流程表中找
-
-            //根据自由流程配置，获取所有待审核人员列表
-            allAudit =
-              "," +
-              tools.deNull(freeNode.audit_node) +
-              "," +
-              tools.deNull(freeNode.approve_node) +
-              ",";
-
-            //根据自由流程配置，获取所有待知会人员列表
-            notifyArray =
-              tools.deNull(freeNode.notify_node) == ""
-                ? []
-                : [freeNode.notify_node];
-
-            //设置审批节点
-            approveNode = freeNode.approve_node;
-
-            //获取自由流程配置，当前审核节点
-            curAuditor = curRow["employee"];
-          } catch (error) {
-            that.tipVisible = true;
-            that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
-            console.log("自由流程设置节点失败 :" + error);
-            return false;
-          }
-        }
-
-        //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
-        var auditArray = allAudit.split("," + curAuditor + ",");
-        //如果存在审核人
-        var firstAuditor = auditArray[1];
-        //流程状态
-        var bpmStatus = {};
-
-        //如果待审核节点为空，则表示已经审批通过 //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
-        if (firstAuditor == "") {
-          //设置流程状态 审批节点已经走完，流程状态为4：已完成
-          bpmStatus = { bpm_status: "4" };
-
-          //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
-          for (let item of notifyArray) {
-            //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            var employee = await manageAPI.queryProcessNodeEmployee(item);
-            //流程岗位
-            var process_station = await manageAPI.queryProcessNodeProcName(
-              item
-            );
-            //审批相关流程节点
-            var pnode = {};
-
-            if (curRow.business_code != "000000000") {
-              //提交审批相关处理信息
-              pnode = {
-                id: manageAPI.queryRandomStr(32), //获取随机数
-                table_name: tableName, //业务表名
-                main_value: curRow["main_value"], //表主键值
-                business_data_id: curRow["business_data_id"], //业务具体数据主键值
-                business_code: that.fixedWFlow["id"], //业务编号
-                process_name: that.fixedWFlow["items"], //流程名称
-                employee: employee[0]["employee"],
-                process_station: process_station[0]["item_text"],
-                process_audit: item,
-                operate_time: date,
-                create_time: date,
-                proponents: curRow["proponents"],
-                content: curRow["content"],
-                business_data: JSON.stringify(curRow)
-              };
-            } else {
-              //提交审批相关处理信息
-              pnode = {
-                id: manageAPI.queryRandomStr(32), //获取随机数
-                table_name: tableName, //业务表名
-                main_value: curRow["business_data_id"], //表主键值
-                business_data_id: curRow["business_data_id"], //业务具体数据主键值
-                business_code: "000000001", //业务编号
-                process_name: "自由流程知会", //流程名称
-                employee: item,
-                process_station: "自由流程知会",
-                process_audit: "000000001",
-                proponents: curRow["proponents"],
-                content: curRow["content"],
-                operate_time: date,
-                create_time: date,
-                business_data: curRow.business_data
-              };
-            }
-
-            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manageAPI.postProcessLogInformed(pnode);
-          }
-
-          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-          result = await manageAPI.postProcessLogHistory(prLogHisNode);
-
-          //删除当前审批节点中的所有记录
-          result = await manageAPI.deleteProcessLog(tableName, prLogHisNode);
-
-          //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
-          result = await manageAPI.patchTableData(
-            tableName,
-            curRow["business_data_id"],
-            bpmStatus
+      this.$confirm("是否确认提交此自由流程?", "确认操作", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          //设置this的别名
+          var that = this;
+          //返回结果
+          var result;
+          //获取当前用户
+          var userInfo = storage.getStore("cur_user");
+          //获取当前时间
+          var date = tools.formatDate(
+            new Date().getTime(),
+            "yyyy-MM-dd hh:mm:ss"
           );
+          //审批动作
+          var operation = operation || "同意";
+          //审批意见
+          var message = message || this.curRow.idea_content || "同意";
+          //当前被选中记录数据
+          var curRow = that.curRow;
+          //流程日志编号
+          var processLogID = tools.queryUrlString("processLogID");
+          //打印表单名称
+          var tableName = tools.queryUrlString("table_name");
+          //审批节点信息
+          var approveNode = null;
+          //定义当前审批日志信息
+          var node = [];
+          //业务代码ID
+          var bussinessCodeID = null;
+          //获取流程审批信息
+          var processAudit = null;
+          //转历史日志节点
+          var prLogHisNode = null;
+          //流程权责
+          var rights = null;
 
-          //当前已经是最后一个审批节点，流程已经处理完毕
-          that.tipContent = "同意审批成功，审批流程处理完毕！";
-
-          //TODO 以前此表单的自由流程进入历史 //TODO 删除以前此表单对应的自由流程
-        } else {
-          //如果firstAuditor是逗号开头，则去掉开头的逗号
-          firstAuditor =
-            firstAuditor.indexOf(",") == 0
-              ? firstAuditor.substring(1)
-              : firstAuditor;
-
-          //获取下一审核节点
-          firstAuditor = firstAuditor.split(",")[0];
-
-          //设置流程 检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中，否则，状态为 状态为2：审核中
-          approveNode == firstAuditor
-            ? (bpmStatus = { bpm_status: "3" })
-            : (bpmStatus = { bpm_status: "2" });
-
-          //审批相关处理信息
-          pnode = {};
-
-          if (curRow.business_code != "000000000") {
-            //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            employee = await manageAPI.queryProcessNodeEmployee(firstAuditor);
-            //流程岗位
-            process_station = await manageAPI.queryProcessNodeProcName(
-              firstAuditor
-            );
-            //提交审批相关处理信息
-            pnode = {
-              id: manageAPI.queryRandomStr(32), //获取随机数
-              table_name: tableName, //业务表名
-              main_value: curRow["main_value"], //表主键值
-              business_data_id: curRow["business_data_id"], //业务具体数据主键值
-              business_code: that.fixedWFlow["id"], //业务编号
-              process_name: that.fixedWFlow["items"], //流程名称
-              employee: employee[0]["employee"],
-              process_station: process_station[0]["item_text"],
-              process_audit: firstAuditor,
-              proponents: curRow["proponents"],
-              content: curRow["content"],
-              create_time: date,
-              business_data: curRow.business_data
-            };
-          } else {
-            //提交审批相关处理信息
-            pnode = {
-              id: manageAPI.queryRandomStr(32), //获取随机数
-              table_name: tableName, //业务表名
-              main_value: curRow["business_data_id"], //表主键值
-              business_data_id: curRow["business_data_id"], //业务具体数据主键值
-              business_code: "000000000", //业务编号
-              process_name: "自由流程审批", //流程名称
-              employee: firstAuditor,
-              process_station: "自由流程审批",
-              process_audit: "000000000",
-              proponents: curRow["proponents"],
-              content: curRow["content"],
-              operate_time: date,
-              create_time: date,
-              business_data: curRow.business_data
-            };
-          }
-
-          //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-          var vflag = await manageAPI.queryApprovalExist(
-            tableName,
-            curRow["business_data_id"]
-          );
-
-          if (vflag) {
-            //数据库中已经存在此记录，提示用户无法提交审批
-            that.tipContent =
-              "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
-          } else {
-            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manageAPI.postProcessLog(pnode);
-
-            //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-            result = await manageAPI.postProcessLogHistory(prLogHisNode);
-
-            //删除当前审批节点中的所有记录
-            result = await manageAPI.deleteProcessLog(tableName, prLogHisNode);
-
-            //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
-            result = await manageAPI.patchTableData(
+          try {
+            //获取当前审批节点的所有数据
+            curRow = await manageAPI.queryProcessLogByID(
               tableName,
-              curRow["business_data_id"],
-              bpmStatus
+              processLogID
             );
-
-            //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
-            that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
+          } catch (error) {
+            console.log(error);
           }
-        }
-      }
-      //提示用户撤销审批操作成功
-      that.tipVisible = true;
 
-      //刷新页面数据
-      this.loadData();
+          //未获取当前审批流程
+          if (tools.deNull(curRow) == "") {
+            that.$message.warning(
+              "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
+            );
+            return false;
+          }
 
-      //设置为view预览模式
-      this.pageType = "view";
+          //业务代码ID
+          bussinessCodeID = curRow["business_data_id"];
+          //获取流程审批信息
+          processAudit = curRow["process_audit"];
 
-      //同意审批成功
-      return result;
+          //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+          if (
+            !(
+              tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+              tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+            )
+          ) {
+            that.$message.warning(
+              "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
+            );
+            return false;
+          }
+
+          try {
+            //获取关于此表单的所有当前审批日志信息
+            node = await manageAPI.queryProcessLog(tableName, bussinessCodeID);
+          } catch (error) {
+            console.log(error);
+          }
+
+          //遍历node,设置approve_user，action
+          _.each(node, function(item) {
+            //记录创建时间
+            let ctime = item["create_time"];
+            //设置审批人员
+            item["approve_user"] = userInfo["username"];
+            //设置操作类型
+            item["action"] = operation;
+            //设置操作时间
+            item["operate_time"] = date;
+            //设置操作意见
+            item["action_opinion"] = message;
+            //设置创建时间
+            item["create_time"] = tools.formatDate(
+              ctime,
+              "yyyy-MM-dd hh:mm:ss"
+            );
+          });
+
+          //转历史日志节点
+          prLogHisNode = JSON.parse(JSON.stringify(node));
+          //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
+          rights = await manageAPI.queryBusinessInfo(tableName);
+          //选定流程权责
+          that.fixedWFlow = rights[0];
+          //设置当前流程审批权责
+          that.rights = rights;
+
+          //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
+          if (rights.length > 1 && curRow.business_code != "000000000") {
+            //that.modelModal = true;
+            that.tipVisible = true;
+            that.tipContent =
+              "获取到此业务含有多个流程权责，请联系管理员进行配置！";
+            return false;
+          } else if (
+            rights.length <= 0 &&
+            curRow.business_code != "000000000"
+          ) {
+            that.tipVisible = true;
+            that.tipContent = "未获取到此业务的流程权责，无法同意审批！";
+            return false;
+          } else {
+            //所有待审核节点
+            var allAudit = "";
+            //所有待知会节点
+            var allNotify = "";
+            //当前审核节点
+            var curAuditor = processAudit;
+            //知会节点数组
+            var notifyArray =
+              tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
+
+            //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
+            if (curRow.business_code != "000000000") {
+              try {
+                //根据权责配置，获取所有待审核人员列表
+                allAudit =
+                  "," +
+                  that.fixedWFlow["audit"] +
+                  "," +
+                  that.fixedWFlow["approve"] +
+                  ",";
+                //根据权责配置，获取所有待知会人员列表
+                allNotify = that.fixedWFlow["notify"];
+                //设置审批节点
+                approveNode = that.fixedWFlow["approve"];
+              } catch (error) {
+                that.tipVisible = true;
+                that.tipContent = "固化流程设置节点失败，无法进行审批操作！";
+                console.log("固化流程设置节点失败 :" + error);
+                return false;
+              }
+            } else {
+              try {
+                //自由流程配置消息
+                var freeNode = JSON.parse(curRow.business_data);
+                //检查是否存在自由流程节点audit_node & approve_node & notify_node , 如果不存在，在下级节点中寻找
+                if (
+                  !("audit_node" in freeNode) &&
+                  !("approve_node" in freeNode) &&
+                  !("notify_node" in freeNode)
+                ) {
+                  freeNode = JSON.parse(freeNode.business_data);
+                }
+
+                //如果仍然为获取到自由流程节点，则从自由流程表中找
+
+                //根据自由流程配置，获取所有待审核人员列表
+                allAudit =
+                  "," +
+                  tools.deNull(freeNode.audit_node) +
+                  "," +
+                  tools.deNull(freeNode.approve_node) +
+                  ",";
+
+                //根据自由流程配置，获取所有待知会人员列表
+                notifyArray =
+                  tools.deNull(freeNode.notify_node) == ""
+                    ? []
+                    : [freeNode.notify_node];
+
+                //设置审批节点
+                approveNode = freeNode.approve_node;
+
+                //获取自由流程配置，当前审核节点
+                curAuditor = curRow["employee"];
+              } catch (error) {
+                that.tipVisible = true;
+                that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
+                console.log("自由流程设置节点失败 :" + error);
+                return false;
+              }
+            }
+
+            //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
+            var auditArray = allAudit.split("," + curAuditor + ",");
+            //如果存在审核人
+            var firstAuditor = auditArray[1];
+            //流程状态
+            var bpmStatus = {};
+
+            //如果待审核节点为空，则表示已经审批通过 //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
+            if (firstAuditor == "") {
+              //设置流程状态 审批节点已经走完，流程状态为4：已完成
+              bpmStatus = { bpm_status: "4" };
+
+              //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
+              for (let item of notifyArray) {
+                //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
+                var employee = await manageAPI.queryProcessNodeEmployee(item);
+                //流程岗位
+                var process_station = await manageAPI.queryProcessNodeProcName(
+                  item
+                );
+                //审批相关流程节点
+                var pnode = {};
+
+                if (curRow.business_code != "000000000") {
+                  //提交审批相关处理信息
+                  pnode = {
+                    id: manageAPI.queryRandomStr(32), //获取随机数
+                    table_name: tableName, //业务表名
+                    main_value: curRow["main_value"], //表主键值
+                    business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                    business_code: that.fixedWFlow["id"], //业务编号
+                    process_name: that.fixedWFlow["items"], //流程名称
+                    employee: employee[0]["employee"],
+                    process_station: process_station[0]["item_text"],
+                    process_audit: item,
+                    operate_time: date,
+                    create_time: date,
+                    proponents: curRow["proponents"],
+                    content: curRow["content"],
+                    business_data: JSON.stringify(curRow)
+                  };
+                } else {
+                  //提交审批相关处理信息
+                  pnode = {
+                    id: manageAPI.queryRandomStr(32), //获取随机数
+                    table_name: tableName, //业务表名
+                    main_value: curRow["business_data_id"], //表主键值
+                    business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                    business_code: "000000001", //业务编号
+                    process_name: "自由流程知会", //流程名称
+                    employee: item,
+                    process_station: "自由流程知会",
+                    process_audit: "000000001",
+                    proponents: curRow["proponents"],
+                    content: curRow["content"],
+                    operate_time: date,
+                    create_time: date,
+                    business_data: curRow.business_data
+                  };
+                }
+
+                //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+                result = await manageAPI.postProcessLogInformed(pnode);
+              }
+
+              //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+              result = await manageAPI.postProcessLogHistory(prLogHisNode);
+
+              //删除当前审批节点中的所有记录
+              result = await manageAPI.deleteProcessLog(
+                tableName,
+                prLogHisNode
+              );
+
+              //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
+              result = await manageAPI.patchTableData(
+                tableName,
+                curRow["business_data_id"],
+                bpmStatus
+              );
+
+              //当前已经是最后一个审批节点，流程已经处理完毕
+              that.tipContent = "同意审批成功，审批流程处理完毕！";
+
+              //TODO 以前此表单的自由流程进入历史 //TODO 删除以前此表单对应的自由流程
+            } else {
+              //如果firstAuditor是逗号开头，则去掉开头的逗号
+              firstAuditor =
+                firstAuditor.indexOf(",") == 0
+                  ? firstAuditor.substring(1)
+                  : firstAuditor;
+
+              //获取下一审核节点
+              firstAuditor = firstAuditor.split(",")[0];
+
+              //设置流程 检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中，否则，状态为 状态为2：审核中
+              approveNode == firstAuditor
+                ? (bpmStatus = { bpm_status: "3" })
+                : (bpmStatus = { bpm_status: "2" });
+
+              //审批相关处理信息
+              pnode = {};
+
+              if (curRow.business_code != "000000000") {
+                //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
+                employee = await manageAPI.queryProcessNodeEmployee(
+                  firstAuditor
+                );
+                //流程岗位
+                process_station = await manageAPI.queryProcessNodeProcName(
+                  firstAuditor
+                );
+                //提交审批相关处理信息
+                pnode = {
+                  id: manageAPI.queryRandomStr(32), //获取随机数
+                  table_name: tableName, //业务表名
+                  main_value: curRow["main_value"], //表主键值
+                  business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                  business_code: that.fixedWFlow["id"], //业务编号
+                  process_name: that.fixedWFlow["items"], //流程名称
+                  employee: employee[0]["employee"],
+                  process_station: process_station[0]["item_text"],
+                  process_audit: firstAuditor,
+                  proponents: curRow["proponents"],
+                  content: curRow["content"],
+                  create_time: date,
+                  business_data: curRow.business_data
+                };
+              } else {
+                //提交审批相关处理信息
+                pnode = {
+                  id: manageAPI.queryRandomStr(32), //获取随机数
+                  table_name: tableName, //业务表名
+                  main_value: curRow["business_data_id"], //表主键值
+                  business_data_id: curRow["business_data_id"], //业务具体数据主键值
+                  business_code: "000000000", //业务编号
+                  process_name: "自由流程审批", //流程名称
+                  employee: firstAuditor,
+                  process_station: "自由流程审批",
+                  process_audit: "000000000",
+                  proponents: curRow["proponents"],
+                  content: curRow["content"],
+                  operate_time: date,
+                  create_time: date,
+                  business_data: curRow.business_data
+                };
+              }
+
+              //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+              var vflag = await manageAPI.queryApprovalExist(
+                tableName,
+                curRow["business_data_id"]
+              );
+
+              if (vflag) {
+                //数据库中已经存在此记录，提示用户无法提交审批
+                that.tipContent =
+                  "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
+              } else {
+                //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+                result = await manageAPI.postProcessLog(pnode);
+
+                //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+                result = await manageAPI.postProcessLogHistory(prLogHisNode);
+
+                //删除当前审批节点中的所有记录
+                result = await manageAPI.deleteProcessLog(
+                  tableName,
+                  prLogHisNode
+                );
+
+                //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
+                result = await manageAPI.patchTableData(
+                  tableName,
+                  curRow["business_data_id"],
+                  bpmStatus
+                );
+
+                //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
+                that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
+              }
+            }
+          }
+          //提示用户撤销审批操作成功
+          that.tipVisible = true;
+
+          //刷新页面数据
+          this.loadData();
+
+          //设置为view预览模式
+          this.pageType = "view";
+
+          //同意审批成功
+          return result;
+        })
+        .catch(async () => {
+          console.log("取消知会确认操作！");
+          return false;
+        });
     },
 
     /**
      * @function 驳回审批
      */
     async handleRejectWF() {
-      //设置this的别名
-      var that = this;
-      //返回结果
-      var result;
-      //获取当前用户
-      var userInfo = storage.getStore("cur_user");
-      //获取当前时间
-      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      //是否进行驳回审批操作?
+      this.$confirm("是否进行驳回审批操作?", "确认操作", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          //设置this的别名
+          var that = this;
+          //返回结果
+          var result;
+          //获取当前用户
+          var userInfo = storage.getStore("cur_user");
+          //获取当前时间
+          var date = tools.formatDate(
+            new Date().getTime(),
+            "yyyy-MM-dd hh:mm:ss"
+          );
 
-      //审批动作
-      var operation = operation || "驳回";
-      //审批意见
-      var message = message || that.curRow.idea_content || "驳回";
-      //当前被选中记录数据
-      var curRow = that.curRow;
-      //流程日志编号
-      var processLogID = tools.queryUrlString("processLogID");
-      //打印表单名称
-      var tableName =
-        curRow["table_name"] || tools.queryUrlString("table_name");
-      //流程状态
-      var bpmStatus = { bpm_status: "1" };
+          //审批动作
+          var operation = operation || "驳回";
+          //审批意见
+          var message = message || that.curRow.idea_content || "驳回";
+          //当前被选中记录数据
+          var curRow = that.curRow;
+          //流程日志编号
+          var processLogID = tools.queryUrlString("processLogID");
+          //打印表单名称
+          var tableName =
+            curRow["table_name"] || tools.queryUrlString("table_name");
+          //流程状态
+          var bpmStatus = { bpm_status: "1" };
 
-      //获取当前审批节点的所有数据
-      curRow = await manageAPI.queryProcessLogByID(tableName, processLogID);
+          //获取当前审批节点的所有数据
+          curRow = await manageAPI.queryProcessLogByID(tableName, processLogID);
 
-      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
-      if (
-        !(
-          tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-          tools.deNull(curRow["employee"]).includes(userInfo["realname"])
-        )
-      ) {
-        that.$message.warning(
-          "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
-        );
-        return false;
-      }
+          //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+          if (
+            !(
+              tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+              tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+            )
+          ) {
+            that.$message.warning(
+              "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
+            );
+            return false;
+          }
 
-      //获取当前审批节点的所有数据
-      curRow = await manageAPI.queryProcessLogByID(tableName, curRow["id"]);
+          //获取当前审批节点的所有数据
+          curRow = await manageAPI.queryProcessLogByID(tableName, curRow["id"]);
 
-      //获取关于此表单的所有当前审批日志信息
-      let node = await manageAPI.queryProcessLog(
-        tableName,
-        curRow["business_data_id"]
-      );
+          //获取关于此表单的所有当前审批日志信息
+          let node = await manageAPI.queryProcessLog(
+            tableName,
+            curRow["business_data_id"]
+          );
 
-      //遍历node,设置approve_user，action
-      _.each(node, function(item) {
-        //获取创建时间
-        let ctime = item["create_time"];
-        //设置审批人员
-        item["approve_user"] = userInfo["username"];
-        //设置操作动作
-        item["action"] = operation;
-        //设置操作时间
-        item["operate_time"] = date;
-        //设置操作意见
-        item["action_opinion"] = message;
-        //设置创建时间
-        item["create_time"] = tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
-      });
+          //遍历node,设置approve_user，action
+          _.each(node, function(item) {
+            //获取创建时间
+            let ctime = item["create_time"];
+            //设置审批人员
+            item["approve_user"] = userInfo["username"];
+            //设置操作动作
+            item["action"] = operation;
+            //设置操作时间
+            item["operate_time"] = date;
+            //设置操作意见
+            item["action_opinion"] = message;
+            //设置创建时间
+            item["create_time"] = tools.formatDate(
+              ctime,
+              "yyyy-MM-dd hh:mm:ss"
+            );
+          });
 
-      //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await manageAPI.postProcessLogHistory(node);
-
-      //删除当前审批节点中的所有记录
-      result = await manageAPI.deleteProcessLog(tableName, node);
-
-      //修改当前审批状态为待处理
-      result = await manageAPI.patchTableData(
-        tableName,
-        curRow["business_data_id"],
-        bpmStatus
-      );
-
-      //TODO 以前此表单的自由流程进入历史
-
-      //TODO 删除以前此表单对应的自由流程
-
-      //提示用户撤销审批操作成功
-      that.tipVisible = true;
-      that.tipContent = "驳回审批成功！";
-
-      //设置为view预览模式
-      this.pageType = "view";
-
-      //刷新页面数据
-      this.loadData();
-
-      //返回操作结果
-      return result;
-    },
-
-    /**
-     * @function 知会确认
-     */
-    async handleConfirmWF() {
-      //设置this的别名
-      var that = this;
-      //返回结果
-      var result;
-      //获取当前用户
-      var userInfo = storage.getStore("cur_user");
-      //获取当前时间
-      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
-      //审批动作
-      var operation = operation || "知会";
-      //审批意见
-      var message = message || that.curRow.idea_content || "知会确认";
-      //当前被选中记录数据
-      var curRow = that.curRow;
-      //流程日志编号
-      var processLogID = tools.queryUrlString("processLogID");
-      //打印表单名称
-      var tableName = tools.queryUrlString("table_name");
-      //定义流程状态
-      var bpmStatus = { bpm_status: "5" };
-      //获取当前审批节点的所有数据
-      curRow = await manageAPI.queryProcessLogInfByID(tableName, processLogID);
-      //设置本次知会确认创建时间
-      curRow["create_time"] = date;
-
-      //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
-      if (
-        tools.deNull(curRow["approve_user"]).length >=
-        tools.deNull(curRow["employee"]).length
-      ) {
-        //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
-        try {
           //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-          result = await manageAPI.postProcessLogHistory(curRow);
+          result = await manageAPI.postProcessLogHistory(node);
+
           //删除当前审批节点中的所有记录
-          result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
-          //如果当前已经进入流程，则需要将流程状态设置为5：已完成
+          result = await manageAPI.deleteProcessLog(tableName, node);
+
+          //修改当前审批状态为待处理
           result = await manageAPI.patchTableData(
             tableName,
             curRow["business_data_id"],
             bpmStatus
           );
-        } catch (error) {
-          console.log(error);
-        }
 
-        //显示弹框，提示知会成功
-        that.tipVisible = true;
-        that.tipContent = "知会确认成功！";
-        return true;
-      }
+          //TODO 以前此表单的自由流程进入历史
 
-      var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
-      var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
+          //TODO 删除以前此表单对应的自由流程
 
-      //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
-      if (
-        !(
-          tools
-            .deNull(employeeList)
-            .includes("," + userInfo["username"] + ",") ||
-          tools.deNull(employeeList).includes("," + userInfo["realname"] + ",")
-        )
-      ) {
-        that.$message.warning(
-          "您不在此知会记录的操作职员列中，无法进行确认操作！"
-        );
-        return false;
-      }
-
-      //已经知会确认过的用户，无法再次知会
-      if (
-        tools
-          .deNull(appoveUserList)
-          .includes("," + userInfo["username"] + ",") ||
-        tools.deNull(appoveUserList).includes("," + userInfo["realname"] + ",")
-      ) {
-        that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
-        return false;
-      }
-
-      //设置知会确认人员
-      curRow["approve_user"] =
-        tools.deNull(curRow["approve_user"]) +
-        (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
-        userInfo["username"];
-      //设置操作内容
-      curRow["action"] = operation;
-      //设置操作时间
-      curRow["operate_time"] = date;
-      //设置操作意见
-      curRow["action_opinion"] =
-        tools.deNull(curRow["action_opinion"]) +
-        (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
-        `${userInfo["username"]}:${message}`;
-
-      //保存当前数据到数据库中
-      await manageAPI.patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
-
-      //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
-      if (curRow["approve_user"].length >= curRow["employee"].length) {
-        
-        try {
-          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-          result = await manageAPI.postProcessLogHistory(curRow);
-          //删除当前审批节点中的所有记录
-          result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
-          //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
-          result = await manageAPI.patchTableData(
-            tableName,
-            curRow["business_data_id"],
-            bpmStatus
-          );
-        } catch (error) {
-          console.log(error);
-        }
-
-        //TODO 以前此表单的自由流程进入历史
-
-        //TODO 删除以前此表单对应的自由流程
-      }
-
-      that.tipVisible = true;
-      that.tipContent = "知会确认成功！";
-
-      //设置为view预览模式
-      this.pageType = "view";
-
-      //刷新页面数据
-      this.loadData();
-
-      //返回结果
-      return result;
-    },
-
-    /**
-     * @function 提交自由流程
-     */
-    async handleSubmitWF() {
-      //获取当前用户
-      var userInfo = storage.getStore("cur_user");
-      //获取审核用户记录
-      var wfUsers = this.wflowUsers;
-      //获取知会用户记录
-      var nfUsers = this.notifyUsers;
-      //获取审批用户，审批用户为终审节点
-      var approver = this.approveUser;
-      //当前时间
-      var ctime = tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
-
-      //审批用户不能为空
-      if (tools.deNull(approver) == "" && this.pageType == "workflowing") {
-        this.$confirm_({
-          title: "温馨提示",
-          content: "请选择审批用户!"
-        });
-        return false;
-      }
-      //如果审批用户含有多个，则不能提交
-      if (
-        tools.deNull(approver).includes(",") &&
-        this.pageType == "workflowing"
-      ) {
-        this.$confirm_({
-          title: "温馨提示",
-          content: "审批用户只能选择一个!"
-        });
-        return false;
-      }
-      //知会用户不能为空
-      if (tools.deNull(nfUsers) == "" && this.pageType == "notifying") {
-        //显示提示信息
-        this.$confirm_({
-          title: "温馨提示",
-          content: "请选择知会用户!"
-        });
-        return false;
-      }
-
-      //获取此表单，关联的流程业务模块
-      var tableName = tools.queryUrlString("table_name");
-
-      //自由流程节点
-      var node = {
-        id: manageAPI.queryRandomStr(32),
-        create_by: userInfo["username"],
-        create_time: ctime,
-        table_name: tableName,
-        main_key: tools.queryUrlString("id"),
-        audit_node: tools.deNull(wfUsers),
-        approve_node: tools.deNull(approver),
-        notify_node: tools.deNull(nfUsers)
-      };
-
-      //TODO 以前此表单的自由流程进入历史
-
-      //TODO 删除以前此表单对应的自由流程
-
-      //提交自由流程审批
-      if (tools.deNull(approver) != "" && this.pageType == "workflowing") {
-        //将审批用户记录，知会用户记录，写入相应的自由流程表单中
-        var result = await manageAPI.postProcessFreeNode(node);
-
-        const freeWFNode = JSON.parse(JSON.stringify(node));
-
-        //提交发起人审批相关处理信息
-        node = {
-          id: manageAPI.queryRandomStr(32), //获取随机数
-          table_name: tableName, //业务表名
-          main_value: tools.queryUrlString("id"), //表主键值
-          business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
-          business_code: "000000000", //业务编号
-          process_name: "自由流程审批", //流程名称
-          employee: userInfo["username"],
-          process_station: "自由流程审批",
-          process_audit: "000000000",
-          proponents: userInfo["username"],
-          approve_user: userInfo["username"],
-          action: "发起",
-          action_opinion: "发起自由流程",
-          content: this.curRow["content"],
-          operate_time: ctime,
-          create_time: ctime,
-          business_data: JSON.stringify(freeWFNode)
-        };
-
-        //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-        result = await manageAPI.postProcessLogHistory(node);
-
-        //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
-        var firstWflowUser =
-          tools.deNull(wfUsers) == ""
-            ? tools.deNull(approver)
-            : tools.deNull(wfUsers).split(",")[0];
-
-        //提交审批相关处理信息
-        node = {
-          id: manageAPI.queryRandomStr(32), //获取随机数
-          table_name: tableName, //业务表名
-          main_value: tools.queryUrlString("id"), //表主键值
-          business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
-          business_code: "000000000", //业务编号
-          process_name: "自由流程审批", //流程名称
-          employee: firstWflowUser,
-          process_station: "自由流程审批",
-          process_audit: "000000000",
-          proponents: userInfo["username"],
-          content: this.curRow["content"],
-          operate_time: ctime,
-          create_time: ctime,
-          business_data: JSON.stringify(node)
-        };
-
-        //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-        let vflag = await manageAPI.queryApprovalExist(
-          tableName,
-          this.curRow["id"]
-        );
-
-        if (vflag) {
-          //数据库中已经存在此记录，提示用户无法提交审批
-          this.$confirm_({
-            title: "温馨提示",
-            content: "待审记录中，已经存在此记录，无法再次提交审批！"
-          });
-
-          //刷新页面数据
-          this.loadData();
-
-          //操作完毕，返回结果
-          return true;
-        } else {
-          //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
-
-          //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-          result = await manageAPI.postProcessLog(node);
-          console.log(" 提交审批返回结果: " + JSON.stringify(result));
-
-          //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await manageAPI.patchTableData(
-            tableName,
-            this.curRow["id"],
-            {
-              bpm_status: "2"
-            }
-          );
-          //再次执行一次修改流程状态的操作，防止网络异常
-          result = await manageAPI.patchTableData(
-            tableName,
-            this.curRow["id"],
-            {
-              bpm_status: "2"
-            }
-          );
-
-          //弹出审批完成提示框s
-          this.$confirm("提交自由流程审批成功！", "操作成功", {
-            type: "success"
-          });
+          //提示用户撤销审批操作成功
+          that.tipVisible = true;
+          that.tipContent = "驳回审批成功！";
 
           //设置为view预览模式
           this.pageType = "view";
@@ -1430,84 +1184,440 @@ export default {
           //刷新页面数据
           this.loadData();
 
-          //操作完毕，返回结果
-          return true;
-        }
-      }
+          //返回操作结果
+          return result;
+        })
+        .catch(async () => {
+          console.log("取消知会确认操作！");
+          return false;
+        });
+    },
 
-      //提交知会信息确认
-      if (tools.deNull(nfUsers) != "" && this.pageType == "notifying") {
-        //获取当前表单信息
-        let curRow = await manageAPI.queryTableData(
-          tableName,
-          tools.queryUrlString("id")
-        );
+    /**
+     * @function 知会确认
+     */
+    async handleConfirmWF() {
+      //是否进行确认知会操作?
+      this.$confirm("是否进行确认知会操作?", "确认操作", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          //设置this的别名
+          var that = this;
+          //返回结果
+          var result;
+          //获取当前用户
+          var userInfo = storage.getStore("cur_user");
+          //获取当前时间
+          var date = tools.formatDate(
+            new Date().getTime(),
+            "yyyy-MM-dd hh:mm:ss"
+          );
+          //审批动作
+          var operation = operation || "知会";
+          //审批意见
+          var message = message || that.curRow.idea_content || "知会确认";
+          //当前被选中记录数据
+          var curRow = that.curRow;
+          //流程日志编号
+          var processLogID = tools.queryUrlString("processLogID");
+          //打印表单名称
+          var tableName = tools.queryUrlString("table_name");
+          //定义流程状态
+          var bpmStatus = { bpm_status: "5" };
+          //获取当前审批节点的所有数据
+          curRow = await manageAPI.queryProcessLogInfByID(
+            tableName,
+            processLogID
+          );
+          //设置本次知会确认创建时间
+          curRow["create_time"] = date;
 
-        //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
-        let loginfo = await manageAPI.queryPRLogInfTotal(
-          tools.queryUrlString("id")
-        );
+          //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+          if (
+            tools.deNull(curRow["approve_user"]).length >=
+            tools.deNull(curRow["employee"]).length
+          ) {
+            //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+            try {
+              //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+              result = await manageAPI.postProcessLogHistory(curRow);
+              //删除当前审批节点中的所有记录
+              result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
+              //如果当前已经进入流程，则需要将流程状态设置为5：已完成
+              result = await manageAPI.patchTableData(
+                tableName,
+                curRow["business_data_id"],
+                bpmStatus
+              );
+            } catch (error) {
+              console.log(error);
+            }
 
-        //如果当前流程状态没有审批通过，则无法发送知会信息
-        if (curRow["bpm_status"] != 4 && curRow["bpm_status"] != 5) {
-          this.$confirm_({
-            title: "温馨提示",
-            content: "此表单业务尚未审批通过，无法进行知会操作！"
-          });
-          return true;
-        }
+            //显示弹框，提示知会成功
+            that.tipVisible = true;
+            that.tipContent = "知会确认成功！";
+            return true;
+          }
 
-        //同一业务数据，每天最多知会3次
-        if (tools.deNull(loginfo) != "" && loginfo.today >= 3) {
-          this.$confirm_({
-            title: "温馨提示",
-            content: "同一业务数据，每天最多知会3次！"
-          });
-          return true;
-        }
+          var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
+          var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
 
-        //同一业务数据，总计最多知会10次
-        if (tools.deNull(loginfo) != "" && loginfo.total >= 10) {
-          this.$confirm_({
-            title: "温馨提示",
-            content: "同一业务数据，总计最多知会10次！"
-          });
-          return true;
-        }
+          //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+          if (
+            !(
+              tools
+                .deNull(employeeList)
+                .includes("," + userInfo["username"] + ",") ||
+              tools
+                .deNull(employeeList)
+                .includes("," + userInfo["realname"] + ",")
+            )
+          ) {
+            that.$message.warning(
+              "您不在此知会记录的操作职员列中，无法进行确认操作！"
+            );
+            return false;
+          }
 
-        //提交审批相关处理信息
-        var pnode = {
-          id: manageAPI.queryRandomStr(32), //获取随机数
-          table_name: tableName, //业务表名
-          main_value: tools.queryUrlString("id"), //表主键值
-          business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
-          business_code: "000000001", //业务编号
-          process_name: "自由流程知会", //流程名称
-          employee: tools.deNull(nfUsers),
-          process_station: "自由流程知会",
-          process_audit: "000000001",
-          operate_time: ctime,
-          create_time: ctime,
-          proponents: userInfo["username"],
-          content: this.curRow["content"],
-          business_data: JSON.stringify(this.curRow)
-        };
+          //已经知会确认过的用户，无法再次知会
+          if (
+            tools
+              .deNull(appoveUserList)
+              .includes("," + userInfo["username"] + ",") ||
+            tools
+              .deNull(appoveUserList)
+              .includes("," + userInfo["realname"] + ",")
+          ) {
+            that.$message.warning("您已经在此知会记录中，执行过确认操作了！");
+            return false;
+          }
 
-        //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-        result = await manageAPI.postProcessLogInformed(pnode);
+          //设置知会确认人员
+          curRow["approve_user"] =
+            tools.deNull(curRow["approve_user"]) +
+            (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
+            userInfo["username"];
+          //设置操作内容
+          curRow["action"] = operation;
+          //设置操作时间
+          curRow["operate_time"] = date;
+          //设置操作意见
+          curRow["action_opinion"] =
+            tools.deNull(curRow["action_opinion"]) +
+            (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+            `${userInfo["username"]}:${message}`;
 
-        //显示提示信息
-        this.$confirm("知会操作成功！", "操作成功", { type: "success" });
+          //保存当前数据到数据库中
+          await manageAPI.patchTableData(
+            "PR_LOG_INFORMED",
+            curRow["id"],
+            curRow
+          );
 
-        //设置为view预览模式
-        this.pageType = "view";
+          //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+          if (curRow["approve_user"].length >= curRow["employee"].length) {
+            try {
+              //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+              result = await manageAPI.postProcessLogHistory(curRow);
+              //删除当前审批节点中的所有记录
+              result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
+              //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+              result = await manageAPI.patchTableData(
+                tableName,
+                curRow["business_data_id"],
+                bpmStatus
+              );
+            } catch (error) {
+              console.log(error);
+            }
 
-        //刷新页面数据
-        this.loadData();
+            //TODO 以前此表单的自由流程进入历史
 
-        //返回操作结果
-        return true;
-      }
+            //TODO 删除以前此表单对应的自由流程
+          }
+
+          that.tipVisible = true;
+          that.tipContent = "知会确认成功！";
+
+          //设置为view预览模式
+          this.pageType = "view";
+
+          //刷新页面数据
+          this.loadData();
+
+          //返回结果
+          return result;
+        })
+        .catch(async () => {
+          console.log("取消知会确认操作！");
+          return false;
+        });
+    },
+
+    /**
+     * @function 提交自由流程
+     */
+    async handleSubmitWF() {
+      //是否确认提交此自由流程?
+      this.$confirm("是否确认提交此自由流程?", "确认操作", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          //获取当前用户
+          var userInfo = storage.getStore("cur_user");
+          //获取审核用户记录
+          var wfUsers = this.wflowUsers;
+          //获取知会用户记录
+          var nfUsers = this.notifyUsers;
+          //获取审批用户，审批用户为终审节点
+          var approver = this.approveUser;
+          //当前时间
+          var ctime = tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
+
+          //审批用户不能为空
+          if (tools.deNull(approver) == "" && this.pageType == "workflowing") {
+            this.$confirm_({
+              title: "温馨提示",
+              content: "请选择审批用户!"
+            });
+            return false;
+          }
+          //如果审批用户含有多个，则不能提交
+          if (
+            tools.deNull(approver).includes(",") &&
+            this.pageType == "workflowing"
+          ) {
+            this.$confirm_({
+              title: "温馨提示",
+              content: "审批用户只能选择一个!"
+            });
+            return false;
+          }
+          //知会用户不能为空
+          if (tools.deNull(nfUsers) == "" && this.pageType == "notifying") {
+            //显示提示信息
+            this.$confirm_({
+              title: "温馨提示",
+              content: "请选择知会用户!"
+            });
+            return false;
+          }
+
+          //获取此表单，关联的流程业务模块
+          var tableName = tools.queryUrlString("table_name");
+
+          //自由流程节点
+          var node = {
+            id: manageAPI.queryRandomStr(32),
+            create_by: userInfo["username"],
+            create_time: ctime,
+            table_name: tableName,
+            main_key: tools.queryUrlString("id"),
+            audit_node: tools.deNull(wfUsers),
+            approve_node: tools.deNull(approver),
+            notify_node: tools.deNull(nfUsers)
+          };
+
+          //TODO 以前此表单的自由流程进入历史
+
+          //TODO 删除以前此表单对应的自由流程
+
+          //提交自由流程审批
+          if (tools.deNull(approver) != "" && this.pageType == "workflowing") {
+            //将审批用户记录，知会用户记录，写入相应的自由流程表单中
+            var result = await manageAPI.postProcessFreeNode(node);
+
+            const freeWFNode = JSON.parse(JSON.stringify(node));
+
+            //提交发起人审批相关处理信息
+            node = {
+              id: manageAPI.queryRandomStr(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: tools.queryUrlString("id"), //表主键值
+              business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+              business_code: "000000000", //业务编号
+              process_name: "自由流程审批", //流程名称
+              employee: userInfo["username"],
+              process_station: "自由流程审批",
+              process_audit: "000000000",
+              proponents: userInfo["username"],
+              approve_user: userInfo["username"],
+              action: "发起",
+              action_opinion: "发起自由流程",
+              content: this.curRow["content"],
+              operate_time: ctime,
+              create_time: ctime,
+              business_data: JSON.stringify(freeWFNode)
+            };
+
+            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+            result = await manageAPI.postProcessLogHistory(node);
+
+            //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
+            var firstWflowUser =
+              tools.deNull(wfUsers) == ""
+                ? tools.deNull(approver)
+                : tools.deNull(wfUsers).split(",")[0];
+
+            //提交审批相关处理信息
+            node = {
+              id: manageAPI.queryRandomStr(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: tools.queryUrlString("id"), //表主键值
+              business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+              business_code: "000000000", //业务编号
+              process_name: "自由流程审批", //流程名称
+              employee: firstWflowUser,
+              process_station: "自由流程审批",
+              process_audit: "000000000",
+              proponents: userInfo["username"],
+              content: this.curRow["content"],
+              operate_time: ctime,
+              create_time: ctime,
+              business_data: JSON.stringify(node)
+            };
+
+            //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+            let vflag = await manageAPI.queryApprovalExist(
+              tableName,
+              this.curRow["id"]
+            );
+
+            if (vflag) {
+              //数据库中已经存在此记录，提示用户无法提交审批
+              this.$confirm_({
+                title: "温馨提示",
+                content: "待审记录中，已经存在此记录，无法再次提交审批！"
+              });
+
+              //刷新页面数据
+              this.loadData();
+
+              //操作完毕，返回结果
+              return true;
+            } else {
+              //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
+
+              //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+              result = await manageAPI.postProcessLog(node);
+              console.log(" 提交审批返回结果: " + JSON.stringify(result));
+
+              //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
+              result = await manageAPI.patchTableData(
+                tableName,
+                this.curRow["id"],
+                {
+                  bpm_status: "2"
+                }
+              );
+              //再次执行一次修改流程状态的操作，防止网络异常
+              result = await manageAPI.patchTableData(
+                tableName,
+                this.curRow["id"],
+                {
+                  bpm_status: "2"
+                }
+              );
+
+              //弹出审批完成提示框s
+              this.$confirm("提交自由流程审批成功！", "操作成功", {
+                type: "success"
+              });
+
+              //设置为view预览模式
+              this.pageType = "view";
+
+              //刷新页面数据
+              this.loadData();
+
+              //操作完毕，返回结果
+              return true;
+            }
+          }
+
+          //提交知会信息确认
+          if (tools.deNull(nfUsers) != "" && this.pageType == "notifying") {
+            //获取当前表单信息
+            let curRow = await manageAPI.queryTableData(
+              tableName,
+              tools.queryUrlString("id")
+            );
+
+            //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
+            let loginfo = await manageAPI.queryPRLogInfTotal(
+              tools.queryUrlString("id")
+            );
+
+            //如果当前流程状态没有审批通过，则无法发送知会信息
+            if (curRow["bpm_status"] != 4 && curRow["bpm_status"] != 5) {
+              this.$confirm_({
+                title: "温馨提示",
+                content: "此表单业务尚未审批通过，无法进行知会操作！"
+              });
+              return true;
+            }
+
+            //同一业务数据，每天最多知会3次
+            if (tools.deNull(loginfo) != "" && loginfo.today >= 3) {
+              this.$confirm_({
+                title: "温馨提示",
+                content: "同一业务数据，每天最多知会3次！"
+              });
+              return true;
+            }
+
+            //同一业务数据，总计最多知会10次
+            if (tools.deNull(loginfo) != "" && loginfo.total >= 10) {
+              this.$confirm_({
+                title: "温馨提示",
+                content: "同一业务数据，总计最多知会10次！"
+              });
+              return true;
+            }
+
+            //提交审批相关处理信息
+            var pnode = {
+              id: manageAPI.queryRandomStr(32), //获取随机数
+              table_name: tableName, //业务表名
+              main_value: tools.queryUrlString("id"), //表主键值
+              business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+              business_code: "000000001", //业务编号
+              process_name: "自由流程知会", //流程名称
+              employee: tools.deNull(nfUsers),
+              process_station: "自由流程知会",
+              process_audit: "000000001",
+              operate_time: ctime,
+              create_time: ctime,
+              proponents: userInfo["username"],
+              content: this.curRow["content"],
+              business_data: JSON.stringify(this.curRow)
+            };
+
+            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+            result = await manageAPI.postProcessLogInformed(pnode);
+
+            //显示提示信息
+            this.$confirm("知会操作成功！", "操作成功", { type: "success" });
+
+            //设置为view预览模式
+            this.pageType = "view";
+
+            //刷新页面数据
+            this.loadData();
+
+            //返回操作结果
+            return true;
+          }
+        })
+        .catch(async () => {
+          console.log("取消知会确认操作！");
+          return false;
+        });
     }
   }
 };
