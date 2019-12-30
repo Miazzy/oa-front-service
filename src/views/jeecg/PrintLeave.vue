@@ -273,7 +273,9 @@
               >
                 <iframe
                   v-print="'#printContent'"
-                  class="no-print"
+                  class="no-print fileview-iframe"
+                  name="fileviewFrame"
+                  id="fileviewFrame"
                   style="display:block;width:88%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
                   :src="this.curRow.fileURL"
                 />
@@ -543,6 +545,7 @@ import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
 import * as _ from "underscore";
+import $ from "jquery";
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -597,13 +600,24 @@ export default {
     };
   },
 
-  async created() {},
+  async created() {
+    //等待一段时间，文档加载完毕后，才可隐藏图标
+    setTimeout(() => {
+      debugger;
+      $(".fa-file-image-o", $("#fileviewFrame")).remove();
+    }, 6000);
+  },
 
   async mounted() {
     //查询当前节点信息
     let that = await manageAPI.watchFormLeave(this);
     //获取返回结果
     let result = await manageAPI.colorProcessDetail(that, this);
+    //等待一段时间，文档加载完毕后，才可隐藏图标
+    setTimeout(() => {
+      debugger;
+      $(".fa-file-image-o", $("#fileviewFrame")).remove();
+    }, 6000);
     //返回结果
     return result;
   },
@@ -614,6 +628,11 @@ export default {
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
       let result = await manageAPI.colorProcessDetail(that, this);
+      //等待一段时间，文档加载完毕后，才可隐藏图标
+      setTimeout(() => {
+        debugger;
+        $(".fa-file-image-o", $("#fileviewFrame")).remove();
+      }, 6000);
       //返回结果
       return result;
     }

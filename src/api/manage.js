@@ -1471,7 +1471,6 @@ export async function watchFormLeave(that) {
 
     //如果不是表单详情页面，则直接返回
     if(!(path.includes('/workflow/view') || path.includes('/basewflow/view'))){
-        debugger
         return false;
     }
 
@@ -1668,7 +1667,7 @@ export async function watchFormLeave(that) {
  * @function 知会/流程通知转移到历史记录中
  */
 export async function transWflowToHistory(tableName , id){
-    debugger;
+
     //定义返回结果
     var result = null;
     //执行转历史操作
@@ -1679,12 +1678,10 @@ export async function transWflowToHistory(tableName , id){
         var messageNode = await queryProcessLogInformed(tableName, id);
         //如果审批日志信息不为空，则将审批日志信息转化为历史数据
         if(deNull(wfnode) != ''){
-            debugger
             result = await transWflowHistoring(tableName , wfnode);
         }
         //如果知会日志信息不为空，则将知会日志信息转化为历史数据
         if(deNull(messageNode) != ''){
-            debugger
             result = await transWflowHistoring(tableName , messageNode);
         }
     } catch (error) {
@@ -1698,7 +1695,6 @@ export async function transWflowToHistory(tableName , id){
  * @function 知会/流程通知转移到历史记录的子操作
  */
 export async function transWflowHistoring(tableName , wfnode){
-    debugger
     //定义返回结果
     var result = null;
 
@@ -1917,6 +1913,7 @@ export function queryImageURL(text) {
  * @function 设置详情页面图片展示样式
  */
 export function changeImageCSS() {
+    //设置图片预览CSS样式
     try {
         setTimeout(() => {
             //图片预览，Css设置Float:left
@@ -1928,6 +1925,15 @@ export function changeImageCSS() {
         }, 10);
     } catch (error) {
         console.log("change image css error :" + error);
+    }
+    //隐藏文档预览服务的图标
+    try {
+        //等待一段时间，文档加载完毕后，才可隐藏图标
+        setTimeout(() => {
+            $(".fa-file-image-o",$('#fileviewFrame')).remove();
+        },3000)
+    } catch (error) {
+        console.log("hidden image icon of fileview framework");
     }
 }
 
@@ -2046,6 +2052,7 @@ export async function colorProcessDetail(that, main) {
     } catch (error) {
         console.log("change image css error :" + error);
     }
+    
     //返回设置结果
     return main;
 }
