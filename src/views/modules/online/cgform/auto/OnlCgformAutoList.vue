@@ -1409,7 +1409,6 @@ export default {
             that.tipContent =
               "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
           } else {
-            debugger
             //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
@@ -1516,6 +1515,9 @@ export default {
       that.loadData();
       //打印驳回审批处理日志
       console.log("驳回审批成功");
+
+      //返回结果
+      return result;
     },
 
     /**
@@ -1586,6 +1588,17 @@ export default {
         var employee = await queryProcessNodeEmployee(firstAuditor);
         //流程岗位
         var process_station = await queryProcessNodeProcName(firstAuditor);
+
+        //没有获取到审核节点的用户信息，请在流程设计->节点配置中设置审核节点的审核用户
+        if (Array.isArray(employee) && employee.length == 0) {
+          this.$notification["error"]({
+            message: "温馨提示",
+            description:
+              "没有获取到审核节点的用户信息，请在流程设计->节点配置中设置审核节点的审核用户！",
+            duration: 4
+          });
+          return false;
+        }
 
         //提交审批相关处理信息
         var node = {
@@ -1676,6 +1689,9 @@ export default {
         console.log(
           " tableName : " + tableName + " \n rights : " + JSON.stringify(rights)
         );
+
+        //返回处理结果
+        return true;
       }
     },
 

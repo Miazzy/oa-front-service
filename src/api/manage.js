@@ -1271,11 +1271,26 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
     //查询考勤异常表的子表信息
     if (tableName == 'BS_ATTENDANCE') {
         try {
-            var data = await queryTableDataByField(
-                tableName + '_DETAILS',
-                foreignKey,
-                id
-            );
+            var data = [];
+            //查询考勤异常子表单数据
+            try {
+                data = await queryTableDataByField(
+                    tableName + '_DETAILS',
+                    foreignKey,
+                    id
+                );
+            } catch (error) {
+                console.log('查询考勤异常子表单数据异常：' + error);
+            }
+            //遍历考勤异常子表单数据并设置序号
+            try {
+                data.forEach(function(item , index){
+                    item.no = index + 1;
+                });
+            } catch (error) {
+                console.log('考勤异常子表单，设置序号异常：' + error)
+            }
+            //设置考勤异常子表单数据
             config['BS_ATTENDANCE'] = data;
         } catch (error) {
             console.log('查询考勤异常表的子表信息异常：' + error);

@@ -323,7 +323,7 @@
           <a-col
             :span="24"
             style="margin-top:10px;margin-bottom:20px;"
-            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
+            v-if="(curRow.bpm_status != 1 || workflows.length > 0 ) && (pageType != 'print')"
           >
             <div style="margin-bottom:20px;">流程进度</div>
             <template>
@@ -599,9 +599,7 @@ export default {
     };
   },
 
-  async created() {
-    
-  },
+  async created() {},
 
   async mounted() {
     //查询当前节点信息
