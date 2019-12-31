@@ -1957,6 +1957,8 @@ export function queryOfficeURL(text) {
         fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = deNull(text).toLowerCase();
+            //定义下载地址
+            var download = window._CONFIG['downloadURL'] + '/';
 
             //获取图片标识
             var flag =
@@ -1977,17 +1979,18 @@ export function queryOfficeURL(text) {
                 console.log('设置文档名称异常：' + error);
             }
 
-            //获取文档真实下载地址
+            //获取文档真实预览地址
             text = window._CONFIG['previewURL'] + window._CONFIG['downloadURL'] + '/' + encodeURIComponent(text);
-
+            //获取文档真实下载地址
+            download = download + text;
 
             //如果文件路径为文档地址，则存入officeList中
             if (!flag) {
                 //将数据存入officeList中
                 officeList.push({
-                    src: text,
                     title: '文档',
-                    msrc: window._CONFIG['downloadURL'] + '/' + text,
+                    src: text,
+                    msrc: download,
                     name: name,
                 });
             }
