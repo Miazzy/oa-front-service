@@ -1979,7 +1979,8 @@ export async function queryCurNodePageType(pageType) {
             //获取页面类型
             pageType = deNull(flag) == '' ? 'view' : pageType;
         } else if (type == 'workflowing') {
-
+            //
+            console.log('TODO 暂时不做');
         }
     } catch (error) {
         console.log('获取当前节点是否有知会或者审批节点信息异常:' + error)
