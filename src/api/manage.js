@@ -1978,7 +1978,8 @@ export function queryOfficeURL(text) {
             }
 
             //获取文档真实下载地址
-            text = window._CONFIG['downloadURL'] + '/' + text;
+            text = window._CONFIG['previewURL'] + window._CONFIG['downloadURL'] + '/' + encodeURIComponent(text);
+
 
             //如果文件路径为文档地址，则存入officeList中
             if (!flag) {
@@ -1986,6 +1987,7 @@ export function queryOfficeURL(text) {
                 officeList.push({
                     src: text,
                     title: '文档',
+                    msrc: window._CONFIG['downloadURL'] + '/' + text,
                     name: name,
                 });
             }
