@@ -1803,17 +1803,17 @@ export function queryFileViewURL(text) {
         var xurl = encodeURIComponent(url);
 
         //获取文件后缀
-        var suffix = deNull(text)
-            .substring(text.lastIndexOf('.'), text.length)
+        var suffix = deNull(url)
+            .substring(url.lastIndexOf('.'), url.length)
             .toLowerCase();
 
         //如果word文档，则使用微软API打开
         url =
             deNull(suffix).includes('doc') ||
-            suffix.includes('ppt') ||
-            suffix.includes('xls') ?
+            deNull(suffix).includes('ppt') ||
+            deNull(suffix).includes('xls') ?
             officeURL + xurl :
-            url;
+            url;  
 
         //如果pdf文档，则浏览器上直接打开
         url = suffix.includes('pdf') ? url : url;
@@ -2127,7 +2127,6 @@ export async function colorProcessDetail(that, main) {
     } catch (error) {
         console.log('set curRow OfficeURL error :' + error);
     }
-    debugger
     try {
         main.slides = queryImageURL(main.curRow.files);
     } catch (error) {

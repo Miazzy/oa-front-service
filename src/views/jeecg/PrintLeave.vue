@@ -285,16 +285,6 @@
 
           <a-col
             :span="24"
-            style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('image')"
-          >
-            <div style="width:98%;">
-              <a-divider style="width:98%;" dashed>·</a-divider>
-            </div>
-          </a-col>
-
-          <a-col
-            :span="24"
             style="margin-top:15px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
@@ -321,6 +311,16 @@
                 </div>
               </div>
             </template>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:10px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('image')"
+          >
+            <div style="width:98%;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
           </a-col>
 
           <a-col
