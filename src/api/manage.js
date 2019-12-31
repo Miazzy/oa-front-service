@@ -224,7 +224,7 @@ export async function queryApprovalExist(tableName, businessID) {
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
 
-        vflag = res.body.length > 0 ? true : false;
+        vflag = res.body.length > 1 ? true : false;
 
         return vflag;
     } catch (err) {

@@ -545,7 +545,6 @@ import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
 import * as _ from "underscore";
-import $ from "jquery";
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -601,11 +600,7 @@ export default {
   },
 
   async created() {
-    //等待一段时间，文档加载完毕后，才可隐藏图标
-    setTimeout(() => {
-      debugger;
-      $(".fa-file-image-o", $("#fileviewFrame")).remove();
-    }, 6000);
+    
   },
 
   async mounted() {
@@ -613,11 +608,6 @@ export default {
     let that = await manageAPI.watchFormLeave(this);
     //获取返回结果
     let result = await manageAPI.colorProcessDetail(that, this);
-    //等待一段时间，文档加载完毕后，才可隐藏图标
-    setTimeout(() => {
-      debugger;
-      $(".fa-file-image-o", $("#fileviewFrame")).remove();
-    }, 6000);
     //返回结果
     return result;
   },
@@ -628,11 +618,6 @@ export default {
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
       let result = await manageAPI.colorProcessDetail(that, this);
-      //等待一段时间，文档加载完毕后，才可隐藏图标
-      setTimeout(() => {
-        debugger;
-        $(".fa-file-image-o", $("#fileviewFrame")).remove();
-      }, 6000);
       //返回结果
       return result;
     }
