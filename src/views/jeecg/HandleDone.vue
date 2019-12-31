@@ -1,59 +1,114 @@
 <template>
   <a-card :bordered="false" :class="{'abcdefg':true}">
-    <div class="no-print" style="text-align: right">
-      <a-button v-print="'#printContent'" ghost type="primary">打印</a-button>
-    </div>
-    <section ref="print" id="printContent" class="abcdefg">
-      <div style="text-align: center">
-        <p style="font-size: 24px;font-weight: 800">打印测试表单</p>
-      </div>
-      <!--签字-->
-      <a-col :md="24" :sm="24">
-        <div class="sign" style="text-align: left;height: inherit">
-          <a-col :span="24">
-            <span>打印人员:</span>
-            <a-input style="width: 30%" v-model="printer" />
-            <span style="margin-left: 12.5%">打印日期:</span>
-            <a-input style="width: 30%" v-model="printTime" />
-          </a-col>
-          <a-col :span="24"></a-col>
-          <a-col :span="24" style="margin-top: 20px">
-            <span>打印内容:</span>
-            <a-input style="width: 80%" v-model="printContent" />
-          </a-col>
-          <a-col :span="24" style="margin-top: 20px">
-            <span>打印目的:</span>
-            <a-input style="width: 80%" v-model="printReason" />
-          </a-col>
-          <a-col style="margin-top: 20px" :span="24">
-            <span>打印图片:</span>
-            <br />
-            <a-upload
-              action="/jsonplaceholder.typicode.com/posts/"
-              listType="picture-card"
-              :fileList="fileList"
-              @preview="handlePreview"
-              @change="handleChange"
-            >
-              <div v-if="fileList.length < 3">
-                <a-icon type="plus" />
-                <div class="ant-upload-text">Upload</div>
-              </div>
-            </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-              <img alt="example" style="width: 100%" :src="previewImage" />
-            </a-modal>
-          </a-col>
+    <!--我的已办-->
+    <a-col :md="24" :sm="24">
+      <template>
+        <div style="top:50px;">
+          <a-spin :spinning="spinning" style="top:50px;">
+            <div class="spin-content"></div>
+          </a-spin>
         </div>
-      </a-col>
-    </section>
+        <a-table
+          :columns="columns"
+          :dataSource="dataDoneList"
+          :pagination="true"
+          style="padding-top:-10px;margin-top:-10px"
+        >
+          <a slot="type" slot-scope="text, record">
+            <a-menu-item>
+              <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
+                <span v-html="record.type"></span>
+              </a>
+            </a-menu-item>
+          </a>
+
+          <a slot="topic" slot-scope="text, record">
+            <a-menu-item>
+              <a
+                :data-info="JSON.stringify(record)"
+                @click="handleDetailWF(record)"
+                style="color:#303030;"
+              >
+                <span style="color:#303030;" v-html="record.topic"></span>
+              </a>
+            </a-menu-item>
+          </a>
+
+          <span slot="name" slot-scope="text , record">
+            <a-tag
+              :color=" (record.name.length > 5 ? 'geekblue' : 'green')"
+              :key="record.name"
+              @click="handleDetailWF(record)"
+            >{{record.name}}</a-tag>
+          </span>
+
+          <span slot="username" slot-scope="text , record">
+            <a-tag
+              v-for="tag in record.username"
+              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+              :key="tag"
+            >{{tag}}</a-tag>
+          </span>
+
+          <span slot="create_time" slot-scope="text , record">
+            <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
+          </span>
+        </a-table>
+      </template>
+    </a-col>
   </a-card>
   <!--</page-layout>-->
 </template>
 <script>
-import ACol from 'ant-design-vue/es/grid/Col'
-import ARow from 'ant-design-vue/es/grid/Row'
-import ATextarea from 'ant-design-vue/es/input/TextArea'
+import ACol from "ant-design-vue/es/grid/Col";
+import ARow from "ant-design-vue/es/grid/Row";
+import ATextarea from "ant-design-vue/es/input/TextArea";
+import { queryProcessLogWait, queryProcessLogDone } from "@/api/manage";
+import { getStore } from "@/utils/storage";
+
+const columns = [
+  {
+    title: "办理事项",
+    dataIndex: "type",
+    key: "type",
+    slots: { title: "type" },
+    width: 100,
+    align: "center",
+    scopedSlots: { customRender: "type" }
+  },
+  {
+    title: "业务",
+    width: 200,
+    align: "center",
+    key: "name",
+    dataIndex: "name",
+    scopedSlots: { customRender: "name" }
+  },
+  {
+    title: "主题",
+    width: 400,
+    align: "left",
+    key: "topic",
+    dataIndex: "topic",
+    scopedSlots: { customRender: "topic" }
+  },
+  {
+    title: "操作人员",
+    key: "username",
+    width: 300,
+    align: "left",
+    dataIndex: "username",
+    scopedSlots: { customRender: "username" }
+  },
+  {
+    title: "创建时间",
+    width: 150,
+    align: "center",
+    key: "create_time",
+    dataIndex: "create_time",
+    scopedSlots: { customRender: "create_time" }
+  }
+];
 
 export default {
   components: {
@@ -61,16 +116,16 @@ export default {
     ARow,
     ACol
   },
-  name: 'Printgzsld',
+  name: "Printgzsld",
   props: {
     reBizCode: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
     return {
-      columns: [{}],
+      columns: columns,
       labelCol: {
         xs: { span: 24 },
         sm: { span: 2 }
@@ -79,52 +134,74 @@ export default {
         xs: { span: 24 },
         sm: { span: 8 }
       },
-      printer: '张三',
-      printTime: '2019-02-01 12:00:00',
-      printContent: '打印内容就是,做一个打印测试',
-      printReason: '做一个打印测试',
       previewVisible: false,
-      previewImage: '',
-      fileList: [
-        {
-          uid: '-1',
-          name: 'xxx.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-        },
-        {
-          uid: '-2',
-          name: 'pic1.png',
-          status: 'done',
-          url: 'https://www.gizbot.com/img/2016/11/whatsapp-error-lead-image-08-1478607387.jpg'
-        }
-      ],
+      previewImage: "",
+      fileList: [],
       url: {
-        loadApplicant: '/sps/register/loadApplicants',
-        loadRegisterFiles: '/sps/register/getRegisterFilesConfig'
-      }
-    }
+        loadApplicant: "/sps/register/loadApplicants",
+        loadRegisterFiles: "/sps/register/getRegisterFilesConfig"
+      },
+      activeKey: 2,
+      dataWaitList: [],
+      dataDoneList: [],
+      spinning: false
+    };
   },
-  created() {
-    this.getDate()
+  async created() {
+    this.getDate();
   },
   methods: {
-    loadData() {},
-    getDate() {
-      // 当前时间
+    async loadData() {},
+    async getDate() {
+      //查询我的已办，我的待办
+      if (this.activeKey == 1 || this.activeKey == 2) {
+        //获取用户信息
+        let userInfo = getStore("cur_user");
+        let username = userInfo["username"];
+        let realname = userInfo["realname"];
+        if (this.activeKey == 1) {
+          //获取我的待办数据
+          this.dataWaitList = await queryProcessLogWait(username, realname);
+        } else if (this.activeKey == 2) {
+          //获取我的已办数据
+          this.dataDoneList = await queryProcessLogDone(username, realname);
+        }
+      }
     },
-    handleCancel() {
-      this.previewVisible = false
+    async handleCancel() {
+      this.previewVisible = false;
     },
-    handlePreview(file) {
-      this.previewImage = file.url || file.thumbUrl
-      this.previewVisible = true
+    async handlePreview(file) {
+      this.previewImage = file.url || file.thumbUrl;
+      this.previewVisible = true;
     },
-    handleChange({ fileList }) {
-      this.fileList = fileList
+    async handleChange({ fileList }) {
+      this.fileList = fileList;
+    },
+    /**
+     * @function 查看详情页面
+     */
+    async handleDetailWF(record) {
+      //获取当前操作对象
+      var curRow = JSON.parse(JSON.stringify(record));
+
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //获取选中记录的所属表单名称
+      var tableName = curRow["tname"];
+
+      //获取操作类型
+      var type = curRow["type"] == "知会" ? "notify" : "workflow";
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&processLogID=${curRow.pid}&user=${userInfo.username}&type=${type}`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
     }
   }
-}
+};
 </script>
 <style scoped>
 .abcdefg .ant-card-body {

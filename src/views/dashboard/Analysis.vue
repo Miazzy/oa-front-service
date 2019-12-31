@@ -303,7 +303,7 @@ for (let i = 0; i < 12; i += 1) {
     y: Math.floor(Math.random() * 1000) + 200
   });
 }
-debugger;
+
 const columns = [
   {
     title: "办理事项",
@@ -441,7 +441,6 @@ export default {
      * @function 查看详情页面
      */
     async handleDetailWF(record) {
-
       //获取当前操作对象
       var curRow = JSON.parse(JSON.stringify(record));
 

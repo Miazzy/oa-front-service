@@ -271,6 +271,27 @@ export default {
       this.$router.push(`/account/center`);
     },
     /**
+     * @function 跳转到我的待办
+     */
+    handleWait() {
+      //跳转到我的待办
+      this.$router.push(`/workflow/waiting`);
+    },
+    /**
+     * @function 跳转到我的已办
+     */
+    handleDone() {
+      //跳转到我的已办
+      this.$router.push(`/workflow/done`);
+    },
+    /**
+     * @function 跳转到我的收藏
+     */
+    handleCollect() {
+      //跳转到我的收藏
+      this.$router.push(`/workflow/collection`);
+    },
+    /**
      * @function 跳转到消息通知页面
      */
     handleMessage() {
