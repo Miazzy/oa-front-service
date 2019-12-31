@@ -768,13 +768,13 @@ export async function deleteProcessLogInf(tableName, node) {
         //去掉开头的逗号
         ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     try {
         deleteURL = `${api.domain}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     try {
@@ -882,14 +882,14 @@ export async function postProcessLogInformed(node) {
             node = node[0];
         }
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     //构建知会表提交数据的URL
     try {
         postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
     } catch (error) {
-        console.error(err);
+        console.error(error);
     }
 
     //发送post请求，保存数据
@@ -1398,6 +1398,7 @@ export async function queryWorkflows(business_data_id) {
             item.employee
           )} , 审批：待处理 , 时间：-- `,
                     status: 'wait',
+                    index: index,
                 };
                 workflows.push(node);
             });
@@ -1422,6 +1423,7 @@ export async function queryWorkflows(business_data_id) {
             optime
           )} `,
                     status: 'sound',
+                    index: index,
                 };
                 workflows.push(node);
             });
@@ -1813,7 +1815,7 @@ export function queryFileViewURL(text) {
             deNull(suffix).includes('ppt') ||
             deNull(suffix).includes('xls') ?
             officeURL + xurl :
-            url;  
+            url;
 
         //如果pdf文档，则浏览器上直接打开
         url = suffix.includes('pdf') ? url : url;
@@ -1974,13 +1976,17 @@ export function queryOfficeURL(text) {
 
             //设置文档名称
             try {
-                name = name.replace('files/','').split('/')[1];    
+                name = name.replace('files/', '').split('/')[1];
             } catch (error) {
                 console.log('设置文档名称异常：' + error);
             }
 
             //获取文档真实预览地址
-            text = window._CONFIG['previewURL'] + window._CONFIG['downloadURL'] + '/' + encodeURIComponent(text);
+            text =
+                window._CONFIG['previewURL'] +
+                window._CONFIG['downloadURL'] +
+                '/' +
+                encodeURIComponent(text);
             //获取文档真实下载地址
             download = download + text;
 
@@ -2121,7 +2127,6 @@ export async function colorProcessDetail(that, main) {
     } catch (error) {
         console.log('set curRow fileURL error :' + error);
     }
-    debugger
     try {
         main.curRow.officeList = queryOfficeURL(main.curRow.files);
     } catch (error) {

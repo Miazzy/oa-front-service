@@ -31,6 +31,7 @@
 import GlobalLayout from "@/components/page/GlobalLayout";
 import Contextmenu from "@/components/menu/Contextmenu";
 import { mixin, mixinDevice } from "@/utils/mixin.js";
+import { deNull } from "@/utils/util";
 import _ from "underscore";
 
 const indexKey = `/dashboard/analysis`;
@@ -50,6 +51,8 @@ const titleKV = {
   e412b58db17b4cbf8cb9833c118c2d3b: "印章借用",
   "62f7122c73c244119e5d4ec8aa170a3d": "出差申请"
 };
+
+//
 
 export default {
   name: "TabLayout",
@@ -140,7 +143,7 @@ export default {
     }
 
     this.activePage = this.$route.fullPath;
-    
+
     //把remove函数，设置到$root上
     this.$root.$tabs = this;
     this.$root.$tabs.closeTab = this.$options.methods.closeTabPage;
@@ -174,10 +177,26 @@ export default {
       }
     },
     activePage: function(key) {
-      let index = this.linkList.lastIndexOf(key);
-      let waitRouter = this.pageList[index];
-      //debugger
-      this.$router.push(Object.assign({}, waitRouter));
+      //获取激活Index
+      var index = this.linkList.lastIndexOf(key);
+      //获取激活对象
+      var waitRouter = this.pageList[index];
+      //获取拷贝对象
+      var obj = Object.assign({}, waitRouter);
+      //设置动态路由
+      try {
+        if (deNull(titleKV[obj.params.code]) != "") {
+          this.dynamicRouterShow(key, titleKV[obj.params.code]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      //跳转到激活页面
+      try {
+        this.$router.push(obj.fullPath);
+      } catch (error) {
+        console.log(error);
+      }
     },
     multipage: function(newVal) {
       if (!newVal) {
@@ -185,10 +204,7 @@ export default {
         this.pageList = [this.$route];
       }
     },
-    $root:()=>{
-      debugger
-    },
-    
+    $root: () => {}
   },
   methods: {
     changePage(key) {
@@ -200,7 +216,6 @@ export default {
       this[action](key);
     },
     remove(key) {
-      debugger;
       if (key == indexKey) {
         this.$message.warning("首页不能关闭!");
         return;
@@ -322,8 +337,7 @@ export default {
         );
       }
     },
-    closeTabPage(key){
-      debugger;
+    closeTabPage(key) {
       if (key == indexKey) {
         this.$message.warning("首页不能关闭!");
         return;
@@ -340,10 +354,17 @@ export default {
         this.$message.warning("这是最后一页，不能再关闭了啦");
         return;
       }
-      this.$root.$tabs.pageList = this.$root.$tabs.pageList.filter(item => item.fullPath !== key);
+      this.$root.$tabs.pageList = this.$root.$tabs.pageList.filter(
+        item => item.fullPath !== key
+      );
       let index = this.$root.$tabs.linkList.indexOf(key);
-      this.$root.$tabs.linkList = this.$root.$tabs.linkList.filter(item => item !== key);
-      index = index >= this.$root.$tabs.linkList.length ? this.$root.$tabs.linkList.length - 1 : index;
+      this.$root.$tabs.linkList = this.$root.$tabs.linkList.filter(
+        item => item !== key
+      );
+      index =
+        index >= this.$root.$tabs.linkList.length
+          ? this.$root.$tabs.linkList.length - 1
+          : index;
       this.$root.$tabs.activePage = this.$root.$tabs.linkList[index];
     }
   }
