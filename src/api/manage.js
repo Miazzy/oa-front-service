@@ -1967,6 +1967,16 @@ export function queryOfficeURL(text) {
                 ptext.includes('webp') ||
                 ptext.includes('png');
 
+            //文档名称
+            var name = ptext;
+
+            //设置文档名称
+            try {
+                name = name.replace('files/','').split('/')[1];    
+            } catch (error) {
+                console.log('设置文档名称异常：' + error);
+            }
+
             //获取文档真实下载地址
             text = window._CONFIG['downloadURL'] + '/' + text;
 
@@ -1975,10 +1985,12 @@ export function queryOfficeURL(text) {
                 //将数据存入officeList中
                 officeList.push({
                     src: text,
-                    msrc: window._CONFIG['thumborURL'] + encodeURIComponent(text),
                     title: '文档',
+                    name: name,
                 });
             }
+
+            //返回过滤结果
             return flag;
         });
     } catch (error) {
@@ -2104,11 +2116,13 @@ export async function colorProcessDetail(that, main) {
     } catch (error) {
         console.log('set curRow fileURL error :' + error);
     }
+    debugger
     try {
         main.curRow.officeList = queryOfficeURL(main.curRow.files);
     } catch (error) {
         console.log('set curRow OfficeURL error :' + error);
     }
+    debugger
     try {
         main.slides = queryImageURL(main.curRow.files);
     } catch (error) {

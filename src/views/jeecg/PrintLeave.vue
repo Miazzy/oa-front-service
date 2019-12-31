@@ -295,6 +295,36 @@
 
           <a-col
             :span="24"
+            style="margin-top:15px;"
+            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
+          >
+            <template>
+              <div class="office-container" style="margin-top:0px;">
+                <div
+                  class="ant-upload-list-item-info"
+                  v-for="(item,index) in curRow.officeList"
+                  :key="index"
+                >
+                  <span>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      :title="item.title"
+                      :href="item.src"
+                      class="ant-upload-list-item-name"
+                      style="float:left;margin-left:-20px;margin-top:5px;"
+                    >
+                      <a-icon type="file" style="float:left;margin-top:4px;margin-right:5px;" />
+                      {{item.name}}
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </template>
+          </a-col>
+
+          <a-col
+            :span="24"
             style="margin-top:2px;"
             v-if="this.curRow.fileStatus != 1 && this.pageType != 'print'"
           >
