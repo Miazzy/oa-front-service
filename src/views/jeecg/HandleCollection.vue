@@ -31,32 +31,9 @@ export default {
         xs: { span: 24 },
         sm: { span: 8 }
       },
-      printer: "张三",
-      printTime: "2019-02-01 12:00:00",
-      printContent: "打印内容就是,做一个打印测试",
-      printReason: "做一个打印测试",
-      previewVisible: false,
       previewImage: "",
-      fileList: [
-        {
-          uid: "-1",
-          name: "xxx.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        },
-        {
-          uid: "-2",
-          name: "pic1.png",
-          status: "done",
-          url:
-            "https://www.gizbot.com/img/2016/11/whatsapp-error-lead-image-08-1478607387.jpg"
-        }
-      ],
-      url: {
-        loadApplicant: "/sps/register/loadApplicants",
-        loadRegisterFiles: "/sps/register/getRegisterFilesConfig"
-      }
+      fileList: [],
+      url: {}
     };
   },
   created() {

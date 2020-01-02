@@ -1934,7 +1934,7 @@ export function queryImageURL(text) {
 /**
  * @function 查询附件中的文档地址
  */
-export function queryOfficeURL(text) {
+export async function queryOfficeURL(text) {
     //文档数组
     var fileList = [];
     var officeList = [];
@@ -1980,6 +1980,9 @@ export function queryOfficeURL(text) {
             } catch (error) {
                 console.log('设置文档名称异常：' + error);
             }
+            
+            //获取文档真实下载地址
+            download = download + text;
 
             //获取文档真实预览地址
             text =
@@ -1987,8 +1990,9 @@ export function queryOfficeURL(text) {
                 window._CONFIG['downloadURL'] +
                 '/' +
                 encodeURIComponent(text);
-            //获取文档真实下载地址
-            download = download + text;
+            
+            //如果是PDF格式，则使用原地址信息
+            text = ptext.includes('.pdf') ? download : text;
 
             //如果文件路径为文档地址，则存入officeList中
             if (!flag) {
@@ -2011,6 +2015,7 @@ export function queryOfficeURL(text) {
     //返回office数组信息
     return officeList;
 }
+
 
 /**
  * @function 设置详情页面图片展示样式
@@ -2128,7 +2133,7 @@ export async function colorProcessDetail(that, main) {
         console.log('set curRow fileURL error :' + error);
     }
     try {
-        main.curRow.officeList = queryOfficeURL(main.curRow.files);
+        main.curRow.officeList = await queryOfficeURL(main.curRow.files);
     } catch (error) {
         console.log('set curRow OfficeURL error :' + error);
     }

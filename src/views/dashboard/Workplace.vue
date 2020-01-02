@@ -101,7 +101,7 @@
             </div>
           </a-card>
           <a-card
-            title="XX 指数"
+            title="综合能力指数"
             style="margin-bottom: 24px"
             :loading="radarLoading"
             :bordered="false"

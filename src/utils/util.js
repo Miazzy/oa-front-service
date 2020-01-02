@@ -1,4 +1,6 @@
-import { isURL } from '@/utils/validate';
+import {
+    isURL
+} from '@/utils/validate';
 
 export const TokenKey = 'Access-Token';
 
@@ -7,11 +9,26 @@ export function timeFix() {
     const hour = time.getHours();
     return hour < 9 ?
         '早上好' :
-        hour <= 11 ? '上午好' : hour <= 13 ? '中午好' : hour < 20 ? '下午好' : '晚上好';
+        hour <= 11 ?
+        '上午好' :
+        hour <= 13 ?
+        '中午好' :
+        hour < 20 ?
+        '下午好' :
+        '晚上好';
 }
 
 export function welcome() {
     const arr = [
+        '上传的附件中，文档名称不能含有空格哦(≖‿≖)✧。不然的话，可能导致无法下载附件哟😄！',
+        '上传的图片中，图片名称不要包含空格哦，我的小机器眼可看不清哟，要是预览不了可不要怪本宝宝☹️',
+        '可以在首页，Tab栏中，查看我的待办，我的已办哟(≖‿≖)✧😄！',
+        '我的待办，处理完毕后，请记得点击首页页面Tab栏右侧的刷新按钮哟🤗！',
+        '审批同意后，可以在我的已办中查看处理过的记录哦💪！',
+        '在工作台的Tab栏页面中，右侧可有快捷菜单哦👌！',
+        '如果小主的页面和别的同学不一样，可能是小主没有清空缓存哦，按F12,弹出调试窗口，在Network栏中选择Disable Cache，然后刷新页面，即可清空缓存哦🤗',
+        '上传附件，上传图片，请不要上传超过30M的文档哦⏰！',
+        '上传图片前，先记得压缩后在上传哦🤗！',
         '待办任务处理好了不👌？',
         '处理完毕的任务，可以在我的已办中查看哦😁！',
         '工作台右侧有快捷导航哦😊！',
@@ -26,6 +43,7 @@ export function welcome() {
         '来泡杯枸杞茶吧🍵！',
         '来杯浓咖啡☕️，醒醒脑⏰！',
         '中午点外卖不🤩？',
+        '来首Music不🎵？',
         '老板来了，赶紧工作💪！',
     ];
     let index = Math.floor(Math.random() * arr.length);
@@ -127,7 +145,7 @@ export function formatDate(value, fmt) {
 
 /**
  * @function 过滤空对象
- * @param {*} data 
+ * @param {*} data
  */
 export function deNull(data) {
     if (typeof data == 'undefined' || data == null || data == '') {
@@ -144,7 +162,9 @@ export function generateIndexRouter(data) {
             name: 'dashboard',
             component: resolve =>
                 require(['@/components/layouts/TabLayout'], resolve),
-            meta: { title: '首页' },
+            meta: {
+                title: '首页'
+            },
             redirect: '/dashboard/analysis',
             children: [...generateChildRouters(data)],
         },
@@ -153,7 +173,9 @@ export function generateIndexRouter(data) {
             name: 'dashboard',
             component: resolve =>
                 require(['@/components/layouts/TabLayout'], resolve),
-            meta: { title: '工作台' },
+            meta: {
+                title: '工作台'
+            },
             redirect: '/dashboard/workplace',
             children: [...generateChildRouters(data)],
         },
@@ -179,8 +201,9 @@ function generateChildRouters(data) {
         }
 
         // eslint-disable-next-line
-        let URL = (item.meta.url || '')
-            .replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)); // URL支持{{ window.xxx }}占位符变量
+        let URL = (item.meta.url || '').replace(/{{([^}}]+)?}}/g, (s1, s2) =>
+            eval(s2)
+        ); // URL支持{{ window.xxx }}占位符变量
         if (isURL(URL)) {
             item.meta.url = URL;
         }
@@ -191,7 +214,6 @@ function generateChildRouters(data) {
             redirect: item.redirect,
             component: resolve => require(['@/' + component + '.vue'], resolve),
             hidden: item.hidden,
-            //component:()=> import(`@/views/${item.component}.vue`),
             meta: {
                 title: item.meta.title,
                 icon: item.meta.icon,
@@ -207,7 +229,6 @@ function generateChildRouters(data) {
         if (item.children && item.children.length > 0) {
             menu.children = [...generateChildRouters(item.children)];
         }
-        //--update-begin----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
         //判断是否生成路由
         if (item.route && item.route === '0') {
             //console.log(' 不生成路由 item.route：  '+item.route);
@@ -215,7 +236,6 @@ function generateChildRouters(data) {
         } else {
             routers.push(menu);
         }
-        //--update-end----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
     }
     return routers;
 }
@@ -255,8 +275,8 @@ export function randomNumber() {
     if (arguments.length === 1) {
         let [length] = arguments;
         // 生成指定长度的随机数字，首位一定不是 0
-        let nums = [...Array(length).keys()].map(
-            i => (i > 0 ? random(0, 9) : random(1, 9))
+        let nums = [...Array(length).keys()].map(i =>
+            i > 0 ? random(0, 9) : random(1, 9)
         );
         return parseInt(nums.join(''));
     } else if (arguments.length >= 2) {
@@ -337,7 +357,7 @@ export function cssExpand(css, id) {
 
 /**
  * 检查字符串是否包含中文
- * @param {*} val 
+ * @param {*} val
  */
 export function existChinese(val) {
     var reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
@@ -346,7 +366,7 @@ export function existChinese(val) {
 
 /**
  * 获取URL参数值
- * @param {*} val 
+ * @param {*} val
  */
 export function queryUrlString(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
@@ -425,7 +445,7 @@ export function queryDateDiff(date1, date2) {
 
 /**
  * @function 字符串转为日期
- * @param {*} date 
+ * @param {*} date
  */
 export function parseDate(date) {
     var t = Date.parse(date);
@@ -438,7 +458,7 @@ export function parseDate(date) {
 
 /**
  * @function 解析JSON对象
- * @param {*} json 
+ * @param {*} json
  */
 export function parseJSON(json) {
     try {

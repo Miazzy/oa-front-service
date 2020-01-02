@@ -2,7 +2,7 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
+        <chart-card :loading="loading" title="总流程数" total="126,560">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -17,8 +17,22 @@
             </trend>
           </div>
           <template slot="footer">
-            日均销售额
-            <span>￥ 234.56</span>
+            日流程数
+            <span>24</span>
+          </template>
+        </chart-card>
+      </a-col>
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+        <chart-card :loading="loading" title="总用户数" :total="6560 | NumberFormat">
+          <a-tooltip title="指标说明" slot="action">
+            <a-icon type="info-circle-o" />
+          </a-tooltip>
+          <div>
+            <mini-bar :height="40" />
+          </div>
+          <template slot="footer">
+            入职率
+            <span>60%</span>
           </template>
         </chart-card>
       </a-col>
@@ -37,7 +51,7 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
+        <chart-card :loading="loading" title="总业务数" :total="6560 | NumberFormat">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -45,33 +59,12 @@
             <mini-bar :height="40" />
           </div>
           <template slot="footer">
-            转化率
-            <span>60%</span>
-          </template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="运营活动效果" total="78%">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" :height="8" />
-          </div>
-          <template slot="footer">
-            <trend flag="down" style="margin-right: 16px;">
-              <span slot="term">同周比</span>
-              12%
-            </trend>
-            <trend flag="up">
-              <span slot="term">日环比</span>
-              80%
-            </trend>
+            业务分布
+            <span></span>
           </template>
         </chart-card>
       </a-col>
     </a-row>
-
     <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
       <div class="salesCard">
         <a-tabs
@@ -83,7 +76,7 @@
         >
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
-              <a-tag color="cyan" @click="reloadData()">刷新</a-tag>
+              <a-tag color="cyan" @click="reloadData()">刷新❄️</a-tag>
             </div>
           </div>
           <a-tab-pane loading="true" tab="我的待办" key="1" style>
@@ -229,12 +222,15 @@
 
     <a-row>
       <a-col :span="24">
-        <a-card
-          :loading="loading"
-          :bordered="false"
-          title="最近一周访问次数统计"
-          :style="{ marginTop: '24px' }"
-        >
+        <a-card :loading="loading" :bordered="false" title="近期访问统计" :style="{ marginTop: '24px' }">
+          <div
+            class="extra-wrapper"
+            style="position: relative;float:right;top: -63px;margin-left:5px;left:6px;"
+          >
+            <div class="extra-item">
+              <a-tag color="blue" @click="reloadVisitData()">刷新❄️</a-tag>
+            </div>
+          </div>
           <a-row>
             <a-col :span="6">
               <head-info title="今日访问IP数" :content="loginfo.todayIp"></head-info>
@@ -438,6 +434,12 @@ export default {
       this.spinning = false;
     },
     /**
+     * @function 刷新近期访问统计
+     */
+    async reloadVisitData() {
+      this.initLogInfo();
+    },
+    /**
      * @function 查看详情页面
      */
     async handleDetailWF(record) {
@@ -459,8 +461,11 @@ export default {
       //跳转到相应页面
       this.$router.push(detailURL);
     },
-
-    initLogInfo() {
+    /**
+     * @function 获取近期用户访问统计，
+     */
+    async initLogInfo() {
+      //查询登录统计数据
       getLoginfo(null).then(res => {
         if (res.success) {
           Object.keys(res.result).forEach(key => {
@@ -469,6 +474,7 @@ export default {
           this.loginfo = res.result;
         }
       });
+      //查询访问统计数据
       getVisitInfo().then(res => {
         if (res.success) {
           this.visitInfo = res.result;
