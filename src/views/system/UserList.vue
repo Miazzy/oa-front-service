@@ -272,12 +272,12 @@
         ],
         url: {
           imgerver: window._CONFIG['imgDomainURL'],
-          syncUser: `${window._CONFIG['domian']}/jeecg-boot/process/extActProcess/doSyncUser`,
-          list: `${window._CONFIG['domian']}/sys/user/list`,
-          delete: `${window._CONFIG['domian']}/sys/user/delete`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/user/deleteBatch`,
-          exportXlsUrl: `${window._CONFIG['domian']}/sys/user/exportXls`,
-          importExcelUrl: `${window._CONFIG['domian']}/sys/user/importExcel`,
+          syncUser: `${window._CONFIG['domain']}/jeecg-boot/process/extActProcess/doSyncUser`,
+          list: `${window._CONFIG['domain']}/sys/user/list`,
+          delete: `${window._CONFIG['domain']}/sys/user/delete`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/user/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domain']}/sys/user/exportXls`,
+          importExcelUrl: `${window._CONFIG['domain']}/sys/user/importExcel`,
         },
       }
     },

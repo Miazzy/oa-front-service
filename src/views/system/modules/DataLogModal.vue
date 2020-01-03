@@ -75,7 +75,7 @@
         headers:{},
         form:this.$form.createForm(this),
         url: {
-          queryDataVerListUrl:`${window._CONFIG['domian']}/sys/dataLog/queryDataVerList`,
+          queryDataVerListUrl:`${window._CONFIG['domain']}/sys/dataLog/queryDataVerList`,
         },
         DataVersionList:[],
       }

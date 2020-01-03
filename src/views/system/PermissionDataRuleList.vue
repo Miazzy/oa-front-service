@@ -108,8 +108,8 @@
         form: this.$form.createForm(this),
         loading: false,
         url: {
-          list: `${window._CONFIG['domian']}/sys/permission/getPermRuleListByPermId`,
-          delete: `${window._CONFIG['domian']}/sys/permission/deletePermissionRule`,
+          list: `${window._CONFIG['domain']}/sys/permission/getPermRuleListByPermId`,
+          delete: `${window._CONFIG['domain']}/sys/permission/deletePermissionRule`,
         },
       }
     },

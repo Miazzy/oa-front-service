@@ -10,7 +10,7 @@ axios.defaults.headers.post['Content-Type'] =
 
 // 创建 axios 实例
 const service = axios.create({
-    baseURL: `${window._CONFIG['domian']}/jeecg-boot`, // api base_url
+    baseURL: `${window._CONFIG['domain']}/jeecg-boot`, // api base_url
     timeout: 6000, // 请求超时时间
 });
 

@@ -105,7 +105,7 @@
          mobile:{rules: [{validator:this.validateMobile}]}
         },
         url: {
-          add: `${window._CONFIG['domian']}/sys/sysDepart/add`,
+          add: `${window._CONFIG['domain']}/sys/sysDepart/add`,
         },
       }
     },

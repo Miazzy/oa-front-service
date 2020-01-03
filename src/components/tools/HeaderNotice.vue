@@ -101,9 +101,9 @@ export default {
     return {
       loadding: false,
       url: {
-        listCementByUser: `${window._CONFIG['domian']}/sys/annountCement/listByUser`,
-        editCementSend: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
-        queryById: `${window._CONFIG['domian']}/sys/annountCement/queryById`
+        listCementByUser: `${window._CONFIG['domain']}/sys/annountCement/listByUser`,
+        editCementSend: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        queryById: `${window._CONFIG['domain']}/sys/annountCement/queryById`
       },
       hovered: false,
       announcement1: [],

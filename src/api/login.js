@@ -15,7 +15,7 @@ import { axios } from '@/utils/request';
 export function login(parameter) {
     try {
         return axios({
-            url: `${window._CONFIG['domian']}/sys/login`,
+            url: `${window._CONFIG['domain']}/sys/login`,
             method: 'post',
             data: parameter,
         });
@@ -27,7 +27,7 @@ export function login(parameter) {
 export function phoneLogin(parameter) {
     try {
         return axios({
-            url: `${window._CONFIG['domian']}/sys/phoneLogin`,
+            url: `${window._CONFIG['domain']}/sys/phoneLogin`,
             method: 'post',
             data: parameter,
         });
@@ -51,7 +51,7 @@ export function getSmsCaptcha(parameter) {
 export function getInfo() {
     try {
         return axios({
-            url: `${window._CONFIG['domian']}/api/user/info`,
+            url: `${window._CONFIG['domain']}/api/user/info`,
             method: 'get',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -65,7 +65,7 @@ export function getInfo() {
 export function logout(logoutToken) {
     try {
         return axios({
-            url: `${window._CONFIG['domian']}/sys/logout`,
+            url: `${window._CONFIG['domain']}/sys/logout`,
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',

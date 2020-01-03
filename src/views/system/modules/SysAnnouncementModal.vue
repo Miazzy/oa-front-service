@@ -119,9 +119,9 @@ export default {
         startTime: { rules: [{ validator: this.startTimeValidate }] }
       },
       url: {
-        queryByIds: `${window._CONFIG['domian']}/sys/user/queryByIds`,
-        add: `${window._CONFIG['domian']}/sys/annountCement/add`,
-        edit: `${window._CONFIG['domian']}/sys/annountCement/edit`
+        queryByIds: `${window._CONFIG['domain']}/sys/user/queryByIds`,
+        add: `${window._CONFIG['domain']}/sys/annountCement/add`,
+        edit: `${window._CONFIG['domain']}/sys/annountCement/edit`
       },
       userType: false,
       userIds: [],

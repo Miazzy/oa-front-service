@@ -1,21 +1,31 @@
-import { axios } from '@/utils/request';
+import {
+    axios
+} from '@/utils/request';
 import axios_ from 'axios';
 import superagent from 'superagent';
 import _ from 'underscore';
-import { setStore, getStore } from '@/utils/storage';
-import { formatDate, queryDateDiff, deNull, queryUrlString } from '@/utils/util';
+import {
+    setStore,
+    getStore
+} from '@/utils/storage';
+import {
+    formatDate,
+    queryDateDiff,
+    deNull,
+    queryUrlString
+} from '@/utils/util';
 import $ from 'jquery';
 
 axios_.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
 
 export const api = {
-    domain: window._CONFIG['domian'],
-    user: `${window._CONFIG['domian']}/jeecg-boot/api/user`,
-    role: `${window._CONFIG['domian']}/jeecg-boot/api/role`,
-    service: `${window._CONFIG['domian']}/jeecg-boot/api/service`,
-    permission: `${window._CONFIG['domian']}/jeecg-boot/api/permission`,
-    permissionNoPager: `${window._CONFIG['domian']}/jeecg-boot/api/permission/no-pager`,
+    domain: window._CONFIG['domain'],
+    user: `${window._CONFIG['domain']}/jeecg-boot/api/user`,
+    role: `${window._CONFIG['domain']}/jeecg-boot/api/role`,
+    service: `${window._CONFIG['domain']}/jeecg-boot/api/service`,
+    permission: `${window._CONFIG['domain']}/jeecg-boot/api/permission`,
+    permissionNoPager: `${window._CONFIG['domain']}/jeecg-boot/api/permission/no-pager`,
     PROCESS_NODE_DICT_ID: '095a5c3fed5b29706cdfc6d9cb32cd4c', //流程节点，对应的字典的ID,根据这个查询流程节点的名称
 };
 
@@ -1328,8 +1338,7 @@ export async function queryWorkflows(business_data_id) {
                 //获取下一节点
                 var next =
                     index < processLogs.length - 1 ?
-                    processLogs[index + 1] :
-                    {
+                    processLogs[index + 1] : {
                         action: '',
                     };
                 //获取标识
@@ -1762,7 +1771,6 @@ export async function transWflowHistoring(tableName, wfnode) {
  */
 export function queryFileViewURL(text) {
 
-    debugger;
     //文档URL
     var url = '';
 
@@ -1811,8 +1819,6 @@ export function queryFileViewURL(text) {
         var xurl = url.replace('files/', 'files/convert/');
         //去掉后缀
         xurl = xurl.substring(0, xurl.lastIndexOf('.'));
-        //设置加密路径
-        xurl = encodeURIComponent(xurl);
 
         //获取文件后缀
         var suffix = deNull(url)
@@ -1820,7 +1826,10 @@ export function queryFileViewURL(text) {
             .toLowerCase();
 
         //如果word文档，则使用微软API打开
-        url = deNull(suffix).includes('xls') ? previewURL + xurl + '.html' : url;
+        url = deNull(suffix).includes('xls') ? xurl + '.html' : url;
+
+        //设置加密路径
+        xurl = encodeURIComponent(xurl);
 
         //如果word文档，则使用微软API打开
         url =
@@ -1829,6 +1838,8 @@ export function queryFileViewURL(text) {
             deNull(suffix).includes('pdf') ?
             previewURL + xurl + '.pdf' :
             url;
+
+        console.log('preview url :' + url);
     } catch (error) {
         console.log('query file view url error :' + error);
     }
@@ -1971,6 +1982,8 @@ export async function queryOfficeURL(text) {
             var ptext = deNull(text).toLowerCase();
             //定义下载地址
             var download = window._CONFIG['downloadURL'] + '/';
+            //文档预览URL
+            var previewURL = window._CONFIG['viewURL'];
 
             //获取图片标识
             var flag =
@@ -1986,7 +1999,7 @@ export async function queryOfficeURL(text) {
 
             //设置文档名称
             try {
-                name = name.replace('files/', '').split('/')[1];
+                name = name.replace('files/', '');
             } catch (error) {
                 console.log('设置文档名称异常：' + error);
             }
@@ -1994,15 +2007,30 @@ export async function queryOfficeURL(text) {
             //获取文档真实下载地址
             download = download + text;
 
-            //获取文档真实预览地址
-            text =
-                window._CONFIG['previewURL'] +
-                window._CONFIG['downloadURL'] +
-                '/' +
-                encodeURIComponent(text);
+            //URL加密，保证中文路径可以被正常解析
+            var xurl = download.replace('files/', 'files/convert/');
+            //去掉后缀
+            xurl = xurl.substring(0, xurl.lastIndexOf('.'));
 
-            //如果是PDF格式，则使用原地址信息
-            text = ptext.includes('.pdf') ? download : text;
+            //获取文件后缀
+            var suffix = deNull(download)
+                .substring(download.lastIndexOf('.'), download.length)
+                .toLowerCase();
+
+            //如果word文档，则使用微软API打开
+            text = deNull(suffix).includes('xls') ? xurl + '.html' : download;
+
+            //设置加密路径
+            xurl = encodeURIComponent(xurl);
+
+            //如果word文档，则使用微软API打开
+            text =
+                deNull(suffix).includes('doc') ||
+                deNull(suffix).includes('ppt') ||
+                deNull(suffix).includes('pdf') ?
+                previewURL + xurl + '.pdf' :
+                text;
+
 
             //如果文件路径为文档地址，则存入officeList中
             if (!flag) {

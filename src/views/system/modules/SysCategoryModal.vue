@@ -69,8 +69,8 @@
         code:{},
         },
         url: {
-          add: `${window._CONFIG['domian']}/sys/category/add`,
-          edit: `${window._CONFIG['domian']}/sys/category/edit`,
+          add: `${window._CONFIG['domain']}/sys/category/add`,
+          edit: `${window._CONFIG['domain']}/sys/category/edit`,
         },
         expandedRowKeys:[],
         pidField:"pid"

@@ -180,13 +180,13 @@
           }
         ],
 		url: {
-          list: `${window._CONFIG['domian']}/sys/quartzJob/list`,
-          delete: `${window._CONFIG['domian']}/sys/quartzJob/delete`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/quartzJob/deleteBatch`,
-          pause: `${window._CONFIG['domian']}/sys/quartzJob/pause`,
-          resume: `${window._CONFIG['domian']}/sys/quartzJob/resume`,
-          exportXlsUrl: `${window._CONFIG['domian']}/sys/quartzJob/exportXls`,
-          importExcelUrl: `${window._CONFIG['domian']}/sys/quartzJob/importExcel`,
+          list: `${window._CONFIG['domain']}/sys/quartzJob/list`,
+          delete: `${window._CONFIG['domain']}/sys/quartzJob/delete`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/quartzJob/deleteBatch`,
+          pause: `${window._CONFIG['domain']}/sys/quartzJob/pause`,
+          resume: `${window._CONFIG['domain']}/sys/quartzJob/resume`,
+          exportXlsUrl: `${window._CONFIG['domain']}/sys/quartzJob/exportXls`,
+          importExcelUrl: `${window._CONFIG['domain']}/sys/quartzJob/importExcel`,
         },
       }
     },

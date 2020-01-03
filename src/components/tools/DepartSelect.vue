@@ -87,7 +87,7 @@
     methods:{
       loadDepartList(){
         return new Promise(resolve => {
-          let url = `${window._CONFIG['domian']}/sys/user/getCurrentUserDeparts`
+          let url = `${window._CONFIG['domain']}/sys/user/getCurrentUserDeparts`
           this.currDepartName=''
           getAction(url).then(res=>{
             if(res.success){
@@ -124,7 +124,7 @@
           orgCode:this.departSelected,
           username:this.username
         }
-        putAction(`${window._CONFIG['domian']}/sys/selectDepart`,obj).then(res=>{
+        putAction(`${window._CONFIG['domain']}/sys/selectDepart`,obj).then(res=>{
           if(res.success){
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);

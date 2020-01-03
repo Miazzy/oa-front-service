@@ -266,14 +266,14 @@
 
 
         url: {
-          list: `${window._CONFIG['domian']}/sys/role/list`,
-          delete: `${window._CONFIG['domian']}/sys/role/delete`,
-          list2: `${window._CONFIG['domian']}/sys/user/userRoleList`,
-          addUserRole: `${window._CONFIG['domian']}/sys/user/addSysUserRole`,
-          delete2: `${window._CONFIG['domian']}/sys/user/deleteUserRole`,
-          deleteBatch2: `${window._CONFIG['domian']}/sys/user/deleteUserRoleBatch`,
-          exportXlsUrl: `${window._CONFIG['domian']}/sys/role/exportXls`,
-          importExcelUrl: `${window._CONFIG['domian']}/sys/role/importExcel`
+          list: `${window._CONFIG['domain']}/sys/role/list`,
+          delete: `${window._CONFIG['domain']}/sys/role/delete`,
+          list2: `${window._CONFIG['domain']}/sys/user/userRoleList`,
+          addUserRole: `${window._CONFIG['domain']}/sys/user/addSysUserRole`,
+          delete2: `${window._CONFIG['domain']}/sys/user/deleteUserRole`,
+          deleteBatch2: `${window._CONFIG['domain']}/sys/user/deleteUserRoleBatch`,
+          exportXlsUrl: `${window._CONFIG['domain']}/sys/role/exportXls`,
+          importExcelUrl: `${window._CONFIG['domain']}/sys/role/importExcel`
         }
       }
     },

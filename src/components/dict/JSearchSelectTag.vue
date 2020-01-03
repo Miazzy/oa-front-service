@@ -87,7 +87,7 @@
         if(this.async){
           if(!this.selectedAsyncValue || !this.selectedAsyncValue.key || this.selectedAsyncValue.key!=this.value){
             console.log("这才请求后台")
-            getAction(`${window._CONFIG['domian']}/sys/dict/loadDictItem/${this.dict}`,{key:this.value}).then(res=>{
+            getAction(`${window._CONFIG['domain']}/sys/dict/loadDictItem/${this.dict}`,{key:this.value}).then(res=>{
               if(res.success){
                 let obj = {
                   key:this.value,
@@ -108,7 +108,7 @@
         this.options = []
         this.loading=true
         // 字典code格式：table,text,code
-        getAction(`${window._CONFIG['domian']}/sys/dict/loadDict/${this.dict}`,{keyword:value}).then(res=>{
+        getAction(`${window._CONFIG['domain']}/sys/dict/loadDict/${this.dict}`,{keyword:value}).then(res=>{
           this.loading=false
           if(res.success){
             if(currentLoad!=this.lastLoad){

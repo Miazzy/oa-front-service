@@ -135,10 +135,10 @@
             width: 170
           }],
         url: {
-          list: `${window._CONFIG['domian']}/sys/user/departUserList`,
-          edit: `${window._CONFIG['domian']}/sys/user/editSysDepartWithUser`,
-          delete: `${window._CONFIG['domian']}/sys/user/deleteUserInDepart`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/user/deleteUserInDepartBatch`,
+          list: `${window._CONFIG['domain']}/sys/user/departUserList`,
+          edit: `${window._CONFIG['domain']}/sys/user/editSysDepartWithUser`,
+          delete: `${window._CONFIG['domain']}/sys/user/deleteUserInDepart`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/user/deleteUserInDepartBatch`,
         }
       }
     },

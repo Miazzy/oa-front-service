@@ -99,9 +99,9 @@
           endTime:{rules: [{ required: true, message: '请输入代理结束时间!' }]},
         },
         url: {
-          add: `${window._CONFIG['domian']}/sys/sysUserAgent/add`,
-          edit: `${window._CONFIG['domian']}/sys/sysUserAgent/edit`,
-          queryByUserName:`${window._CONFIG['domian']}/sys/sysUserAgent/queryByUserName`,
+          add: `${window._CONFIG['domain']}/sys/sysUserAgent/add`,
+          edit: `${window._CONFIG['domain']}/sys/sysUserAgent/edit`,
+          queryByUserName:`${window._CONFIG['domain']}/sys/sysUserAgent/queryByUserName`,
         },
       }
     },

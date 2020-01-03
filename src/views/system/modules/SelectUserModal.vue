@@ -142,7 +142,7 @@
         selectedRowKeys: [],
         selectedRows: [],
         url: {
-          list: `${window._CONFIG['domian']}/sys/user/list`,
+          list: `${window._CONFIG['domain']}/sys/user/list`,
         }
       }
     },

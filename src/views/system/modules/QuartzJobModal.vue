@@ -97,8 +97,8 @@
           }
         },
         url: {
-          add: `${window._CONFIG['domian']}/sys/quartzJob/add`,
-          edit: `${window._CONFIG['domian']}/sys/quartzJob/edit`,
+          add: `${window._CONFIG['domain']}/sys/quartzJob/add`,
+          edit: `${window._CONFIG['domain']}/sys/quartzJob/edit`,
         },
       }
     },

@@ -205,11 +205,11 @@
           mobile: {rules: [{validator: this.validateMobile}]}
         },
         url: {
-          delete: `${window._CONFIG['domian']}/sys/sysDepart/delete`,
-          edit: `${window._CONFIG['domian']}/sys/sysDepart/edit`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/sysDepart/deleteBatch`,
-          exportXlsUrl: `${window._CONFIG['domian']}/sys/sysDepart/exportXls`,
-          importExcelUrl: `${window._CONFIG['domian']}/sys/sysDepart/importExcel`,
+          delete: `${window._CONFIG['domain']}/sys/sysDepart/delete`,
+          edit: `${window._CONFIG['domain']}/sys/sysDepart/edit`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/sysDepart/deleteBatch`,
+          exportXlsUrl: `${window._CONFIG['domain']}/sys/sysDepart/exportXls`,
+          importExcelUrl: `${window._CONFIG['domain']}/sys/sysDepart/importExcel`,
         },
       }
     },

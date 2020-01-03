@@ -133,9 +133,9 @@
           itemValue: {rules: [{required: true, message: '请输入数据值!'}]},
         },
         url: {
-          list: `${window._CONFIG['domian']}/sys/dictItem/list`,
-          delete: `${window._CONFIG['domian']}/sys/dictItem/delete`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/dictItem/deleteBatch`,
+          list: `${window._CONFIG['domain']}/sys/dictItem/list`,
+          delete: `${window._CONFIG['domain']}/sys/dictItem/delete`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/dictItem/deleteBatch`,
         },
       }
     },

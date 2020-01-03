@@ -137,9 +137,9 @@ export default {
         }
       ],
       url: {
-        list: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/getMyAnnouncementSend`,
-        editCementSend: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
-        readAllMsg: `${window._CONFIG['domian']}/sys/sysAnnouncementSend/readAll`
+        list: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/getMyAnnouncementSend`,
+        editCementSend: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        readAllMsg: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/readAll`
       },
       loading: false
     }

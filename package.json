@@ -17,6 +17,7 @@
         "ant-design-vue": "^1.3.9",
         "apexcharts": "^3.6.5",
         "axios": "^0.18.0",
+        "bpmn-js": "^6.1.1",
         "clipboard": "^2.0.4",
         "codemirror": "^5.46.0",
         "dayjs": "^1.8.0",

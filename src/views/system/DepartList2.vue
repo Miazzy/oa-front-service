@@ -148,9 +148,9 @@
         selectedRowKeys: [],
         selectedRows: [],
         url: {
-          list: `${window._CONFIG['domian']}/sys/sysDepart/list`,
-          delete: `${window._CONFIG['domian']}/sys/sysDepart/delete`,
-          deleteBatch: `${window._CONFIG['domian']}/sys/sysDepart/deleteBatch`,
+          list: `${window._CONFIG['domain']}/sys/sysDepart/list`,
+          delete: `${window._CONFIG['domain']}/sys/sysDepart/delete`,
+          deleteBatch: `${window._CONFIG['domain']}/sys/sysDepart/deleteBatch`,
         },
 
       }

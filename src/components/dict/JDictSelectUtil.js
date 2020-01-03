@@ -77,7 +77,7 @@ export async function ajaxFilterDictText(dictCode, key) {
     return '';
   }
   //通过请求读取字典文本
-  let res = await getAction(`${window._CONFIG['domian']}/sys/dict/getDictText/${dictCode}/${key}`);
+  let res = await getAction(`${window._CONFIG['domain']}/sys/dict/getDictText/${dictCode}/${key}`);
   if (res.success) {
     // console.log('restult: '+ res.result);
     return res.result;
