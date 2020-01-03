@@ -1329,7 +1329,9 @@ export async function queryWorkflows(business_data_id) {
                 var next =
                     index < processLogs.length - 1 ?
                     processLogs[index + 1] :
-                    { action: '' };
+                    {
+                        action: '',
+                    };
                 //获取标识
                 var flag = index == processLogs.length - 1;
                 //获取操作时间
@@ -1759,6 +1761,8 @@ export async function transWflowHistoring(tableName, wfnode) {
  * @param {*} text
  */
 export function queryFileViewURL(text) {
+
+    debugger;
     //文档URL
     var url = '';
 
@@ -1797,12 +1801,18 @@ export function queryFileViewURL(text) {
             );
         });
 
-        //微软文档预览API
-        var officeURL = window._CONFIG['previewURL'];
+        //文档预览URL
+        var previewURL = window._CONFIG['viewURL'];
+
         //文档下载地址
         url = window._CONFIG['downloadURL'] + '/' + url;
+
         //URL加密，保证中文路径可以被正常解析
-        var xurl = encodeURIComponent(url);
+        var xurl = url.replace('files/', 'files/convert/');
+        //去掉后缀
+        xurl = xurl.substring(0, xurl.lastIndexOf('.'));
+        //设置加密路径
+        xurl = encodeURIComponent(xurl);
 
         //获取文件后缀
         var suffix = deNull(url)
@@ -1810,15 +1820,15 @@ export function queryFileViewURL(text) {
             .toLowerCase();
 
         //如果word文档，则使用微软API打开
+        url = deNull(suffix).includes('xls') ? previewURL + xurl + '.html' : url;
+
+        //如果word文档，则使用微软API打开
         url =
             deNull(suffix).includes('doc') ||
             deNull(suffix).includes('ppt') ||
-            deNull(suffix).includes('xls') ?
-            officeURL + xurl :
+            deNull(suffix).includes('pdf') ?
+            previewURL + xurl + '.pdf' :
             url;
-
-        //如果pdf文档，则浏览器上直接打开
-        url = suffix.includes('pdf') ? url : url;
     } catch (error) {
         console.log('query file view url error :' + error);
     }
@@ -1980,7 +1990,7 @@ export async function queryOfficeURL(text) {
             } catch (error) {
                 console.log('设置文档名称异常：' + error);
             }
-            
+
             //获取文档真实下载地址
             download = download + text;
 
@@ -1990,7 +2000,7 @@ export async function queryOfficeURL(text) {
                 window._CONFIG['downloadURL'] +
                 '/' +
                 encodeURIComponent(text);
-            
+
             //如果是PDF格式，则使用原地址信息
             text = ptext.includes('.pdf') ? download : text;
 
@@ -2015,7 +2025,6 @@ export async function queryOfficeURL(text) {
     //返回office数组信息
     return officeList;
 }
-
 
 /**
  * @function 设置详情页面图片展示样式
