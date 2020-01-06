@@ -88,12 +88,13 @@
   import pick from 'lodash.pick'
   import Vue from 'vue'
   import {ACCESS_TOKEN} from "@/store/mutation-types"
-
+  import { deNull } from '@/utils/util';
   import { getUploadFileList,getFilePaths } from '@/utils/commonUploadFile.js'
 
   export default {
     name: "JeecgOrderCustomerModal",
     data() {
+      debugger;
       return {
         title: "操作",
         visible: false,
@@ -176,7 +177,7 @@
         url: {
           add: "/test/order/addCustomer",
           edit: "/test/order/editCustomer",
-          fileUpload: window._CONFIG['domianURL'] + "/sys/common/upload",
+          fileUpload: deNull(window._CONFIG['domainURL']) + "/sys/common/upload",
           imgerver: window._CONFIG['imgDomainURL'],
           getOrderCustomerList: "/test/order/listOrderCustomerByMainId",
         },

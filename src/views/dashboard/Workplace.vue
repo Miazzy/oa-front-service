@@ -2,7 +2,7 @@
   <page-layout :avatar="avatar">
     <div slot="headerContent">
       <div class="title">
-        {{ timeFix }}，{{ nickname() }}童鞋，
+        {{ timeFix }}，{{ nickname() }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
       <div>{{postName}} | {{departName}}</div>

@@ -364,7 +364,7 @@ export default {
           let smsParams = {};
           smsParams.mobile = values.mobile;
           smsParams.smsmode = "0";
-          postAction(`${window._CONFIG["domian"]}/sys/sms`, smsParams)
+          postAction(`${window._CONFIG["domain"]}/sys/sms`, smsParams)
             .then(res => {
               if (!res.success) {
                 setTimeout(hide, 0);
@@ -527,7 +527,7 @@ export default {
         orgCode: this.departSelected,
         username: this.form.getFieldValue("username")
       };
-      putAction(`${window._CONFIG["domian"]}/sys/selectDepart`, obj).then(
+      putAction(`${window._CONFIG["domain"]}/sys/selectDepart`, obj).then(
         res => {
           if (res.success) {
             const userInfo = res.result.userInfo;

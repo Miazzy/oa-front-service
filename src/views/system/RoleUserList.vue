@@ -279,7 +279,7 @@
     },
     computed: {
       importExcelUrl: function() {
-        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
+        return `${window._CONFIG['domainURL']}/${this.url.importExcelUrl}`
       },
       leftColMd() {
         return this.selectedRowKeys1.length === 0 ? 24 : 12

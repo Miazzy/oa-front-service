@@ -18,6 +18,7 @@
 
 <script>
 import Vue from 'vue'
+import { deNull } from '@/utils/util';
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const FILE_TYPE_ALL = 'all'
@@ -36,9 +37,10 @@ const getFileName = path => {
 export default {
   name: 'JUpload',
   data() {
+    debugger;
     return {
-      uploadAction: window._CONFIG['domianURL'] + '/sys/common/upload',
-      urlDownload: window._CONFIG['downloadURL'] + '/',
+      uploadAction: deNull(window._CONFIG['domainURL']) + '/sys/common/upload',
+      urlDownload: deNull(window._CONFIG['downloadURL'])+ '/',
       headers: {},
       fileList: []
     }

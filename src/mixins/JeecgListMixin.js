@@ -212,7 +212,7 @@ export const JeecgListMixin = {
     /* 导出 */
     handleExportXls2(){
       let paramsStr = encodeURI(JSON.stringify(this.getQueryParams()));
-      let url = `${window._CONFIG['domianURL']}/${this.url.exportXlsUrl}?paramsStr=${paramsStr}`;
+      let url = `${window._CONFIG['domainURL']}/${this.url.exportXlsUrl}?paramsStr=${paramsStr}`;
       window.location.href = url;
     },
     handleExportXls(fileName){
@@ -276,7 +276,7 @@ export const JeecgListMixin = {
       if(text.indexOf(",")>0){
         text = text.substring(0,text.indexOf(","))
       }
-      window.open(window._CONFIG['domianURL'] + "/sys/common/download/"+text);
+      window.open(window._CONFIG['domainURL'] + "/sys/common/download/"+text);
     },
   }
 

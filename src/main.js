@@ -81,7 +81,16 @@ Vue.use(JeecgComponents);
 
 //注册ViewUI前端组件
 Vue.use(ViewUI);
-Vue.use(VuePreview);
+Vue.use(VuePreview,{
+  mainClass: 'pswp--minimal--dark',
+  barsSize: {top: 0, bottom: 0},
+  captionEl: true,
+  fullscreenEl: true,
+  shareEl: false,
+  bgOpacity: 0.99,
+  tapToClose: true,
+  tapToToggleControls: false
+});
 
 //ElementUI也会注册这个函数，提前改名
 Vue.prototype.$confirm_ = Vue.prototype.$confirm;

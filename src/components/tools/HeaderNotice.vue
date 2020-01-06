@@ -217,7 +217,7 @@ export default {
       // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
       var userId = store.getters.userInfo.id;
       var url =
-        window._CONFIG["domianURL"]
+         window._CONFIG["domainURL"]
           .replace("https://", "wss://")
           .replace("http://", "ws://") +
         "/websocket/" +

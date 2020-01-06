@@ -36,7 +36,7 @@
 <script>
   import moment from 'moment'
   import { FormTypes } from '@/utils/JEditableTableUtil'
-  import { randomUUID, randomNumber } from '@/utils/util'
+  import { randomUUID, randomNumber , deNull} from '@/utils/util'
   import JEditableTable from '@/components/jeecg/JEditableTable'
 
   export default {
@@ -74,7 +74,7 @@
             placeholder: '点击上传',
             token: true,
             responseName: 'message',
-            action: window._CONFIG['domianURL'] + '/sys/common/upload'
+            action: deNull(window._CONFIG['domainURL']) + '/sys/common/upload'
           },
           {
             title: '字段类型',

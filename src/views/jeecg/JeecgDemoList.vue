@@ -197,7 +197,7 @@
         description: '用户管理页面',
         //字典数组缓存
         sexDictOptions: [],
-        importExcelUrl:`${window._CONFIG['domianURL']}/test/jeecgDemo/importExcel`,
+        importExcelUrl:`${window._CONFIG['domainURL']}/test/jeecgDemo/importExcel`,
         //表头
         columns:[],
         //列设置

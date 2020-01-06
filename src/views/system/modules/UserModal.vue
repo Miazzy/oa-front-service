@@ -189,6 +189,7 @@ import { getAction, patchTableData, queryTableData } from "@/api/manage";
 import { addUser, editUser, queryUserRole, queryall } from "@/api/api";
 import { disabledAuthFilter } from "@/utils/authFilter";
 import { duplicateCheck } from "@/api/api";
+import { deNull } from '@/utils/util';
 
 export default {
   name: "RoleModal",
@@ -289,12 +290,12 @@ export default {
       form: this.$form.createForm(this),
       picUrl: "",
       url: {
-        fileUpload: window._CONFIG["domianURL"] + "/sys/common/upload",
+        fileUpload:  deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
         imgerver: window._CONFIG["imgDomainURL"],
-        userWithDepart: `${window._CONFIG["domian"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
-        userId: `${window._CONFIG["domian"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
+        userWithDepart: `${window._CONFIG["domain"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
+        userId: `${window._CONFIG["domain"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
         syncUserByUserName: `${
-          window._CONFIG["domian"]
+          window._CONFIG["domain"]
         }/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
       }
     };

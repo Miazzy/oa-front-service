@@ -16,11 +16,15 @@
         //Vue服务器域名
         window._CONFIG['domain'] = 'https://www.shengtai.club';
         //API端服务器URL
-        window._CONFIG['domainURL'] = window._CONFIG['domain'] + '/jeecg-boot';
+        window._CONFIG['domainURL'] = 'https://www.shengtai.club/jeecg-boot';
+        //Vue服务器域名,不要删除domian属性，因为有些组件是这样写的，而且位于node_module里面
+        window._CONFIG['domian'] = 'https://www.shengtai.club';
+        //API端服务器URL,不要删除domianURL属性，因为有些组件是这样写的，而且位于node_module里面
+        window._CONFIG['domianURL'] = 'https://www.shengtai.club/jeecg-boot';
         //下载服务器域名
-        window._CONFIG['downloadURL'] = window._CONFIG['domain'];
+        window._CONFIG['downloadURL'] = 'https://www.shengtai.club';
         //图片服务器域名
-        window._CONFIG['imgDomainURL'] = window._CONFIG['domain'];
+        window._CONFIG['imgDomainURL'] = 'https://www.shengtai.club';
         //KKFileView文档预览URL
         window._CONFIG['previewURL'] =
             'https://fileview.shengtai.club/onlinePreview?url=';
@@ -30,9 +34,6 @@
         //图片压缩裁剪URL
         window._CONFIG['thumborURL'] =
             'https://thumbor.shengtai.club/unsafe/fill/100/60/sm/0/plain/';
-        //PDF文档预览URL
-        window._CONFIG['pdfDomainURL'] =
-            window._CONFIG['domainURL'] + '/sys/common/pdf/pdfPreviewIframe';
         //图片预览URL
         window._CONFIG['imageURL'] = window._CONFIG['previewURL'];
         //多媒体预览URL

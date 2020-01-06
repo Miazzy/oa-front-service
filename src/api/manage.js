@@ -1879,12 +1879,15 @@ export function queryFileType(text) {
             '';
 
         type =
-            suffix.includes('doc') || suffix.includes('xls') || suffix.includes('ppt') ?
+            suffix.includes('doc') || suffix.includes('xls') || suffix.includes('ppt') || suffix.includes('pdf') ?
             `${type}@office@` :
             type;
     } catch (error) {
         console.log('query file type error :' + error);
     }
+
+    //打印文档URL
+    console.log('url type :' + type);
 
     //返回URL
     return type;
@@ -1928,20 +1931,99 @@ export function queryImageURL(text) {
                 ptext.includes('webp') ||
                 ptext.includes('png');
 
-            //获取图片真实下载地址
-            text = window._CONFIG['downloadURL'] + '/' + text;
+            //获取文件后缀
+            var suffix = deNull(ptext)
+                .substring(ptext.lastIndexOf('.'), ptext.length)
+                .toLowerCase();
 
+            //定义压缩图片URL
+            var thumborURL = text.replace('files/', 'files/images/').replace(suffix,'_S240x160' + suffix);
+
+            //获取图片真实下载地址 在线压缩地址：window._CONFIG['thumborURL'] + encodeURIComponent(text)  离线压缩地址：text.replace('files/', 'files/images/').replace(suffix,'_S240x160'+suffix)
+            text = window._CONFIG['downloadURL'] + '/' + text.replace('files/', 'files/origin/');
+            //获取压缩图片地址
+            thumborURL = window._CONFIG['downloadURL'] + '/' + thumborURL;
+            //图片预加载地址
+            ptext = thumborURL;
+            //获取在线裁剪预览地址
+            thumborURL = window._CONFIG['thumborURL'] + encodeURIComponent(thumborURL)
+
+            //动态加载图片，并计算图片高宽比
+            var img = new Image();
+            img.src = ptext;
+            img.onload = () => {
+                //如果文件路径为图片地址，则存入images中
+                if (flag) {
+                    //将数据存入images中
+                    images.push({
+                        src: text,
+                        msrc: thumborURL,
+                        title: '图片预览',
+                        w: 900,
+                        h: 900*img.height/img.width,
+                    });
+                }
+            };
+
+            return flag;
+        });
+    } catch (error) {
+        console.log('query image url error :' + error);
+    }
+
+    //返回图片数组信息
+    return images;
+}
+
+/**
+ * @function 查询附件中的视频地址
+ */
+export function queryVideoURL(text) {
+    //文档数组
+    var fileList = [];
+    var images = [];
+
+    try {
+        //如果text为空，则返回空数组
+        if (deNull(text) == '') {
+            return [];
+        }
+        //如果含有多个地址，则split后获取数组
+        if (deNull(text).indexOf(',') > 0) {
+            fileList = text.split(',');
+        } else {
+            fileList.push(text);
+        }
+    } catch (error) {
+        console.log('query image url error :' + error);
+    }
+
+    try {
+        //遍历并筛选出里面的图片信息
+        fileList = _.filter(fileList, function(text) {
+            //获取小写后的路径
+            var ptext = deNull(text).toLowerCase();
+
+            //获取图片标识
+            var flag =
+                ptext.includes('mp4') ||
+                ptext.includes('flv') ||
+                ptext.includes('avi') ;
+            
+            //获取文件后缀
+            var suffix = deNull(ptext)
+                .substring(ptext.lastIndexOf('.'), ptext.length)
+                .toLowerCase();
+
+            //获取图片真实下载地址 在线压缩地址：window._CONFIG['thumborURL'] + encodeURIComponent(text)  离线压缩地址：text.replace('files/', 'files/images/').replace(suffix,'_S240x160'+suffix)
+            text = window._CONFIG['downloadURL'] + '/' + text.replace('files/', 'files/');
+            
             //如果文件路径为图片地址，则存入images中
             if (flag) {
                 //将数据存入images中
-                images.push({
-                    src: text,
-                    msrc: window._CONFIG['thumborURL'] + encodeURIComponent(text),
-                    title: '图片预览',
-                    w: 900,
-                    h: 600,
-                });
+                images.push(text);
             }
+            
             return flag;
         });
     } catch (error) {
@@ -2060,14 +2142,9 @@ export async function queryOfficeURL(text) {
 export function changeImageCSS() {
     //设置图片预览CSS样式
     try {
-        setTimeout(() => {
-            //图片预览，Css设置Float:left
-            $('figure[itemscope="itemscope"]').css('float', 'left');
-            $('figure[itemscope="itemscope"]').css('margin-right', '10px');
-            $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
-            //图片预览，文件名称展示位置Center
-            $('.pswp__caption__center').css('text-align', 'center');
-        }, 10);
+         setTimeouts(() => {
+            postcss();
+        }, 100,300,500,800,1000,2000,3000,4000,5000,6000,7000,8000,9000);
     } catch (error) {
         console.log('change image css error :' + error);
     }
@@ -2080,6 +2157,32 @@ export function changeImageCSS() {
     } catch (error) {
         console.log('hidden image icon of fileview framework');
     }
+}
+
+/**
+ * @function callback连续执行函数
+ */
+export function setTimeouts(callback , ...times){
+    for(let time of times){
+        setTimeout(() => {
+            callback();
+            console.log('执行callback函数 ，times:' + time);
+        }, time);
+    }
+}
+
+/**
+ * @function 设置css样式
+ */
+export function postcss(){
+    //图片预览，Css设置Float:left
+    $('figure[itemscope="itemscope"]').css('float', 'left');
+    $('figure[itemscope="itemscope"]').css('margin-right', '10px');
+    $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
+    //图片预览，文件名称展示位置Center
+    $('.pswp__caption__center').css('text-align', 'center');
+    //异常图片高度，避免竖版图片走样
+    $('.pswp__img').css('height', '');
 }
 
 /**

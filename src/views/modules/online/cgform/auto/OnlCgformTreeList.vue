@@ -469,7 +469,7 @@
         if(text.indexOf(",")>0){
           text = text.substring(0,text.indexOf(","))
         }
-        window.open(window._CONFIG['domianURL'] + "/sys/common/download/"+text);
+        window.open(window._CONFIG['domainURL'] + "/sys/common/download/"+text);
       },
       /*-------数据格式化-end----------*/
 

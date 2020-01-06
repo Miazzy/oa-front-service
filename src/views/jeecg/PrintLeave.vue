@@ -295,17 +295,24 @@
                   v-for="(item,index) in curRow.officeList"
                   :key="index"
                 >
-                  <span>
+                  <span style="hover{background: #efeffe;}">
                     <a
-                      target="_blank"
                       rel="noopener noreferrer"
-                      :title="item.title"
-                      :href="item.src"
                       class="ant-upload-list-item-name"
-                      style="float:left;margin-left:-20px;margin-top:5px;"
+                      style="float:left;margin-left:-20px;margin-top:5px;border-bottom:1px solid #f0f0f0; hover{background: #efeffe;}"
                     >
                       <a-icon type="file" style="float:left;margin-top:4px;margin-right:5px;" />
-                      {{item.name}}
+                      <a
+                        target="_blank"
+                        :title="item.title"
+                        :href="item.src"
+                        style="float:left;width:80%;margin-top:4px;margin-right:5px;hover{background: #efeffe;}"
+                      >{{item.name}}</a>
+                      <a-icon
+                        type="download"
+                        @click="handleDownLoad(item)"
+                        style="float:right;margin-top:4px;width:10%;margin-right:5px;hover{background: #efeffe;}"
+                      />
                     </a>
                   </span>
                 </div>
@@ -335,7 +342,7 @@
                 style="margin-botton:0px;"
               >
                 <div style="margin-bottom:10px;">图片附件</div>
-                <vue-preview :slides="slides" @close="handleClose"></vue-preview>
+                <vue-preview :slides="slides" @close="handleClose" @click="handleImgClick"></vue-preview>
               </div>
             </template>
           </a-col>
@@ -703,6 +710,16 @@ export default {
       setTimeout(() => {
         this.curRow.fileStatus = 0;
       }, 10000);
+    },
+
+    /**
+     * @function 处理下载功能
+     */
+    async handleDownLoad(item) {
+      //打印日志
+      console.log(JSON.stringify(item));
+      //window打开链接
+      window.open(item.msrc);
     },
 
     /**

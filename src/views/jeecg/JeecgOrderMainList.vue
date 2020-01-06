@@ -104,7 +104,7 @@
     data () {
       return {
         description: '订单管理页面',
-        importExcelUrl:`${window._CONFIG['domianURL']}/test/jeecgOrderMain/importExcel`,
+        importExcelUrl:`${window._CONFIG['domainURL']}/test/jeecgOrderMain/importExcel`,
         // 表头
         columns: [
           {
