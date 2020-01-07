@@ -1083,6 +1083,37 @@ export default {
                 that.tipContent =
                   "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
               } else {
+                //执行事务处理
+                var operationData = {
+                  type: "next",
+                  current: {
+                    opeartion: "add",
+                    tableName: "PR_LOG",
+                    data: pnode
+                  },
+                  history: {
+                    operation: "add",
+                    tableName: "PR_LOG_HISTORY",
+                    data: prLogHisNode
+                  },
+                  inform: {
+                    operation: "add",
+                    tableName: "PR_LOG_INFORMED",
+                    data: ""
+                  },
+                  delete: {
+                    operation: "delete",
+                    tableName: "PR_LOG",
+                    data: prLogHisNode
+                  },
+                  origin: {
+                    operation: "patch",
+                    tableName: tableName,
+                    id: curRow["business_data_id"],
+                    data: bpmStatus
+                  }
+                };
+
                 //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
                 result = await manageAPI.postProcessLog(pnode);
 

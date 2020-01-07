@@ -1,11 +1,11 @@
 <template>
   <page-layout :avatar="avatar">
     <div slot="headerContent">
-      <div class="title">
+      <div class="title" style="font-size:16px;">
         {{ timeFix }}，{{ nickname() }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div>{{postName}} | {{departName}}</div>
+      <div :style="postStyle">{{postName}} | {{departName}}</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
@@ -160,7 +160,7 @@ export default {
       departName: "",
       avatar: "",
       user: {},
-
+      postStyle: { "margin-top": "-5px" },
       projects: [],
       loading: true,
       radarLoading: true,
@@ -226,6 +226,9 @@ export default {
       console.log("workplace -> call getServiceList()", res);
     });
 
+    //设置岗位style
+    this.handlePostStyle();
+
     //设置员工岗位信息/部门信息
     try {
       this.v_user = await queryTableDataByField(
@@ -244,6 +247,7 @@ export default {
     this.getActivity();
     this.getTeams();
     this.initRadar();
+    this.handlePostStyle();
   },
   methods: {
     ...mapGetters(["nickname", "welcome"]),
@@ -262,6 +266,14 @@ export default {
       this.$http.get("/api/workplace/teams").then(res => {
         this.teams = res.result;
       });
+    },
+    /**
+     * @function 设置岗位style
+     */
+    handlePostStyle() {
+      if (this.welcome.length > 35) {
+        this.postStyle = { "margin-top": "-10px" };
+      }
     },
     /**
      * @function 跳转到个人中心

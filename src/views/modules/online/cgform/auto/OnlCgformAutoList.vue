@@ -149,6 +149,7 @@
         >分享</a-button>
       </template>
       <template v-if="code == '0b511f234f3847baa50106a14fff6215' ">
+        <!--
         <a-button
           @click="handleApproveWF"
           type="primary"
@@ -161,14 +162,17 @@
           icon="close-circle"
           style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >驳回</a-button>
+        -->
       </template>
       <template v-if="code == 'd11901bc44f24a66b25b37a7a04c611e' ">
+        <!--
         <a-button
           @click="handleConfirmWF"
           type="primary"
           icon="check-circle"
           style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >确认</a-button>
+        -->
       </template>
       <template v-if="cgButtonList && cgButtonList.length>0" v-for="(item,index) in cgButtonList">
         <a-button
@@ -1798,7 +1802,7 @@ export default {
       let paramsStr = encodeURI(JSON.stringify(param));
       console.log("paramsStr: " + paramsStr);
       let url =
-         window._CONFIG["domainURL"] +
+        window._CONFIG["domainURL"] +
         this.url.exportXls +
         this.code +
         "?paramsStr=" +

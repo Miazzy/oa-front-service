@@ -333,6 +333,20 @@ export async function patchTableData(tableName, id, node) {
 }
 
 /**
+ * 更新数据
+ * @param {*} tableName
+ * @param {*} id
+ * @param {*} node
+ */
+export async function patchTableItem(tableName, id, node) {
+    try {
+        return patchTableData(tableName, id, node);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
  * 查询数据
  * @param {*} tableName
  * @param {*} id
@@ -718,6 +732,47 @@ export async function queryProcessLogByID(tableName, id) {
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
+export async function deleteTableItem(tableName, node) {
+    //提交URL
+    var deleteURL = '';
+    //遍历node,取出里面的ids
+    var ids = '';
+
+    //如果node不是数组，则转化为数组
+    if (!(node instanceof Array)) {
+        node = [node];
+    }
+
+    try {
+        _.each(node, function(item) {
+            ids = ids + ',' + item['id'];
+        });
+
+        //去掉开头的逗号
+        ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
+    } catch (error) {
+        console.error(error);
+    }
+
+    try {
+        deleteURL = `${api.domain}/api/${tableName}/bulk?_ids=${ids}`;
+    } catch (error) {
+        console.error(error);
+    }
+
+    try {
+        const res = await superagent.delete(deleteURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
 export async function deleteProcessLog(tableName, node) {
     //提交URL
     var deleteURL = '';
@@ -791,6 +846,45 @@ export async function deleteProcessLogInf(tableName, node) {
         const res = await superagent.delete(deleteURL).set('accept', 'json');
         console.log(res);
 
+        return res.body;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postTableItem(tableName , node) {
+    //提交URL
+    var postURL = null;
+    //是否批处理
+    var bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
+
+    //如果只有一条数据,则URL中不需要/bulk路径
+    try {
+        if (node instanceof Array && node.length == 1) {
+            bflag = '';
+            node = node[0];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    //构建表单提交数据的URL
+    try {
+        postURL = `${api.domain}/api/${tableName}${bflag}`;
+    } catch (error) {
+        console.log(error);
+    }
+
+    //发送post请求，保存数据
+    try {
+        const res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
         return res.body;
     } catch (err) {
         console.error(err);
@@ -1608,10 +1702,10 @@ export async function watchFormLeave(that) {
         //查询表单类型名称
         that.curRow.formTypeName = queryFormTypeName(tableName);
         //查询日期之间的天数
-        that.curRow.total_days = queryDateDiff(
-            that.curRow.starttime,
-            that.curRow.endtime
-        );
+        // that.curRow.total_days = queryDateDiff(
+        //     that.curRow.starttime,
+        //     that.curRow.endtime
+        // );
     } catch (error) {
         console.log('watch form leave error :' + error);
     }
