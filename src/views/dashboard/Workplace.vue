@@ -271,10 +271,11 @@ export default {
      * @function 设置岗位style
      */
     handlePostStyle() {
-      if (this.welcome.length > 35) {
+      if (this.welcome.length > 30) {
         this.postStyle = { "margin-top": "-10px" };
       }
     },
+
     /**
      * @function 跳转到个人中心
      */

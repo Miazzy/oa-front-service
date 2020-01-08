@@ -268,6 +268,8 @@ export async function insertTableData(tableName, node) {
     }
 }
 
+
+
 export async function postTableData(tableName, node) {
     //Post数据的URL地址
     var insertURL = `${api.domain}/api/${tableName}`;
@@ -358,6 +360,22 @@ export async function queryTableData(tableName, id) {
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
         return res.body[0];
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询数据(all)
+ * @param {*} tableName
+ */
+export async function queryTableAll(tableName) {
+    //查询URL Get	/api/tableName	query all rows by tableName
+    var queryURL = `${api.domain}/api/${tableName}`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body;
     } catch (err) {
         console.error(err);
     }
@@ -612,11 +630,138 @@ export async function queryProcessLogWait(username, realname) {
 }
 
 /**
+ * 查询我的待办数据
+ */
+export async function queryProcessLogWaitByParam(username, param) {
+
+    //条件SQL
+    var whereSQL = "";
+
+    //根据条件构造参数
+    if (deNull(param.type) != "") {
+        whereSQL = whereSQL + `~and(type,eq,${param.type})`;
+    }
+    if (deNull(param.name) != "") {
+        whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
+    }
+    if (deNull(param.topic) != "") {
+        whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
+    }
+    if (deNull(param.time) != "") {
+        var starttime = '';
+        var endtime = '';
+
+        //设置时间
+        if (param.time.length == 0) {
+            starttime = new Date();
+            endtime = new Date();
+        } else if (param.time.length == 1) {
+            starttime = param.time[0].format('YYYY-MM-DD');        
+            endtime = param.time[1].format('YYYY-MM-DD');        
+        } else if (param.time.length >= 2) {
+            starttime = param.time[0].format('YYYY-MM-DD');        
+            endtime = param.time[1].format('YYYY-MM-DD'); 
+        }
+
+        starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+        endtime = formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+
+        whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
+    }
+
+    //查询URL
+    var queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=10&_sort=-create_time`;
+    var result = {};
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
  * 查询我的已办数据
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
     var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    var result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询我的已办数据
+ */
+export async function queryProcessLogDoneByParam(username, param) {
+
+    //条件SQL
+    var whereSQL = "";
+
+    //根据条件构造参数
+    if (deNull(param.type) != "") {
+        whereSQL = whereSQL + `~and(type,eq,${param.type})`;
+    }
+    if (deNull(param.name) != "") {
+        whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
+    }
+    if (deNull(param.topic) != "") {
+        whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
+    }
+    if (deNull(param.time) != "") {
+        var starttime = '';
+        var endtime = '';
+
+        //设置时间
+        if (param.time.length == 0) {
+            starttime = new Date();
+            endtime = new Date();
+        } else if (param.time.length == 1) {
+            starttime = param.time[0].format('YYYY-MM-DD');        
+            endtime = param.time[1].format('YYYY-MM-DD');        
+        } else if (param.time.length >= 2) {
+            starttime = param.time[0].format('YYYY-MM-DD');        
+            endtime = param.time[1].format('YYYY-MM-DD'); 
+        }
+
+        starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+        endtime = formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+
+        whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
+    }
+
+    //查询URL
+    var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=10&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -855,7 +1000,7 @@ export async function deleteProcessLogInf(tableName, node) {
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
-export async function postTableItem(tableName , node) {
+export async function postTableItem(tableName, node) {
     //提交URL
     var postURL = null;
     //是否批处理
@@ -1863,7 +2008,7 @@ export async function transWflowHistoring(tableName, wfnode) {
  * @function 查询文档对应预览地址
  * @param {*} text
  */
-export function queryFileViewURL(text) {
+export async function queryFileViewURL(text) {
 
     //文档URL
     var url = '';
@@ -1908,6 +2053,8 @@ export function queryFileViewURL(text) {
 
         //文档下载地址
         url = window._CONFIG['downloadURL'] + '/' + url;
+        //暂存文档地址
+        var tempUrl = `${url}`;
 
         //URL加密，保证中文路径可以被正常解析
         var xurl = url.replace('files/', 'files/convert/');
@@ -1921,6 +2068,18 @@ export function queryFileViewURL(text) {
 
         //如果word文档，则使用微软API打开
         url = deNull(suffix).includes('xls') ? xurl + '.html' : url;
+        //如果word文档，则使用微软API打开
+        url = deNull(suffix).includes('doc') ||
+            deNull(suffix).includes('ppt') ||
+            deNull(suffix).includes('pdf') ?
+            xurl + '.pdf' :
+            url;
+
+        //待检测URL        
+        var checkURL = decodeURIComponent(url);
+
+        //打印checkURL
+        console.log('checkURL :' + checkURL);
 
         //设置加密路径
         xurl = encodeURIComponent(xurl);
@@ -1933,8 +2092,19 @@ export function queryFileViewURL(text) {
             previewURL + xurl + '.pdf' :
             url;
 
+        //检测文件URL标识
+        var existFlag = await queryUrlValid(checkURL);
+
+        //如果文件地址不存在，则使用kkfileview预览模式
+        if (!existFlag) {
+            url = window._CONFIG['previewURL'] + tempUrl;
+            console.log('地址不存在：' + url);
+        }
+
+        //打印预览地址日志
         console.log('preview url :' + url);
     } catch (error) {
+        //打印错误日志
         console.log('query file view url error :' + error);
     }
 
@@ -2031,7 +2201,7 @@ export function queryImageURL(text) {
                 .toLowerCase();
 
             //定义压缩图片URL
-            var thumborURL = text.replace('files/', 'files/images/').replace(suffix,'_S240x160' + suffix);
+            var thumborURL = text.replace('files/', 'files/images/').replace(suffix, '_S240x160' + suffix);
 
             //获取图片真实下载地址 在线压缩地址：window._CONFIG['thumborURL'] + encodeURIComponent(text)  离线压缩地址：text.replace('files/', 'files/images/').replace(suffix,'_S240x160'+suffix)
             text = window._CONFIG['downloadURL'] + '/' + text.replace('files/', 'files/origin/');
@@ -2054,7 +2224,7 @@ export function queryImageURL(text) {
                         msrc: thumborURL,
                         title: '图片预览',
                         w: 900,
-                        h: 900*img.height/img.width,
+                        h: 900 * img.height / img.width,
                     });
                 }
             };
@@ -2102,8 +2272,8 @@ export function queryVideoURL(text) {
             var flag =
                 ptext.includes('mp4') ||
                 ptext.includes('flv') ||
-                ptext.includes('avi') ;
-            
+                ptext.includes('avi');
+
             //获取文件后缀
             var suffix = deNull(ptext)
                 .substring(ptext.lastIndexOf('.'), ptext.length)
@@ -2111,13 +2281,13 @@ export function queryVideoURL(text) {
 
             //获取图片真实下载地址 在线压缩地址：window._CONFIG['thumborURL'] + encodeURIComponent(text)  离线压缩地址：text.replace('files/', 'files/images/').replace(suffix,'_S240x160'+suffix)
             text = window._CONFIG['downloadURL'] + '/' + text.replace('files/', 'files/');
-            
+
             //如果文件路径为图片地址，则存入images中
             if (flag) {
                 //将数据存入images中
                 images.push(text);
             }
-            
+
             return flag;
         });
     } catch (error) {
@@ -2195,6 +2365,14 @@ export async function queryOfficeURL(text) {
 
             //如果word文档，则使用微软API打开
             text = deNull(suffix).includes('xls') ? xurl + '.html' : download;
+            //如果word文档，则使用微软API打开
+            text =
+                deNull(suffix).includes('doc') ||
+                deNull(suffix).includes('ppt') ||
+                deNull(suffix).includes('pdf') ? xurl + '.pdf' : download;
+
+            //file文件URL路径
+            var fileURL = `${text}`;
 
             //设置加密路径
             xurl = encodeURIComponent(xurl);
@@ -2207,13 +2385,13 @@ export async function queryOfficeURL(text) {
                 previewURL + xurl + '.pdf' :
                 text;
 
-
             //如果文件路径为文档地址，则存入officeList中
             if (!flag) {
                 //将数据存入officeList中
                 officeList.push({
                     title: '文档',
                     src: text,
+                    file: fileURL,
                     msrc: download,
                     name: name,
                 });
@@ -2236,9 +2414,9 @@ export async function queryOfficeURL(text) {
 export function changeImageCSS() {
     //设置图片预览CSS样式
     try {
-         setTimeouts(() => {
+        setTimeouts(() => {
             postcss();
-        }, 100,300,500,800,1000,2000,3000,4000,5000,6000,7000,8000,9000);
+        }, 100, 300, 500, 800, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000);
     } catch (error) {
         console.log('change image css error :' + error);
     }
@@ -2256,8 +2434,8 @@ export function changeImageCSS() {
 /**
  * @function callback连续执行函数
  */
-export function setTimeouts(callback , ...times){
-    for(let time of times){
+export function setTimeouts(callback, ...times) {
+    for (let time of times) {
         setTimeout(() => {
             callback();
             console.log('执行callback函数 ，times:' + time);
@@ -2268,7 +2446,7 @@ export function setTimeouts(callback , ...times){
 /**
  * @function 设置css样式
  */
-export function postcss(){
+export function postcss() {
     //图片预览，Css设置Float:left
     $('figure[itemscope="itemscope"]').css('float', 'left');
     $('figure[itemscope="itemscope"]').css('margin-right', '10px');
@@ -2362,7 +2540,7 @@ export async function colorProcessDetail(that, main) {
         console.log('set curRow fileType error :' + error);
     }
     try {
-        main.curRow.fileURL = queryFileViewURL(main.curRow.files);
+        main.curRow.fileURL = await queryFileViewURL(main.curRow.files);
     } catch (error) {
         console.log('set curRow fileURL error :' + error);
     }
@@ -2489,4 +2667,25 @@ export async function queryWorkflowStatus(tableName, id) {
 
     //返回节点信息
     return node;
+}
+
+
+
+/**
+ * @function 检测URL是否有效
+ * @param {*} url 
+ */
+export async function queryUrlValid(url) {
+
+    //提交URL
+    var queryURL = `${window._CONFIG['validURL']}${url}`;
+
+    try {
+        const res = await superagent.get(queryURL);
+        console.log(' url :' + url + " result :" + JSON.stringify(res));
+        return res.body.success;
+    } catch (err) {
+        console.error(err);
+    }
+
 }

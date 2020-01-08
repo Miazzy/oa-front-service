@@ -1,5 +1,55 @@
 <template>
   <a-card :bordered="false" :class="{'abcdefg':true}">
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="24">
+          <a-col :md="4" :sm="4">
+            <a-form-item label="事项">
+              <a-select style="width: 120px" v-model="queryParam.type">
+                <a-select-option value="审批">审批</a-select-option>
+                <a-select-option value="知会">知会</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="5" :sm="5">
+            <a-form-item label="业务">
+              <a-select style="width: 180px" v-model="queryParam.name">
+                <a-select-option v-for="item in tableNameList" :key="item.id">{{item.name}}</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="5" :sm="5">
+            <a-form-item label="主题">
+              <a-input placeholder="请输入主题信息" v-model="queryParam.topic"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="时间">
+              <a-range-picker v-model="queryParam.time" format="YYYY-MM-DD" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="3" :sm="3">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button
+                type="primary"
+                @click="searchQuery"
+                icon="search"
+                style="margin-left: 0px"
+              >查询</a-button>
+              <a-button
+                type="primary"
+                @click="searchReset"
+                icon="reload"
+                style="margin-left: 8px"
+              >重置</a-button>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- 我的待办 -->
     <a-col :md="24" :sm="24">
       <template>
@@ -62,7 +112,7 @@
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
-import { queryProcessLogWait, queryProcessLogDone } from "@/api/manage";
+import * as manageAPI from "@/api/manage";
 import { getStore } from "@/utils/storage";
 
 const columns = [
@@ -136,14 +186,26 @@ export default {
       activeKey: 1,
       dataWaitList: [],
       dataDoneList: [],
+      tableNameList: [],
+      queryParam: {},
       spinning: false
     };
   },
   created() {
     this.getDate();
+    this.loadData();
   },
   methods: {
-    async loadData() {},
+    async loadData() {
+      //查询表单信息
+      var tableNameList = await manageAPI.queryTableAll("v_table_name");
+
+      //设置表单信息
+      this.tableNameList = tableNameList;
+
+      //打印表单信息
+      console.log("table name list :" + JSON.stringify(tableNameList));
+    },
     async getDate() {
       //查询我的已办，我的待办
       if (this.activeKey == 1 || this.activeKey == 2) {
@@ -153,10 +215,16 @@ export default {
         let realname = userInfo["realname"];
         if (this.activeKey == 1) {
           //获取我的待办数据
-          this.dataWaitList = await queryProcessLogWait(username, realname);
+          this.dataWaitList = await manageAPI.queryProcessLogWait(
+            username,
+            realname
+          );
         } else if (this.activeKey == 2) {
           //获取我的已办数据
-          this.dataDoneList = await queryProcessLogDone(username, realname);
+          this.dataDoneList = await manageAPI.queryProcessLogDone(
+            username,
+            realname
+          );
         }
       }
     },
@@ -191,6 +259,32 @@ export default {
 
       //跳转到相应页面
       this.$router.push(detailURL);
+    },
+    /**
+     * @function 查询函数
+     */
+    async searchQuery() {
+      //获取用户信息
+      let userInfo = getStore("cur_user");
+      let username = userInfo["username"];
+
+      //获取我的待办数据
+      this.dataWaitList = await manageAPI.queryProcessLogWaitByParam(
+        username,
+        this.queryParam
+      );
+
+      //打印日志信息
+      console.log("dataWaitList :" + JSON.stringify(this.dataWaitList));
+    },
+    /**
+     * @function 重置函数
+     */
+    async searchReset() {
+      this.queryParam.type = "";
+      this.queryParam.name = "";
+      this.queryParam.topic = "";
+      this.queryParam.time = "";
     }
   }
 };

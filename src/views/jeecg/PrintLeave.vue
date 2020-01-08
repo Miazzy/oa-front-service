@@ -302,16 +302,17 @@
                       style="float:left;margin-left:-20px;margin-top:5px;border-bottom:1px solid #f0f0f0; hover{background: #efeffe;}"
                     >
                       <a-icon type="file" style="float:left;margin-top:4px;margin-right:5px;" />
-                      <a
+                      <span
+                        type="file"
                         target="_blank"
                         :title="item.title"
-                        :href="item.src"
-                        style="float:left;width:80%;margin-top:4px;margin-right:5px;hover{background: #efeffe;}"
-                      >{{item.name}}</a>
+                        @click="handlePreview(item)"
+                        style="float:left;width:80%;margin-top:4px;margin-right:5px;hover{background: #efeffe; cursor:point;}"
+                      >{{item.name}}</span>
                       <a-icon
                         type="download"
                         @click="handleDownLoad(item)"
-                        style="float:right;margin-top:4px;width:10%;margin-right:5px;hover{background: #efeffe;}"
+                        style="float:right;margin-top:4px;width:10%;margin-right:5px;hover{background: #efeffe; cursor:point;}"
                       />
                     </a>
                   </span>
@@ -711,7 +712,17 @@ export default {
         this.curRow.fileStatus = 0;
       }, 10000);
     },
-
+    async handlePreview(item) {
+      //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览
+      var existFlag = await manageAPI.queryUrlValid(item.fileURL);
+      //如果文件地址不存在，则使用kkfileview预览模式，否则使用自带预览服务
+      if (!existFlag) {
+        window.open(window._CONFIG["previewURL"] + item.msrc);
+      } else {
+        //window打开链接
+        window.open(item.src);
+      }
+    },
     /**
      * @function 处理下载功能
      */
@@ -989,6 +1000,66 @@ export default {
                 result = await manageAPI.postProcessLogInformed(pnode);
               }
 
+              //执行事务处理
+              var operationData = {
+                id: manageAPI.queryRandomStr(32),
+                type: "approve",
+                create_by: userInfo["username"],
+                create_time: date,
+                table_name: tableName,
+                table_id: curRow["business_data_id"],
+                table_data: JSON.stringify(that.curRow),
+                status: "wait",
+                current_data: JSON.stringify({
+                  opeartion: "add",
+                  tableName: "PR_LOG",
+                  data: ""
+                }),
+                history_data: JSON.stringify({
+                  operation: "add",
+                  tableName: "PR_LOG_HISTORY",
+                  data: prLogHisNode
+                }),
+                inform_data: JSON.stringify({
+                  operation: "add",
+                  tableName: "PR_LOG_INFORMED",
+                  data: pnode
+                }),
+                delete_data: JSON.stringify({
+                  operation: "delete",
+                  tableName: "PR_LOG",
+                  data: prLogHisNode
+                }),
+                origin_data: JSON.stringify({
+                  operation: "patch",
+                  tableName: tableName,
+                  id: curRow["business_data_id"],
+                  data: bpmStatus
+                }),
+                trends_data: JSON.stringify({
+                  opeartion: "add",
+                  tableName: "",
+                  data: ""
+                }),
+                task_data: JSON.stringify({
+                  opeartion: "add",
+                  tableName: "",
+                  data: ""
+                }),
+                other_data: JSON.stringify({})
+              };
+
+              //流程事务处理框架，保证流程处理操作的事务最终一致性
+              try {
+                //执行事务处理框架
+                result = await manageAPI.postTableData(
+                  "BS_TRANSACTION",
+                  operationData
+                );
+              } catch (error) {
+                console.log("流程事务处理框架处理异常", error);
+              }
+
               //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
               result = await manageAPI.postProcessLogHistory(prLogHisNode);
 
@@ -1085,34 +1156,63 @@ export default {
               } else {
                 //执行事务处理
                 var operationData = {
+                  id: manageAPI.queryRandomStr(32),
                   type: "next",
-                  current: {
+                  create_by: userInfo["username"],
+                  create_time: date,
+                  table_name: tableName,
+                  table_id: curRow["business_data_id"],
+                  table_data: JSON.stringify(that.curRow),
+                  status: "wait",
+                  current_data: JSON.stringify({
                     opeartion: "add",
                     tableName: "PR_LOG",
                     data: pnode
-                  },
-                  history: {
+                  }),
+                  history_data: JSON.stringify({
                     operation: "add",
                     tableName: "PR_LOG_HISTORY",
                     data: prLogHisNode
-                  },
-                  inform: {
+                  }),
+                  inform_data: JSON.stringify({
                     operation: "add",
                     tableName: "PR_LOG_INFORMED",
                     data: ""
-                  },
-                  delete: {
+                  }),
+                  delete_data: JSON.stringify({
                     operation: "delete",
                     tableName: "PR_LOG",
                     data: prLogHisNode
-                  },
-                  origin: {
+                  }),
+                  origin_data: JSON.stringify({
                     operation: "patch",
                     tableName: tableName,
                     id: curRow["business_data_id"],
                     data: bpmStatus
-                  }
+                  }),
+                  trends_data: JSON.stringify({
+                    opeartion: "add",
+                    tableName: "",
+                    data: ""
+                  }),
+                  task_data: JSON.stringify({
+                    opeartion: "add",
+                    tableName: "",
+                    data: ""
+                  }),
+                  other_data: JSON.stringify({})
                 };
+
+                //流程事务处理框架，保证流程处理操作的事务最终一致性
+                try {
+                  //执行事务处理框架
+                  result = await manageAPI.postTableData(
+                    "BS_TRANSACTION",
+                    operationData
+                  );
+                } catch (error) {
+                  console.log("流程事务处理框架处理异常", error);
+                }
 
                 //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
                 result = await manageAPI.postProcessLog(pnode);
