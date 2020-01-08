@@ -670,7 +670,7 @@ export async function queryProcessLogWaitByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
     var result = {};
 
     try {
@@ -761,7 +761,7 @@ export async function queryProcessLogDoneByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');

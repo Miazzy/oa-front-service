@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="4" :sm="4">
             <a-form-item label="事项">
-              <a-select defaultValue="approve" style="width: 120px">
+              <a-select style="width: 120px" v-model="queryParam.type">
                 <a-select-option value="approve">审批</a-select-option>
                 <a-select-option value="message">知会</a-select-option>
               </a-select>
@@ -14,19 +14,19 @@
           </a-col>
           <a-col :md="5" :sm="5">
             <a-form-item label="业务">
-              <a-select style="width: 180px">
+              <a-select style="width: 180px" v-model="queryParam.name">
                 <a-select-option v-for="item in tableNameList" :key="item.id">{{item.name}}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="5" :sm="5">
             <a-form-item label="主题">
-              <a-input placeholder="请输入主题信息"></a-input>
+              <a-input placeholder="请输入主题信息" v-model="queryParam.topic"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="6">
             <a-form-item label="时间">
-              <a-range-picker />
+              <a-range-picker v-model="queryParam.time" />
             </a-form-item>
           </a-col>
           <a-col :md="3" :sm="3">
@@ -195,6 +195,7 @@ export default {
       dataWaitList: [],
       dataDoneList: [],
       tableNameList: [],
+      queryParam: {},
       spinning: false
     };
   },
@@ -270,6 +271,7 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
+      debugger;
       //获取用户信息
       let userInfo = getStore("cur_user");
       let username = userInfo["username"];
@@ -287,10 +289,7 @@ export default {
      * @function 重置函数
      */
     async searchReset() {
-      this.queryParam.type = "";
-      this.queryParam.name = "";
-      this.queryParam.topic = "";
-      this.queryParam.time = "";
+      this.queryParam = {};
     }
   }
 };

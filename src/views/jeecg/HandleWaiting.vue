@@ -281,10 +281,7 @@ export default {
      * @function 重置函数
      */
     async searchReset() {
-      this.queryParam.type = "";
-      this.queryParam.name = "";
-      this.queryParam.topic = "";
-      this.queryParam.time = "";
+      this.queryParam = {};
     }
   }
 };
