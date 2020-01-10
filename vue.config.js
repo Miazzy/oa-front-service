@@ -14,13 +14,15 @@ module.exports = {
         index: {
             entry: 'src/main.js',
             chunks: ['chunk-vendors', 'chunk-common', 'index'],
+            externals: {
+                vue: 'Vue',
+                'vue-router': 'VueRouter',
+            },
         },
     },
     configureWebpack: config => {
         //生产环境取消 console.log
-        if (process.env.NODE_ENV === 'production') {
-            config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
-        }
+        config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
     },
 
     chainWebpack: config => {
@@ -48,7 +50,7 @@ module.exports = {
         proxy: {
             '/jeecg-boot': {
                 target: 'https://www.shengtai.club', //请求本地 需要jeecg-boot后台项目
-                ws: false,
+                ws: true,
                 changeOrigin: true,
             },
         },

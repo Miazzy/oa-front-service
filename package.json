@@ -57,8 +57,7 @@
         "vue-splitpane": "^1.0.4",
         "vuedraggable": "^2.20.0",
         "vuex": "^3.0.1",
-        "vuex-class": "^0.3.1",
-        "webpack": "^4.41.2"
+        "vuex-class": "^0.3.1"
     },
     "devDependencies": {
         "@babel/polyfill": "^7.2.5",
@@ -74,7 +73,8 @@
         "less-loader": "^4.1.0",
         "node-sass": "^4.11.0",
         "sass-loader": "^7.0.1",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "webpack": "^4.41.5"
     },
     "eslintConfig": {
         "root": true,

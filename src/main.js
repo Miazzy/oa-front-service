@@ -21,8 +21,8 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-import ViewUI from 'view-design';
-import 'view-design/dist/styles/iview.css';
+//import ViewUI from 'view-design';
+//import 'view-design/dist/styles/iview.css';
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -30,7 +30,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import formCreate from '@form-create/element-ui';
 
 //import EleForm from 'vue-ele-form';
-import F2 from '@antv/f2';
+//import F2 from '@antv/f2';
 
 import axios from 'axios';
 import qs from 'qs';

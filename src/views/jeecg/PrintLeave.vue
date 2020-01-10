@@ -5,16 +5,9 @@
         v-print="'#printContent'"
         ghost
         type="primary"
-        v-if="pageType == 'print'"
+        v-if="pageType == 'print' || pageType == 'notify' "
         @click="handlePrint"
       >打印</a-button>
-      <a-button
-        ghost
-        type="primary"
-        @click="handleSubmitWF"
-        style="display:none;"
-        v-if="pageType == 'workflowing' || pageType == 'notifying'"
-      >提交</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
