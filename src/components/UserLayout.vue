@@ -19,33 +19,30 @@
           <a href="#" target="_self">隐私</a>
           <a href="#" target="_self">条款</a>
         </div>
-        <div class="copyright">
-          Copyright &copy; 2019
-          <a href="#" target="_blank">鹏程生态</a> 出品
-        </div>
+        <div class="copyright">Copyright &copy; 2019</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import RouteView from '@/components/layouts/RouteView'
-import { mixinDevice } from '@/utils/mixin.js'
+import RouteView from "@/components/layouts/RouteView";
+import { mixinDevice } from "@/utils/mixin.js";
 
 export default {
-  name: 'UserLayout',
+  name: "UserLayout",
   components: { RouteView },
   mixins: [mixinDevice],
   data() {
-    return {}
+    return {};
   },
   mounted() {
-    document.body.classList.add('userLayout')
+    document.body.classList.add("userLayout");
   },
   beforeDestroy() {
-    document.body.classList.remove('userLayout')
+    document.body.classList.remove("userLayout");
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -100,9 +97,10 @@ export default {
         .title {
           font-size: 33px;
           color: rgba(0, 0, 0, 0.85);
-          font-family: 'Chinese Quote', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
-            'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-            'Segoe UI Symbol';
+          font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont,
+            "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+            "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+            "Segoe UI Emoji", "Segoe UI Symbol";
           font-weight: 600;
           position: relative;
           top: 2px;

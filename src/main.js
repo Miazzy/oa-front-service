@@ -4,7 +4,9 @@ import Storage from 'vue-ls';
 import router from './router';
 import store from './store/';
 
-import { VueAxios } from '@/utils/request';
+import {
+    VueAxios
+} from '@/utils/request';
 
 import Antd from 'ant-design-vue';
 import Viser from 'viser-vue';
@@ -21,16 +23,16 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-//import ViewUI from 'view-design';
-//import 'view-design/dist/styles/iview.css';
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import formCreate from '@form-create/element-ui';
 
-//import EleForm from 'vue-ele-form';
-//import F2 from '@antv/f2';
+import EleForm from 'vue-ele-form';
+import F2 from '@antv/f2';
 
 import axios from 'axios';
 import qs from 'qs';
@@ -81,15 +83,18 @@ Vue.use(JeecgComponents);
 
 //注册ViewUI前端组件
 Vue.use(ViewUI);
-Vue.use(VuePreview,{
-  mainClass: 'pswp--minimal--dark',
-  barsSize: {top: 0, bottom: 0},
-  captionEl: true,
-  fullscreenEl: true,
-  shareEl: false,
-  bgOpacity: 0.99,
-  tapToClose: true,
-  tapToToggleControls: false
+Vue.use(VuePreview, {
+    mainClass: 'pswp--minimal--dark',
+    barsSize: {
+        top: 0,
+        bottom: 0
+    },
+    captionEl: true,
+    fullscreenEl: true,
+    shareEl: false,
+    bgOpacity: 0.99,
+    tapToClose: true,
+    tapToToggleControls: false
 });
 
 //ElementUI也会注册这个函数，提前改名
@@ -98,7 +103,7 @@ Vue.prototype.$message_ = Vue.prototype.$message;
 
 //注册ElementUI
 Vue.use(ElementUI);
-//Vue.use(EleForm);
+Vue.use(EleForm);
 
 //注册表单生成控件
 Vue.use(formCreate);

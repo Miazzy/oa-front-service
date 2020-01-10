@@ -21,7 +21,6 @@
         </div>
         <div class="copyright">
           Copyright &copy; 2019
-          <a href="#" target="_blank">鹏程生态</a> 出品
         </div>
       </div>
     </div>

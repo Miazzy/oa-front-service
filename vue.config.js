@@ -14,17 +14,14 @@ module.exports = {
         index: {
             entry: 'src/main.js',
             chunks: ['chunk-vendors', 'chunk-common', 'index'],
-            externals: {
-                vue: 'Vue',
-                'vue-router': 'VueRouter',
-            },
         },
     },
     configureWebpack: config => {
         //生产环境取消 console.log
-        config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
+        if (process.env.NODE_ENV === 'production') {
+            config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
+        }
     },
-
     chainWebpack: config => {
         config.resolve.alias
             .set('@$', resolve('src'))
