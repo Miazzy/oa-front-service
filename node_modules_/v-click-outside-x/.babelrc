@@ -1,0 +1,26 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "loose": false,
+        "modules": "commonjs",
+        "spec": true,
+        "useBuiltIns": false,
+        "debug": false
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-property-mutators",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": false,
+        "helpers": false,
+        "regenerator": false,
+        "useESModules": false
+      }
+    ]
+  ]
+}

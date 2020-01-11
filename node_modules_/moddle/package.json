@@ -1,0 +1,58 @@
+{
+  "name": "moddle",
+  "version": "5.0.1",
+  "description": "A library for importing meta-model based file formats into JS",
+  "scripts": {
+    "all": "run-s lint test distro",
+    "lint": "eslint .",
+    "dev": "npm test -- --watch",
+    "test": "mocha -r esm --reporter=spec --recursive test/spec",
+    "distro": "run-s build test:build",
+    "build": "rollup -c",
+    "test:build": "mocha --reporter=spec --recursive test/distro",
+    "prepublishOnly": "run-s distro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bpmn-io/moddle"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "umd:main": "dist/moddle.umd.js",
+  "source": "lib/index.js",
+  "keywords": [
+    "model",
+    "meta-model",
+    "xml",
+    "xsd",
+    "import",
+    "export"
+  ],
+  "author": {
+    "name": "Nico Rehwaldt",
+    "url": "https://github.com/Nikku"
+  },
+  "contributors": [
+    {
+      "name": "bpmn.io contributors",
+      "url": "https://github.com/bpmn-io"
+    }
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.11.0",
+    "eslint-plugin-bpmn-io": "^0.4.1",
+    "esm": "^3.0.15",
+    "mocha": "^4.0.1",
+    "npm-run-all": "^4.1.2",
+    "rollup": "^1.17.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1"
+  },
+  "dependencies": {
+    "min-dash": "^3.0.0"
+  }
+}

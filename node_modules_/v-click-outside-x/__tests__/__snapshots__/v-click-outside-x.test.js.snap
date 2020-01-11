@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`vClickOutside ESM directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside ESM no document directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside ESMREQ directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside MIN directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside MINREQ directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside WEB directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;
+
+exports[`vClickOutside WEBREQ directive bind/unbind bind exceptions throws an error if value is not a function 1`] = `"Binding value must be a function."`;

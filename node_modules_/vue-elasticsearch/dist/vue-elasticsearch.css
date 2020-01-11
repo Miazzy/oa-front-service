@@ -1,0 +1,33 @@
+
+.ve-autocomplete[data-v-81599be4] {
+  position: relative;
+  height: 300px;
+}
+.ve-autocomplete .ve-autocomplete-box input[data-v-81599be4] {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+.ve-autocomplete .ve-suggestions-list[data-v-81599be4] {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+    padding: 0;
+    border: 1px solid #dbdbdb;
+    border-radius: 0 0 3px 3px;
+    width: 100%;
+    overflow: hidden;
+}
+.ve-autocomplete .ve-suggestions-list li[data-v-81599be4] {
+      display: inline-block;
+      width: 100%;
+      flex-wrap: wrap;
+      background: white;
+      margin: 0;
+      border-bottom: 1px solid #eee;
+      color: #363636;
+      padding: 7px;
+      cursor: pointer;
+}
+.ve-autocomplete .ve-suggestions-list li.active[data-v-81599be4] {
+        background: #f8f8f8;
+}

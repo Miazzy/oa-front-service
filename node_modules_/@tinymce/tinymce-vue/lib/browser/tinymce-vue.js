@@ -1,0 +1,312 @@
+var Editor = (function () {
+    'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+    var validEvents = [
+        'onActivate',
+        'onAddUndo',
+        'onBeforeAddUndo',
+        'onBeforeExecCommand',
+        'onBeforeGetContent',
+        'onBeforeRenderUI',
+        'onBeforeSetContent',
+        'onBeforePaste',
+        'onBlur',
+        'onChange',
+        'onClearUndos',
+        'onClick',
+        'onContextMenu',
+        'onCopy',
+        'onCut',
+        'onDblclick',
+        'onDeactivate',
+        'onDirty',
+        'onDrag',
+        'onDragDrop',
+        'onDragEnd',
+        'onDragGesture',
+        'onDragOver',
+        'onDrop',
+        'onExecCommand',
+        'onFocus',
+        'onFocusIn',
+        'onFocusOut',
+        'onGetContent',
+        'onHide',
+        'onInit',
+        'onKeyDown',
+        'onKeyPress',
+        'onKeyUp',
+        'onLoadContent',
+        'onMouseDown',
+        'onMouseEnter',
+        'onMouseLeave',
+        'onMouseMove',
+        'onMouseOut',
+        'onMouseOver',
+        'onMouseUp',
+        'onNodeChange',
+        'onObjectResizeStart',
+        'onObjectResized',
+        'onObjectSelected',
+        'onPaste',
+        'onPostProcess',
+        'onPostRender',
+        'onPreProcess',
+        'onProgressState',
+        'onRedo',
+        'onRemove',
+        'onReset',
+        'onSaveContent',
+        'onSelectionChange',
+        'onSetAttrib',
+        'onSetContent',
+        'onShow',
+        'onSubmit',
+        'onUndo',
+        'onVisualAid'
+    ];
+    var isValidKey = function (key) { return validEvents.indexOf(key) !== -1; };
+    var bindHandlers = function (initEvent, listeners, editor) {
+        Object.keys(listeners)
+            .filter(isValidKey)
+            .forEach(function (key) {
+            var handler = listeners[key];
+            if (typeof handler === 'function') {
+                if (key === 'onInit') {
+                    handler(initEvent, editor);
+                }
+                else {
+                    editor.on(key.substring(2), function (e) { return handler(e, editor); });
+                }
+            }
+        });
+    };
+    var bindModelHandlers = function (ctx, editor) {
+        var modelEvents = ctx.$props.modelEvents ? ctx.$props.modelEvents : null;
+        var normalizedEvents = Array.isArray(modelEvents) ? modelEvents.join(' ') : modelEvents;
+        var currentContent;
+        ctx.$watch('value', function (val, prevVal) {
+            if (editor && typeof val === 'string' && val !== currentContent && val !== prevVal) {
+                editor.setContent(val);
+                currentContent = val;
+            }
+        });
+        editor.on(normalizedEvents ? normalizedEvents : 'change keyup undo redo', function () {
+            currentContent = editor.getContent();
+            ctx.$emit('input', currentContent);
+        });
+    };
+    var initEditor = function (initEvent, ctx, editor) {
+        var value = ctx.$props.value ? ctx.$props.value : '';
+        var initialValue = ctx.$props.initialValue ? ctx.$props.initialValue : '';
+        editor.setContent(value || initialValue);
+        // checks if the v-model shorthand is used (which sets an v-on:input listener) and then binds either
+        // specified the events or defaults to "change keyup" event and emits the editor content on that event
+        if (ctx.$listeners.input) {
+            bindModelHandlers(ctx, editor);
+        }
+        bindHandlers(initEvent, ctx.$listeners, editor);
+    };
+    var unique = 0;
+    var uuid = function (prefix) {
+        var time = Date.now();
+        var random = Math.floor(Math.random() * 1000000000);
+        unique++;
+        return prefix + '_' + random + unique + String(time);
+    };
+    var isTextarea = function (element) {
+        return element !== null && element.tagName.toLowerCase() === 'textarea';
+    };
+    var normalizePluginArray = function (plugins) {
+        if (typeof plugins === 'undefined' || plugins === '') {
+            return [];
+        }
+        return Array.isArray(plugins) ? plugins : plugins.split(' ');
+    };
+    var mergePlugins = function (initPlugins, inputPlugins) {
+        return normalizePluginArray(initPlugins).concat(normalizePluginArray(inputPlugins));
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+    var injectScriptTag = function (scriptId, doc, url, callback) {
+        var scriptTag = doc.createElement('script');
+        scriptTag.type = 'application/javascript';
+        scriptTag.id = scriptId;
+        scriptTag.addEventListener('load', callback);
+        scriptTag.src = url;
+        if (doc.head) {
+            doc.head.appendChild(scriptTag);
+        }
+    };
+    var create = function () {
+        return {
+            listeners: [],
+            scriptId: uuid('tiny-script'),
+            scriptLoaded: false
+        };
+    };
+    var load = function (state, doc, url, callback) {
+        if (state.scriptLoaded) {
+            callback();
+        }
+        else {
+            state.listeners.push(callback);
+            if (!doc.getElementById(state.scriptId)) {
+                injectScriptTag(state.scriptId, doc, url, function () {
+                    state.listeners.forEach(function (fn) { return fn(); });
+                    state.scriptLoaded = true;
+                });
+            }
+        }
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+    var getGlobal = function () { return (typeof window !== 'undefined' ? window : global); };
+    var getTinymce = function () {
+        var global = getGlobal();
+        return global && global.tinymce ? global.tinymce : null;
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+    var editorProps = {
+        apiKey: String,
+        cloudChannel: String,
+        id: String,
+        init: Object,
+        initialValue: String,
+        inline: Boolean,
+        modelEvents: [String, Array],
+        plugins: [String, Array],
+        tagName: String,
+        toolbar: [String, Array],
+        value: String,
+        disabled: Boolean
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+    var scriptState = create();
+    var renderInline = function (h, id, tagName) {
+        return h(tagName ? tagName : 'div', {
+            attrs: { id: id }
+        });
+    };
+    var renderIframe = function (h, id) {
+        return h('textarea', {
+            attrs: { id: id },
+            style: { visibility: 'hidden' }
+        });
+    };
+    var initialise = function (ctx) { return function () {
+        var finalInit = __assign({}, ctx.$props.init, { readonly: ctx.$props.disabled, selector: "#" + ctx.elementId, plugins: mergePlugins(ctx.$props.init && ctx.$props.init.plugins, ctx.$props.plugins), toolbar: ctx.$props.toolbar || (ctx.$props.init && ctx.$props.init.toolbar), inline: ctx.inlineEditor, setup: function (editor) {
+                ctx.editor = editor;
+                editor.on('init', function (e) { return initEditor(e, ctx, editor); });
+                if (ctx.$props.init && typeof ctx.$props.init.setup === 'function') {
+                    ctx.$props.init.setup(editor);
+                }
+            } });
+        if (isTextarea(ctx.element)) {
+            ctx.element.style.visibility = '';
+        }
+        getTinymce().init(finalInit);
+    }; };
+    var Editor = {
+        props: editorProps,
+        created: function () {
+            this.elementId = this.$props.id || uuid('tiny-vue');
+            this.inlineEditor = (this.$props.init && this.$props.init.inline) || this.$props.inline;
+        },
+        watch: {
+            disabled: function () {
+                this.editor.setMode(this.disabled ? 'readonly' : 'design');
+            }
+        },
+        mounted: function () {
+            this.element = this.$el;
+            if (getTinymce() !== null) {
+                initialise(this)();
+            }
+            else if (this.element && this.element.ownerDocument) {
+                var doc = this.element.ownerDocument;
+                var channel = this.$props.cloudChannel ? this.$props.cloudChannel : '5';
+                var apiKey = this.$props.apiKey ? this.$props.apiKey : 'no-api-key';
+                load(scriptState, doc, "https://cdn.tiny.cloud/1/" + apiKey + "/tinymce/" + channel + "/tinymce.min.js", initialise(this));
+            }
+        },
+        beforeDestroy: function () {
+            if (getTinymce() !== null) {
+                getTinymce().remove(this.editor);
+            }
+        },
+        render: function (h) {
+            return this.inlineEditor ? renderInline(h, this.elementId, this.$props.tagName) : renderIframe(h, this.elementId);
+        }
+    };
+
+    /**
+     * Copyright (c) 2018-present, Ephox, Inc.
+     *
+     * This source code is licensed under the Apache 2 license found in the
+     * LICENSE file in the root directory of this source tree.
+     *
+     */
+
+    return Editor;
+
+}());

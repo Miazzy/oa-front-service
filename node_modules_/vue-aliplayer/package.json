@@ -1,0 +1,37 @@
+{
+  "name": "vue-aliplayer",
+  "version": "0.0.8",
+  "description": "A Vue 2.x video player component based on AliPlayer",
+  "main": "dist/vue-aliplayer.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo test",
+    "build:dev": "vbuild -c vbuild.dev.js",
+    "build": "npm run build:cjs && npm run build:umd",
+    "build:cjs": "vbuild -c vbuild.build.js --format cjs",
+    "build:umd": "vbuild -c vbuild.build.js --format umd",
+    "dev": "vbuild -c vbuild.dev.js -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slacrey/vue-aliplayer.git"
+  },
+  "keywords": [
+    "vue",
+    "aliplayer"
+  ],
+  "author": "linfeng (237242115@qq.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slacrey/vue-aliplayer/issues"
+  },
+  "homepage": "https://github.com/slacrey/vue-aliplayer#readme",
+  "devDependencies": {
+    "vbuild": "^6.0.0"
+  },
+  "dependencies": {
+    "vue-github-badge": "^1.0.0"
+  }
+}

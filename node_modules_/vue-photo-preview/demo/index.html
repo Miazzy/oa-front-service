@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>vue-photo-preview</title>
+		<link rel="stylesheet" type="text/css" href="../dist/skin.css"/>
+		<style type="text/css">
+			.item img{
+				width: 100%;
+			}
+			.item2 img{
+				width: 44%;
+				margin: 2%;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div id="app">
+				<!--单个-->
+				<p>单个</p>
+				<div class="item">
+					<img v-for="item in img1" :src="item" preview="1" preview-text="描述文字">
+				</div>
+				<!--分组-->
+				<p>分组</p>
+				<div class="item2">
+					<img src="1.jpg" preview="2" preview-text="描述文字">
+					<img src="3.jpg" preview="2" preview-text="描述文字2">
+				</div>
+
+				<p>大图</p>
+				<div class="item2">
+					<img src="xxx.jpg" large="xxx_3x.jpg" preview="2" preview-text="描述文字">
+				</div>
+		</div>
+		
+		
+		<script src="https://lib.baomitu.com/vue/2.5.17/vue.min.js"></script>
+		<script src="../dist/vue-photo-preview.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var options={
+				fullscreenEl:false, //关闭全屏按钮
+			}
+			
+			Vue.use(vuePhotoPreview,options)
+			
+			var vm=new Vue({
+				el:'#app',
+				data:{
+					img1:[]
+				},
+				mounted:function(){
+					//异步插入的图片
+					setTimeout(() => {
+						vm.img1.push('1.jpg')
+						vm.$previewRefresh()
+					}, 2000);
+
+					//图片查看器打开后，打印本次查看器的实例（事件、方法、属性的示例）
+					this.$preview.on('imageLoadComplete',(e,item)=>{
+						console.log(this.$preview.self)
+					})
+				}
+			})
+		</script>
+	</body>
+</html>

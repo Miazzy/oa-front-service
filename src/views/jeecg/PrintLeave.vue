@@ -58,14 +58,36 @@
             <a-input style="width: 70%" readonly v-model="curRow.create_time" />
           </a-col>
 
-          <a-col :span="12" style="margin-bottom:10px;">
+          <a-col 
+            :span="12" 
+            style="margin-bottom:10px;"
+            v-if="typeof curRow.depart_name != 'undefined' && curRow.depart_name != null" >
             <span>{{tableInfo.depart_name}}:</span>
-            <a-input style="width: 70%" readonly v-model="depart.depart_name" />
+            <a-input style="width: 70%" readonly v-model="curRow.depart_name" />
           </a-col>
 
-          <a-col :span="12" style="margin-bottom:10px;">
+          <a-col 
+            :span="12" 
+            style="margin-bottom:10px;"
+            v-if="typeof curRow.leave_type_name != 'undefined' && curRow.leave_type_name != null">
             <span style="margin-left: 0%">{{curRow.formTypeName}}类型:</span>
             <a-input style="width: 70%" readonly v-model="curRow.leave_type_name" />
+          </a-col>
+
+          <a-col 
+            :span="12" 
+            style="margin-bottom:10px;"
+            v-if="typeof curRow.announce_type != 'undefined' && curRow.announce_type != null">
+            <span style="margin-left: 0%">{{tableInfo.announce_type}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.announce_type" />
+          </a-col>
+
+          <a-col 
+            :span="12" 
+            style="margin-bottom:10px;"
+            v-if="typeof curRow.announce_title != 'undefined' && curRow.announce_title != null">
+            <span style="margin-left: 0%">{{tableInfo.announce_title}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.announce_title" />
           </a-col>
 
           <a-col
@@ -142,7 +164,10 @@
             ></div>
           </a-col>
 
-          <a-col :span="24" style="margin-top: 20px;margin-bottom: 10px;">
+          <a-col 
+            :span="24" 
+            style="margin-top: 20px;margin-bottom: 10px;"
+            v-if="typeof curRow.content != 'undefined' && curRow.content != null">
             <span style="float:left;display:block;">{{tableInfo.content}}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
@@ -231,6 +256,17 @@
             ></div>
           </a-col>
 
+          <a-col 
+            :span="24" 
+            style="margin-bottom:10px;margin-top:10px;"
+            v-if="typeof curRow.announce_content != 'undefined' && curRow.announce_content != null">
+            <span style="float:left;display:block;">{{tableInfo.announce_content}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.announce_content"
+            ></div>
+          </a-col>
+
           <a-col :span="24" style="margin-top:30px;" v-if="curRow.main_table_status == true">
             <template>
               <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false"></a-table>
@@ -258,14 +294,16 @@
                 v-if="this.curRow.fileType.includes('office')"
                 style="width:100%;display:block;"
               >
-                <iframe
-                  v-print="'#printContent'"
-                  class="no-print fileview-iframe"
-                  name="fileviewFrame"
-                  id="fileviewFrame"
-                  style="display:block;width:88%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
-                  :src="this.curRow.fileURL"
-                />
+                <div class="no-print" style="text-align: right">
+                  <iframe
+                    v-print="'#printContent'"
+                    class="no-print fileview-iframe"
+                    name="fileviewFrame"
+                    id="fileviewFrame"
+                    style="display:block;width:95%;align:left;height:720px;overflow-y:auto;overflow-x:hidden;border:1px solid #cecece;border-bottom:1px solid #cecece;"
+                    :src="this.curRow.fileURL"
+                  />
+                </div>
               </div>
             </template>
           </a-col>

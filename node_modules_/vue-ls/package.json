@@ -1,0 +1,137 @@
+{
+  "name": "vue-ls",
+  "version": "3.2.1",
+  "description": "Vue plugin for work with LocalStorage from Vue context",
+  "main": "dist/vue-ls.js",
+  "jsnext:main": "src/index.js",
+  "unpkg": "dist/vue-ls.min.js",
+  "files": [
+    "src",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "build": "node_modules/.bin/rollup -c ./build/rollup.config.js --name VueStorage && NODE_ENV=production node_modules/.bin/rollup -c ./build/rollup.config.js --name VueStorage",
+    "test": "NODE_ENV=test node_modules/.bin/nyc node_modules/.bin/ava",
+    "test:browserstack": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_chrome_50,bstack_chrome_57,bstack_ie_9,bstack_ie_11,bstack_edge_13,bstack_edge_14,bstack_firefox_40,bstack_firefox_52,bstack_safari_8,bstack_safari_10",
+    "test:browserstack:chrome": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_chrome_50,bstack_chrome_57",
+    "test:browserstack:ie": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_ie_9,bstack_ie_11",
+    "test:browserstack:edge": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_edge_13,bstack_edge_14",
+    "test:browserstack:firefox": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_firefox_40,bstack_firefox_52",
+    "test:browserstack:safari": "RUN_ON_BSTACK=true BSTACK_LOCAL=true node_modules/.bin/gulp test --env bstack_safari_8,bstack_safari_10",
+    "test:phantomjs": "RUN_ON_BSTACK=false node_modules/.bin/gulp test --env phantomjs",
+    "test:e2e": "RUN_ON_BSTACK=false node_modules/.bin/gulp test --env chrome",
+    "test:unit": "node_modules/.bin/karma start build/karma.dev.config.js",
+    "test:sauce": "npm run sauce -- 0 && npm run sauce -- 1 && npm run sauce -- 2 && npm run sauce -- 3 && npm run sauce -- 4 && npm run sauce -- 5",
+    "sauce": "node_modules/.bin/karma start build/karma.sauce.config.js",
+    "lint": "node_modules/.bin/eslint ./",
+    "report": "npm test && node_modules/.bin/nyc report --reporter=html",
+    "coveralls": "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
+    "codecov": "./node_modules/.bin/nyc report --reporter=lcovonly && codecov -t $CODECOV_TOKEN"
+  },
+  "keywords": [
+    "storage",
+    "localstorage",
+    "local-storage",
+    "vue-localstorage",
+    "vuejs-localstorage",
+    "vue-local-storage",
+    "vuejs-local-storage",
+    "memorystroage",
+    "sessionstorage",
+    "session-storage",
+    "vue-sessionstorage",
+    "vuejs-sessionstorage",
+    "vue-session-storage",
+    "vuejs-session-storage",
+    "memory-stroage",
+    "vue-ls",
+    "vue",
+    "vuejs",
+    "vue-plugin",
+    "watch",
+    "es6-modules"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinCK/vue-ls.git"
+  },
+  "author": "Igor Ognichenko <ognichenko.igor@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/RobinCK/vue-ls/issues"
+  },
+  "engines": {
+    "node": ">=6.11.5"
+  },
+  "homepage": "https://github.com/RobinCK/vue-ls#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.3.1",
+    "ava": "^1.1.0",
+    "babel-eslint": "^10.0.0",
+    "babel-loader": "^8.0.5",
+    "browserstack-automate": "^1.0.2",
+    "chromedriver": "^2.45.0",
+    "connect": "^3.6.6",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.15.0",
+    "eslint-plugin-node": "^8.0.1",
+    "get-gulp-args": "^0.0.1",
+    "gulp": "4.0.0",
+    "gulp-nightwatch": "^1.1.0",
+    "gulp-util": "^3.0.8",
+    "husky": "^1.3.1",
+    "jasmine": "^3.3.1",
+    "jasmine-core": "^3.2.1",
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^2.0.0",
+    "karma-sauce-launcher": "^2.0.2",
+    "karma-webpack": "^3.0.2",
+    "mock-browser": "^0.92.14",
+    "nightwatch": "^1.0.18",
+    "nyc": "^13.0.1",
+    "phantomjs": "^2.1.7",
+    "remove": "^0.1.5",
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-local-resolve": "^1.0.7",
+    "rollup-plugin-uglify": "^6.0.2",
+    "selenium-server": "^3.14.0",
+    "serve-static": "^1.13.2",
+    "vue": "^2.5.22",
+    "webpack": "^4.29.0"
+  },
+  "semistandard": {
+    "ignore": [
+      "node_modules",
+      "bower_components",
+      "build",
+      "dist",
+      "test"
+    ]
+  },
+  "ava": {
+    "babel": {
+      "extensions": [
+        "js"
+      ]
+    },
+    "tap": true,
+    "files": [
+      "./test/unit/ava/*.js"
+    ],
+    "require": [
+      "@babel/register",
+      "@babel/polyfill"
+    ]
+  }
+}

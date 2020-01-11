@@ -1,0 +1,364 @@
+import {
+  assign,
+  isFunction,
+  isArray,
+  forEach,
+  isDefined
+} from 'min-dash';
+
+import {
+  delegate as domDelegate,
+  event as domEvent,
+  attr as domAttr,
+  query as domQuery,
+  classes as domClasses,
+  domify as domify
+} from 'min-dom';
+
+var entrySelector = '.entry';
+
+var DEFAULT_PRIORITY = 1000;
+
+
+/**
+ * A context pad that displays element specific, contextual actions next
+ * to a diagram element.
+ *
+ * @param {Object} config
+ * @param {Boolean|Object} [config.scale={ min: 1.0, max: 1.5 }]
+ * @param {Number} [config.scale.min]
+ * @param {Number} [config.scale.max]
+ * @param {EventBus} eventBus
+ * @param {Overlays} overlays
+ */
+export default function ContextPad(config, eventBus, overlays) {
+
+  this._eventBus = eventBus;
+  this._overlays = overlays;
+
+  var scale = isDefined(config && config.scale) ? config.scale : {
+    min: 1,
+    max: 1.5
+  };
+
+  this._overlaysConfig = {
+    position: {
+      right: -9,
+      top: -6
+    },
+    scale: scale
+  };
+
+  this._current = null;
+
+  this._init();
+}
+
+ContextPad.$inject = [
+  'config.contextPad',
+  'eventBus',
+  'overlays'
+];
+
+
+/**
+ * Registers events needed for interaction with other components
+ */
+ContextPad.prototype._init = function() {
+
+  var eventBus = this._eventBus;
+
+  var self = this;
+
+  eventBus.on('selection.changed', function(e) {
+
+    var selection = e.newSelection;
+
+    if (selection.length === 1) {
+      self.open(selection[0]);
+    } else {
+      self.close();
+    }
+  });
+
+  eventBus.on('elements.delete', function(event) {
+    var elements = event.elements;
+
+    forEach(elements, function(e) {
+      if (self.isOpen(e)) {
+        self.close();
+      }
+    });
+  });
+
+  eventBus.on('element.changed', function(event) {
+    var element = event.element,
+        current = self._current;
+
+    // force reopen if element for which we are currently opened changed
+    if (current && current.element === element) {
+      self.open(element, true);
+    }
+  });
+};
+
+
+/**
+ * Register a provider with the context pad
+ *
+ * @param  {Number} [priority=1000]
+ * @param  {ContextPadProvider} provider
+ *
+ * @example
+ * const contextPadProvider = {
+  *   getContextPadEntries: function(element) {
+  *     return function(entries) {
+  *       return {
+  *         ...entries,
+  *         'entry-1': {
+  *           label: 'My Entry',
+  *           action: function() { alert("I have been clicked!"); }
+  *         }
+  *       };
+  *     }
+  *   }
+  * };
+  *
+ * contextPad.registerProvider(800, contextPadProvider);
+ */
+ContextPad.prototype.registerProvider = function(priority, provider) {
+  if (!provider) {
+    provider = priority;
+    priority = DEFAULT_PRIORITY;
+  }
+
+  this._eventBus.on('contextPad.getProviders', priority, function(event) {
+    event.providers.push(provider);
+  });
+};
+
+
+/**
+ * Returns the context pad entries for a given element
+ *
+ * @param {djs.element.Base} element
+ *
+ * @return {Array<ContextPadEntryDescriptor>} list of entries
+ */
+ContextPad.prototype.getEntries = function(element) {
+  var providers = this._getProviders();
+
+  var entries = {};
+
+  // loop through all providers and their entries.
+  // group entries by id so that overriding an entry is possible
+  forEach(providers, function(provider) {
+    var entriesOrUpdater = provider.getContextPadEntries(element);
+
+    if (isFunction(entriesOrUpdater)) {
+      entries = entriesOrUpdater(entries);
+    } else {
+      forEach(entriesOrUpdater, function(entry, id) {
+        entries[id] = entry;
+      });
+    }
+  });
+
+  return entries;
+};
+
+
+/**
+ * Trigger an action available on the opened context pad
+ *
+ * @param  {String} action
+ * @param  {Event} event
+ * @param  {Boolean} [autoActivate=false]
+ */
+ContextPad.prototype.trigger = function(action, event, autoActivate) {
+
+  var element = this._current.element,
+      entries = this._current.entries,
+      entry,
+      handler,
+      originalEvent,
+      button = event.delegateTarget || event.target;
+
+  if (!button) {
+    return event.preventDefault();
+  }
+
+  entry = entries[domAttr(button, 'data-action')];
+  handler = entry.action;
+
+  originalEvent = event.originalEvent || event;
+
+  // simple action (via callback function)
+  if (isFunction(handler)) {
+    if (action === 'click') {
+      return handler(originalEvent, element, autoActivate);
+    }
+  } else {
+    if (handler[action]) {
+      return handler[action](originalEvent, element, autoActivate);
+    }
+  }
+
+  // silence other actions
+  event.preventDefault();
+};
+
+
+/**
+ * Open the context pad for the given element
+ *
+ * @param {djs.model.Base} element
+ * @param {Boolean} force if true, force reopening the context pad
+ */
+ContextPad.prototype.open = function(element, force) {
+  if (!force && this.isOpen(element)) {
+    return;
+  }
+
+  this.close();
+  this._updateAndOpen(element);
+};
+
+ContextPad.prototype._getProviders = function(id) {
+
+  var event = this._eventBus.createEvent({
+    type: 'contextPad.getProviders',
+    providers: []
+  });
+
+  this._eventBus.fire(event);
+
+  return event.providers;
+};
+
+ContextPad.prototype._updateAndOpen = function(element) {
+
+  var entries = this.getEntries(element),
+      pad = this.getPad(element),
+      html = pad.html;
+
+  forEach(entries, function(entry, id) {
+    var grouping = entry.group || 'default',
+        control = domify(entry.html || '<div class="entry" draggable="true"></div>'),
+        container;
+
+    domAttr(control, 'data-action', id);
+
+    container = domQuery('[data-group=' + grouping + ']', html);
+    if (!container) {
+      container = domify('<div class="group" data-group="' + grouping + '"></div>');
+      html.appendChild(container);
+    }
+
+    container.appendChild(control);
+
+    if (entry.className) {
+      addClasses(control, entry.className);
+    }
+
+    if (entry.title) {
+      domAttr(control, 'title', entry.title);
+    }
+
+    if (entry.imageUrl) {
+      control.appendChild(domify('<img src="' + entry.imageUrl + '">'));
+    }
+  });
+
+  domClasses(html).add('open');
+
+  this._current = {
+    element: element,
+    pad: pad,
+    entries: entries
+  };
+
+  this._eventBus.fire('contextPad.open', { current: this._current });
+};
+
+
+ContextPad.prototype.getPad = function(element) {
+  if (this.isOpen()) {
+    return this._current.pad;
+  }
+
+  var self = this;
+
+  var overlays = this._overlays;
+
+  var html = domify('<div class="djs-context-pad"></div>');
+
+  var overlaysConfig = assign({
+    html: html
+  }, this._overlaysConfig);
+
+  domDelegate.bind(html, entrySelector, 'click', function(event) {
+    self.trigger('click', event);
+  });
+
+  domDelegate.bind(html, entrySelector, 'dragstart', function(event) {
+    self.trigger('dragstart', event);
+  });
+
+  // stop propagation of mouse events
+  domEvent.bind(html, 'mousedown', function(event) {
+    event.stopPropagation();
+  });
+
+  this._overlayId = overlays.add(element, 'context-pad', overlaysConfig);
+
+  var pad = overlays.get(this._overlayId);
+
+  this._eventBus.fire('contextPad.create', { element: element, pad: pad });
+
+  return pad;
+};
+
+
+/**
+ * Close the context pad
+ */
+ContextPad.prototype.close = function() {
+  if (!this.isOpen()) {
+    return;
+  }
+
+  this._overlays.remove(this._overlayId);
+
+  this._overlayId = null;
+
+  this._eventBus.fire('contextPad.close', { current: this._current });
+
+  this._current = null;
+};
+
+/**
+ * Check if pad is open. If element is given, will check
+ * if pad is opened with given element.
+ *
+ * @param {Element} element
+ * @return {Boolean}
+ */
+ContextPad.prototype.isOpen = function(element) {
+  return !!this._current && (!element ? true : this._current.element === element);
+};
+
+
+
+
+// helpers //////////////////////
+
+function addClasses(element, classNames) {
+
+  var classes = domClasses(element);
+
+  var actualClassNames = isArray(classNames) ? classNames : classNames.split(/\s+/g);
+  actualClassNames.forEach(function(cls) {
+    classes.add(cls);
+  });
+}

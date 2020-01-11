@@ -1,0 +1,21 @@
+{
+  "name": "js-calendar",
+  "version": "1.2.3",
+  "description": "JavaScript calendar days generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/test",
+    "build": "webpack"
+  },
+  "author": "Sergio Crisostomo",
+  "repository": "https://github.com/SergioCrisostomo/js-calendar",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "webpack": "^2.3.2"
+  },
+  "directories": {
+    "test": "test"
+  }
+}

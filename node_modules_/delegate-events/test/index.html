@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Event</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+
+    <h1> Delegate tests</h1>
+
+    <p>Open the console, and verify that interacting with the elements logs output as expected by their descriptions.</p>
+
+    <h2>Basic binding</h2>
+
+    <ul class='basic-test'>
+      <li><a class='unlimited' href="#">I can be clicked unlimited times</a></li>
+      <li><a class='unlimited' href="#">I can be clicked unlimited times</a></li>
+
+      <li>I don't have a &lt;a&gt; so am unclickable</li>
+
+      <li><a class='five-times' href="#">I can be clicked 5 times</a></li>
+    </ul>
+
+    <h2>Multiple events</h2>
+    <p>Bind two events, one to "li a" and one to "li.foo a", give one element the foo class, but not the other.</p>
+    <ul class='multiple-test'>
+      <li><a href='#'>Bound to li, triggers 1 event</a></li>
+      <li class='foo'><a href='#'>Bound to li.foo, triggers both events</a></li>
+    </ul>
+
+
+    <h2>Blur/Focus events</h2>
+
+    <ul class='blur-focus-test'>
+      <li class='focus'>This triggers on focus: <input placeholder='focus me'></li>
+      <li class='blur'>This triggers on blur: <input placeholder='blur me'></li>
+    </ul>
+
+    <script src="./test.bundle.js"></script>
+  </body>
+</html>

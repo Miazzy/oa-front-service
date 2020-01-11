@@ -1,0 +1,22 @@
+{
+  "name": "closest",
+  "version": "0.0.1",
+  "description": "Find the closest parent that matches a selector.",
+  "keywords": [
+    "browserify",
+    "CSS",
+    "selector",
+    "closest",
+    "parents",
+    "jquery"
+  ],
+  "dependencies": {
+    "matches-selector": "0.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForbesLindesay/closest.git"
+  },
+  "author": "Jonathan Ong",
+  "license": "MIT"
+}

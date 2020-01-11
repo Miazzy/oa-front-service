@@ -1,0 +1,15 @@
+{
+  "name": "vue-layui",
+  "version": "0.0.1-alpha-1",
+  "description": "vue for layui, a small wheel",
+  "main": "index.js",
+  "repository": "https://github.com/xiaofengsha/vue-layui.git",
+  "author": "billywang",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "vue": "^2.5.16",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "vue-github-badge",
+  "version": "1.0.1",
+  "description": "cuz I need it",
+  "repository": {
+    "url": "egoist/vue-github-badge",
+    "type": "git"
+  },
+  "main": "dist/vue-github-badge.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo 'no tests!' && npm run lint",
+    "prepublish": "npm run build",
+    "lint": "xo",
+    "build": "bili ./src/index.js --format umd --compress --module-name GitHubBadge --name vue-github-badge --js babel --banner",
+    "build:example": "poi build",
+    "deploy": "npm run build:example && gh-pages -d dist-example",
+    "dev": "poi"
+  },
+  "author": "egoist <0x142857@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "bili": "^0.16.0-rc.2",
+    "eslint-config-rem": "^3.1.0",
+    "gh-pages": "^1.0.0",
+    "poi": "^9.0.4",
+    "rollup-plugin-babel": "^2.7.1",
+    "xo": "^0.18.2"
+  },
+  "xo": {
+    "extends": [
+      "rem"
+    ],
+    "ignores": [
+      "example.js"
+    ]
+  },
+  "poi": {
+    "dist": "dist-example",
+    "entry": "example.js",
+    "homepage": "/vue-github-badge"
+  }
+}

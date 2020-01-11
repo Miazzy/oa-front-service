@@ -1,0 +1,14 @@
+{
+  "name": "event",
+  "repo": "component/event",
+  "description": "Event binding component",
+  "version": "0.1.4",
+  "keywords": [
+    "browser",
+    "event",
+    "events"
+  ],
+  "scripts": [
+    "index.js"
+  ]
+}

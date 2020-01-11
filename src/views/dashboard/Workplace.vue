@@ -5,15 +5,25 @@
         {{ timeFix }}，{{ nickname() }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div :style="postStyle">{{postName}} | {{departName}}</div>
+      <div :style="postStyle">{{ postName }} | {{ departName }}</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
         <a-col :span="8">
-          <head-info title="项目数" content="56" :center="false" :bordered="false" />
+          <head-info
+            title="项目数"
+            content="56"
+            :center="false"
+            :bordered="false"
+          />
         </a-col>
         <a-col :span="8">
-          <head-info title="团队排名" content="8/24" :center="false" :bordered="false" />
+          <head-info
+            title="团队排名"
+            content="8/24"
+            :center="false"
+            :bordered="false"
+          />
         </a-col>
         <a-col :span="8">
           <head-info title="项目访问" content="2,223" :center="false" />
@@ -30,18 +40,24 @@
             style="margin-bottom: 24px;"
             :bordered="false"
             title="进行中的项目"
-            :body-style="{ padding: 0 }"
+            :body-style="{padding: 0}"
           >
             <a slot="extra">全部项目</a>
             <div>
-              <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projects">
-                <a-card :bordered="false" :body-style="{ padding: 0 }">
+              <a-card-grid
+                class="project-card-grid"
+                :key="i"
+                v-for="(item, i) in projects"
+              >
+                <a-card :bordered="false" :body-style="{padding: 0}">
                   <a-card-meta>
                     <div slot="title" class="card-title">
                       <a-avatar size="small" :src="item.cover" />
                       <a>{{ item.title }}</a>
                     </div>
-                    <div slot="description" class="card-description">{{ item.description }}</div>
+                    <div slot="description" class="card-description">
+                      {{ item.description }}
+                    </div>
                   </a-card-meta>
                   <div class="project-item">
                     <a href="/#/">科学搬砖组</a>
@@ -58,10 +74,10 @@
                 <a-list-item-meta>
                   <a-avatar slot="avatar" :src="item.user.avatar" />
                   <div slot="title">
-                    <span>{{ item.user.nickname }}</span>&nbsp;
-                    在&nbsp;
-                    <a href="#">{{ item.project.name }}</a>&nbsp;
-                    <span>{{ item.project.action }}</span>&nbsp;
+                    <span>{{ item.user.nickname }}</span
+                    >&nbsp; 在&nbsp; <a href="#">{{ item.project.name }}</a
+                    >&nbsp; <span>{{ item.project.action }}</span
+                    >&nbsp;
                     <a href="#">{{ item.project.event }}</a>
                   </div>
                   <div slot="description">{{ item.time }}</div>
@@ -70,7 +86,14 @@
             </a-list>
           </a-card>
         </a-col>
-        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
+        <a-col
+          style="padding: 0 12px"
+          :xl="8"
+          :lg="24"
+          :md="24"
+          :sm="24"
+          :xs="24"
+        >
           <a-card
             title="快速开始 / 便捷导航"
             style="margin-bottom: 24px"
@@ -79,24 +102,92 @@
           >
             <div class="item-group">
               <div style="margin:5px 0px;">
-                <a-tag color="purple" @click="handleWait()">我的待办</a-tag>
-                <a-tag color="cyan" @click="handleDone()">我的已办</a-tag>
-                <a-tag color="pink" @click="handleMessage()">我的消息</a-tag>
-                <a-tag color="blue" @click="handleCollect()">我的收藏</a-tag>
-                <a-tag color="red" @click="handleMyCenter()">个人中心</a-tag>
-              </div>
-              <div style="margin:10px 0px;">
-                <a-tag color="green" @click="handleLeave()">请假申请</a-tag>
-                <a-tag color="blue" @click="handleGoOut()">外出申请</a-tag>
-                <a-tag color="orange" @click="handleOvertime()">加班申请</a-tag>
-                <a-tag color="pink" @click="handleAttendance()">考勤异常</a-tag>
-                <a-tag color="cyan" @click="handleFileBorrow()">档案借阅</a-tag>
-              </div>
-              <div style="margin:10px 0px;">
-                <a-tag color="blue" @click="handleUseSealCon()">用印(合同)</a-tag>
-                <a-tag color="red" @click="handleUseSealCom()">用印(非合同)</a-tag>
-                <a-tag color="green" @click="handleSealDeclare()">印章借用</a-tag>
-                <a-tag color="orange" @click="handleTravel()">出差申请</a-tag>
+                <a-tag
+                  color="purple"
+                  @click="handleWait()"
+                  style="margin-bottom:10px;"
+                  >我的待办</a-tag
+                >
+                <a-tag
+                  color="cyan"
+                  @click="handleDone()"
+                  style="margin-bottom:10px;"
+                  >我的已办</a-tag
+                >
+                <a-tag
+                  color="pink"
+                  @click="handleMessage()"
+                  style="margin-bottom:10px;"
+                  >我的消息</a-tag
+                >
+                <a-tag
+                  color="blue"
+                  @click="handleCollect()"
+                  style="margin-bottom:10px;"
+                  >我的收藏</a-tag
+                >
+                <a-tag
+                  color="red"
+                  @click="handleMyCenter()"
+                  style="margin-bottom:10px;"
+                  >个人中心</a-tag
+                >
+
+                <a-tag
+                  color="green"
+                  @click="handleLeave()"
+                  style="margin-bottom:10px;"
+                  >请假申请</a-tag
+                >
+                <a-tag
+                  color="blue"
+                  @click="handleGoOut()"
+                  style="margin-bottom:10px;"
+                  >外出申请</a-tag
+                >
+                <a-tag
+                  color="orange"
+                  @click="handleOvertime()"
+                  style="margin-bottom:10px;"
+                  >加班申请</a-tag
+                >
+                <a-tag
+                  color="pink"
+                  @click="handleAttendance()"
+                  style="margin-bottom:10px;"
+                  >考勤异常</a-tag
+                >
+                <a-tag
+                  color="cyan"
+                  @click="handleFileBorrow()"
+                  style="margin-bottom:10px;"
+                  >档案借阅</a-tag
+                >
+
+                <a-tag
+                  color="blue"
+                  @click="handleUseSealCon()"
+                  style="margin-bottom:10px;"
+                  >用印(合同)</a-tag
+                >
+                <a-tag
+                  color="red"
+                  @click="handleUseSealCom()"
+                  style="margin-bottom:10px;"
+                  >用印(非合同)</a-tag
+                >
+                <a-tag
+                  color="green"
+                  @click="handleSealDeclare()"
+                  style="margin-bottom:10px;"
+                  >印章借用</a-tag
+                >
+                <a-tag
+                  color="orange"
+                  @click="handleTravel()"
+                  style="margin-bottom:10px;"
+                  >出差申请</a-tag
+                >
               </div>
             </div>
           </a-card>
@@ -105,7 +196,7 @@
             style="margin-bottom: 24px"
             :loading="radarLoading"
             :bordered="false"
-            :body-style="{ padding: 0 }"
+            :body-style="{padding: 0}"
           >
             <div style="min-height: 400px;">
               <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
@@ -131,36 +222,32 @@
 </template>
 
 <script>
-import { timeFix, welcome } from "@/utils/util";
-import { mapGetters } from "vuex";
+import {timeFix, welcome} from '@/utils/util';
+import {mapGetters} from 'vuex';
 
-import PageLayout from "@/components/page/PageLayout";
-import HeadInfo from "@/components/tools/HeadInfo";
-import Radar from "@/components/chart/Radar";
-import {
-  getRoleList,
-  getServiceList,
-  queryTableDataByField
-} from "@/api/manage";
+import PageLayout from '@/components/page/PageLayout';
+import HeadInfo from '@/components/tools/HeadInfo';
+import Radar from '@/components/chart/Radar';
+import {getRoleList, getServiceList, queryTableDataByField} from '@/api/manage';
 
-const DataSet = require("@antv/data-set");
+const DataSet = require('@antv/data-set');
 
 export default {
-  name: "Workplace",
+  name: 'Workplace',
   components: {
     PageLayout,
     HeadInfo,
-    Radar
+    Radar,
   },
   data() {
     return {
       timeFix: timeFix(),
       welcome: welcome(),
-      postName: "",
-      departName: "",
-      avatar: "",
+      postName: '',
+      departName: '',
+      avatar: '',
       user: {},
-      postStyle: { "margin-top": "-5px" },
+      postStyle: {'margin-top': '-5px'},
       projects: [],
       loading: true,
       radarLoading: true,
@@ -169,61 +256,61 @@ export default {
 
       // data
       axis1Opts: {
-        dataKey: "item",
+        dataKey: 'item',
         line: null,
         tickLine: null,
         grid: {
           lineStyle: {
-            lineDash: null
+            lineDash: null,
           },
-          hideFirstLine: false
-        }
+          hideFirstLine: false,
+        },
       },
       axis2Opts: {
-        dataKey: "score",
+        dataKey: 'score',
         line: null,
         tickLine: null,
         grid: {
-          type: "polygon",
+          type: 'polygon',
           lineStyle: {
-            lineDash: null
-          }
-        }
+            lineDash: null,
+          },
+        },
       },
       scale: [
         {
-          dataKey: "score",
+          dataKey: 'score',
           min: 0,
-          max: 80
-        }
+          max: 80,
+        },
       ],
       axisData: [
-        { item: "引用", a: 70, b: 30, c: 40 },
-        { item: "口碑", a: 60, b: 70, c: 40 },
-        { item: "产量", a: 50, b: 60, c: 40 },
-        { item: "贡献", a: 40, b: 50, c: 40 },
-        { item: "热度", a: 60, b: 70, c: 40 },
-        { item: "引用", a: 70, b: 50, c: 40 }
+        {item: '引用', a: 70, b: 30, c: 40},
+        {item: '口碑', a: 60, b: 70, c: 40},
+        {item: '产量', a: 50, b: 60, c: 40},
+        {item: '贡献', a: 40, b: 50, c: 40},
+        {item: '热度', a: 60, b: 70, c: 40},
+        {item: '引用', a: 70, b: 50, c: 40},
       ],
-      radarData: []
+      radarData: [],
     };
   },
   computed: {
     userInfo() {
       return this.$store.getters.userInfo;
-    }
+    },
   },
   async created() {
     this.user = this.userInfo;
-    this.avatar = window._CONFIG["imgDomainURL"] + "/" + this.userInfo.avatar;
-    console.log("this.avatar :" + this.avatar);
+    this.avatar = window._CONFIG['imgDomainURL'] + '/' + this.userInfo.avatar;
+    console.log('this.avatar :' + this.avatar);
 
     getRoleList().then(res => {
-      console.log("workplace -> call getRoleList()", res);
+      console.log('workplace -> call getRoleList()', res);
     });
 
     getServiceList().then(res => {
-      console.log("workplace -> call getServiceList()", res);
+      console.log('workplace -> call getServiceList()', res);
     });
 
     //设置岗位style
@@ -232,14 +319,14 @@ export default {
     //设置员工岗位信息/部门信息
     try {
       this.v_user = await queryTableDataByField(
-        "v_user",
-        "username",
+        'v_user',
+        'username',
         this.user.username
       );
-      this.postName = this.v_user[0]["post"];
-      this.departName = this.v_user[0]["name"];
+      this.postName = this.v_user[0]['post'];
+      this.departName = this.v_user[0]['name'];
     } catch (error) {
-      console.log("工作台设置员工岗位信息/部门信息异常：" + error);
+      console.log('工作台设置员工岗位信息/部门信息异常：' + error);
     }
   },
   mounted() {
@@ -250,20 +337,20 @@ export default {
     this.handlePostStyle();
   },
   methods: {
-    ...mapGetters(["nickname", "welcome"]),
+    ...mapGetters(['nickname', 'welcome']),
     getProjects() {
-      this.$http.get("/api/list/search/projects").then(res => {
+      this.$http.get('/api/list/search/projects').then(res => {
         this.projects = res.result && res.result.data;
         this.loading = false;
       });
     },
     getActivity() {
-      this.$http.get("/api/workplace/activity").then(res => {
+      this.$http.get('/api/workplace/activity').then(res => {
         this.activities = res.result;
       });
     },
     getTeams() {
-      this.$http.get("/api/workplace/teams").then(res => {
+      this.$http.get('/api/workplace/teams').then(res => {
         this.teams = res.result;
       });
     },
@@ -272,7 +359,7 @@ export default {
      */
     handlePostStyle() {
       if (this.welcome.length > 30) {
-        this.postStyle = { "margin-top": "-10px" };
+        this.postStyle = {'margin-top': '-10px'};
       }
     },
 
@@ -320,7 +407,7 @@ export default {
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "请假申请" }
+        meta: {title: '请假申请'},
       });
     },
     /**
@@ -332,7 +419,7 @@ export default {
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "外出申请" }
+        meta: {title: '外出申请'},
       });
     },
     /**
@@ -344,31 +431,31 @@ export default {
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "加班申请" }
+        meta: {title: '加班申请'},
       });
     },
     /**
      * @function 跳转到考勤异常申请列表
      */
     handleAttendance() {
-      var path = "/online/cgformList/b0fee76c2ee84baeb9494b196b779e3e";
+      var path = '/online/cgformList/b0fee76c2ee84baeb9494b196b779e3e';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "考勤异常" }
+        meta: {title: '考勤异常'},
       });
     },
     /**
      * @function 跳转到档案及证照借阅申请列表
      */
     handleFileBorrow() {
-      var path = "/online/cgformList/3da23c7955d84465a759d0f1830a0d00";
+      var path = '/online/cgformList/3da23c7955d84465a759d0f1830a0d00';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "档案及证照借阅" }
+        meta: {title: '档案及证照借阅'},
       });
     },
 
@@ -376,65 +463,65 @@ export default {
      * @function 跳转到用印申请(合同)列表
      */
     handleUseSealCon() {
-      var path = "/online/cgformList/dd78c4c8a59e4ee3bd93ec011a3f6b4c";
+      var path = '/online/cgformList/dd78c4c8a59e4ee3bd93ec011a3f6b4c';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "用印申请(合同)" }
+        meta: {title: '用印申请(合同)'},
       });
     },
     /**
      * @function 跳转到用印申请(非合同)列表
      */
     handleUseSealCom() {
-      var path = "/online/cgformList/cfd4ee2d60fa48f585c157d524b0a108";
+      var path = '/online/cgformList/cfd4ee2d60fa48f585c157d524b0a108';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "用印申请(非合同)" }
+        meta: {title: '用印申请(非合同)'},
       });
     },
     /**
      * @function 跳转到用印申请(非合同)列表
      */
     handleSealDeclare() {
-      var path = "/online/cgformList/e412b58db17b4cbf8cb9833c118c2d3b";
+      var path = '/online/cgformList/e412b58db17b4cbf8cb9833c118c2d3b';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "印章借阅" }
+        meta: {title: '印章借阅'},
       });
     },
     /**
      * @function 跳转到用印申请(非合同)列表
      */
     handleTravel() {
-      var path = "/online/cgformList/62f7122c73c244119e5d4ec8aa170a3d";
+      var path = '/online/cgformList/62f7122c73c244119e5d4ec8aa170a3d';
       //跳转到相应页面
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "出差申请" }
+        meta: {title: '出差申请'},
       });
     },
     initRadar() {
       this.radarLoading = true;
-      this.$http.get("/api/workplace/radar").then(res => {
+      this.$http.get('/api/workplace/radar').then(res => {
         const dv = new DataSet.View().source(res.result);
         dv.transform({
-          type: "fold",
-          fields: ["个人", "团队", "部门"],
-          key: "user",
-          value: "score"
+          type: 'fold',
+          fields: ['个人', '团队', '部门'],
+          key: 'user',
+          value: 'score',
         });
         this.radarData = dv.rows;
         this.radarLoading = false;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

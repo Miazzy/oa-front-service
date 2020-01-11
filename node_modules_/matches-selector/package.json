@@ -1,0 +1,52 @@
+{
+  "name": "matches-selector",
+  "version": "1.2.0",
+  "description": "Check if a DOM element matches a given selector, with decent browser support and unit tests.",
+  "keywords": [
+    "browserify",
+    "CSS",
+    "selector"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForbesLindesay/matches-selector.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "run-browser test/index.js"
+  },
+  "devDependencies": {
+    "domify": "~1.1.1",
+    "tape": "~2.3.2",
+    "run-browser": "~2.0.2"
+  },
+  "testling": {
+    "files": "test/index.js",
+    "browsers": [
+      "iexplore/8.0",
+      "iexplore/10.0",
+      "iexplore/9.0",
+      "chrome/30.0",
+      "chrome/31.0",
+      "chrome/canary",
+      "firefox/4.0",
+      "firefox/10.0",
+      "firefox/15.0",
+      "firefox/20.0",
+      "firefox/21.0",
+      "firefox/22.0",
+      "firefox/23.0",
+      "firefox/24.0",
+      "firefox/25.0",
+      "firefox/nightly",
+      "opera/11.0",
+      "opera/17.0",
+      "opera/next",
+      "safari/5.0.5",
+      "safari/5.1",
+      "safari/6.0",
+      "iphone/6.0",
+      "ipad/6.0"
+    ]
+  }
+}

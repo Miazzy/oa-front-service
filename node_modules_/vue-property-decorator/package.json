@@ -1,0 +1,48 @@
+{
+  "name": "vue-property-decorator",
+  "version": "7.3.0",
+  "description": "property decorators for Vue Component",
+  "main": "lib/vue-property-decorator.umd.js",
+  "module": "lib/vue-property-decorator.js",
+  "keywords": [
+    "vue",
+    "typescript",
+    "decorator"
+  ],
+  "author": "kaorun343",
+  "license": "MIT",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc -p src/tsconfig.json && rollup -c",
+    "test": "webpack --config ./test/webpack.config.js && ava test/decorator.spec.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "@types/node": "^8.0.47",
+    "ava": "^0.23.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-typescript": "^0.8.1",
+    "ts-loader": "^4.3.0",
+    "typescript": "^2.6.1",
+    "vue": "^2.5.3",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
+  },
+  "typings": "./lib/vue-property-decorator.d.ts",
+  "dependencies": {
+    "vue-class-component": "^6.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaorun343/vue-property-decorator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kaorun343/vue-property-decorator/issues"
+  },
+  "homepage": "https://github.com/kaorun343/vue-property-decorator#readme"
+}

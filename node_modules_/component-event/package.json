@@ -1,0 +1,19 @@
+{
+  "name": "component-event",
+  "description": "Event binding component",
+  "version": "0.1.4",
+  "keywords": [
+    "browser",
+    "event",
+    "events"
+  ],
+  "component": {
+    "scripts": {
+      "event/index.js": "index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/component/event.git"
+  }
+}

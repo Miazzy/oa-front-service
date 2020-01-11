@@ -1,0 +1,94 @@
+{
+  "name": "bpmn-js",
+  "version": "6.1.1",
+  "description": "A bpmn 2.0 toolkit and web modeler",
+  "scripts": {
+    "all": "run-s lint test distro test:distro",
+    "lint": "eslint .",
+    "dev": "npm test -- --auto-watch --no-single-run",
+    "test": "karma start test/config/karma.unit.js",
+    "distro": "node tasks/build-distro.js",
+    "test:distro": "node tasks/test-distro.js",
+    "prepublishOnly": "run-s distro test:distro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bpmn-io/bpmn-js"
+  },
+  "keywords": [
+    "bpmn",
+    "bpmn-js",
+    "toolkit",
+    "web modeler",
+    "modeler",
+    "modeling",
+    "process modeling"
+  ],
+  "author": {
+    "name": "Nico Rehwaldt",
+    "url": "https://github.com/nikku"
+  },
+  "contributors": [
+    {
+      "name": "bpmn.io contributors",
+      "url": "https://github.com/bpmn-io"
+    }
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "sideEffects": [
+    "*.css"
+  ],
+  "devDependencies": {
+    "camunda-bpmn-moddle": "^4.0.1",
+    "chai": "^4.1.2",
+    "chai-match": "^1.1.1",
+    "cpx": "^1.5.0",
+    "del": "^3.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-bpmn-io": "^0.10.0",
+    "eslint-plugin-import": "^2.18.0",
+    "execa": "^1.0.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.1",
+    "karma-env-preprocessor": "^0.1.1",
+    "karma-firefox-launcher": "^1.2.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-mocha": "^1.3.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-sinon-chai": "^2.0.2",
+    "karma-webpack": "^4.0.2",
+    "mkdirp": "^0.5.1",
+    "mocha": "^6.1.4",
+    "mocha-test-container-support": "0.2.0",
+    "npm-run-all": "^4.1.2",
+    "phantomjs-prebuilt": "^2.1.12",
+    "puppeteer": "^1.18.1",
+    "raw-loader": "^1.0.0",
+    "rollup": "^1.16.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-license": "^0.10.0",
+    "rollup-plugin-node-resolve": "^5.1.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.2.0",
+    "webpack": "^4.35.3"
+  },
+  "dependencies": {
+    "bpmn-font": "^0.9.3",
+    "bpmn-moddle": "^6.0.0",
+    "css.escape": "^1.5.1",
+    "diagram-js": "^6.2.1",
+    "diagram-js-direct-editing": "^1.6.1",
+    "ids": "^1.0.0",
+    "inherits": "^2.0.1",
+    "min-dash": "^3.5.1",
+    "min-dom": "^3.0.0",
+    "object-refs": "^0.3.0",
+    "tiny-svg": "^2.2.1"
+  }
+}

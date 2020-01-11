@@ -1,0 +1,44 @@
+{
+  "name": "vue-preview",
+  "version": "1.1.3",
+  "description": "A Vue integration PhotoSwipe image preview plugin",
+  "main": "/dist/vue-preview.min.js",
+  "scripts": {
+    "build": "webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LS1231/vue-preview.git"
+  },
+  "keywords": [
+    "vue",
+    "preview",
+    "photoswipe"
+  ],
+  "author": "LiuSong [347139089@qq.com] (https://ls1231.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LS1231/vue-preview/issues"
+  },
+  "homepage": "https://github.com/LS1231/vue-preview#readme",
+  "dependencies": {
+    "photoswipe": "^4.1.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.3",
+    "css-loader": "^0.28.10",
+    "file-loader": "^1.1.11",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "url-loader": "^0.5.7",
+    "vue": "^2.5.13",
+    "vue-loader": "^14.1.1",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^3.1.0"
+  }
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>The HTML5 Herald</title>
+        <meta name="description" content="JavaScript Calendar demo">
+        <meta name="author" content="Sergio Crisostomo">
+		<!--
+			<link rel="stylesheet" href="css/styles.css">
+		-->
+        <script src="../dist/jsCalendar.js"></script>
+        <style media="screen">
+            #selector {
+                width: 100%;
+                padding: 5px;
+                height: 20px;
+                background: #fff;
+            }
+
+            #selector > * {
+                padding: 5px;
+            }
+
+            #calendar > div {
+                float: left;
+                width: 260px;
+                height: 245px;
+                margin: 5px;
+            }
+
+            #calendar > div > div {
+                float: left;
+                text-align: center;
+                width: 30px;
+                height: 23px;
+                border: 1px solid #000;
+                padding-top: 5px;
+                border-radius: 2px;
+            }
+
+            #calendar .month {
+                width: 254px;
+                height: 25px;
+                border: none;
+            }
+
+            .inactive {
+                color: #aaa;
+				background-color: #eee;
+            }
+
+            .day-of-week {
+                background-color: #ddf;
+            }
+
+			.week-number {
+				background-color: #fee;
+			}
+
+            .day-in-month {
+                background-color: #bbc;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div id="selector">
+            <input type="text" placeholder="year" />
+            <button type="button">load</button>
+            <button type="button"> &lt; </button>
+            <button type="button"> &gt; </button>
+        </div>
+        <div id="calendar"></div>
+
+
+
+        <script type="text/javascript">
+            var jsCalendar = require('jsCalendar');
+            var jsCal = new jsCalendar.Generator({
+                weekStart: 0
+            });
+			var monthNames = ["January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"
+			];
+			var currentYear = new Date().getFullYear();
+            var input = document.querySelector('input');
+            var buttons = document.querySelectorAll('button');
+            var target = document.querySelector('#calendar');
+
+			// mount HTML
+            buttons[0].addEventListener('click', function() {
+                target.innerHTML = '';
+                var year = parseInt(input.value, 10) || currentYear;
+                for (var i = 0; i < 12; i++) {
+                    var div = document.createElement('div');
+                    var month = monthNames[i];
+                    var monthDiv = document.createElement('div');
+                    monthDiv.className = 'month';
+                    monthDiv.innerHTML = month + ' - ' + year;
+                    div.appendChild(monthDiv);
+                    jsCal(year, i, jsCalendar.addLabels).cells.forEach(function(cell, c) {
+                        var cellDiv = document.createElement('div');
+						// add classes from "addLabels" plugin
+                        cellDiv.className = cell.class.join(' ');
+						// add day number or 3 character long weekday label
+						cellDiv.innerHTML = typeof cell.desc == 'string' ? cell.desc.slice(0, 3) : cell.desc;
+                        div.appendChild(cellDiv);
+                    });
+                    target.appendChild(div);
+                }
+            });
+            buttons[0].click();
+
+			// new year inserted
+			input.addEventListener('change', function(){
+				currentYear = Number(this.value);
+				buttons[0].click();
+			});
+
+			function changeYear(direction){
+				return function(){
+					currentYear+= direction;
+					input.value = currentYear;
+					buttons[0].click();
+				}
+			}
+			buttons[1].addEventListener('click', changeYear(-1));
+			buttons[2].addEventListener('click', changeYear(1));
+
+        </script>
+    </body>
+
+</html>

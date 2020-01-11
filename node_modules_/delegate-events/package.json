@@ -1,0 +1,25 @@
+{
+  "name": "delegate-events",
+  "description": "Event delegation component",
+  "version": "1.1.1",
+  "dependencies": {
+    "closest": "*",
+    "component-event": "*"
+  },
+  "devDependencies": {
+    "browserify": "^3.33.0"
+  },
+  "keywords": [
+    "delegate",
+    "delegation",
+    "event",
+    "events"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/HenrikJoreteg/delegate.git"
+  },
+  "scripts": {
+    "test": "browserify test/test.js > test/test.bundle.js && echo 'Now open test/index.html in a browser to test'"
+  }
+}

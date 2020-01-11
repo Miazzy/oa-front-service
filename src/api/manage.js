@@ -21,6 +21,7 @@ axios_.defaults.headers.post['Content-Type'] =
 
 export const api = {
     domain: window._CONFIG['domain'],
+    restapi: window._CONFIG['restAPI'],
     user: `${window._CONFIG['domain']}/jeecg-boot/api/user`,
     role: `${window._CONFIG['domain']}/jeecg-boot/api/role`,
     service: `${window._CONFIG['domain']}/jeecg-boot/api/service`,
@@ -199,7 +200,7 @@ export async function queryTableName(callback) {
     //获取主键ID
     var tableID = queryURLTableParam();
     //查询URL
-    var queryURL = `${api.domain}/api/onl_cgform_head/${tableID}`;
+    var queryURL = `${api.restapi}/api/onl_cgform_head/${tableID}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -227,7 +228,7 @@ export async function queryTableName(callback) {
  */
 export async function queryApprovalExist(tableName, businessID) {
     //查询URL GET	/api/tableName/:id/exists	True or false whether a row exists or not  /api/tableName/findOne
-    var queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
 
     //查询标识
     var vflag = false;
@@ -250,7 +251,7 @@ export async function queryApprovalExist(tableName, businessID) {
  */
 export async function insertTableData(tableName, node) {
     //Post数据的URL地址
-    var insertURL = `${api.domain}/api/${tableName}`;
+    var insertURL = `${api.restapi}/api/${tableName}`;
 
     //如果传入数据为数组，则URL添加bulk路径
     if (typeof node != 'undefined' && node != null && node instanceof Array) {
@@ -272,7 +273,7 @@ export async function insertTableData(tableName, node) {
 
 export async function postTableData(tableName, node) {
     //Post数据的URL地址
-    var insertURL = `${api.domain}/api/${tableName}`;
+    var insertURL = `${api.restapi}/api/${tableName}`;
 
     //如果传入数据为数组，则URL添加bulk路径
     if (typeof node != 'undefined' && node != null && node instanceof Array) {
@@ -297,7 +298,7 @@ export async function postTableData(tableName, node) {
  */
 export async function deleteTableData(tableName, id) {
     //Post数据的URL地址
-    var deleteURL = `${api.domain}/api/${tableName}/${id}`;
+    var deleteURL = `${api.restapi}/api/${tableName}/${id}`;
 
     try {
         const res = await superagent.delete(deleteURL).set('accept', 'json');
@@ -315,7 +316,7 @@ export async function deleteTableData(tableName, id) {
  */
 export async function patchTableData(tableName, id, node) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var patchURL = `${api.domain}/api/${tableName}/${id}`;
+    var patchURL = `${api.restapi}/api/${tableName}/${id}`;
 
     //如果传入数据为空，则直接返回错误
     if (typeof node == 'undefined' || node == null || node == '') {
@@ -355,7 +356,7 @@ export async function patchTableItem(tableName, id, node) {
  */
 export async function queryTableData(tableName, id) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${api.domain}/api/${tableName}/${id}`;
+    var queryURL = `${api.restapi}/api/${tableName}/${id}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -371,7 +372,7 @@ export async function queryTableData(tableName, id) {
  */
 export async function queryTableAll(tableName) {
     //查询URL Get	/api/tableName	query all rows by tableName
-    var queryURL = `${api.domain}/api/${tableName}`;
+    var queryURL = `${api.restapi}/api/${tableName}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -389,7 +390,7 @@ export async function queryTableAll(tableName) {
  */
 export async function queryTableDataByField(tableName, field, value) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${api.domain}/api/${tableName}?_where=(${field},eq,${value})`;
+    var queryURL = `${api.restapi}/api/${tableName}?_where=(${field},eq,${value})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -407,7 +408,7 @@ export async function queryTableDataByField(tableName, field, value) {
  */
 export async function queryTableDataAll(tableName) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${api.domain}/api/${tableName}`;
+    var queryURL = `${api.restapi}/api/${tableName}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -425,7 +426,7 @@ export async function queryTableDataAll(tableName) {
  */
 export async function queryTableFieldInfo(tableName, field, value) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${api.domain}/api/${tableName}?_where=(name,eq,${field})~and(field,eq,${value})`;
+    var queryURL = `${api.restapi}/api/${tableName}?_where=(name,eq,${field})~and(field,eq,${value})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -440,7 +441,7 @@ export async function queryTableFieldInfo(tableName, field, value) {
  */
 export async function queryBusinessInfo(tableName, callback) {
     //查询URL
-    var queryURL = `${api.domain}/api/PR_RIGHTS?_where=(business,like,~${tableName}~)`;
+    var queryURL = `${api.restapi}/api/PR_RIGHTS?_where=(business,like,~${tableName}~)`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -466,7 +467,7 @@ export async function queryBusinessInfo(tableName, callback) {
  */
 export async function queryProcessNodeEmployee(node, callback) {
     //查询URL
-    var queryURL = `${api.domain}/api/BS_APPROVE_NODE?_where=(name,eq,${node})`;
+    var queryURL = `${api.restapi}/api/BS_APPROVE_NODE?_where=(name,eq,${node})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -492,7 +493,7 @@ export async function queryProcessNodeEmployee(node, callback) {
  */
 export async function queryProcessNodeProcName(node, callback) {
     //查询URL
-    var queryURL = `${api.domain}/api/sys_dict_item?_where=(dict_id,eq,${api.PROCESS_NODE_DICT_ID})~and(item_value,eq,${node})`;
+    var queryURL = `${api.restapi}/api/sys_dict_item?_where=(dict_id,eq,${api.PROCESS_NODE_DICT_ID})~and(item_value,eq,${node})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -526,8 +527,8 @@ export async function queryUserList(params) {
     var ascFlag = params.order == 'asc' ? '' : '-';
 
     //查询URL
-    var queryURL = `${api.domain}/api/v_user?${whereFlag}_p=${params.pageNo}&_size=${params.pageSize}&_sort=${ascFlag}${params.column}`;
-    var queryCountURL = `${api.domain}/api/v_user/count?${whereFlag}`;
+    var queryURL = `${api.restapi}/api/v_user?${whereFlag}_p=${params.pageNo}&_size=${params.pageSize}&_sort=${ascFlag}${params.column}`;
+    var queryCountURL = `${api.restapi}/api/v_user/count?${whereFlag}`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -550,8 +551,8 @@ export async function queryUserList(params) {
  */
 export async function queryProcessLogToApproved(username, realname, params) {
     //查询URL
-    var queryURL = `${api.domain}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
-    var queryCountURL = `${api.domain}/api/PR_LOG/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
+    var queryURL = `${api.restapi}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
+    var queryCountURL = `${api.restapi}/api/PR_LOG/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -574,8 +575,8 @@ export async function queryProcessLogToApproved(username, realname, params) {
  */
 export async function queryProcessLogHisApproved(username, realname, params) {
     //查询URL
-    var queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
-    var queryCountURL = `${api.domain}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
+    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
+    var queryCountURL = `${api.restapi}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
     var result = {};
 
     try {
@@ -606,7 +607,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
  */
 export async function queryProcessLogWait(username, realname) {
     //查询URL
-    var queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     var result = {};
 
     try {
@@ -656,11 +657,11 @@ export async function queryProcessLogWaitByParam(username, param) {
             starttime = new Date();
             endtime = new Date();
         } else if (param.time.length == 1) {
-            starttime = param.time[0].format('YYYY-MM-DD');        
-            endtime = param.time[1].format('YYYY-MM-DD');        
+            starttime = param.time[0].format('YYYY-MM-DD');
+            endtime = param.time[1].format('YYYY-MM-DD');
         } else if (param.time.length >= 2) {
-            starttime = param.time[0].format('YYYY-MM-DD');        
-            endtime = param.time[1].format('YYYY-MM-DD'); 
+            starttime = param.time[0].format('YYYY-MM-DD');
+            endtime = param.time[1].format('YYYY-MM-DD');
         }
 
         starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
@@ -670,7 +671,7 @@ export async function queryProcessLogWaitByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.domain}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
     var result = {};
 
     try {
@@ -698,7 +699,7 @@ export async function queryProcessLogWaitByParam(username, param) {
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
-    var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -747,11 +748,11 @@ export async function queryProcessLogDoneByParam(username, param) {
             starttime = new Date();
             endtime = new Date();
         } else if (param.time.length == 1) {
-            starttime = param.time[0].format('YYYY-MM-DD');        
-            endtime = param.time[1].format('YYYY-MM-DD');        
+            starttime = param.time[0].format('YYYY-MM-DD');
+            endtime = param.time[1].format('YYYY-MM-DD');
         } else if (param.time.length >= 2) {
-            starttime = param.time[0].format('YYYY-MM-DD');        
-            endtime = param.time[1].format('YYYY-MM-DD'); 
+            starttime = param.time[0].format('YYYY-MM-DD');
+            endtime = param.time[1].format('YYYY-MM-DD');
         }
 
         starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
@@ -761,7 +762,7 @@ export async function queryProcessLogDoneByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.domain}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -788,8 +789,8 @@ export async function queryProcessLogDoneByParam(username, param) {
  */
 export async function queryProcessLogInfApproved(username, realname, params) {
     //查询URL
-    var queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
-    var queryCountURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
+    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
+    var queryCountURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -814,7 +815,7 @@ export async function queryProcessLogInfApproved(username, realname, params) {
  */
 export async function queryProcessLogInfByID(tableName, id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -830,7 +831,7 @@ export async function queryProcessLogInfByID(tableName, id) {
  */
 export async function queryProcessLogInformed(tableName, business_data_id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -846,7 +847,7 @@ export async function queryProcessLogInformed(tableName, business_data_id) {
  */
 export async function queryProcessLog(tableName, businessID) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -863,7 +864,7 @@ export async function queryProcessLog(tableName, businessID) {
  */
 export async function queryProcessLogByID(tableName, id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -900,7 +901,7 @@ export async function deleteTableItem(tableName, node) {
     }
 
     try {
-        deleteURL = `${api.domain}/api/${tableName}/bulk?_ids=${ids}`;
+        deleteURL = `${api.restapi}/api/${tableName}/bulk?_ids=${ids}`;
     } catch (error) {
         console.error(error);
     }
@@ -941,7 +942,7 @@ export async function deleteProcessLog(tableName, node) {
     }
 
     try {
-        deleteURL = `${api.domain}/api/PR_LOG/bulk?_ids=${ids}`;
+        deleteURL = `${api.restapi}/api/PR_LOG/bulk?_ids=${ids}`;
     } catch (error) {
         console.error(error);
     }
@@ -982,7 +983,7 @@ export async function deleteProcessLogInf(tableName, node) {
     }
 
     try {
-        deleteURL = `${api.domain}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
+        deleteURL = `${api.restapi}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
     } catch (error) {
         console.error(error);
     }
@@ -1018,7 +1019,7 @@ export async function postTableItem(tableName, node) {
 
     //构建表单提交数据的URL
     try {
-        postURL = `${api.domain}/api/${tableName}${bflag}`;
+        postURL = `${api.restapi}/api/${tableName}${bflag}`;
     } catch (error) {
         console.log(error);
     }
@@ -1041,7 +1042,7 @@ export async function postTableItem(tableName, node) {
  */
 export async function postProcessLog(node) {
     //提交URL
-    var postURL = `${api.domain}/api/PR_LOG`;
+    var postURL = `${api.restapi}/api/PR_LOG`;
 
     try {
         const res = await superagent
@@ -1061,7 +1062,7 @@ export async function postProcessLog(node) {
  */
 export async function postProcessFreeNode(node) {
     //提交URL
-    var postURL = `${api.domain}/api/BS_FREE_PROCESS`;
+    var postURL = `${api.restapi}/api/BS_FREE_PROCESS`;
 
     try {
         const res = await superagent
@@ -1097,7 +1098,7 @@ export async function postProcessLogHistory(node) {
 
     //构建流程历史表提交数据的URL
     try {
-        postURL = `${api.domain}/api/PR_LOG_HISTORY${bflag}`;
+        postURL = `${api.restapi}/api/PR_LOG_HISTORY${bflag}`;
     } catch (error) {
         console.log(error);
     }
@@ -1136,7 +1137,7 @@ export async function postProcessLogInformed(node) {
 
     //构建知会表提交数据的URL
     try {
-        postURL = `${api.domain}/api/PR_LOG_INFORMED${bflag}`;
+        postURL = `${api.restapi}/api/PR_LOG_INFORMED${bflag}`;
     } catch (error) {
         console.error(error);
     }
@@ -1160,7 +1161,7 @@ export async function postProcessLogInformed(node) {
  */
 export async function queryPRLogHistoryByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=1&_size=99`;
+    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=1&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1176,7 +1177,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
  */
 export async function queryPRLogByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/PR_LOG?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1192,7 +1193,7 @@ export async function queryPRLogByDataID(business_data_id) {
  */
 export async function queryPRLogInfByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG_INFORMED?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1211,8 +1212,8 @@ export async function queryPRLogInfTotal(business_data_id) {
     var ctime = formatDate(new Date(), 'yyyy-MM-dd');
 
     //提交URL
-    var queryURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
-    var queryTodayURL = `${api.domain}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(operate_time,like,~${ctime}~)`;
+    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
+    var queryTodayURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(operate_time,like,~${ctime}~)`;
     var result = {};
     var count = 0;
     var today = 0;
@@ -1701,7 +1702,7 @@ export async function queryWorkflows(business_data_id) {
  */
 export async function queryDepartNameByCode(code) {
     //提交URL
-    var queryURL = `${api.domain}/api/sys_depart?_where=(org_code,eq,${code})`;
+    var queryURL = `${api.restapi}/api/sys_depart?_where=(org_code,eq,${code})`;
     //根据部门编号，查询部门信息
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1776,6 +1777,8 @@ export async function watchFormLeave(that) {
         return false;
     }
 
+
+
     try {
         department = await queryTableData(
             'sys_depart',
@@ -1789,6 +1792,8 @@ export async function watchFormLeave(that) {
     try {
         department =
             department || (await queryDepartNameByCode(that.curRow.sys_org_code));
+        //部门信息
+        //that.curRow.depart_name = department;
     } catch (error) {
         console.log('query department error :' + error);
     }
@@ -1918,6 +1923,7 @@ export async function watchFormLeave(that) {
 
     try {
         that.depart = department;
+        that.curRow.depart_name = department;
     } catch (error) {
         console.log('setup department error : ' + error);
     }
