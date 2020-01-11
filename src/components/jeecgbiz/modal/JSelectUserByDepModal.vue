@@ -9,7 +9,10 @@
     style="margin-top: -70px"
     wrapClassName="ant-modal-cust-warp"
   >
-    <a-row :gutter="10" style="background-color: #ececec; padding: 10px; margin: -10px">
+    <a-row
+      :gutter="10"
+      style="background-color: #ececec; padding: 10px; margin: -10px"
+    >
       <a-col :md="6" :sm="24">
         <a-card :bordered="false">
           <!--组织机构-->
@@ -18,7 +21,7 @@
             :selectedKeys="selectedKeys"
             :checkStrictly="true"
             @select="this.onSelect"
-            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
+            :dropdownStyle="{maxHeight: '200px', overflow: 'auto'}"
             :treeData="departTree"
           />
         </a-card>
@@ -27,12 +30,17 @@
         <a-card :bordered="false">
           用户账号:
           <a-input-search
-            :style="{width:'150px',marginBottom:'15px'}"
+            :style="{width: '150px', marginBottom: '15px'}"
             placeholder="请输入用户账号"
             v-model="queryParam.username"
             @search="onSearch"
           ></a-input-search>
-          <a-button @click="searchReset(1)" style="margin-left: 20px" icon="redo">重置</a-button>
+          <a-button
+            @click="searchReset(1)"
+            style="margin-left: 20px"
+            icon="redo"
+            >重置</a-button
+          >
           <!--用户列表-->
           <a-table
             ref="table"
@@ -42,7 +50,10 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
-            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            :rowSelection="{
+              selectedRowKeys: selectedRowKeys,
+              onChange: onSelectChange,
+            }"
             @change="handleTableChange"
           ></a-table>
         </a-card>
@@ -52,90 +63,90 @@
 </template>
 
 <script>
-import { filterObj } from "@/utils/util";
+import {filterObj} from '@/utils/util';
 import {
   queryDepartTreeList,
   getUserList,
   queryUserByDepId,
-  queryUserRoleMap
-} from "@/api/api";
+  queryUserRoleMap,
+} from '@/api/api';
 export default {
-  name: "JSelectUserByDepModal",
+  name: 'JSelectUserByDepModal',
   components: {},
-  props: ["modalWidth"],
+  props: ['modalWidth'],
   data() {
     return {
       queryParam: {
-        username: ""
+        username: '',
       },
       columns: [
         {
-          title: "用户账号",
-          align: "center",
-          dataIndex: "username"
+          title: '用户账号',
+          align: 'center',
+          dataIndex: 'username',
         },
         {
-          title: "真实姓名",
-          align: "center",
-          dataIndex: "realname"
+          title: '真实姓名',
+          align: 'center',
+          dataIndex: 'realname',
         },
         {
-          title: "角色名称",
-          align: "center",
-          dataIndex: "roleName"
+          title: '角色名称',
+          align: 'center',
+          dataIndex: 'roleName',
         },
         {
-          title: "性别",
-          align: "center",
-          dataIndex: "sex",
+          title: '性别',
+          align: 'center',
+          dataIndex: 'sex',
           customRender: function(text) {
             if (text === 1) {
-              return "男";
+              return '男';
             } else if (text === 2) {
-              return "女";
+              return '女';
             } else {
               return text;
             }
-          }
+          },
         },
         {
-          title: "手机号码",
-          align: "center",
-          dataIndex: "phone"
+          title: '手机号码',
+          align: 'center',
+          dataIndex: 'phone',
         },
         {
-          title: "邮箱",
-          align: "center",
-          dataIndex: "email"
-        }
+          title: '邮箱',
+          align: 'center',
+          dataIndex: 'email',
+        },
       ],
       scrollTrigger: {},
       dataSource: [],
       selectedKeys: [],
       userNameArr: [],
-      departName: "",
+      departName: '',
       userRolesMap: {},
-      title: "根据部门选择用户",
+      title: '根据部门选择用户',
       ipagination: {
         current: 1,
         pageSize: 10,
-        pageSizeOptions: ["10", "20", "30"],
+        pageSizeOptions: ['10', '20', '30'],
         showTotal: (total, range) => {
-          return range[0] + "-" + range[1] + " 共" + total + "条";
+          return range[0] + '-' + range[1] + ' 共' + total + '条';
         },
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 0
+        total: 0,
       },
       isorter: {
-        column: "createTime",
-        order: "desc"
+        column: 'createTime',
+        order: 'desc',
       },
       selectedRowKeys: [],
       selectedRows: [],
       departTree: [],
       visible: false,
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
     };
   },
   created() {
@@ -169,7 +180,7 @@ export default {
     resetScreenSize() {
       let screenWidth = document.body.clientWidth;
       if (screenWidth < 500) {
-        this.scrollTrigger = { x: 800 };
+        this.scrollTrigger = {x: 800};
       } else {
         this.scrollTrigger = {};
       }
@@ -188,9 +199,9 @@ export default {
       return filterObj(param);
     },
     getQueryField() {
-      let str = "id,";
+      let str = 'id,';
       for (let a = 0; a < this.columns.length; a++) {
-        str += "," + this.columns[a].dataIndex;
+        str += ',' + this.columns[a].dataIndex;
       }
       return str;
     },
@@ -212,7 +223,7 @@ export default {
       //TODO 筛选
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
-        this.isorter.order = "ascend" === sorter.order ? "asc" : "desc";
+        this.isorter.order = 'ascend' === sorter.order ? 'asc' : 'desc';
       }
       this.ipagination = pagination;
       this.loadData();
@@ -222,7 +233,7 @@ export default {
       for (let i = 0, len = this.selectedRowKeys.length; i < len; i++) {
         this.getUserNames(this.selectedRowKeys[i]);
       }
-      that.$emit("ok", that.userNameArr.join(","));
+      that.$emit('ok', that.userNameArr.join(','));
       that.close();
     },
     // 遍历匹配,获取用户真实姓名
@@ -252,7 +263,7 @@ export default {
     },
     // 根据选择的id来查询用户信息
     queryUserByDepId(selectedKeys) {
-      queryUserByDepId({ id: selectedKeys.toString() }).then(res => {
+      queryUserByDepId({id: selectedKeys.toString()}).then(res => {
         if (res.success) {
           this.dataSource = res.result;
           this.ipagination.total = res.result.length;
@@ -269,7 +280,7 @@ export default {
           roleName.push(map[key]);
         }
       }
-      return roleName.join(",");
+      return roleName.join(',');
     },
     queryDepartTree() {
       queryDepartTreeList().then(res => {
@@ -280,8 +291,8 @@ export default {
     },
     // 为角色名称赋值
     assignRoleName(data) {
-      let userId = "";
-      let role = "";
+      let userId = '';
+      let role = '';
       for (let i = 0, length = data.length; i < length; i++) {
         userId = this.dataSource[i].id;
         role = this.queryUserRole(userId);
@@ -290,8 +301,8 @@ export default {
     },
     modalFormOk() {
       this.loadData();
-    }
-  }
+    },
+  },
 };
 </script>
 

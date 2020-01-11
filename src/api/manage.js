@@ -518,6 +518,10 @@ export async function queryProcessNodeProcName(node, callback) {
  * 查询审批处理页面的记录
  */
 export async function queryUserList(params) {
+
+    //pageNo从0开始计算
+    params.pageNo = params.pageNo - 0;
+
     //用户名称
     var whereFlag =
         deNull(params.name) == '' ?
@@ -550,6 +554,10 @@ export async function queryUserList(params) {
  * 查询审批处理页面的记录
  */
 export async function queryProcessLogToApproved(username, realname, params) {
+
+    //pageNo从0开始计算
+    params.pageNo = params.pageNo - 0;
+
     //查询URL
     var queryURL = `${api.restapi}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
     var queryCountURL = `${api.restapi}/api/PR_LOG/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
@@ -574,6 +582,10 @@ export async function queryProcessLogToApproved(username, realname, params) {
  * 查询审批历史记录页面的记录
  */
 export async function queryProcessLogHisApproved(username, realname, params) {
+
+    //pageNo从0开始计算
+    params.pageNo = params.pageNo - 0;
+
     //查询URL
     var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     var queryCountURL = `${api.restapi}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
@@ -607,7 +619,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
  */
 export async function queryProcessLogWait(username, realname) {
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=0&_size=30&_sort=-create_time`;
     var result = {};
 
     try {
@@ -671,7 +683,7 @@ export async function queryProcessLogWaitByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)${whereSQL}&_p=0&_size=99&_sort=-create_time`;
     var result = {};
 
     try {
@@ -699,7 +711,7 @@ export async function queryProcessLogWaitByParam(username, param) {
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=1&_size=10&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=0&_size=30&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -762,7 +774,7 @@ export async function queryProcessLogDoneByParam(username, param) {
     }
 
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=1&_size=99&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=0&_size=99&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -788,6 +800,10 @@ export async function queryProcessLogDoneByParam(username, param) {
  * 查询审批知会记录页面的记录
  */
 export async function queryProcessLogInfApproved(username, realname, params) {
+
+    //pageNo从0开始计算
+    params.pageNo = params.pageNo - 0;
+
     //查询URL
     var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
     var queryCountURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
@@ -1161,7 +1177,7 @@ export async function postProcessLogInformed(node) {
  */
 export async function queryPRLogHistoryByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=1&_size=99`;
+    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
