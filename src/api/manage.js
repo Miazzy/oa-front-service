@@ -1938,8 +1938,9 @@ export async function watchFormLeave(that) {
     }
 
     try {
+        debugger;
         that.depart = department;
-        that.curRow.depart_name = department;
+        that.curRow.depart_name = department.depart_name;
     } catch (error) {
         console.log('setup department error : ' + error);
     }

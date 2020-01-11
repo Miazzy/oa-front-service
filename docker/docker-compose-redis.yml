@@ -1,0 +1,11 @@
+version: '3'
+services:
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/xylink/redis:3.2_v1
+    container_name: redis_oa_system
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - /app/redis/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf

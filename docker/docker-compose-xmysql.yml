@@ -1,0 +1,12 @@
+version: '3'
+services:
+  xmysql:
+    image: markuman/xmysql:0.4.2
+    ports:
+      - '10000:80'
+    environment:
+      - DATABASE_HOST=172.18.231.224
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=ziyequma
+      - DATABASE_NAME=jeecg
+    restart: always
