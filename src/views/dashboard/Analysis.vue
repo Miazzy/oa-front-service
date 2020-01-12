@@ -238,35 +238,29 @@
                 style="padding-top:-10px;margin-top:-10px"
               >
                 <span slot="announce_type" slot-scope="text, record">
-                  <a-tag color="cyan" :key="record.announce_type">
-                    {{
-                    record.announce_type
-                    }}
-                  </a-tag>
+                  <a-tag
+                    color="cyan"
+                    :key="record.announce_type"
+                    @click="handleAnnounceInfo(record,'BS_ANNOUNCE')"
+                  >{{ record.announce_type }}</a-tag>
+                </span>
+                <span slot="announce_title" slot-scope="text, record">
+                  <a-tag
+                    color="blue"
+                    :key="record.announce_title"
+                    @click="handleAnnounceInfo(record,'BS_ANNOUNCE')"
+                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
-                  <a-tag color="geekblue" :key="record.create_by">
-                    {{
-                    record.create_by
-                    }}
-                  </a-tag>
+                  <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
                 </span>
                 <span slot="create_time" slot-scope="text, record">
-                  <a-tag color="blue" :key="record.create_time">
-                    {{
-                    record.create_time
-                    }}
-                  </a-tag>
+                  <a-tag color="pink" :key="record.create_time">{{ record.create_time }}</a-tag>
                 </span>
               </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="红头文件" key="6">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="红头文件"></div>
-              </a-col>
-            </a-row>
             <template>
               <div style="top:50px;">
                 <a-spin :spinning="spinning" style="top:50px;">
@@ -274,19 +268,35 @@
                 </a-spin>
               </div>
               <a-table
-                :columns="columns"
+                :columns="announce_columns"
                 :dataSource="dataHeadList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <span slot="announce_type" slot-scope="text, record">
+                  <a-tag
+                    color="cyan"
+                    :key="record.announce_type"
+                    @click="handleAnnounceInfo(record,'BS_REDHEAD')"
+                  >{{ record.announce_type }}</a-tag>
+                </span>
+                <span slot="announce_title" slot-scope="text, record">
+                  <a-tag
+                    color="blue"
+                    :key="record.announce_title"
+                    @click="handleAnnounceInfo(record,'BS_REDHEAD')"
+                  >{{ record.announce_title}}</a-tag>
+                </span>
+                <span slot="create_by" slot-scope="text, record">
+                  <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
+                </span>
+                <span slot="create_time" slot-scope="text, record">
+                  <a-tag color="pink" :key="record.create_time">{{ record.create_time }}</a-tag>
+                </span>
+              </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="新闻资讯" key="7">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="新闻资讯"></div>
-              </a-col>
-            </a-row>
             <template>
               <div style="top:50px;">
                 <a-spin :spinning="spinning" style="top:50px;">
@@ -294,19 +304,35 @@
                 </a-spin>
               </div>
               <a-table
-                :columns="columns"
+                :columns="announce_columns"
                 :dataSource="dataNewsList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <span slot="announce_type" slot-scope="text, record">
+                  <a-tag
+                    color="cyan"
+                    :key="record.announce_type"
+                    @click="handleAnnounceInfo(record,'BS_NEWS')"
+                  >{{ record.announce_type }}</a-tag>
+                </span>
+                <span slot="announce_title" slot-scope="text, record">
+                  <a-tag
+                    color="blue"
+                    :key="record.announce_title"
+                    @click="handleAnnounceInfo(record,'BS_NEWS')"
+                  >{{ record.announce_title}}</a-tag>
+                </span>
+                <span slot="create_by" slot-scope="text, record">
+                  <a-tag color="geekblue" :key="record.create_by">{{ record.create_by}}</a-tag>
+                </span>
+                <span slot="create_time" slot-scope="text, record">
+                  <a-tag color="pink" :key="record.create_time">{{ record.create_time}}</a-tag>
+                </span>
+              </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="奖罚通报" key="8">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="奖罚通报"></div>
-              </a-col>
-            </a-row>
             <template>
               <div style="top:50px;">
                 <a-spin :spinning="spinning" style="top:50px;">
@@ -314,19 +340,35 @@
                 </a-spin>
               </div>
               <a-table
-                :columns="columns"
+                :columns="announce_columns"
                 :dataSource="dataNoticeList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <span slot="announce_type" slot-scope="text, record">
+                  <a-tag
+                    color="cyan"
+                    :key="record.announce_type"
+                    @click="handleAnnounceInfo(record,'BS_NOTICE')"
+                  >{{ record.announce_type}}</a-tag>
+                </span>
+                <span slot="announce_title" slot-scope="text, record">
+                  <a-tag
+                    color="blue"
+                    :key="record.announce_title"
+                    @click="handleAnnounceInfo(record,'BS_NOTICE')"
+                  >{{ record.announce_title}}</a-tag>
+                </span>
+                <span slot="create_by" slot-scope="text, record">
+                  <a-tag color="geekblue" :key="record.create_by">{{ record.create_by}}</a-tag>
+                </span>
+                <span slot="create_time" slot-scope="text, record">
+                  <a-tag color="pink" :key="record.create_time">{{ record.create_time}}</a-tag>
+                </span>
+              </a-table>
             </template>
           </a-tab-pane>
           <a-tab-pane loading="true" tab="楼市观察" key="9">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="市场观察"></div>
-              </a-col>
-            </a-row>
             <template>
               <div style="top:50px;">
                 <a-spin :spinning="spinning" style="top:50px;">
@@ -334,11 +376,21 @@
                 </a-spin>
               </div>
               <a-table
-                :columns="columns"
+                :columns="announce_columns"
                 :dataSource="dataHousesList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
-              ></a-table>
+              >
+                <span slot="announce_type" slot-scope="text, record">
+                  <a-tag color="cyan" :key="record.announce_type">{{ record.announce_type }}</a-tag>
+                </span>
+                <span slot="create_by" slot-scope="text, record">
+                  <a-tag color="geekblue" :key="record.create_by">{{record.create_by}}</a-tag>
+                </span>
+                <span slot="create_time" slot-scope="text, record">
+                  <a-tag color="blue" :key="record.create_time">{{ record.create_time }}</a-tag>
+                </span>
+              </a-table>
             </template>
           </a-tab-pane>
         </a-tabs>
@@ -466,7 +518,7 @@ const columns = [
 
 const announce_columns = [
   {
-    title: "公告类型",
+    title: "类型",
     dataIndex: "announce_type",
     key: "announce_type",
     slots: { title: "announce_type" },
@@ -475,15 +527,15 @@ const announce_columns = [
     scopedSlots: { customRender: "announce_type" }
   },
   {
-    title: "公告标题",
+    title: "标题",
     width: 500,
-    align: "center",
+    align: "left",
     key: "announce_title",
     dataIndex: "announce_title",
     scopedSlots: { customRender: "announce_title" }
   },
   {
-    title: "创建人员",
+    title: "创建人",
     width: 100,
     align: "center",
     key: "create_by",
@@ -491,7 +543,7 @@ const announce_columns = [
     scopedSlots: { customRender: "create_by" }
   },
   {
-    title: "创建时间",
+    title: "时间",
     width: 100,
     align: "center",
     key: "create_time",
@@ -555,62 +607,58 @@ export default {
   },
   methods: {
     async getData(key) {
-      //查询我的已办，我的待办
-      if (this.activeKey == 1 || this.activeKey == 2 || key == 1 || key == 2) {
-        //获取用户信息
-        let userInfo = getStore("cur_user");
-        let username = userInfo["username"];
-        let realname = userInfo["realname"];
-        if (this.activeKey == 1 || key == 1) {
-          //获取我的待办数据
-          this.dataWaitList = await manageAPI.queryProcessLogWait(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 2 || key == 2) {
-          //获取我的已办数据
-          this.dataDoneList = await manageAPI.queryProcessLogDone(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 3 || key == 3) {
-          //获取我的消息数据
-          this.dataDoneList = await manageAPI.queryProcessLogDone(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 4 || key == 4) {
-          //获取我的收藏数据
-          this.dataDoneList = await manageAPI.queryProcessLogDone(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 5 || key == 5) {
-          //获取行政公告数据
-          this.dataAnnounceList = await manageAPI.queryAnnounceList(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 6 || key == 6) {
-          //获取红头文件数据
-          this.dataHeadList = await manageAPI.queryHeadList(username, realname);
-        } else if (this.activeKey == 7 || key == 7) {
-          //获取新闻资讯数据
-          this.dataNewsList = await manageAPI.queryNewsList(username, realname);
-        } else if (this.activeKey == 8 || key == 8) {
-          //获取奖罚通报数据
-          this.dataNoticeList = await manageAPI.queryNoticeList(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 9 || key == 9) {
-          //获取市场观察数据
-          this.dataViewsList = await manageAPI.queryViewsList(
-            username,
-            realname
-          );
-        }
+      //查询我的已办，我的待办，行政公告，红头文件，新闻资讯，奖罚通报，市场观察等内容
+      //获取用户信息
+      let userInfo = getStore("cur_user");
+      let username = userInfo["username"];
+      let realname = userInfo["realname"];
+      if (this.activeKey == 1 || key == 1) {
+        //获取我的待办数据
+        this.dataWaitList = await manageAPI.queryProcessLogWait(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 2 || key == 2) {
+        //获取我的已办数据
+        this.dataDoneList = await manageAPI.queryProcessLogDone(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 3 || key == 3) {
+        //获取我的消息数据
+        this.dataDoneList = await manageAPI.queryProcessLogDone(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 4 || key == 4) {
+        //获取我的收藏数据
+        this.dataDoneList = await manageAPI.queryProcessLogDone(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 5 || key == 5) {
+        //获取行政公告数据
+        this.dataAnnounceList = await manageAPI.queryAnnounceList(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 6 || key == 6) {
+        //获取红头文件数据
+        this.dataHeadList = await manageAPI.queryHeadList(username, realname);
+      } else if (this.activeKey == 7 || key == 7) {
+        //获取新闻资讯数据
+        this.dataNewsList = await manageAPI.queryNewsList(username, realname);
+      } else if (this.activeKey == 8 || key == 8) {
+        //获取奖罚通报数据
+        this.dataNoticeList = await manageAPI.queryNoticeList(
+          username,
+          realname
+        );
+      } else if (this.activeKey == 9 || key == 9) {
+        //获取市场观察数据
+        this.dataViewsList = await manageAPI.queryViewsList(username, realname);
       }
+
       //获取日访问量/总访问量
       try {
         var total = await manageAPI.queryTableDataAll("v_visit_total");
@@ -701,6 +749,22 @@ export default {
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&processLogID=${curRow.pid}&user=${userInfo.username}&type=${type}`;
+
+      //跳转到相应页面
+      this.$router.push(detailURL);
+    },
+    /**
+     * @function 查看详情页面
+     */
+    async handleAnnounceInfo(record, tableName) {
+      //获取当前操作对象
+      var curRow = JSON.parse(JSON.stringify(record));
+
+      //获取当前用户
+      var userInfo = getStore("cur_user");
+
+      //设置跳转URL
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify`;
 
       //跳转到相应页面
       this.$router.push(detailURL);

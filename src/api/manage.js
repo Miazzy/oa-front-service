@@ -1312,7 +1312,7 @@ export async function queryNewsList() {
 /**
  * 获取奖罚通报数据
  */
-export async function dataNoticeList() {
+export async function queryNoticeList() {
     //提交URL
     var queryURL = `${api.restapi}/api/bs_notice?_sort=-create_time&_p=0&_size=99`;
 
