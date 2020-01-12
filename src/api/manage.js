@@ -544,7 +544,7 @@ export async function queryProcessNodeProcName(node, callback) {
 export async function queryUserList(params) {
 
     //pageNo从0开始计算
-    params.pageNo = params.pageNo - 0;
+    params.pageNo = params.pageNo - 1;
 
     //用户名称
     var whereFlag =
@@ -580,7 +580,7 @@ export async function queryUserList(params) {
 export async function queryProcessLogToApproved(username, realname, params) {
 
     //pageNo从0开始计算
-    params.pageNo = params.pageNo - 0;
+    params.pageNo = params.pageNo - 1;
 
     //查询URL
     var queryURL = `${api.restapi}/api/pr_log?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
@@ -608,7 +608,7 @@ export async function queryProcessLogToApproved(username, realname, params) {
 export async function queryProcessLogHisApproved(username, realname, params) {
 
     //pageNo从0开始计算
-    params.pageNo = params.pageNo - 0;
+    params.pageNo = params.pageNo - 1;
 
     //查询URL
     var queryURL = `${api.restapi}/api/pr_log_history?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
@@ -826,7 +826,7 @@ export async function queryProcessLogDoneByParam(username, param) {
 export async function queryProcessLogInfApproved(username, realname, params) {
 
     //pageNo从0开始计算
-    params.pageNo = params.pageNo - 0;
+    params.pageNo = params.pageNo - 1;
 
     //查询URL
     var queryURL = `${api.restapi}/api/pr_log_informed?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;

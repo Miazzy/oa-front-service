@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36cdba8e-88ad-4fd9-a1b8-4885ec763490" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/manage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/manage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/Analysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/Analysis.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/jeecg/PrintLeave.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/jeecg/PrintLeave.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +20,7 @@
         <entry file="file://$PROJECT_DIR$/src/api/manage.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+              <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -158,7 +155,7 @@
     <entry file="file://$PROJECT_DIR$/src/api/manage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+          <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
         </state>
       </provider>
     </entry>
