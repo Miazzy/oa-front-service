@@ -227,8 +227,10 @@ export async function queryTableName(callback) {
  * @param {*} businessID
  */
 export async function queryApprovalExist(tableName, businessID) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //查询URL GET	/api/tableName/:id/exists	True or false whether a row exists or not  /api/tableName/findOne
-    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+    var queryURL = `${api.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
 
     //查询标识
     var vflag = false;
@@ -250,6 +252,8 @@ export async function queryApprovalExist(tableName, businessID) {
  * @param {*} id
  */
 export async function insertTableData(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //Post数据的URL地址
     var insertURL = `${api.restapi}/api/${tableName}`;
 
@@ -272,6 +276,8 @@ export async function insertTableData(tableName, node) {
 
 
 export async function postTableData(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //Post数据的URL地址
     var insertURL = `${api.restapi}/api/${tableName}`;
 
@@ -297,6 +303,8 @@ export async function postTableData(tableName, node) {
  * @param {*} id
  */
 export async function deleteTableData(tableName, id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //Post数据的URL地址
     var deleteURL = `${api.restapi}/api/${tableName}/${id}`;
 
@@ -315,6 +323,8 @@ export async function deleteTableData(tableName, id) {
  * @param {*} node
  */
 export async function patchTableData(tableName, id, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var patchURL = `${api.restapi}/api/${tableName}/${id}`;
 
@@ -342,6 +352,8 @@ export async function patchTableData(tableName, id, node) {
  * @param {*} node
  */
 export async function patchTableItem(tableName, id, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     try {
         return patchTableData(tableName, id, node);
     } catch (err) {
@@ -355,6 +367,8 @@ export async function patchTableItem(tableName, id, node) {
  * @param {*} id
  */
 export async function queryTableData(tableName, id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${api.restapi}/api/${tableName}/${id}`;
 
@@ -371,6 +385,8 @@ export async function queryTableData(tableName, id) {
  * @param {*} tableName
  */
 export async function queryTableAll(tableName) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //查询URL Get	/api/tableName	query all rows by tableName
     var queryURL = `${api.restapi}/api/${tableName}`;
 
@@ -389,6 +405,8 @@ export async function queryTableAll(tableName) {
  * @param {*} id
  */
 export async function queryTableDataByField(tableName, field, value) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${api.restapi}/api/${tableName}?_where=(${field},eq,${value})`;
 
@@ -407,6 +425,8 @@ export async function queryTableDataByField(tableName, field, value) {
  * @param {*} id
  */
 export async function queryTableDataAll(tableName) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${api.restapi}/api/${tableName}`;
 
@@ -425,6 +445,8 @@ export async function queryTableDataAll(tableName) {
  * @param {*} id
  */
 export async function queryTableFieldInfo(tableName, field, value) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${api.restapi}/api/${tableName}?_where=(name,eq,${field})~and(field,eq,${value})`;
 
@@ -440,8 +462,10 @@ export async function queryTableFieldInfo(tableName, field, value) {
  * 查询流程权责业务信息
  */
 export async function queryBusinessInfo(tableName, callback) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //查询URL
-    var queryURL = `${api.restapi}/api/PR_RIGHTS?_where=(business,like,~${tableName}~)`;
+    var queryURL = `${api.restapi}/api/pr_rights?_where=(business,like,~${tableName}~)`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -467,7 +491,7 @@ export async function queryBusinessInfo(tableName, callback) {
  */
 export async function queryProcessNodeEmployee(node, callback) {
     //查询URL
-    var queryURL = `${api.restapi}/api/BS_APPROVE_NODE?_where=(name,eq,${node})`;
+    var queryURL = `${api.restapi}/api/bs_approve_node?_where=(name,eq,${node})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -559,8 +583,8 @@ export async function queryProcessLogToApproved(username, realname, params) {
     params.pageNo = params.pageNo - 0;
 
     //查询URL
-    var queryURL = `${api.restapi}/api/PR_LOG?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
-    var queryCountURL = `${api.restapi}/api/PR_LOG/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
+    var queryURL = `${api.restapi}/api/pr_log?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}`;
+    var queryCountURL = `${api.restapi}/api/pr_log/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -587,8 +611,8 @@ export async function queryProcessLogHisApproved(username, realname, params) {
     params.pageNo = params.pageNo - 0;
 
     //查询URL
-    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
-    var queryCountURL = `${api.restapi}/api/PR_LOG_HISTORY/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
+    var queryURL = `${api.restapi}/api/pr_log_history?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
+    var queryCountURL = `${api.restapi}/api/pr_log_history/count?_where=(approve_user,like,~${username}~)~or(approve_user,like,~${realname}~)~or(proponents,like,~${username}~)~or(proponents,like,~${realname}~)`;
     var result = {};
 
     try {
@@ -805,8 +829,8 @@ export async function queryProcessLogInfApproved(username, realname, params) {
     params.pageNo = params.pageNo - 0;
 
     //查询URL
-    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
-    var queryCountURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
+    var queryURL = `${api.restapi}/api/pr_log_informed?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))&_p=${params.pageNo}&_size=${params.pageSize}&_sort=-operate_time`;
+    var queryCountURL = `${api.restapi}/api/pr_log_informed/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -830,8 +854,10 @@ export async function queryProcessLogInfApproved(username, realname, params) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function queryProcessLogInfByID(tableName, id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+    var queryURL = `${api.restapi}/api/pr_log_informed?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -846,8 +872,10 @@ export async function queryProcessLogInfByID(tableName, id) {
  * 获取某业务记录对应的审批日志信息
  */
 export async function queryProcessLogInformed(tableName, business_data_id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/pr_log_informed?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -862,8 +890,10 @@ export async function queryProcessLogInformed(tableName, business_data_id) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function queryProcessLog(tableName, businessID) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -879,8 +909,10 @@ export async function queryProcessLog(tableName, businessID) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function queryProcessLogByID(tableName, id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
+    var queryURL = `${api.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -895,6 +927,8 @@ export async function queryProcessLogByID(tableName, id) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function deleteTableItem(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
     var deleteURL = '';
     //遍历node,取出里面的ids
@@ -936,6 +970,8 @@ export async function deleteTableItem(tableName, node) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function deleteProcessLog(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
     var deleteURL = '';
     //遍历node,取出里面的ids
@@ -958,7 +994,7 @@ export async function deleteProcessLog(tableName, node) {
     }
 
     try {
-        deleteURL = `${api.restapi}/api/PR_LOG/bulk?_ids=${ids}`;
+        deleteURL = `${api.restapi}/api/pr_log/bulk?_ids=${ids}`;
     } catch (error) {
         console.error(error);
     }
@@ -977,6 +1013,8 @@ export async function deleteProcessLog(tableName, node) {
  * 根据数据字典中的节点编号，删除到这个节点对应的流程信息
  */
 export async function deleteProcessLogInf(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //遍历node,取出里面的ids
     var ids = '';
     //提交URL
@@ -999,7 +1037,7 @@ export async function deleteProcessLogInf(tableName, node) {
     }
 
     try {
-        deleteURL = `${api.restapi}/api/PR_LOG_INFORMED/bulk?_ids=${ids}`;
+        deleteURL = `${api.restapi}/api/pr_log_informed/bulk?_ids=${ids}`;
     } catch (error) {
         console.error(error);
     }
@@ -1018,6 +1056,8 @@ export async function deleteProcessLogInf(tableName, node) {
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
 export async function postTableItem(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
     //提交URL
     var postURL = null;
     //是否批处理
@@ -1058,7 +1098,7 @@ export async function postTableItem(tableName, node) {
  */
 export async function postProcessLog(node) {
     //提交URL
-    var postURL = `${api.restapi}/api/PR_LOG`;
+    var postURL = `${api.restapi}/api/pr_log`;
 
     try {
         const res = await superagent
@@ -1078,7 +1118,7 @@ export async function postProcessLog(node) {
  */
 export async function postProcessFreeNode(node) {
     //提交URL
-    var postURL = `${api.restapi}/api/BS_FREE_PROCESS`;
+    var postURL = `${api.restapi}/api/bs_free_process`;
 
     try {
         const res = await superagent
@@ -1114,7 +1154,7 @@ export async function postProcessLogHistory(node) {
 
     //构建流程历史表提交数据的URL
     try {
-        postURL = `${api.restapi}/api/PR_LOG_HISTORY${bflag}`;
+        postURL = `${api.restapi}/api/pr_log_history${bflag}`;
     } catch (error) {
         console.log(error);
     }
@@ -1153,7 +1193,7 @@ export async function postProcessLogInformed(node) {
 
     //构建知会表提交数据的URL
     try {
-        postURL = `${api.restapi}/api/PR_LOG_INFORMED${bflag}`;
+        postURL = `${api.restapi}/api/pr_log_informed${bflag}`;
     } catch (error) {
         console.error(error);
     }
@@ -1177,7 +1217,7 @@ export async function postProcessLogInformed(node) {
  */
 export async function queryPRLogHistoryByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_HISTORY?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1189,11 +1229,144 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
 }
 
 /**
+ * 获取行政公告数据
+ */
+export async function queryAnnounceList() {
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_announce?_sort=-create_time&_p=0&_size=99`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+
+        var result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取红头文件数据
+ */
+export async function queryHeadList() {
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_redhead?_sort=-create_time&_p=0&_size=99`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+
+        var result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取新闻资讯数据
+ */
+export async function queryNewsList() {
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_news?_sort=-create_time&_p=0&_size=99`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+
+        var result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取奖罚通报数据
+ */
+export async function dataNoticeList() {
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_notice?_sort=-create_time&_p=0&_size=99`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        var result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 获取市场观察数据
+ */
+export async function queryViewsList() {
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_views?_sort=-create_time&_p=0&_size=99`;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        var result = res.body;
+
+        //遍历并格式化日期
+        _.each(result, function(item) {
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['username'] = deNull(item['username']).split(',');
+        });
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
  * 获取某业务记录对应的审批日志信息
  */
 export async function queryPRLogByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1209,7 +1382,7 @@ export async function queryPRLogByDataID(business_data_id) {
  */
 export async function queryPRLogInfByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
+    var queryURL = `${api.restapi}/api/pr_log_informed?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1228,8 +1401,8 @@ export async function queryPRLogInfTotal(business_data_id) {
     var ctime = formatDate(new Date(), 'yyyy-MM-dd');
 
     //提交URL
-    var queryURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})`;
-    var queryTodayURL = `${api.restapi}/api/PR_LOG_INFORMED/count?_where=(business_data_id,eq,${business_data_id})~and(operate_time,like,~${ctime}~)`;
+    var queryURL = `${api.restapi}/api/pr_log_informed/count?_where=(business_data_id,eq,${business_data_id})`;
+    var queryTodayURL = `${api.restapi}/api/pr_log_informed/count?_where=(business_data_id,eq,${business_data_id})~and(operate_time,like,~${ctime}~)`;
     var result = {};
     var count = 0;
     var today = 0;
@@ -1329,7 +1502,8 @@ export function queryBpmStatus(status) {
         '3': '审批中',
         '4': '已完成',
         '5': '已完成',
-        '6': '已作废',
+        '10': '已作废',
+        '99': '已作废',
     };
 
     return config[status];
@@ -1339,6 +1513,9 @@ export function queryBpmStatus(status) {
  * @function 根据表名查询表单名称
  */
 export function queryFormName(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '请假流程申请单',
         BS_EGRESS: '外出流程申请单',
@@ -1358,6 +1535,9 @@ export function queryFormName(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormTypeName(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '请假',
         BS_EGRESS: '外出',
@@ -1377,6 +1557,9 @@ export function queryFormTypeName(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormTypeValue(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '--',
         BS_EGRESS: '普通',
@@ -1396,6 +1579,9 @@ export function queryFormTypeValue(tableName) {
  * @function 根据表名查询表单名称
  */
 export function queryFormMainTable(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: false,
         BS_EGRESS: false,
@@ -1415,6 +1601,9 @@ export function queryFormMainTable(tableName) {
  * @function 开始日期表单显示名称
  */
 export function queryFormMTStarttimeName(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '开始',
         BS_EGRESS: '开始',
@@ -1434,6 +1623,9 @@ export function queryFormMTStarttimeName(tableName) {
  * @function 结束日期表单显示名称
  */
 export function queryFormMTEndtimeName(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '结束',
         BS_EGRESS: '结束',
@@ -1453,6 +1645,9 @@ export function queryFormMTEndtimeName(tableName) {
  * @function 结束日期表单显示名称
  */
 export function queryFormMTFileName(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: '文件名称',
         BS_EGRESS: '文件名称',
@@ -1472,6 +1667,9 @@ export function queryFormMTFileName(tableName) {
  * @function 查询附表字段
  */
 export function queryFormMTSubColumns(tableName) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: [],
         BS_EGRESS: [],
@@ -1515,6 +1713,9 @@ export function queryFormMTSubColumns(tableName) {
  * @function 查询附表数据
  */
 export async function queryFormMTSubData(tableName, foreignKey, id) {
+    //大写转小写
+    tableName = tableName.toUpperCase();
+    //配置说明
     var config = {
         BS_LEAVE: [],
         BS_EGRESS: [],

@@ -178,7 +178,7 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.entourage != 'undefined' && tableInfo.entourage != null"
+            v-if="typeof tableInfo.entourage != 'undefined' && tableInfo.entourage != null && typeof curRow.entourage != 'undefined' && curRow.entourage != null"
           >
             <span style="float:left;display:block;">{{tableInfo.entourage}}:</span>
             <div
