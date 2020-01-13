@@ -208,22 +208,6 @@
               </a-table>
             </template>
           </a-tab-pane>
-          <!--
-          <a-tab-pane loading="true" tab="我的消息" key="3" style="display:none;">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="消息列表"></div>
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane loading="true" tab="我的收藏" key="4" style="display:none;">
-            <a-row>
-              <a-col :xl="24" :lg="12" :md="12" :sm="24" :xs="24">
-                <div title="收藏列表"></div>
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          -->
           <a-tab-pane loading="true" tab="行政公告" key="5">
             <template>
               <div style="top:50px;">
@@ -368,7 +352,7 @@
               </a-table>
             </template>
           </a-tab-pane>
-          <a-tab-pane loading="true" tab="楼市观察" key="9">
+          <a-tab-pane loading="true" tab="市场观察" key="9">
             <template>
               <div style="top:50px;">
                 <a-spin :spinning="spinning" style="top:50px;">
@@ -377,15 +361,26 @@
               </div>
               <a-table
                 :columns="announce_columns"
-                :dataSource="dataHousesList"
+                :dataSource="dataViewsList"
                 :pagination="false"
                 style="padding-top:-10px;margin-top:-10px"
               >
                 <span slot="announce_type" slot-scope="text, record">
-                  <a-tag color="cyan" :key="record.announce_type">{{ record.announce_type }}</a-tag>
+                  <a-tag
+                    color="cyan"
+                    :key="record.announce_type"
+                    @click="handleAnnounceInfo(record,'BS_MARKET_INFO')"
+                  >{{ record.announce_type }}</a-tag>
+                </span>
+                <span slot="announce_title" slot-scope="text, record">
+                  <a-tag
+                    color="blue"
+                    :key="record.announce_title"
+                    @click="handleAnnounceInfo(record,'BS_MARKET_INFO')"
+                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
-                  <a-tag color="geekblue" :key="record.create_by">{{record.create_by}}</a-tag>
+                  <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
                 </span>
                 <span slot="create_time" slot-scope="text, record">
                   <a-tag color="blue" :key="record.create_time">{{ record.create_time }}</a-tag>

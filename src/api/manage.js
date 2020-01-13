@@ -1233,7 +1233,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
  */
 export async function queryAnnounceList() {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_announce?_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1260,7 +1260,7 @@ export async function queryAnnounceList() {
  */
 export async function queryHeadList() {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_redhead?_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_redhead?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1287,7 +1287,7 @@ export async function queryHeadList() {
  */
 export async function queryNewsList() {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_news?_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_news?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1314,7 +1314,7 @@ export async function queryNewsList() {
  */
 export async function queryNoticeList() {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_notice?_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_notice?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1340,7 +1340,7 @@ export async function queryNoticeList() {
  */
 export async function queryViewsList() {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_views?_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_market_info?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');

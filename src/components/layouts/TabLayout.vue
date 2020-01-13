@@ -65,6 +65,7 @@ const titleKV = {
   c9c7e537dbb54691b4f0eff23854fdbb: '红头文件',
   ebe9412bb4f34b5c8ea3fb7c0908d315: '新闻资讯',
   '6650f6e79479489192fe469d1e3f98f3': '奖罚通报',
+  '6bfb3ee6257a4066b1d26f195da83fe0': '车辆补贴',
 };
 
 //
