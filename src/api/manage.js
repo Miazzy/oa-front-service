@@ -1526,6 +1526,14 @@ export function queryFormName(tableName) {
         BS_SEAL_CONTRACT: '用印申请流程申请单',
         BS_SEAL_DECLARE: '印章借用申请单',
         BS_TRAVEL: '出差申请单',
+        BS_MARKET_INFO:'市场观察表',
+        BS_NOTICE:'奖罚通报表',
+        BS_NEWS:'新闻资讯表',
+        BS_ANNOUNCE:'行政公告表',
+        BS_REDHEAD:'红头文件表',
+        BS_ISSUE:'问题反馈表',
+        BS_TRAFFIC_ALLOWANCE:'车辆补贴申请表',
+        BS_TRANSACTION:'流程事务处理表',
     };
 
     return config[tableName];
@@ -1999,7 +2007,7 @@ export async function watchFormLeave(that) {
     try {
         department = await queryTableData(
             'sys_depart',
-            that.curRow.department || that.curRow.sys_org_code
+            that.curRow.department || that.curRow.depart_name || that.curRow.sys_org_code
         );
     } catch (error) {
         console.log('query department error :' + error);
@@ -2362,6 +2370,7 @@ export function queryFileType(text) {
             suffix.includes('bmp') ||
             suffix.includes('gif') ||
             suffix.includes('webp') ||
+            suffix.includes('svg') || 
             suffix.includes('png') ?
             '@image@' :
             '';

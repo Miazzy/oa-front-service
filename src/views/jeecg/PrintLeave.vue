@@ -58,34 +58,38 @@
             <a-input style="width: 70%" readonly v-model="curRow.create_time" />
           </a-col>
 
-          <a-col 
-            :span="12" 
+          <a-col
+            :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.depart_name != 'undefined' && curRow.depart_name != null" >
+            v-if="typeof curRow.depart_name != 'undefined' && curRow.depart_name != null"
+          >
             <span>{{tableInfo.depart_name}}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.depart_name" />
           </a-col>
 
-          <a-col 
-            :span="12" 
+          <a-col
+            :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.leave_type_name != 'undefined' && curRow.leave_type_name != null">
+            v-if="typeof curRow.leave_type_name != 'undefined' && curRow.leave_type_name != null"
+          >
             <span style="margin-left: 0%">{{curRow.formTypeName}}类型:</span>
             <a-input style="width: 70%" readonly v-model="curRow.leave_type_name" />
           </a-col>
 
-          <a-col 
-            :span="12" 
+          <a-col
+            :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.announce_type != 'undefined' && curRow.announce_type != null">
+            v-if="typeof curRow.announce_type != 'undefined' && curRow.announce_type != null"
+          >
             <span style="margin-left: 0%">{{tableInfo.announce_type}}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.announce_type" />
           </a-col>
 
-          <a-col 
-            :span="12" 
+          <a-col
+            :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.announce_title != 'undefined' && curRow.announce_title != null">
+            v-if="typeof curRow.announce_title != 'undefined' && curRow.announce_title != null"
+          >
             <span style="margin-left: 0%">{{tableInfo.announce_title}}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.announce_title" />
           </a-col>
@@ -164,10 +168,47 @@
             ></div>
           </a-col>
 
-          <a-col 
-            :span="24" 
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.employee_post != 'undefined' && tableInfo.employee_post != null && typeof curRow.employee_post != 'undefined' && curRow.employee_post != null"
+          >
+            <span style="margin-left:28px;">{{tableInfo.employee_post}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.employee_post" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.traffic_models != 'undefined' && tableInfo.traffic_models != null && typeof curRow.traffic_models != 'undefined' && curRow.traffic_models != null"
+          >
+            <span style="margin-left:28px;">{{tableInfo.traffic_models}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.traffic_models" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.licence_number != 'undefined' && tableInfo.licence_number != null && typeof curRow.licence_number != 'undefined' && curRow.licence_number != null"
+          >
+            <span style="margin-left:14px;">{{tableInfo.licence_number}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.licence_number" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-bottom:10px;"
+            v-if="typeof tableInfo.traffic_amount != 'undefined' && tableInfo.traffic_amount != null && typeof curRow.traffic_amount != 'undefined' && curRow.traffic_amount != null"
+          >
+            <span style="margin-left:28px;">{{tableInfo.traffic_amount.padStart(4,' ')}}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.traffic_amount" />
+          </a-col>
+
+          <a-col
+            :span="24"
             style="margin-top: 20px;margin-bottom: 10px;"
-            v-if="typeof curRow.content != 'undefined' && curRow.content != null">
+            v-if="typeof curRow.content != 'undefined' && curRow.content != null"
+          >
             <span style="float:left;display:block;">{{tableInfo.content}}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
@@ -235,6 +276,30 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
+            v-if="typeof tableInfo.traffic_standards != 'undefined' && tableInfo.traffic_standards != null && typeof curRow.traffic_standards != 'undefined' && curRow.traffic_standards != null"
+          >
+            <span style="float:left;display:block;">{{tableInfo.traffic_standards}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.traffic_standards"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
+            v-if="typeof tableInfo.traffic_numbers != 'undefined' && tableInfo.traffic_numbers != null && typeof curRow.traffic_numbers != 'undefined' && curRow.traffic_numbers != null"
+          >
+            <span style="float:left;display:block;">{{tableInfo.traffic_numbers}}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.traffic_numbers"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
             v-if="typeof tableInfo.travel_remarks != 'undefined' && tableInfo.travel_remarks != null"
           >
             <span style="float:left;display:block;">{{tableInfo.travel_remarks}}:</span>
@@ -256,10 +321,11 @@
             ></div>
           </a-col>
 
-          <a-col 
-            :span="24" 
+          <a-col
+            :span="24"
             style="margin-bottom:10px;margin-top:10px;"
-            v-if="typeof curRow.announce_content != 'undefined' && curRow.announce_content != null">
+            v-if="typeof curRow.announce_content != 'undefined' && curRow.announce_content != null"
+          >
             <span style="float:left;display:block;">{{tableInfo.announce_content}}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
@@ -489,6 +555,21 @@
                 </div>
               </a-timeline>
             </template>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
+            v-if="typeof tableInfo.traffic_numbers != 'undefined' && tableInfo.traffic_numbers != null"
+          >
+            <span style="float:left;display:block;">注:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:20px;"
+            >
+              <p>1. 此表批准后原价由综合部存档，复印件交财务部。</p>
+              <p>2. 此表批准日期在15号（含15号）以前则从当月开始享有车辆补贴，在15号以后则从下月开始享有。</p>
+              <p>3. 驾驶证、行驶证和身份证的复印件是该表的必备附件，驾驶证必须是申请人本人证件，行驶证与驾驶证户名不一致，需另附行驶证所有人的身份证复印件及关系证明、书面说明。</p>
+            </div>
           </a-col>
 
           <a-col
