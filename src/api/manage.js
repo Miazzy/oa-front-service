@@ -2426,6 +2426,7 @@ export function queryImageURL(text) {
                 ptext.includes('bmp') ||
                 ptext.includes('gif') ||
                 ptext.includes('webp') ||
+                suffix.includes('svg') || 
                 ptext.includes('png');
 
             //获取文件后缀
@@ -2571,6 +2572,7 @@ export async function queryOfficeURL(text) {
                 ptext.includes('bmp') ||
                 ptext.includes('gif') ||
                 ptext.includes('webp') ||
+                ptext.includes('svg') ||
                 ptext.includes('png');
 
             //文档名称
@@ -2598,12 +2600,16 @@ export async function queryOfficeURL(text) {
 
             //如果word文档，则使用微软API打开
             text = deNull(suffix).includes('xls') ? xurl + '.html' : download;
+
+            //如果word文档，则使用微软API打开
+            text = deNull(suffix).includes('svg') ? download : download;
+
             //如果word文档，则使用微软API打开
             text =
                 deNull(suffix).includes('doc') ||
                 deNull(suffix).includes('ppt') ||
                 deNull(suffix).includes('pdf') ? xurl + '.pdf' : download;
-
+            
             //file文件URL路径
             var fileURL = `${text}`;
 
