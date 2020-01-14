@@ -2,15 +2,15 @@
   <div class="footer">
     <div class="links"></div>
     <div class="copyright">
-      Copyright
-      <a-icon type="copyright" />2019
+      copyright
+      <a-icon type="copyright" />2019 - 2020
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "LayoutFooter"
+  name: 'LayoutFooter',
 };
 </script>
 

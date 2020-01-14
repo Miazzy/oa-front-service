@@ -1,1 +1,0 @@
-//# sourceMappingURL=ISlider.js.map

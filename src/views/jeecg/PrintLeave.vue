@@ -2,6 +2,8 @@
   <a-card :bordered="false" :class="{'abcdefg':true}">
     <div class="no-print" style="text-align: right">
       <a-button v-print="'#printContent'" ghost type="primary" @click="handlePrint">打印</a-button>
+      <a-button v-print="'#printContent'" ghost type="primary" @click="handleQRcode" style="margin-left:10px;">二维码</a-button>
+      <a-button v-print="'#printContent'" ghost type="primary" @click="handleShortURL" style="margin-left:10px;">短链接</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
@@ -817,6 +819,18 @@ export default {
       setTimeout(() => {
         this.curRow.fileStatus = 0;
       }, 10000);
+    },
+    /**
+     * @function 生成二维码操作
+     */
+    async handleQRCode() {
+
+    },
+    /**
+     * @function 生成短链接操作
+     */
+    async handleShortURL() {
+
     },
     async handlePreview(item) {
       //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览

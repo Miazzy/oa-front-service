@@ -31,7 +31,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import formCreate from '@form-create/element-ui';
 
-import EleForm from 'vue-ele-form';
+//import EleForm from 'vue-ele-form';
 import F2 from '@antv/f2';
 
 import axios from 'axios';
@@ -103,7 +103,7 @@ Vue.prototype.$message_ = Vue.prototype.$message;
 
 //注册ElementUI
 Vue.use(ElementUI);
-Vue.use(EleForm);
+//Vue.use(EleForm);
 
 //注册表单生成控件
 Vue.use(formCreate);

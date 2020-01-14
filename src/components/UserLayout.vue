@@ -4,11 +4,10 @@
       <div class="top">
         <div class="header">
           <a href="/">
-            <img src="~@/assets/logo.svg" class="logo" alt="logo" />
-            <span class="title">鹏程综合管理平台</span>
+            <span class="title">综合管理信息系统</span>
           </a>
         </div>
-        <div class="desc">鹏程综合管理平台</div>
+        <div class="desc">综合管理信息系统</div>
       </div>
 
       <route-view></route-view>
@@ -19,29 +18,29 @@
           <a href="#" target="_self">隐私</a>
           <a href="#" target="_self">条款</a>
         </div>
-        <div class="copyright">Copyright &copy; 2019</div>
+        <div class="copyright">copyright &copy; 2019 - 2020</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import RouteView from "@/components/layouts/RouteView";
-import { mixinDevice } from "@/utils/mixin.js";
+import RouteView from '@/components/layouts/RouteView';
+import {mixinDevice} from '@/utils/mixin.js';
 
 export default {
-  name: "UserLayout",
-  components: { RouteView },
+  name: 'UserLayout',
+  components: {RouteView},
   mixins: [mixinDevice],
   data() {
     return {};
   },
   mounted() {
-    document.body.classList.add("userLayout");
+    document.body.classList.add('userLayout');
   },
   beforeDestroy() {
-    document.body.classList.remove("userLayout");
-  }
+    document.body.classList.remove('userLayout');
+  },
 };
 </script>
 
@@ -97,10 +96,10 @@ export default {
         .title {
           font-size: 33px;
           color: rgba(0, 0, 0, 0.85);
-          font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont,
-            "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-            "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji",
-            "Segoe UI Emoji", "Segoe UI Symbol";
+          font-family: 'Chinese Quote', -apple-system, BlinkMacSystemFont,
+            'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+            'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+            'Segoe UI Emoji', 'Segoe UI Symbol';
           font-weight: 600;
           position: relative;
           top: 2px;
