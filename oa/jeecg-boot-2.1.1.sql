@@ -4,7 +4,7 @@ UPDATE `sys_dict_item` SET  `item_text` = '可见/可访问(授权后可见/可�
 -- ----------------------------
 -- Table structure for oss_file
 -- ----------------------------
-#DROP TABLE IF EXISTS `oss_file`;
+DROP TABLE IF EXISTS `oss_file`;
 CREATE TABLE `oss_file` (
   `id` varchar(32) NOT NULL COMMENT '主键id',
   `file_name` varchar(255) default NULL COMMENT '文件名称',

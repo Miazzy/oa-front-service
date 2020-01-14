@@ -2,8 +2,13 @@
   <a-card :bordered="false" :class="{'abcdefg':true}">
     <div class="no-print" style="text-align: right">
       <a-button v-print="'#printContent'" ghost type="primary" @click="handlePrint">打印</a-button>
-      <a-button v-print="'#printContent'" ghost type="primary" @click="handleQRcode" style="margin-left:10px;">二维码</a-button>
-      <a-button v-print="'#printContent'" ghost type="primary" @click="handleShortURL" style="margin-left:10px;">短链接</a-button>
+      <a-button ghost type="primary" @click="handleQRcode" style="margin-left:10px;">二维码</a-button>
+      <a-button
+        ghost
+        type="primary"
+        @click="handleShortURL"
+        style="margin-left:10px;display:none;"
+      >短链接</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
@@ -680,6 +685,16 @@
           >
             <p>{{tipContent}}</p>
           </a-modal>
+
+          <el-dialog title="二维码分享" :visible.sync="qrcodeVisible" width="30%">
+            <div style="text-align:center;">
+              <qrcode :value="qrcodeUrl" :options="{ width: 200 }" style="text-align:center;"></qrcode>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="qrcodeVisible = false">取 消</el-button>
+              <el-button type="primary" @click="qrcodeVisible = false">确 定</el-button>
+            </span>
+          </el-dialog>
         </div>
       </a-col>
     </section>
@@ -695,6 +710,11 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
+import Vue from "vue";
+import VueQrcode from "@chenfengyuan/vue-qrcode";
+
+//Vue挂载QRCode组件
+Vue.component(VueQrcode.name, VueQrcode);
 
 //默认预览图片
 const images = [];
@@ -741,6 +761,8 @@ export default {
       tipContent: "",
       slides: images,
       wflowstatus: {},
+      qrcodeUrl: "",
+      qrcodeVisible: false,
       form: this.$form.createForm(this)
     };
   },
@@ -823,14 +845,23 @@ export default {
     /**
      * @function 生成二维码操作
      */
-    async handleQRCode() {
+    async handleQRcode() {
+      //生成分享链接
+      var url = window.location.href.replace("workflow", "basewflow");
 
+      //根据分享链接生成二维码显示URL
+      this.qrcodeUrl = url;
+
+      //弹出弹框显示二维码
+      this.qrcodeVisible = true;
     },
     /**
      * @function 生成短链接操作
      */
     async handleShortURL() {
-
+      //生成分享链接
+      //发送分享链接请求短链接URL
+      //弹出弹框显示端链接
     },
     async handlePreview(item) {
       //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览
