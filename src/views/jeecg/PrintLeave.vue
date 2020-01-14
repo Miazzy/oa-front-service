@@ -2,13 +2,8 @@
   <a-card :bordered="false" :class="{'abcdefg':true}">
     <div class="no-print" style="text-align: right">
       <a-button v-print="'#printContent'" ghost type="primary" @click="handlePrint">打印</a-button>
-      <a-button ghost type="primary" @click="handleQRcode" style="margin-left:10px;">二维码</a-button>
-      <a-button
-        ghost
-        type="primary"
-        @click="handleShortURL"
-        style="margin-left:10px;display:none;"
-      >短链接</a-button>
+      <a-button ghost type="primary" @click="handleQRcode" style="margin-left:10px;">打码</a-button>
+      <a-button ghost type="primary" @click="handleShort" style="margin-left:10px;">短链</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
@@ -695,6 +690,16 @@
               <el-button type="primary" @click="qrcodeVisible = false">确 定</el-button>
             </span>
           </el-dialog>
+
+          <el-dialog title="短链接分享" :visible.sync="shortUrlVisible" width="30%">
+            <div style="text-align:center;">
+              <span>{{ shortUrl }}</span>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="shortUrlVisible = false">取 消</el-button>
+              <el-button type="primary" @click="shortUrlVisible = false">确 定</el-button>
+            </span>
+          </el-dialog>
         </div>
       </a-col>
     </section>
@@ -761,8 +766,10 @@ export default {
       tipContent: "",
       slides: images,
       wflowstatus: {},
+      shortUrl: "",
       qrcodeUrl: "",
       qrcodeVisible: false,
+      shortUrlVisible: false,
       form: this.$form.createForm(this)
     };
   },
@@ -858,10 +865,43 @@ export default {
     /**
      * @function 生成短链接操作
      */
-    async handleShortURL() {
+    async handleShort() {
       //生成分享链接
-      //发送分享链接请求短链接URL
+      var url = window.location.href.replace("workflow", "basewflow");
+
+      //计算一个短随机码值
+      var random = manageAPI.queryRandomStr(4);
+
+      //获取时间戳
+      var timestamp = new Date().getTime();
+
+      //统计次数
+      var count = 0;
+
+      //失效时间
+      var date = new Date();
+      date.setMonth(date.getMonth() + 1);
+      date = tools.formatDate(date, "yyyy-MM-dd hh:mm:ss");
+
+      //设置应该保存数据
+      var node = {
+        id: random,
+        code: random,
+        url: url,
+        count: count,
+        expire: date,
+        time: timestamp
+      };
+
+      //将短随机码和真实链接对应关系写入数据库中，有效时间30+-2天
+      manageAPI.postTableData("bs_short_link", node);
+
       //弹出弹框显示端链接
+      this.shortUrl =
+        "本文分享地址：" + window._CONFIG["domain"] + "/s/" + random;
+
+      //弹出弹框显示二维码
+      this.shortUrlVisible = true;
     },
     async handlePreview(item) {
       //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览

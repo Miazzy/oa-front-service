@@ -1468,6 +1468,28 @@ export function queryRandomStr(n) {
 }
 
 /**
+ * 获取n位随机数,随机来源chars
+ */
+export function queryRandom(n) {
+    var temp =
+        '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z';
+    var res = '';
+
+    try {
+        var chars = temp.split(',');
+        for (var i = 0; i < n; i++) {
+            var id = Math.ceil(Math.random() * 62);
+            res += chars[id];
+        }
+    } catch (error) {
+        console.log('获取n位随机数异常：' + error);
+    }
+
+    //返回随机数
+    return res;
+}
+
+/**
  * 通过函数暴露API
  */
 export function commonArgs() {
@@ -1526,14 +1548,14 @@ export function queryFormName(tableName) {
         BS_SEAL_CONTRACT: '用印申请流程申请单',
         BS_SEAL_DECLARE: '印章借用申请单',
         BS_TRAVEL: '出差申请单',
-        BS_MARKET_INFO:'市场观察表',
-        BS_NOTICE:'奖罚通报表',
-        BS_NEWS:'新闻资讯表',
-        BS_ANNOUNCE:'行政公告表',
-        BS_REDHEAD:'红头文件表',
-        BS_ISSUE:'问题反馈表',
-        BS_TRAFFIC_ALLOWANCE:'车辆补贴申请表',
-        BS_TRANSACTION:'流程事务处理表',
+        BS_MARKET_INFO: '市场观察表',
+        BS_NOTICE: '奖罚通报表',
+        BS_NEWS: '新闻资讯表',
+        BS_ANNOUNCE: '行政公告表',
+        BS_REDHEAD: '红头文件表',
+        BS_ISSUE: '问题反馈表',
+        BS_TRAFFIC_ALLOWANCE: '车辆补贴申请表',
+        BS_TRANSACTION: '流程事务处理表',
     };
 
     return config[tableName];
@@ -2370,7 +2392,7 @@ export function queryFileType(text) {
             suffix.includes('bmp') ||
             suffix.includes('gif') ||
             suffix.includes('webp') ||
-            suffix.includes('svg') || 
+            suffix.includes('svg') ||
             suffix.includes('png') ?
             '@image@' :
             '';
@@ -2426,7 +2448,7 @@ export function queryImageURL(text) {
                 ptext.includes('bmp') ||
                 ptext.includes('gif') ||
                 ptext.includes('webp') ||
-                suffix.includes('svg') || 
+                suffix.includes('svg') ||
                 ptext.includes('png');
 
             //获取文件后缀
@@ -2609,7 +2631,7 @@ export async function queryOfficeURL(text) {
                 deNull(suffix).includes('doc') ||
                 deNull(suffix).includes('ppt') ||
                 deNull(suffix).includes('pdf') ? xurl + '.pdf' : download;
-            
+
             //file文件URL路径
             var fileURL = `${text}`;
 
