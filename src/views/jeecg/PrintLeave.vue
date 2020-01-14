@@ -868,9 +868,37 @@ export default {
     async handleShort() {
       //生成分享链接
       var url = window.location.href.replace("workflow", "basewflow");
+      //加密后的URL
+      var encode = window.btoa(url);
+
+      var originNode = tools.getStore(encode);
+
+      if (tools.deNull(originNode) != "") {
+        //获取短随机码
+        let random = originNode.code;
+        //获取失效时间
+        let expire_ = originNode.expire_;
+
+        //获取当前时间
+        var expire = new Date();
+        expire = tools.formatDate(date, "yyyyMMdd");
+
+        //缓存未失效，则直接展示二维码
+        if (expire <= expire_) {
+          //弹出弹框显示端链接
+          this.shortUrl =
+            "本文分享地址：" + window._CONFIG["domain"] + "/s/" + random;
+
+          //弹出弹框显示二维码
+          this.shortUrlVisible = true;
+
+          //设置返回值
+          return true;
+        }
+      }
 
       //计算一个短随机码值
-      var random = manageAPI.queryRandomStr(4);
+      let random = manageAPI.queryRandomStr(4);
 
       //获取时间戳
       var timestamp = new Date().getTime();
@@ -881,7 +909,8 @@ export default {
       //失效时间
       var date = new Date();
       date.setMonth(date.getMonth() + 1);
-      date = tools.formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      var datetime = tools.formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      var datestr = tools.formatDate(date, "yyyyMMdd");
 
       //设置应该保存数据
       var node = {
@@ -889,9 +918,13 @@ export default {
         code: random,
         url: url,
         count: count,
-        expire: date,
+        expire: datetime,
+        expire_: datestr,
         time: timestamp
       };
+
+      //保存到缓存中
+      tools.setStore(encode, JSON.stringify(node));
 
       //将短随机码和真实链接对应关系写入数据库中，有效时间30+-2天
       manageAPI.postTableData("bs_short_link", node);
