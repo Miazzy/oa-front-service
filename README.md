@@ -1,6 +1,5 @@
-# Ant Design Jeecg Vue
+# 基于Ant Design Jeecg Vue v2.1.0版本开发 
 
-当前最新版本： 2.1.0（发布日期：20190826）
 
 ## Overview
 
