@@ -1,12 +1,13 @@
-# Ant Design Jeecg Vue
+# 基于Ant Design Pro 开发 ，项目名：OA Vue v1.0.0
 
-当前最新版本： 2.1.0（发布日期：20190826）
 
 ## Overview
 
 基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro Vue 版
 Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
 前端页面代码和后端功能代码一键生成，不需要写任何代码，保持 jeecg 一贯的强大！！
+
+本项目是基于Jeecg-Vue开发，鉴于Jeecg-Vue开源版本，工作流相关模块闭源，且开源版本没有工作流功能，故开发此版本。
 
 #### 前端技术
 
@@ -26,8 +27,7 @@ Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代�
 - 拉取项目代码
 
 ```bash
-git clone https://github.com/zhangdaiscott/jeecg-boot.git
-cd  jeecg-boot/ant-design-jeecg-vue
+git clone https://gitee.com/yunwisdoms/oa-front-service.git .
 ```
 
 - 安装依赖
@@ -80,6 +80,26 @@ yarn run lint
     }
   }
 ```
+
+## 项目截图
+
+首页，含有我的待办，我的已办，行政公告，红头文件，新闻资讯，市场观察等内容，提交审批后，待处理人会收到我的待办消息，点击进入我的审批详情进行审批操作
+
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/094940_0ccdd375_499098.png "截屏2020-01-1509.31.38.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095056_22ae1ea5_499098.png "截屏2020-01-1509.34.34.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095105_482885e8_499098.png "截屏2020-01-1509.34.40.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095114_1758bd86_499098.png "截屏2020-01-1509.35.29.png")
+
+审批流程详情页面，点击‘打码’按钮可以生成二维码，手机扫码后，可以直接跳转到此详情页面
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095122_88d97d9f_499098.png "截屏2020-01-1509.35.35.png")
+
+审批流程详情页面，点击‘打码’按钮可以生成短链接，浏览器打开短链接，可以直接跳转到此审批详情页面
+
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095221_a185070d_499098.png "截屏2020-01-1509.35.42.png")
+审批流程详情页面，上传的附件，可以进行预览，支持Office、PDF、图片预览，后续添加音频、视频等多媒体文件播放功能，Office文档上传后，会触发文档转PDF任务，在文档转换期间，如果预览文档，则调用KKfileView进行预览文档，转换完毕，且文档存在于服务器后端，则直接用已经转换完毕的完毕的PDF文档进行预览，上传的图片会被压缩处理，并生成100x60的缩略图。
+
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095308_29e8a2d0_499098.png "截屏2020-01-1509.35.50.png")
+![![![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095437_4e526d78_499098.png "截屏2020-01-1509.36.24.png")](https://images.gitee.com/uploads/images/2020/0115/095431_5c57d6fa_499098.png "截屏2020-01-1509.36.17.png")](https://images.gitee.com/uploads/images/2020/0115/095424_bfb9dee9_499098.png "截屏2020-01-1509.36.11.png")
 
 ## 附属文档
 
