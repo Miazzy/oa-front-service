@@ -99,7 +99,7 @@ yarn run lint
 审批流程详情页面，上传的附件，可以进行预览，支持Office、PDF、图片预览，后续添加音频、视频等多媒体文件播放功能，Office文档上传后，会触发文档转PDF任务，在文档转换期间，如果预览文档，则调用KKfileView进行预览文档，转换完毕，且文档存在于服务器后端，则直接用已经转换完毕的完毕的PDF文档进行预览，上传的图片会被压缩处理，并生成100x60的缩略图。
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095308_29e8a2d0_499098.png "截屏2020-01-1509.35.50.png")
-![![![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095437_4e526d78_499098.png "截屏2020-01-1509.36.24.png")](https://images.gitee.com/uploads/images/2020/0115/095431_5c57d6fa_499098.png "截屏2020-01-1509.36.17.png")](https://images.gitee.com/uploads/images/2020/0115/095424_bfb9dee9_499098.png "截屏2020-01-1509.36.11.png")
+![![![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095437_4e526d78_499098.png "截屏2020-01-1509.36.24.png")](https://images.gitee.com/uploads/images/2020/0115/095431_5c57d6fa_499098.png "截屏2020-01-1509.36.17.png")](https://images.gitee.com/uploads/images/2020/0115/095424_bfb9dee9_499098.png "截屏2020-01-1509.36.11.png")![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/154450_3466efff_499098.png "截屏2020-01-1515.43.48.png")
 
 ## 附属文档
 
