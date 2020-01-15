@@ -27,8 +27,7 @@ Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代�
 - 拉取项目代码
 
 ```bash
-git clone https://gitee.com/yunwisdoms/oa-front-service.git 
-cd  jeecg-boot/ant-design-jeecg-vue
+git clone https://gitee.com/yunwisdoms/oa-front-service.git .
 ```
 
 - 安装依赖
