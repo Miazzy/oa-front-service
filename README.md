@@ -7,6 +7,8 @@
 Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
 前端页面代码和后端功能代码一键生成，不需要写任何代码，保持 jeecg 一贯的强大！！
 
+本项目是基于Jeecg-Vue开发，鉴于Jeecg-Vue开源版本，工作流相关模块闭源，且开源版本没有工作流功能，故开发此版本。
+
 #### 前端技术
 
 - 基础框架：[ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
@@ -25,7 +27,7 @@ Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代�
 - 拉取项目代码
 
 ```bash
-git clone https://github.com/zhangdaiscott/jeecg-boot.git
+git clone 
 cd  jeecg-boot/ant-design-jeecg-vue
 ```
 
