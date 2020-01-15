@@ -22,6 +22,7 @@ axios_.defaults.headers.post['Content-Type'] =
 export const api = {
     domain: window._CONFIG['domain'],
     restapi: window._CONFIG['restAPI'],
+    token: `${window._CONFIG['domain']}/jeecg-boot/sys/common/token`,
     user: `${window._CONFIG['domain']}/jeecg-boot/api/user`,
     role: `${window._CONFIG['domain']}/jeecg-boot/api/role`,
     service: `${window._CONFIG['domain']}/jeecg-boot/api/service`,
@@ -143,6 +144,27 @@ export async function getPermissions(parameter) {
     }
 }
 
+/**
+ * @function 获取用户信息操作
+ */
+export function getInfo() {
+    try {
+        return axios({
+            url: `${window._CONFIG['domainURL']}/api/user/info`,
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+            },
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+/**
+ * @function 保存操作
+ */
 export async function saveService(parameter) {
     try {
         return axios({
@@ -152,6 +174,23 @@ export async function saveService(parameter) {
         });
     } catch (error) {
         console.log(error);
+    }
+}
+
+/**
+ * @function 定时刷新Token，保持连接，Keep-Alive
+ */
+export async function queryToken() {
+    try {
+        var token = getStore('pro__Access-Token');
+
+        var queryURL = `${api.token}/${token.value}`;
+
+        var result = await superagent.get(queryURL);
+
+        return result;
+    } catch (error) {
+        console.log(" error : " + error);
     }
 }
 
@@ -2929,8 +2968,6 @@ export async function queryWorkflowStatus(tableName, id) {
     //返回节点信息
     return node;
 }
-
-
 
 /**
  * @function 检测URL是否有效

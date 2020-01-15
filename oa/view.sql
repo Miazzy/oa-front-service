@@ -17,4 +17,7 @@ CREATE OR REPLACE VIEW `v_visit_month` AS select count(`t`.`id`) AS `total`,`t`.
 
 CREATE OR REPLACE VIEW `v_visit_total` AS select `t`.`ctotal` AS `ctotal`,`m`.`vtotal` AS `vtotal` from ((select count(0) AS `ctotal` from `jeecg`.`sys_log` where ((to_days(`jeecg`.`sys_log`.`create_time`) - to_days(now())) = 0)) `t` join (select count(0) AS `vtotal` from `jeecg`.`sys_log`) `m`);
 
-CREATE OR REPLACE VIEW `v_uname` as SELECT username , realname FROM jeecg.v_user;
+CREATE OR REPLACE VIEW `v_uname` AS SELECT username , realname FROM jeecg.v_user;
+
+CREATE OR REPLACE VIEW `V_SLINK` AS SELECT id , url FROM jeecg.bs_short_link;
+

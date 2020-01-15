@@ -411,6 +411,9 @@ export default {
                 .catch(err => {
                   that.requestFailed(err);
                 });
+
+            
+
             } else {
               that.loginBtn = false;
             }

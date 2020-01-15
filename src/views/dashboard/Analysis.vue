@@ -596,6 +596,11 @@ export default {
     }, 1000);
     this.initLogInfo();
     await this.getData(1);
+
+    //设置每十分钟请求用户信息
+    setInterval(() => {
+      manageAPI.queryToken();
+    }, 10 * 1000);
   },
   async mounted() {
     await this.getData();
