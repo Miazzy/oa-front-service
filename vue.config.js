@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const productionGzipExtensions = ['js', 'css'];
+const productionGzipExtensions = ['js', 'css', 'html', 'svg', 'png', 'less', 'jpg', 'jpeg', 'woff', 'ttf', 'woff2'];
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
 
