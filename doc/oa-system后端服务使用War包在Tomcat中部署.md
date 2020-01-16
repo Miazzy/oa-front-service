@@ -5,10 +5,12 @@
 部署方案采用nginx+tomcat部署方案
 前端项目由于build后都是静态文件，部署到nginx中；后端服务发布部署到tomcat中。
 
+
 #### 一、后台项目jeecg-boot打war包
 
 （jeecg-boot-module-system）
 （1）后台项目jeecg-boot-module-system打war包之前要进行如下改动
+
 
 1、pom.xml文件中项目打包格式设置为war
 war
@@ -20,6 +22,7 @@ war
         <version>2.0.0</version>
         <packaging>war</packaging>
 ```
+
 2、pom.xml文件删除插件spring-boot-maven-plugin
 下面配置删除
 ```xml
@@ -32,6 +35,7 @@ war
    </plugins>
 </build>
 ```
+
 3、增加项目web容器部署的支持：
 修改类/src/main/java/org/jeecg/JeecgApplication.java
 代码如下：
@@ -64,12 +68,38 @@ public class JeecgApplication extends SpringBootServletInitializer {
 
 4、修改配置文件（数据库和redis配置）
 
-1、修改数据库连接 application-prod.yml
-2、修改缓存redis配置 application-prod.yml
-3、修改上传附件配置 application-prod.yml
-输入图片说明
-4、切换配置为线上配置 application.yml
-输入图片说明
+- 1、修改数据库连接 application-prod.yml
+- 2、修改缓存redis配置 application-prod.yml
+- 3、修改上传附件配置 application-prod.yml
+- 4、切换配置为线上配置 application.yml
+
+
+5、修改WebSocketConfig配置
+```
+@Configuration
+public class WebSocketConfig {
+    /**
+     * 	注入ServerEndpointExporter，
+     * 	这个bean会自动注册使用了@ServerEndpoint注解声明的Websocket endpoint
+     */
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
+    
+}
+
+如果使用外置Tomcat,则注释掉下面代码，使用Jar部署，则不注释此代码
+
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
+
+```
+
+
+
 然后 maven package 打war包
 
 #### 二、后台项目jeecg-boot部署tomcat
