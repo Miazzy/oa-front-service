@@ -1,4 +1,4 @@
-## Jeecg-Boot使用war包在Tomcat中部署之参考教程
+## OA-System后端服务使用war包在Tomcat中部署之参考教程
 
  
 ### 正式环境部署
@@ -15,10 +15,10 @@ war
 具体配置如下：
 ```xml
         <modelVersion>4.0.0</modelVersion>
-	<groupId>org.jeecgframework.boot</groupId>
-	<artifactId>jeecg-boot-module-system</artifactId>
-	<version>2.0.0</version>
-	<packaging>war</packaging>
+        <groupId>org.jeecgframework.boot</groupId>
+        <artifactId>jeecg-boot-module-system</artifactId>
+        <version>2.0.0</version>
+        <packaging>war</packaging>
 ```
 2、pom.xml文件删除插件spring-boot-maven-plugin
 下面配置删除
