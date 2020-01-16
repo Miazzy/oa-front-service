@@ -1,9 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-//const HtmlWebpackPlugin = require('html-webpack-plugin');
-//const CompressionWebpackPlugin = require('compression-webpack-plugin');
-//const productionGzipExtensions = ['js', 'css'];
-//const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const productionGzipExtensions = ['js', 'css'];
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
 
 function resolve(dir) {
@@ -19,6 +19,7 @@ const assetsCDN = {
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
         axios: 'axios',
+        'element-ui': 'ElementUI',
     },
     css: [],
     js: [
@@ -36,9 +37,26 @@ const vueConfig = {
         plugins: [
             // Ignore all locale files of moment.js
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new CompressionWebpackPlugin({
+                algorithm: 'gzip',
+                test: productionGzipExtensions,
+                threshold: 10240,
+                minRatio: 0.6,
+            }),
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    compress: {
+                        drop_console: true,
+                        drop_debugger: true,
+                        pure_funcs: ['console.log'], //移除console
+                    },
+                },
+                sourceMap: false,
+                parallel: true,
+            }),
         ],
         // if prod, add externals
-        externals: isProd ? assetsCDN.externals : {},
+        externals: assetsCDN.externals,
     },
 
     pages: {

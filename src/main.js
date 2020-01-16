@@ -4,9 +4,7 @@ import Storage from 'vue-ls';
 import router from './router';
 import store from './store/';
 
-import {
-    VueAxios
-} from '@/utils/request';
+import { VueAxios } from '@/utils/request';
 
 import Antd from 'ant-design-vue';
 import Viser from 'viser-vue';
@@ -26,7 +24,7 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
-import ElementUI from 'element-ui';
+//import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import formCreate from '@form-create/element-ui';
@@ -87,14 +85,14 @@ Vue.use(VuePreview, {
     mainClass: 'pswp--minimal--dark',
     barsSize: {
         top: 0,
-        bottom: 0
+        bottom: 0,
     },
     captionEl: true,
     fullscreenEl: true,
     shareEl: false,
     bgOpacity: 0.99,
     tapToClose: true,
-    tapToToggleControls: false
+    tapToToggleControls: false,
 });
 
 //ElementUI也会注册这个函数，提前改名
