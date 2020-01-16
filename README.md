@@ -7,7 +7,9 @@
 Jeecg-boot 的前段 UI 框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
 前端页面代码和后端功能代码一键生成，不需要写任何代码，保持 jeecg 一贯的强大！！
 
-本项目是基于Jeecg-Vue开发，鉴于Jeecg-Vue开源版本，工作流相关模块闭源，且开源版本没有工作流功能，故开发此版本。
+本项目是基于Jeecg-Boot开发，鉴于Jeecg-Boot开源版本，工作流相关模块闭源，且开源版本没有工作流功能，故开发此版本。
+
+此版本的目前工作流比较简陋，后续会补充加签、会签、和根据审批内容动态处理流程走向的功能。
 
 #### 前端技术
 
@@ -99,7 +101,7 @@ yarn run lint
 审批流程详情页面，上传的附件，可以进行预览，支持Office、PDF、图片预览，后续添加音频、视频等多媒体文件播放功能，Office文档上传后，会触发文档转PDF任务，在文档转换期间，如果预览文档，则调用KKfileView进行预览文档，转换完毕，且文档存在于服务器后端，则直接用已经转换完毕的完毕的PDF文档进行预览，上传的图片会被压缩处理，并生成100x60的缩略图。
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095308_29e8a2d0_499098.png "截屏2020-01-1509.35.50.png")
-![![![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095437_4e526d78_499098.png "截屏2020-01-1509.36.24.png")](https://images.gitee.com/uploads/images/2020/0115/095431_5c57d6fa_499098.png "截屏2020-01-1509.36.17.png")](https://images.gitee.com/uploads/images/2020/0115/095424_bfb9dee9_499098.png "截屏2020-01-1509.36.11.png")
+![![![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/095437_4e526d78_499098.png "截屏2020-01-1509.36.24.png")](https://images.gitee.com/uploads/images/2020/0115/095431_5c57d6fa_499098.png "截屏2020-01-1509.36.17.png")](https://images.gitee.com/uploads/images/2020/0115/095424_bfb9dee9_499098.png "截屏2020-01-1509.36.11.png")![输入图片说明](https://images.gitee.com/uploads/images/2020/0115/154450_3466efff_499098.png "截屏2020-01-1515.43.48.png")
 
 ## 附属文档
 
