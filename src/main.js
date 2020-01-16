@@ -8,7 +8,7 @@ import {
     VueAxios
 } from '@/utils/request';
 
-import Antd from 'ant-design-vue';
+//import Antd from 'ant-design-vue';
 import Viser from 'viser-vue';
 import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 
@@ -23,7 +23,7 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-import ViewUI from 'view-design';
+//import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
 //import ElementUI from 'element-ui';
@@ -35,11 +35,21 @@ import formCreate from '@form-create/element-ui';
 //import F2 from '@antv/f2';
 
 //import axios from 'axios';
-//import qs from 'qs';
-axios.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded';
-Vue.prototype.$axios = axios;
-Vue.prototype.$qs = qs;
+import qs from 'qs';
+
+try {
+    axios.defaults.headers.post['Content-Type'] =
+        'application/x-www-form-urlencoded';
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.prototype.$axios = axios;
+    Vue.prototype.$qs = qs;
+} catch (error) {
+    console.log(error);
+}
 
 import {
     ACCESS_TOKEN,
@@ -62,54 +72,146 @@ import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index';
 import VuePreview from 'vue-preview';
 
-Vue.config.productionTip = false;
 
-//Vue注册组件
-Vue.use(Storage, config.storageOptions);
+try {
+    Vue.config.productionTip = false;
+} catch (error) {
+    console.log(error);
+}
 
-//注册AntDVue前端组件
-Vue.use(Antd);
+try {
+    //Vue注册组件
+    Vue.use(Storage, config.storageOptions);
+} catch (error) {
+    console.log(error);
+}
 
-Vue.use(VueAxios, router);
-Vue.use(Viser);
-Vue.use(hasPermission);
-Vue.use(JDictSelectTag);
-Vue.use(Print);
-Vue.use(VueApexCharts);
-Vue.component('apexchart', VueApexCharts);
-Vue.use(preview);
-Vue.use(vueBus);
-Vue.use(JeecgComponents);
+try {
+    //注册AntDVue前端组件
+    Vue.use(Antd);
+} catch (error) {
+    console.log(error);
+}
 
-//注册ViewUI前端组件
-Vue.use(ViewUI);
-Vue.use(VuePreview, {
-    mainClass: 'pswp--minimal--dark',
-    barsSize: {
-        top: 0,
-        bottom: 0,
-    },
-    captionEl: true,
-    fullscreenEl: true,
-    shareEl: false,
-    bgOpacity: 0.99,
-    tapToClose: true,
-    tapToToggleControls: false,
-});
+try {
+    Vue.use(VueAxios, router);
+} catch (error) {
+    console.log(error);
+}
 
-//ElementUI也会注册这个函数，提前改名
-Vue.prototype.$confirm_ = Vue.prototype.$confirm;
-Vue.prototype.$message_ = Vue.prototype.$message;
+try {
+    Vue.use(Viser);
+} catch (error) {
+    console.log(error);
+}
 
-//注册ElementUI
-Vue.use(ElementUI);
-//Vue.use(EleForm);
+try {
+    Vue.use(hasPermission);
+} catch (error) {
+    console.log(error);
+}
 
-//注册表单生成控件
-Vue.use(formCreate);
+try {
+    Vue.use(JDictSelectTag);
+} catch (error) {
+    console.log(error);
+}
 
-//注册F2可视化组件
-Vue.use(F2);
+try {
+    Vue.use(Print);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.use(VueApexCharts);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.component('apexchart', VueApexCharts);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.use(preview);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.use(vueBus);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.use(JeecgComponents);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //注册ViewUI前端组件
+    Vue.use(ViewUI);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    Vue.use(VuePreview, {
+        mainClass: 'pswp--minimal--dark',
+        barsSize: {
+            top: 0,
+            bottom: 0,
+        },
+        captionEl: true,
+        fullscreenEl: true,
+        shareEl: false,
+        bgOpacity: 0.99,
+        tapToClose: true,
+        tapToToggleControls: false,
+    });
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //ElementUI也会注册这个函数，提前改名
+    Vue.prototype.$confirm_ = Vue.prototype.$confirm;
+    Vue.prototype.$message_ = Vue.prototype.$message;
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //注册ElementUI
+    Vue.use(ElementUI);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //Vue.use(EleForm);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //注册表单生成控件
+    Vue.use(formCreate);
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    //注册F2可视化组件
+    Vue.use(F2);
+} catch (error) {
+    console.log(error);
+}
 
 new Vue({
     router,

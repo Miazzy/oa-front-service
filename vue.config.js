@@ -21,7 +21,7 @@ const assetsCDN = {
         axios: 'axios',
         'element-ui': 'ElementUI',
         f2: 'F2',
-        qs: 'qs',
+        antd: 'Antd',
     },
     css: [],
     js: [
