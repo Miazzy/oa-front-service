@@ -1,10 +1,13 @@
-Jeecg-Boot使用war包在Tomcat中部署之参考教程
+## Jeecg-Boot使用war包在Tomcat中部署之参考教程
+
  
-正式环境部署
+### 正式环境部署
 部署方案采用nginx+tomcat部署方案
 前端项目由于build后都是静态文件，部署到nginx中；后端服务发布部署到tomcat中。
 
-一、后台项目jeecg-boot打war包（jeecg-boot-module-system）
+#### 一、后台项目jeecg-boot打war包
+
+（jeecg-boot-module-system）
 （1）后台项目jeecg-boot-module-system打war包之前要进行如下改动
 
 1、pom.xml文件中项目打包格式设置为war
@@ -69,12 +72,12 @@ public class JeecgApplication extends SpringBootServletInitializer {
 输入图片说明
 然后 maven package 打war包
 
-二、后台项目jeecg-boot部署tomcat
+#### 二、后台项目jeecg-boot部署tomcat
 1、设置tomcat端口号 8080，设置tomcat编码 URIEncoding="UTF-8"
 2、部署项目到tomcat安装目录webapps/jeecg-boot工程目录下
 部署完后通过http://localhost:8080/jeecg-boot 可以访问项目，提示token错误说明部署成功！！
 
-三、前台项目build
+#### 三、前台项目build
 1、修改 public/index.html
 ```
  //图片预览请求地址
@@ -100,7 +103,7 @@ build完成后台会生成一个dist的目录该目录下即为build后的文件
 4、nginx部署前端项目
 拷贝dist下的代码到nginx安装目录下html目录中，即可
 
-四、Nginx配置（conf/nginx.conf）
+#### 四、Nginx配置（conf/nginx.conf）
 nginx监听80端口
 ```
 server {
