@@ -75,7 +75,7 @@ public class JeecgApplication extends SpringBootServletInitializer {
 
 
 5、修改WebSocketConfig配置
-```
+```java
 @Configuration
 public class WebSocketConfig {
     /**
