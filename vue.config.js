@@ -1,5 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const CompressionWebpackPlugin = require('compression-webpack-plugin');
+//const productionGzipExtensions = ['js', 'css'];
+//const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
 
 function resolve(dir) {
@@ -71,12 +75,7 @@ const vueConfig = {
             });
         // if prod is on
         // assets require on cdn
-        if (isProd) {
-            config.plugin('html').tap(args => {
-                args[0].cdn = assetsCDN;
-                return args;
-            });
-        }
+        if (isProd) {}
     },
 
     css: {
