@@ -13,8 +13,8 @@
 1、pom.xml文件中项目打包格式设置为war
 war
 具体配置如下：
-```
-  <modelVersion>4.0.0</modelVersion>
+```xml
+        <modelVersion>4.0.0</modelVersion>
 	<groupId>org.jeecgframework.boot</groupId>
 	<artifactId>jeecg-boot-module-system</artifactId>
 	<version>2.0.0</version>
@@ -22,7 +22,7 @@ war
 ```
 2、pom.xml文件删除插件spring-boot-maven-plugin
 下面配置删除
-```
+```xml
 <build>
    <plugins>
 	<plugin>
@@ -35,7 +35,7 @@ war
 3、增加项目web容器部署的支持：
 修改类/src/main/java/org/jeecg/JeecgApplication.java
 代码如下：
-```
+```java
 package org.jeecg;
  
 import org.springframework.boot.SpringApplication;
@@ -79,7 +79,7 @@ public class JeecgApplication extends SpringBootServletInitializer {
 
 #### 三、前台项目build
 1、修改 public/index.html
-```
+```javascript
  //图片预览请求地址
  window._CONFIG['domianURL'] = 'http://localhost:8080/jeecg-boot';
  window._CONFIG['imgDomainURL'] = 'http://localhost:8080/jeecg-boot/sys/common/view';
@@ -88,7 +88,7 @@ public class JeecgApplication extends SpringBootServletInitializer {
 2、后台接口服务项目名默认是jeecg-boot，如果需要个性化可以修改src/utils/request.js 中baseURL参数
 （一般情况下默认不需要修改）
 具体代码如下：
-```
+```javascript
 // 创建 axios 实例
 const service = axios.create({
   baseURL: '/jeecg-boot/', // api base_url
@@ -105,7 +105,7 @@ build完成后台会生成一个dist的目录该目录下即为build后的文件
 
 #### 四、Nginx配置（conf/nginx.conf）
 nginx监听80端口
-```
+```bash
 server {
 		listen       80;
 		server_name  你的域名;
