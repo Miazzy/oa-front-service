@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 //const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const productionGzipExtensions = ['js', 'css', 'html', 'svg', 'png', 'less', 'jpg', 'jpeg', 'woff', 'ttf', 'woff2'];
+const productionGzipExtensions = ['js', 'css', 'html', 'svg', 'png', 'less', 'jpg', 'jpeg', 'woff', 'ttf', 'woff2', 'ico'];
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
 
@@ -20,6 +20,8 @@ const assetsCDN = {
         vuex: 'Vuex',
         axios: 'axios',
         'element-ui': 'ElementUI',
+        f2: 'F2',
+        qs: 'qs',
     },
     css: [],
     js: [

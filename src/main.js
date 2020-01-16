@@ -1,10 +1,12 @@
-import Vue from 'vue';
+//import Vue from 'vue';
 import App from './App.vue';
 import Storage from 'vue-ls';
 import router from './router';
 import store from './store/';
 
-import { VueAxios } from '@/utils/request';
+import {
+    VueAxios
+} from '@/utils/request';
 
 import Antd from 'ant-design-vue';
 import Viser from 'viser-vue';
@@ -30,10 +32,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import formCreate from '@form-create/element-ui';
 
 //import EleForm from 'vue-ele-form';
-import F2 from '@antv/f2';
+//import F2 from '@antv/f2';
 
-import axios from 'axios';
-import qs from 'qs';
+//import axios from 'axios';
+//import qs from 'qs';
 axios.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
 Vue.prototype.$axios = axios;
