@@ -2052,18 +2052,6 @@ export async function watchFormLeave(that) {
                     that.$root.$tabs.closeTab(path);
                 }
             });
-            // that
-            //     .$confirm(message, '提示', {
-            //         type: 'error',
-            //     })
-            //     .then(() => {
-            //         //关闭当前Tab页面
-            //         that.$root.$tabs.closeTab(path);
-            //     })
-            //     .catch(() => {
-            //         //关闭当前Tab页面
-            //         that.$root.$tabs.closeTab(path);
-            //     });
             console.log('此表单数据已经被删除，无法查看此数据，result :' + result);
         } catch (error) {
             console.log('message confirm error :' + error);
