@@ -2059,8 +2059,6 @@ export async function watchFormLeave(that) {
         return false;
     }
 
-
-
     try {
         department = await queryTableData(
             'sys_depart',

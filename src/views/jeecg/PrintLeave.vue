@@ -708,6 +708,7 @@
        
 <script>
 import * as manageAPI from "@/api/manage";
+import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
 import * as _ from "underscore";
@@ -966,7 +967,6 @@ export default {
         title: "确认操作",
         content: "是否确认提交此自由流程?",
         onOk: async () => {
-
           //设置this的别名
           var that = this;
           //返回结果
@@ -1274,29 +1274,39 @@ export default {
               };
 
               //流程事务处理框架，保证流程处理操作的事务最终一致性
-              try {
-                //执行事务处理框架
-                result = await manageAPI.postTableData(
-                  "BS_TRANSACTION",
-                  operationData
-                );
-              } catch (error) {
-                console.log("流程事务处理框架处理异常", error);
-              }
+              // try {
+              //   //执行事务处理框架
+              //   result = await manageAPI.postTableData(
+              //     "BS_TRANSACTION",
+              //     operationData
+              //   );
+              // } catch (error) {
+              //   console.log("流程事务处理框架处理异常", error);
+              // }
 
-              //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-              result = await manageAPI.postProcessLogHistory(prLogHisNode);
+              // //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+              // result = await manageAPI.postProcessLogHistory(prLogHisNode);
 
-              //删除当前审批节点中的所有记录
-              result = await manageAPI.deleteProcessLog(
+              // //删除当前审批节点中的所有记录
+              // result = await manageAPI.deleteProcessLog(
+              //   tableName,
+              //   prLogHisNode
+              // );
+
+              // //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
+              // result = await manageAPI.patchTableData(
+              //   tableName,
+              //   curRow["business_data_id"],
+              //   bpmStatus
+              // );
+
+              //执行审批业务
+              workflowAPI.postWorkflowApprove(
                 tableName,
-                prLogHisNode
-              );
-
-              //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
-              result = await manageAPI.patchTableData(
-                tableName,
-                curRow["business_data_id"],
+                curRow,
+                operationData,
+                null,
+                prLogHisNode,
                 bpmStatus
               );
 
@@ -1428,32 +1438,42 @@ export default {
                 };
 
                 //流程事务处理框架，保证流程处理操作的事务最终一致性
-                try {
-                  //执行事务处理框架
-                  result = await manageAPI.postTableData(
-                    "BS_TRANSACTION",
-                    operationData
-                  );
-                } catch (error) {
-                  console.log("流程事务处理框架处理异常", error);
-                }
+                // try {
+                //   //执行事务处理框架
+                //   result = await manageAPI.postTableData(
+                //     "BS_TRANSACTION",
+                //     operationData
+                //   );
+                // } catch (error) {
+                //   console.log("流程事务处理框架处理异常", error);
+                // }
 
-                //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-                result = await manageAPI.postProcessLog(pnode);
+                // //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+                // result = await manageAPI.postProcessLog(pnode);
 
-                //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-                result = await manageAPI.postProcessLogHistory(prLogHisNode);
+                // //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+                // result = await manageAPI.postProcessLogHistory(prLogHisNode);
 
-                //删除当前审批节点中的所有记录
-                result = await manageAPI.deleteProcessLog(
+                // //删除当前审批节点中的所有记录
+                // result = await manageAPI.deleteProcessLog(
+                //   tableName,
+                //   prLogHisNode
+                // );
+
+                // //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
+                // result = await manageAPI.patchTableData(
+                //   tableName,
+                //   curRow["business_data_id"],
+                //   bpmStatus
+                // );
+
+                //执行审批业务
+                workflowAPI.postWorkflowApprove(
                   tableName,
-                  prLogHisNode
-                );
-
-                //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
-                result = await manageAPI.patchTableData(
-                  tableName,
-                  curRow["business_data_id"],
+                  curRow,
+                  operationData,
+                  pnode,
+                  prLogHisNode,
                   bpmStatus
                 );
 
@@ -1473,7 +1493,6 @@ export default {
 
           //同意审批成功
           return result;
-
         }
       });
 
@@ -1483,7 +1502,7 @@ export default {
       //   type: "warning"
       // })
       //   .then(async () => {
-          
+
       //   })
       //   .catch(async () => {
       //     console.log("取消知会确认操作！");
