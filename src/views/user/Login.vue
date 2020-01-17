@@ -241,6 +241,11 @@ import {encryption, getEncryptedString} from '@/utils/encryption/aesEncrypt';
 import store from '@/store/';
 import {setStore, getStore, clearStore, clearAll} from '@/utils/storage';
 import {USER_INFO} from '@/store/mutation-types';
+import CryptoJS from 'crypto-js';
+import crypto from '@/assets/crypto';
+
+//注册crypto
+Vue.use(crypto);
 
 export default {
   components: {
@@ -317,7 +322,11 @@ export default {
         this.formLogin.autoLogin = false;
         this.formLogin.rememberMe = false;
       } else {
+        //先进行AES解密，转为Base64代码
+        info = this.decodeAES(info);
+        //解密Base64代码，转为字符串
         info = window.atob(info);
+        //解析字符串，转为json对象
         info = JSON.parse(info);
 
         this.formLogin.autoLogin = info.auto_login;
@@ -387,12 +396,12 @@ export default {
 
               //如果含有记住我的功能，则将账户/密码存入浏览器中
               if (loginParams.remember_me == true) {
+                //获取用户登录信息的Base64代码
+                var infoBase64 = window.btoa(JSON.stringify(loginParams));
+                //对Base64进行加密
+                var secrets = this.encodeAES(infoBase64);
                 //保存账户缓存信息
-                setStore(
-                  '__LOGIN_ACCOUNT__',
-                  window.btoa(JSON.stringify(loginParams)),
-                  7 * 24 * 60 * 60 * 1000
-                );
+                setStore('__LOGIN_ACCOUNT__', secrets, 7 * 24 * 60 * 60 * 1000);
               } else {
                 //清除账户缓存信息
                 clearStore('__LOGIN_ACCOUNT__');
@@ -411,9 +420,6 @@ export default {
                 .catch(err => {
                   that.requestFailed(err);
                 });
-
-            
-
             } else {
               that.loginBtn = false;
             }
