@@ -89,7 +89,7 @@ export default {
       this.$confirm_({
         title: "确认操作",
         content: "真的要注销登录吗 ?",
-        onOk: async => {
+        onOk: async () => {
           this.Logout({})
             .then(() => {
               this.$message_.info("注销登陆成功！");
