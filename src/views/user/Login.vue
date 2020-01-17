@@ -142,13 +142,6 @@
         >
           忘记密码
         </router-link>
-        <router-link
-          :to="{name: 'register'}"
-          class="forge-password"
-          style="float: right;margin-right: 10px"
-        >
-          注册账户
-        </router-link>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -164,15 +157,16 @@
         >
       </a-form-item>
 
-      <!-- <div class="user-login-other">
+      <div class="user-login-other">
         <span>其他登陆方式</span>
         <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
-        <router-link class="register" :to="{ name: 'register' }">
+        <a><a-icon class="item-icon" type="wechat"></a-icon></a>
+        <router-link class="register" :to="{name: 'register'}">
           注册账户
         </router-link>
-      </div>-->
+      </div>
     </a-form>
 
     <two-step-captcha
@@ -326,6 +320,8 @@ export default {
         } else {
           //先进行AES解密，转为Base64代码
           info = this.decodeAES(this.decodeAES(info));
+          //先进行DES解密，转为Base64代码
+          info = this.decodeDES(this.decodeDES(info));
           //解密Base64代码，转为字符串
           info = window.atob(window.atob(window.atob(info)));
           //解析字符串，转为json对象
@@ -393,21 +389,19 @@ export default {
           (err, values) => {
             if (!err) {
               loginParams.username = values.username;
-              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
-              //loginParams.password = md5(values.password)
-              //loginParams.password = encryption(values.password,that.encryptedString.key,that.encryptedString.iv)
               loginParams.password = values.password;
-              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
 
               //如果含有记住我的功能，则将账户/密码存入浏览器中
               if (loginParams.remember_me == true) {
                 //获取用户登录信息字符串代码
-                var infoBase64 = JSON.stringify(loginParams);
+                var secrets = JSON.stringify(loginParams);
                 //对用户信息进行Base64加密操作
-                infoBase64 = window.btoa(window.btoa(window.btoa()));
-                //对Base64进行加密
-                var secrets = this.encodeAES(this.encodeAES(infoBase64));
-                //保存账户缓存信息
+                secrets = window.btoa(window.btoa(window.btoa(secrets)));
+                //对Base64进行DES加密 //将登录信息转为Base64 //console.log('secrets to base64 : ' + secrets);
+                secrets = this.encodeDES(this.encodeDES(secrets));
+                //对Base64进行AES加密 //将Base64转为des //console.log('secrets to des : ' + secrets);
+                secrets = this.encodeAES(this.encodeAES(secrets));
+                //保存账户缓存信息 //将des转为aes加密串 //console.log('secrets to aes : ' + secrets);
                 setStore('__LOGIN_ACCOUNT__', secrets, 7 * 24 * 60 * 60 * 1000);
               } else {
                 //清除账户缓存信息
