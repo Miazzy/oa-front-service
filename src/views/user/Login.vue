@@ -315,45 +315,50 @@ export default {
 
     //等待页面加载后，设置快速登录
     setTimeout(() => {
-      var info = getStore('__LOGIN_ACCOUNT__');
+      try {
+        //获取用户信息
+        var info = getStore('__LOGIN_ACCOUNT__');
 
-      //如果没有获取到缓存信息，则不自动设置为记住密码、自动登录
-      if (typeof info == 'undefined' || info == null || info == '') {
-        this.formLogin.autoLogin = false;
-        this.formLogin.rememberMe = false;
-      } else {
-        //先进行AES解密，转为Base64代码
-        info = this.decodeAES(info);
-        //解密Base64代码，转为字符串
-        info = window.atob(info);
-        //解析字符串，转为json对象
-        info = JSON.parse(info);
+        //如果没有获取到缓存信息，则不自动设置为记住密码、自动登录
+        if (typeof info == 'undefined' || info == null || info == '') {
+          this.formLogin.autoLogin = false;
+          this.formLogin.rememberMe = false;
+        } else {
+          //先进行AES解密，转为Base64代码
+          info = this.decodeAES(this.decodeAES(info));
+          //解密Base64代码，转为字符串
+          info = window.atob(window.atob(window.atob(info)));
+          //解析字符串，转为json对象
+          info = JSON.parse(info);
 
-        this.formLogin.autoLogin = info.auto_login;
-        this.formLogin.rememberMe = info.remember_me;
+          this.formLogin.autoLogin = info.auto_login;
+          this.formLogin.rememberMe = info.remember_me;
 
-        //如果用户上次登录，勾选了记住账户，则直接回填数据
-        if (info.remember_me == true) {
-          this.form.setFieldsValue({
-            username: info.username,
-          });
-          this.form.setFieldsValue({
-            password: info.password,
-          });
-          this.form.setFieldsValue({
-            inputCode: this.verifiedCode,
-          });
+          //如果用户上次登录，勾选了记住账户，则直接回填数据
+          if (info.remember_me == true) {
+            this.form.setFieldsValue({
+              username: info.username,
+            });
+            this.form.setFieldsValue({
+              password: info.password,
+            });
+            this.form.setFieldsValue({
+              inputCode: this.verifiedCode,
+            });
+          }
+
+          //如果设置了自动登录，则调用登录函数
+          if (info.auto_login == true) {
+            setTimeout(() => {
+              //再次检查自动登录是否勾选，防止出现同时勾选记住密码和自动登录后，一旦弹出到登录页面，还没来得及修改登录账户时，直接又登录上去
+              if (this.formLogin.autoLogin == true) {
+                this.handleSubmit();
+              }
+            }, 1500);
+          }
         }
-
-        //如果设置了自动登录，则调用登录函数
-        if (info.auto_login == true) {
-          setTimeout(() => {
-            //再次检查自动登录是否勾选，防止出现同时勾选记住密码和自动登录后，一旦弹出到登录页面，还没来得及修改登录账户时，直接又登录上去
-            if (this.formLogin.autoLogin == true) {
-              this.handleSubmit();
-            }
-          }, 1500);
-        }
+      } catch (error) {
+        console.log('获取用户信息异常：' + error);
       }
     }, 1000);
   },
@@ -396,10 +401,12 @@ export default {
 
               //如果含有记住我的功能，则将账户/密码存入浏览器中
               if (loginParams.remember_me == true) {
-                //获取用户登录信息的Base64代码
-                var infoBase64 = window.btoa(JSON.stringify(loginParams));
+                //获取用户登录信息字符串代码
+                var infoBase64 = JSON.stringify(loginParams);
+                //对用户信息进行Base64加密操作
+                infoBase64 = window.btoa(window.btoa(window.btoa()));
                 //对Base64进行加密
-                var secrets = this.encodeAES(infoBase64);
+                var secrets = this.encodeAES(this.encodeAES(infoBase64));
                 //保存账户缓存信息
                 setStore('__LOGIN_ACCOUNT__', secrets, 7 * 24 * 60 * 60 * 1000);
               } else {
