@@ -600,7 +600,7 @@ export default {
     //设置每十分钟请求用户信息
     setInterval(() => {
       manageAPI.queryToken();
-    }, 10 * 1000);
+    }, 10 * 60 * 1000);
   },
   async mounted() {
     await this.getData();
