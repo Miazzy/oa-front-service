@@ -1590,21 +1590,27 @@ export default {
           });
 
           //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-          result = await manageAPI.postProcessLogHistory(node);
+          // result = await manageAPI.postProcessLogHistory(node);
 
-          //删除当前审批节点中的所有记录
-          result = await manageAPI.deleteProcessLog(tableName, node);
+          // //删除当前审批节点中的所有记录
+          // result = await manageAPI.deleteProcessLog(tableName, node);
 
-          //修改当前审批状态为待处理
-          result = await manageAPI.patchTableData(
+          // //修改当前审批状态为待处理
+          // result = await manageAPI.patchTableData(
+          //   tableName,
+          //   curRow["business_data_id"],
+          //   bpmStatus
+          // );
+
+          //执行审批业务
+          workflowAPI.postWorkflowApprove(
             tableName,
-            curRow["business_data_id"],
+            curRow,
+            null,
+            null,
+            node,
             bpmStatus
           );
-
-          //TODO 以前此表单的自由流程进入历史
-
-          //TODO 删除以前此表单对应的自由流程
 
           //提示用户撤销审批操作成功
           that.tipVisible = true;

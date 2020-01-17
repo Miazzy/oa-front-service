@@ -25,28 +25,42 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         console.log("流程事务处理框架处理异常", error);
     }
 
-    //如果“审批处理下一节点的审批信息”不为空，则执行当前处理
-    if (pnode != null) {
-        //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-        result = await manageAPI.postProcessLog(pnode);
+    try {
+        //如果“审批处理下一节点的审批信息”不为空，则执行当前处理
+        if (pnode != null) {
+            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+            result = await manageAPI.postProcessLog(pnode);
+        }
+    } catch (error) {
+        console.log("审批处理下一节点的审批信息", error);
     }
 
-    //如果“审批处理当前节点的审批信息”不为空，则执行当前处理
-    if (tableName != null && curRow != null && prLogHisNode != null && bpmStatus != null) {
-        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await manageAPI.postProcessLogHistory(prLogHisNode);
+    try {
+        //如果“审批处理当前节点的审批信息”不为空，则执行当前处理
+        if (tableName != null && curRow != null && prLogHisNode != null && bpmStatus != null) {
+            //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+            result = await manageAPI.postProcessLogHistory(prLogHisNode);
 
-        //删除当前审批节点中的所有记录
-        result = await manageAPI.deleteProcessLog(
-            tableName,
-            prLogHisNode
-        );
-        //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 
-        result = await manageAPI.patchTableData(
-            tableName,
-            curRow["business_data_id"],
-            bpmStatus
-        );
+            //删除当前审批节点中的所有记录
+            result = await manageAPI.deleteProcessLog(
+                tableName,
+                prLogHisNode
+            );
+            //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 
+            result = await manageAPI.patchTableData(
+                tableName,
+                curRow["business_data_id"],
+                bpmStatus
+            );
+
+            //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史
+
+            //TODO 以前此表单的自由流程进入历史
+
+            //TODO 删除以前此表单对应的自由流程
+        }
+    } catch (error) {
+        console.log("审批处理当前节点的审批信息", error);
     }
 
     //返回执行结果
