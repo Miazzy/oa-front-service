@@ -54,129 +54,131 @@
 </template>
 
 <script>
-import { filterObj } from '@/utils/util'
-import { getAction, putAction } from '@/api/manage'
-import ShowAnnouncement from '@/components/tools/ShowAnnouncement'
-import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import { filterObj } from "@/utils/util";
+import { getAction, putAction } from "@/api/manage";
+import ShowAnnouncement from "@/components/tools/ShowAnnouncement";
+import { JeecgListMixin } from "@/mixins/JeecgListMixin";
 
 export default {
-  name: 'UserAnnouncementList',
+  name: "UserAnnouncementList",
   mixins: [JeecgListMixin],
   components: {
     ShowAnnouncement
   },
   data() {
     return {
-      description: '系统通告表管理页面',
+      description: "系统通告表管理页面",
       queryParam: {},
       columns: [
         {
-          title: '标题',
-          align: 'center',
-          dataIndex: 'titile'
+          title: "标题",
+          align: "center",
+          dataIndex: "titile"
         },
         {
-          title: '消息类型',
-          align: 'center',
-          dataIndex: 'msgCategory',
+          title: "消息类型",
+          align: "center",
+          dataIndex: "msgCategory",
           customRender: function(text) {
-            if (text == '1') {
-              return '通知公告'
-            } else if (text == '2') {
-              return '系统消息'
+            if (text == "1") {
+              return "通知公告";
+            } else if (text == "2") {
+              return "系统消息";
             } else {
-              return text
+              return text;
             }
           }
         },
         {
-          title: '发布人',
-          align: 'center',
-          dataIndex: 'sender'
+          title: "发布人",
+          align: "center",
+          dataIndex: "sender"
         },
         {
-          title: '发布时间',
-          align: 'center',
-          dataIndex: 'sendTime'
+          title: "发布时间",
+          align: "center",
+          dataIndex: "sendTime"
         },
         {
-          title: '优先级',
-          align: 'center',
-          dataIndex: 'priority',
+          title: "优先级",
+          align: "center",
+          dataIndex: "priority",
           customRender: function(text) {
-            if (text == 'L') {
-              return '低'
-            } else if (text == 'M') {
-              return '中'
-            } else if (text == 'H') {
-              return '高'
+            if (text == "L") {
+              return "低";
+            } else if (text == "M") {
+              return "中";
+            } else if (text == "H") {
+              return "高";
             } else {
-              return text
+              return text;
             }
           }
         },
         {
-          title: '阅读状态',
-          align: 'center',
-          dataIndex: 'readFlag',
+          title: "阅读状态",
+          align: "center",
+          dataIndex: "readFlag",
           customRender: function(text) {
-            if (text == '0') {
-              return '未读'
-            } else if (text == '1') {
-              return '已读'
+            if (text == "0") {
+              return "未读";
+            } else if (text == "1") {
+              return "已读";
             } else {
-              return text
+              return text;
             }
           }
         },
         {
-          title: '操作',
-          dataIndex: 'action',
-          align: 'center',
-          scopedSlots: { customRender: 'action' }
+          title: "操作",
+          dataIndex: "action",
+          align: "center",
+          scopedSlots: { customRender: "action" }
         }
       ],
       url: {
-        list: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/getMyAnnouncementSend`,
-        editCementSend: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
-        readAllMsg: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/readAll`
+        list: `${window._CONFIG["domain"]}/sys/sysAnnouncementSend/getMyAnnouncementSend`,
+        editCementSend: `${window._CONFIG["domain"]}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        readAllMsg: `${window._CONFIG["domain"]}/sys/sysAnnouncementSend/readAll`
       },
       loading: false
-    }
+    };
   },
   created() {
-    this.loadData()
+    this.loadData();
   },
   methods: {
     handleDetail: function(record) {
-      this.$refs.sysAnnouncementModal.detail(record)
-      this.$refs.sysAnnouncementModal.title = '查看'
+      this.$refs.sysAnnouncementModal.detail(record);
+      this.$refs.sysAnnouncementModal.title = "查看";
     },
     showAnnouncement(record) {
-      putAction(this.url.editCementSend, { anntId: record.anntId }).then(res => {
-        if (res.success) {
-          this.loadData()
+      putAction(this.url.editCementSend, { anntId: record.anntId }).then(
+        res => {
+          if (res.success) {
+            this.loadData();
+          }
         }
-      })
-      this.$refs.ShowAnnouncement.detail(record)
+      );
+      this.$refs.ShowAnnouncement.detail(record);
     },
     readAll() {
-      var that = this
+      var that = this;
       that.$confirm_({
-        title: '确认操作',
-        content: '是否全部标注已读?',
+        title: "确认操作",
+        content: "是否全部标注已读?",
         onOk: function() {
           putAction(that.url.readAllMsg).then(res => {
             if (res.success) {
-              that.$message.success(res.message)
-              that.loadData()
+              that.$message.success(res.message);
+              that.loadData();
             }
-          })
+          });
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style scoped>
 .ant-card-body .table-operator {

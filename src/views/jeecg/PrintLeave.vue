@@ -961,12 +961,12 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
-      this.$confirm("是否确认提交此自由流程?", "确认操作", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
+      //确认提交此自由流程
+      this.$confirm_({
+        title: "确认操作",
+        content: "是否确认提交此自由流程?",
+        onOk: async () => {
+
           //设置this的别名
           var that = this;
           //返回结果
@@ -1473,11 +1473,22 @@ export default {
 
           //同意审批成功
           return result;
-        })
-        .catch(async () => {
-          console.log("取消知会确认操作！");
-          return false;
-        });
+
+        }
+      });
+
+      // this.$confirm("是否确认提交此自由流程?", "确认操作", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(async () => {
+          
+      //   })
+      //   .catch(async () => {
+      //     console.log("取消知会确认操作！");
+      //     return false;
+      //   });
     },
 
     /**
@@ -1485,12 +1496,10 @@ export default {
      */
     async handleRejectWF() {
       //是否进行驳回审批操作?
-      this.$confirm("是否进行驳回审批操作?", "确认操作", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
+      this.$confirm_({
+        title: "确认操作",
+        content: "是否进行驳回审批操作?",
+        onOk: async () => {
           //设置this的别名
           var that = this;
           //返回结果
@@ -1590,11 +1599,20 @@ export default {
 
           //返回操作结果
           return result;
-        })
-        .catch(async () => {
-          console.log("取消知会确认操作！");
-          return false;
-        });
+        }
+      });
+
+      //是否进行驳回审批操作?
+      // this.$confirm("是否进行驳回审批操作?", "确认操作", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(async () => {})
+      //   .catch(async () => {
+      //     console.log("取消知会确认操作！");
+      //     return false;
+      //   });
     },
 
     /**
@@ -1602,12 +1620,10 @@ export default {
      */
     async handleConfirmWF() {
       //是否进行确认知会操作?
-      this.$confirm("是否进行确认知会操作?", "确认操作", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
+      this.$confirm_({
+        title: "确认操作",
+        content: "是否进行确认知会操作?",
+        onOk: async () => {
           //设置this的别名
           var that = this;
           //返回结果
@@ -1754,11 +1770,20 @@ export default {
 
           //返回结果
           return result;
-        })
-        .catch(async () => {
-          console.log("取消知会确认操作！");
-          return false;
-        });
+        }
+      });
+
+      //是否进行确认知会操作? // this.$confirm("是否进行确认知会操作?", "确认操作", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(async () => {
+      //   })
+      //   .catch(async () => {
+      //     console.log("取消知会确认操作！");
+      //     return false;
+      //   });
     },
 
     /**
@@ -1766,12 +1791,10 @@ export default {
      */
     async handleSubmitWF() {
       //是否确认提交此自由流程?
-      this.$confirm("是否确认提交此自由流程?", "确认操作", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
+      this.$confirm_({
+        title: "确认操作",
+        content: "是否确认提交此自由流程?",
+        onOk: async () => {
           //获取当前用户
           var userInfo = storage.getStore("cur_user");
           //获取审核用户记录
@@ -1928,9 +1951,13 @@ export default {
                 }
               );
 
-              //弹出审批完成提示框s
-              this.$confirm("提交自由流程审批成功！", "操作成功", {
-                type: "success"
+              //弹出审批完成提示框 //this.$confirm("提交自由流程审批成功！", "操作成功", {type: "success"});
+              this.$confirm_({
+                title: "操作成功",
+                content: "提交自由流程审批成功！",
+                onOk: () => {
+                  console.log("提交自由流程审批成功！");
+                }
               });
 
               //设置为view预览模式
@@ -2005,8 +2032,14 @@ export default {
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
             result = await manageAPI.postProcessLogInformed(pnode);
 
-            //显示提示信息
-            this.$confirm("知会操作成功！", "操作成功", { type: "success" });
+            //显示提示信息 //this.$confirm("知会操作成功！", "操作成功", { type: "success" });
+            this.$confirm_({
+              title: "操作成功",
+              content: "知会操作成功！",
+              onOk: () => {
+                console.log("知会操作成功！");
+              }
+            });
 
             //设置为view预览模式
             this.pageType = "view";
@@ -2017,11 +2050,22 @@ export default {
             //返回操作结果
             return true;
           }
-        })
-        .catch(async () => {
-          console.log("取消知会确认操作！");
-          return false;
-        });
+
+          console.log("确认提交此自由流程！");
+        }
+      });
+
+      //是否确认提交此自由流程?
+      // this.$confirm("是否确认提交此自由流程?", "确认操作", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(async () => {})
+      //   .catch(async () => {
+      //     console.log("取消知会确认操作！");
+      //     return false;
+      //   });
     }
   }
 };

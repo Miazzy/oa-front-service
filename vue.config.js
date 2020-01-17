@@ -19,17 +19,13 @@ const assetsCDN = {
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
         axios: 'axios',
-        'element-ui': 'ElementUI',
-        f2: 'F2',
-        antd: 'Antd',
+        Element: 'Element',
+        F2: 'F2',
+        G2: 'G2',
+        antd: 'antd',
     },
     css: [],
-    js: [
-        '//cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js',
-        '//cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
-        '//cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
-        '//cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
-    ],
+    js: [],
 };
 
 // vue.config.js
@@ -42,20 +38,20 @@ const vueConfig = {
             new CompressionWebpackPlugin({
                 algorithm: 'gzip',
                 test: productionGzipExtensions,
-                threshold: 10240,
-                minRatio: 0.6,
+                threshold: 0,
+                minRatio: 0.8,
             }),
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    compress: {
-                        drop_console: true,
-                        drop_debugger: true,
-                        pure_funcs: ['console.log'], //移除console
-                    },
-                },
-                sourceMap: false,
-                parallel: true,
-            }),
+            // new UglifyJsPlugin({
+            //     uglifyOptions: {
+            //         compress: {
+            //             drop_console: true,
+            //             drop_debugger: true,
+            //             pure_funcs: ['console.log'], //移除console
+            //         },
+            //     },
+            //     sourceMap: false,
+            //     parallel: true,
+            // }),
         ],
         // if prod, add externals
         externals: assetsCDN.externals,

@@ -2044,18 +2044,26 @@ export async function watchFormLeave(that) {
             var result = await transWflowToHistory(tableName, id);
 
             //显示并确认提示信息
-            that
-                .$confirm(message, '提示', {
-                    type: 'error',
-                })
-                .then(() => {
+            that.$confirm_({
+                title: "提示",
+                content: message,
+                onOk: function() {
                     //关闭当前Tab页面
                     that.$root.$tabs.closeTab(path);
-                })
-                .catch(() => {
-                    //关闭当前Tab页面
-                    that.$root.$tabs.closeTab(path);
-                });
+                }
+            });
+            // that
+            //     .$confirm(message, '提示', {
+            //         type: 'error',
+            //     })
+            //     .then(() => {
+            //         //关闭当前Tab页面
+            //         that.$root.$tabs.closeTab(path);
+            //     })
+            //     .catch(() => {
+            //         //关闭当前Tab页面
+            //         that.$root.$tabs.closeTab(path);
+            //     });
             console.log('此表单数据已经被删除，无法查看此数据，result :' + result);
         } catch (error) {
             console.log('message confirm error :' + error);

@@ -52,15 +52,15 @@
 </template>
 
 <script>
-import HeaderNotice from './HeaderNotice'
-import UserPassword from './UserPassword'
-import SettingDrawer from '@/components/setting/SettingDrawer'
-import DepartSelect from './DepartSelect'
-import { mapActions, mapGetters } from 'vuex'
-import { mixinDevice } from '@/utils/mixin.js'
+import HeaderNotice from "./HeaderNotice";
+import UserPassword from "./UserPassword";
+import SettingDrawer from "@/components/setting/SettingDrawer";
+import DepartSelect from "./DepartSelect";
+import { mapActions, mapGetters } from "vuex";
+import { mixinDevice } from "@/utils/mixin.js";
 
 export default {
-  name: 'UserMenu',
+  name: "UserMenu",
   mixins: [mixinDevice],
   components: {
     HeaderNotice,
@@ -72,56 +72,63 @@ export default {
     theme: {
       type: String,
       required: false,
-      default: 'dark'
+      default: "dark"
     }
   },
   methods: {
-    ...mapActions(['Logout']),
-    ...mapGetters(['nickname', 'avatar', 'userInfo']),
+    ...mapActions(["Logout"]),
+    ...mapGetters(["nickname", "avatar", "userInfo"]),
     getAvatar() {
-      console.log('url = ' + window._CONFIG['imgDomainURL'] + '/' + this.avatar())
-      return window._CONFIG['imgDomainURL'] + '/' + this.avatar()
+      console.log(
+        "url = " + window._CONFIG["imgDomainURL"] + "/" + this.avatar()
+      );
+      return window._CONFIG["imgDomainURL"] + "/" + this.avatar();
     },
     handleLogout() {
-      const that = this
-      this.$confirm('真的要注销登录吗 ?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            that.Logout({}).then(() => {
-              that.$message({
-                type: 'success',
-                message: '注销登陆成功！'
-              });
+      //确认注销登录
+      this.$confirm_({
+        title: "确认操作",
+        content: "真的要注销登录吗 ?",
+        onOk: async => {
+          this.Logout({})
+            .then(() => {
+              this.$message_.info("注销登陆成功！");
               setTimeout(() => {
-                window.location.href = '/'
-              }, 300)
-            }).catch(err => {
-              that.$message.error({
-                title: '错误',
-                description: err.message
-              })
+                window.location.href = "/";
+              }, 300);
+            })
+            .catch(err => {
+              this.$message_.err("注销登陆异常！");
+              console.log(err);
             });
-        }).catch(() => {
-          this.$message({
-            type: 'warning',
-            message: '取消操作！'
-          });          
-        });
+        }
+      });
+
+      // this.$confirm("真的要注销登录吗 ?", "提示", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(() => {})
+      //   .catch(() => {
+      //     this.$message({
+      //       type: "warning",
+      //       message: "取消操作！"
+      //     });
+      //   });
     },
     updatePassword() {
-      let username = this.userInfo().username
-      this.$refs.userPassword.show(username)
+      let username = this.userInfo().username;
+      this.$refs.userPassword.show(username);
     },
     updateCurrentDepart() {
-      this.$refs.departSelect.show()
+      this.$refs.departSelect.show();
     },
     systemSetting() {
-      this.$refs.settingDrawer.showDrawer()
+      this.$refs.settingDrawer.showDrawer();
     }
   }
-}
+};
 </script>
 
 <style scoped>

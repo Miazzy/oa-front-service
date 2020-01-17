@@ -8,7 +8,7 @@ import {
     VueAxios
 } from '@/utils/request';
 
-//import Antd from 'ant-design-vue';
+import antd from 'ant-design-vue';
 import Viser from 'viser-vue';
 import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 
@@ -26,7 +26,7 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 //import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
-//import ElementUI from 'element-ui';
+import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import formCreate from '@form-create/element-ui';
@@ -88,7 +88,7 @@ try {
 
 try {
     //注册AntDVue前端组件
-    Vue.use(Antd);
+    Vue.use(antd);
 } catch (error) {
     console.log(error);
 }
@@ -188,7 +188,7 @@ try {
 
 try {
     //注册ElementUI
-    Vue.use(ElementUI);
+    Vue.use(Element);
 } catch (error) {
     console.log(error);
 }
