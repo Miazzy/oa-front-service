@@ -1273,35 +1273,8 @@ export default {
                 other_data: JSON.stringify({})
               };
 
-              //流程事务处理框架，保证流程处理操作的事务最终一致性
-              // try {
-              //   //执行事务处理框架
-              //   result = await manageAPI.postTableData(
-              //     "BS_TRANSACTION",
-              //     operationData
-              //   );
-              // } catch (error) {
-              //   console.log("流程事务处理框架处理异常", error);
-              // }
-
-              // //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-              // result = await manageAPI.postProcessLogHistory(prLogHisNode);
-
-              // //删除当前审批节点中的所有记录
-              // result = await manageAPI.deleteProcessLog(
-              //   tableName,
-              //   prLogHisNode
-              // );
-
-              // //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为已通过:3，修改当前审批状态为待处理
-              // result = await manageAPI.patchTableData(
-              //   tableName,
-              //   curRow["business_data_id"],
-              //   bpmStatus
-              // );
-
               //执行审批业务
-              workflowAPI.postWorkflowApprove(
+              await workflowAPI.postWorkflowApprove(
                 tableName,
                 curRow,
                 operationData,
@@ -1437,38 +1410,8 @@ export default {
                   other_data: JSON.stringify({})
                 };
 
-                //流程事务处理框架，保证流程处理操作的事务最终一致性
-                // try {
-                //   //执行事务处理框架
-                //   result = await manageAPI.postTableData(
-                //     "BS_TRANSACTION",
-                //     operationData
-                //   );
-                // } catch (error) {
-                //   console.log("流程事务处理框架处理异常", error);
-                // }
-
-                // //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-                // result = await manageAPI.postProcessLog(pnode);
-
-                // //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-                // result = await manageAPI.postProcessLogHistory(prLogHisNode);
-
-                // //删除当前审批节点中的所有记录
-                // result = await manageAPI.deleteProcessLog(
-                //   tableName,
-                //   prLogHisNode
-                // );
-
-                // //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
-                // result = await manageAPI.patchTableData(
-                //   tableName,
-                //   curRow["business_data_id"],
-                //   bpmStatus
-                // );
-
                 //执行审批业务
-                workflowAPI.postWorkflowApprove(
+                await workflowAPI.postWorkflowApprove(
                   tableName,
                   curRow,
                   operationData,
@@ -1495,19 +1438,6 @@ export default {
           return result;
         }
       });
-
-      // this.$confirm("是否确认提交此自由流程?", "确认操作", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(async () => {
-
-      //   })
-      //   .catch(async () => {
-      //     console.log("取消知会确认操作！");
-      //     return false;
-      //   });
     },
 
     /**
@@ -1589,21 +1519,8 @@ export default {
             );
           });
 
-          //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-          // result = await manageAPI.postProcessLogHistory(node);
-
-          // //删除当前审批节点中的所有记录
-          // result = await manageAPI.deleteProcessLog(tableName, node);
-
-          // //修改当前审批状态为待处理
-          // result = await manageAPI.patchTableData(
-          //   tableName,
-          //   curRow["business_data_id"],
-          //   bpmStatus
-          // );
-
-          //执行审批业务
-          workflowAPI.postWorkflowApprove(
+          //执行审批驳回业务
+          await workflowAPI.postWorkflowApprove(
             tableName,
             curRow,
             null,
@@ -1626,18 +1543,6 @@ export default {
           return result;
         }
       });
-
-      //是否进行驳回审批操作?
-      // this.$confirm("是否进行驳回审批操作?", "确认操作", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(async () => {})
-      //   .catch(async () => {
-      //     console.log("取消知会确认操作！");
-      //     return false;
-      //   });
     },
 
     /**
@@ -1797,18 +1702,6 @@ export default {
           return result;
         }
       });
-
-      //是否进行确认知会操作? // this.$confirm("是否进行确认知会操作?", "确认操作", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(async () => {
-      //   })
-      //   .catch(async () => {
-      //     console.log("取消知会确认操作！");
-      //     return false;
-      //   });
     },
 
     /**
@@ -1875,14 +1768,10 @@ export default {
             notify_node: tools.deNull(nfUsers)
           };
 
-          //TODO 以前此表单的自由流程进入历史
-
-          //TODO 删除以前此表单对应的自由流程
-
           //提交自由流程审批
           if (tools.deNull(approver) != "" && this.pageType == "workflowing") {
             //将审批用户记录，知会用户记录，写入相应的自由流程表单中
-            var result = await manageAPI.postProcessFreeNode(node);
+            var result = null; //await manageAPI.postProcessFreeNode(node);
 
             const freeWFNode = JSON.parse(JSON.stringify(node));
 
@@ -1907,8 +1796,8 @@ export default {
               business_data: JSON.stringify(freeWFNode)
             };
 
-            //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manageAPI.postProcessLogHistory(node);
+            //发起节点，审批信息，写入审批历史表中
+            const startFreeNode = JSON.parse(JSON.stringify(node));
 
             //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
             var firstWflowUser =
@@ -1934,6 +1823,9 @@ export default {
               business_data: JSON.stringify(node)
             };
 
+            //保存审批相关处理信息
+            const nextWflowNode = JSON.parse(JSON.stringify(node));
+
             //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
             let vflag = await manageAPI.queryApprovalExist(
               tableName,
@@ -1953,28 +1845,31 @@ export default {
               //操作完毕，返回结果
               return true;
             } else {
-              //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
+              //将审批用户记录，知会用户记录，写入相应的自由流程表单中
+              // result = await manageAPI.postProcessFreeNode(freeWFNode);
+              // //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+              // result = await manageAPI.postProcessLogHistory(startFreeNode);
+              // //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
+              // result = await manageAPI.postProcessLog(nextWflowNode);
+              // //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
+              // result = await manageAPI.patchTableData(
+              //   tableName,
+              //   this.curRow["id"],
+              //   {
+              //     bpm_status: "2"
+              //   }
+              // );
 
-              //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-              result = await manageAPI.postProcessLog(node);
+              await workflowAPI.postWorkflowFree(
+                tableName,
+                this.curRow,
+                freeWFNode,
+                startFreeNode,
+                nextWflowNode,
+                "2"
+              );
+
               console.log(" 提交审批返回结果: " + JSON.stringify(result));
-
-              //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-              result = await manageAPI.patchTableData(
-                tableName,
-                this.curRow["id"],
-                {
-                  bpm_status: "2"
-                }
-              );
-              //再次执行一次修改流程状态的操作，防止网络异常
-              result = await manageAPI.patchTableData(
-                tableName,
-                this.curRow["id"],
-                {
-                  bpm_status: "2"
-                }
-              );
 
               //弹出审批完成提示框 //this.$confirm("提交自由流程审批成功！", "操作成功", {type: "success"});
               this.$confirm_({
@@ -2079,18 +1974,6 @@ export default {
           console.log("确认提交此自由流程！");
         }
       });
-
-      //是否确认提交此自由流程?
-      // this.$confirm("是否确认提交此自由流程?", "确认操作", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(async () => {})
-      //   .catch(async () => {
-      //     console.log("取消知会确认操作！");
-      //     return false;
-      //   });
     }
   }
 };
