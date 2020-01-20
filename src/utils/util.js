@@ -90,7 +90,17 @@ export function filterObj(obj) {
  * @returns {*}
  */
 export function formatDate(value, fmt) {
+
+    debugger;
+
+    //如果时间格式含有T，yyyy-MM-ddThh:mm:ss,yyyy-MM-ddThh:mm:ss.SSSZ
+    if (typeof value == "string" && value.includes('T')) {
+        value = new Date(value);
+    }
+
+    //正则表达式
     var regPos = /^\d+(\.\d+)?$/;
+
     if (regPos.test(value) || value instanceof Date) {
         //如果是数字
         let getDate = value instanceof Date ? value : new Date(value);
@@ -383,8 +393,8 @@ export function queryDateDiff(date1, date2) {
     //如果被解析日期格式为字符串，则先将字符串解析为日期格式
     if (Object.prototype.toString.call(date1).includes('String')) {
         try {
-            date1 = parseDate(formatDate(date1, 'yyyy-MM-dd HH:mm:ss'));
-            date2 = parseDate(formatDate(date2, 'yyyy-MM-dd HH:mm:ss'));
+            date1 = parseDate(formatDate(date1, 'yyyy-MM-dd hh:mm:ss'));
+            date2 = parseDate(formatDate(date2, 'yyyy-MM-dd hh:mm:ss'));
         } catch (e) {
             date1 = parseDate(date1);
             date2 = parseDate(date2);

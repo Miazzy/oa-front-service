@@ -662,7 +662,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
 
         //遍历并格式化日期
         _.each(result.records, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd HH:mm:ss');
+            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd hh:mm:ss');
             optime = optime.replace('T', ' ');
             item['operate_time'] = optime;
         });
@@ -1861,6 +1861,7 @@ export async function queryWorkflows(business_data_id) {
 
             //遍历审批日志
             _.each(processLogs, (item, index) => {
+                debugger;
                 //获取下一节点
                 var next =
                     index < processLogs.length - 1 ?
@@ -1870,7 +1871,7 @@ export async function queryWorkflows(business_data_id) {
                 //获取标识
                 var flag = index == processLogs.length - 1;
                 //获取操作时间
-                var optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+                var optime = formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
 
                 var content = `节点：${deNull(
           item.process_station
@@ -1948,8 +1949,9 @@ export async function queryWorkflows(business_data_id) {
             processLogs = await queryPRLogInfByDataID(business_data_id);
 
             _.each(processLogs, (item, index) => {
+                debugger;
                 //获取操作时间
-                var optime = formatDate(item.operate_time, 'yyyy-MM-dd hh:mm:ss');
+                var optime = formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
                 var appruser = deNull(item.approve_user);
                 var node = {
                     id: item.id,
@@ -2099,14 +2101,14 @@ export async function watchFormLeave(that) {
         //查询申请开始日期
         that.curRow.starttime = formatDate(
             that.curRow.starttime,
-            'yyyy-MM-dd HH:mm:ss'
+            'yyyy-MM-dd hh:mm:ss'
         );
 
         //如果未查询到开始日期，则使用申请日期
         if (that.curRow.starttime == '--') {
             that.curRow.starttime = formatDate(
                 that.curRow.create_time,
-                'yyyy-MM-dd HH:mm:ss'
+                'yyyy-MM-dd hh:mm:ss'
             );
         }
     } catch (error) {
@@ -2117,12 +2119,12 @@ export async function watchFormLeave(that) {
         //查询申请结束日期
         that.curRow.endtime = formatDate(
             that.curRow.endtime,
-            'yyyy-MM-dd HH:mm:ss'
+            'yyyy-MM-dd hh:mm:ss'
         );
         //查询申请创建日期
         that.curRow.create_time = formatDate(
             that.curRow.create_time,
-            'yyyy-MM-dd HH:mm:ss'
+            'yyyy-MM-dd hh:mm:ss'
         );
     } catch (error) {
         console.log('watch form leave error :' + error);
