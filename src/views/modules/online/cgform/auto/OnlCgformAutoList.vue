@@ -398,7 +398,8 @@ import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
 import { filterObj, formatDate, deNull, queryUrlString } from "@/utils/util";
 import JImportModal from "@/components/jeecg/JImportModal";
 import _ from "underscore";
-import { setStore, getStore, clearStore } from "@/utils/storage";
+import * as storage from "@/utils/storage";
+
 import {
   ACCESS_TOKEN,
   USER_NAME,
@@ -620,7 +621,9 @@ export default {
       let that = this;
 
       //获取html信息
-      let htmlInfo = getStore(`processlog_by_bs_data_id@${business_data_id}`);
+      let htmlInfo = storage.getStore(
+        `processlog_by_bs_data_id@${business_data_id}`
+      );
 
       if (htmlInfo == null || htmlInfo == "") {
         //获取审批日志信息
@@ -635,7 +638,11 @@ export default {
 
         record.processlog_html_info = htmlInfo;
 
-        setStore(`processlog_by_bs_data_id@${business_data_id}`, record, 10);
+        storage.setStore(
+          `processlog_by_bs_data_id@${business_data_id}`,
+          record,
+          10
+        );
       }
 
       //遍历并设置相应html
@@ -661,7 +668,7 @@ export default {
         this.code == "0b511f234f3847baa50106a14fff6215" &&
         this.description == "流程审批日志表"
       ) {
-        let userInfo = getStore("cur_user");
+        var userInfo = storage.getStore("cur_user");
 
         let result = await queryProcessLogToApproved(
           userInfo["username"],
@@ -680,7 +687,7 @@ export default {
         this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96" &&
         this.description == "流程审批日志历史表"
       ) {
-        let userInfo = getStore("cur_user");
+        let userInfo = storage.getStore("cur_user");
         let result = await queryProcessLogHisApproved(
           userInfo["username"],
           userInfo["realname"],
@@ -698,7 +705,7 @@ export default {
         this.code == "d11901bc44f24a66b25b37a7a04c611e" &&
         this.description == "流程审批知会表"
       ) {
-        let userInfo = getStore("cur_user");
+        let userInfo = storage.getStore("cur_user");
         //获取待知会列表数据
         let result = await queryProcessLogInfApproved(
           userInfo["username"],
@@ -718,12 +725,12 @@ export default {
           console.log("--onlineList-列表数据", res);
           if (res.success) {
             var result = res.result;
-            var userInfo = getStore("cur_user");
+            var userInfo = storage.getStore("cur_user");
             if (Number(result.total) > 0) {
               this.table.pagination.total = Number(res.result.total);
 
               res.result.records = _.filter(res.result.records, function(item) {
-                let userInfo = getStore("cur_user");
+                let userInfo = storage.getStore("cur_user");
                 if (
                   "create_by" in item &&
                   that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
@@ -828,7 +835,7 @@ export default {
       }
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
       var value = await queryTableName();
@@ -840,7 +847,11 @@ export default {
       var curRow = this.table.selectionRows[0];
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+      storage.setStore(
+        `${tableName}@id=${curRow.id}`,
+        JSON.stringify(curRow),
+        60000
+      );
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=print`;
@@ -863,7 +874,7 @@ export default {
       }
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
       var value = await queryTableName();
@@ -881,7 +892,11 @@ export default {
       }
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+      storage.setStore(
+        `${tableName}@id=${curRow.id}`,
+        JSON.stringify(curRow),
+        60000
+      );
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notifying`;
@@ -904,7 +919,7 @@ export default {
       }
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
       var value = await queryTableName();
@@ -922,7 +937,11 @@ export default {
       }
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+      storage.setStore(
+        `${tableName}@id=${curRow.id}`,
+        JSON.stringify(curRow),
+        60000
+      );
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=workflowing`;
@@ -944,7 +963,7 @@ export default {
         return false;
       }
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
       var value = await queryTableName();
@@ -956,7 +975,11 @@ export default {
       var curRow = this.table.selectionRows[0];
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+      storage.setStore(
+        `${tableName}@id=${curRow.id}`,
+        JSON.stringify(curRow),
+        60000
+      );
 
       //设置跳转URL
       var detailURL = `/basewflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=view`;
@@ -980,7 +1003,7 @@ export default {
         return false;
       }
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
       var value = await queryTableName();
@@ -992,7 +1015,11 @@ export default {
       var curRow = this.table.selectionRows[0];
 
       //缓存当前选中数据
-      setStore(`${tableName}@id=${curRow.id}`, JSON.stringify(curRow), 60000);
+      storage.setStore(
+        `${tableName}@id=${curRow.id}`,
+        JSON.stringify(curRow),
+        60000
+      );
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
@@ -1021,7 +1048,7 @@ export default {
       //返回结果
       var result;
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
       //获取当前时间
       var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
@@ -1132,7 +1159,7 @@ export default {
       //返回结果
       var result;
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
       //获取当前时间
       var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
@@ -1450,7 +1477,7 @@ export default {
       //返回结果
       let result;
       //获取当前用户
-      let userInfo = getStore("cur_user");
+      let userInfo = storage.getStore("cur_user");
       //获取当前时间
       let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
@@ -1561,7 +1588,7 @@ export default {
       }
 
       //获取当前用户信息
-      let userInfo = getStore("cur_user");
+      let userInfo = storage.getStore("cur_user");
 
       //检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
 
@@ -1707,7 +1734,7 @@ export default {
       //返回结果
       let result;
       //获取当前用户
-      let userInfo = getStore("cur_user");
+      let userInfo = storage.getStore("cur_user");
       //获取当前时间
       let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 

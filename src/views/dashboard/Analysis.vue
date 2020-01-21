@@ -450,7 +450,7 @@ import HeadInfo from "@/components/tools/HeadInfo.vue";
 import Trend from "@/components/Trend";
 import { getLoginfo, getVisitInfo } from "@/api/api";
 import * as manageAPI from "@/api/manage";
-import { getStore } from "@/utils/storage";
+import * as storage from "@/utils/storage";
 
 const rankList = [];
 for (let i = 0; i < 7; i++) {
@@ -609,7 +609,7 @@ export default {
     async getData(key) {
       //查询我的已办，我的待办，行政公告，红头文件，新闻资讯，奖罚通报，市场观察等内容
       //获取用户信息
-      let userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];
       let realname = userInfo["realname"];
       if (this.activeKey == 1 || key == 1) {
@@ -674,7 +674,7 @@ export default {
      */
     async reloadData() {
       this.spinning = true;
-      let userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];
       let realname = userInfo["realname"];
       if (this.activeKey == 1) {
@@ -739,7 +739,7 @@ export default {
       var curRow = JSON.parse(JSON.stringify(record));
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取选中记录的所属表单名称
       var tableName = curRow["tname"];
@@ -761,7 +761,7 @@ export default {
       var curRow = JSON.parse(JSON.stringify(record));
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //设置跳转URL
       var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify`;

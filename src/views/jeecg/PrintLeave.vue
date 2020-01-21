@@ -959,6 +959,29 @@ export default {
     },
 
     /**
+     * @function 处理用户信息
+     */
+    async handleUserInfo(userInfo) {
+      //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+      if (typeof userInfo == "undefined" && userInfo == null) {
+        //确认用户信息
+        this.$confirm_({
+          title: "提示信息",
+          content: "用户登录信息过期，请重新登录！",
+          onOk: async () => {
+            //清空缓存信息
+            storage.clearAll();
+            //跳转到登录页面
+            this.$router.push(`/user/login`);
+          }
+        });
+        return false;
+      } else {
+        return true;
+      }
+    },
+
+    /**
      * @function 同意审批
      */
     async handleApproveWF() {
@@ -971,8 +994,13 @@ export default {
           var that = this;
           //返回结果
           var result;
+
           //获取当前用户
           var userInfo = storage.getStore("cur_user");
+
+          //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+          await this.handleUserInfo(userInfo);
+
           //获取当前时间
           var date = tools.formatDate(
             new Date().getTime(),
@@ -1451,10 +1479,16 @@ export default {
         onOk: async () => {
           //设置this的别名
           var that = this;
+
           //返回结果
           var result;
+
           //获取当前用户
           var userInfo = storage.getStore("cur_user");
+
+          //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+          await this.handleUserInfo(userInfo);
+
           //获取当前时间
           var date = tools.formatDate(
             new Date().getTime(),
@@ -1463,15 +1497,20 @@ export default {
 
           //审批动作
           var operation = operation || "驳回";
+
           //审批意见
           var message = message || that.curRow.idea_content || "驳回";
+
           //当前被选中记录数据
           var curRow = that.curRow;
+
           //流程日志编号
           var processLogID = tools.queryUrlString("processLogID");
+
           //打印表单名称
           var tableName =
             curRow["table_name"] || tools.queryUrlString("table_name");
+
           //流程状态
           var bpmStatus = { bpm_status: "1" };
 
@@ -1556,32 +1595,46 @@ export default {
         onOk: async () => {
           //设置this的别名
           var that = this;
+
           //返回结果
           var result;
+
           //获取当前用户
           var userInfo = storage.getStore("cur_user");
+
+          //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+          await this.handleUserInfo(userInfo);
+
           //获取当前时间
           var date = tools.formatDate(
             new Date().getTime(),
             "yyyy-MM-dd hh:mm:ss"
           );
+
           //审批动作
           var operation = operation || "知会";
+
           //审批意见
           var message = message || that.curRow.idea_content || "知会确认";
+
           //当前被选中记录数据
           var curRow = that.curRow;
+
           //流程日志编号
           var processLogID = tools.queryUrlString("processLogID");
+
           //打印表单名称
           var tableName = tools.queryUrlString("table_name");
+
           //定义流程状态
           var bpmStatus = { bpm_status: "5" };
+
           //获取当前审批节点的所有数据
           curRow = await manageAPI.queryProcessLogInfByID(
             tableName,
             processLogID
           );
+
           //设置本次知会确认创建时间
           curRow["create_time"] = date;
 
@@ -1650,10 +1703,13 @@ export default {
             tools.deNull(curRow["approve_user"]) +
             (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
             userInfo["username"];
+
           //设置操作内容
           curRow["action"] = operation;
+
           //设置操作时间
           curRow["operate_time"] = date;
+
           //设置操作意见
           curRow["action_opinion"] =
             tools.deNull(curRow["action_opinion"]) +
@@ -1715,12 +1771,19 @@ export default {
         onOk: async () => {
           //获取当前用户
           var userInfo = storage.getStore("cur_user");
+
+          //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+          await this.handleUserInfo(userInfo);
+
           //获取审核用户记录
           var wfUsers = this.wflowUsers;
+
           //获取知会用户记录
           var nfUsers = this.notifyUsers;
+
           //获取审批用户，审批用户为终审节点
           var approver = this.approveUser;
+
           //当前时间
           var ctime = tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
 

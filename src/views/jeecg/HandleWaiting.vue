@@ -113,7 +113,7 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
-import { getStore } from "@/utils/storage";
+import * as storage from "@/utils/storage";
 
 const columns = [
   {
@@ -210,7 +210,7 @@ export default {
       //查询我的已办，我的待办
       if (this.activeKey == 1 || this.activeKey == 2) {
         //获取用户信息
-        let userInfo = getStore("cur_user");
+        var userInfo = storage.getStore("cur_user");
         let username = userInfo["username"];
         let realname = userInfo["realname"];
         if (this.activeKey == 1) {
@@ -246,7 +246,7 @@ export default {
       var curRow = JSON.parse(JSON.stringify(record));
 
       //获取当前用户
-      var userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
 
       //获取选中记录的所属表单名称
       var tableName = curRow["tname"];
@@ -265,7 +265,7 @@ export default {
      */
     async searchQuery() {
       //获取用户信息
-      let userInfo = getStore("cur_user");
+      var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];
 
       //获取我的待办数据
