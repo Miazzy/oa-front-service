@@ -2983,3 +2983,194 @@ export async function queryUrlValid(url) {
     }
 
 }
+
+/**
+ * @function 查询用户总数
+ */
+export async function queryUserCount() {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_user/count`;
+
+    try {
+        const res = await superagent.get(queryURL);
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+        return res.body[0]['no_of_rows'];
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询流程总数
+ */
+export async function queryWflowCount() {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_workflow_total/count`;
+
+    try {
+        const res = await superagent.get(queryURL);
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+        return res.body[0]['no_of_rows'];
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询月度流程数
+ */
+export async function queryWflowMonthCount() {
+
+    debugger;
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_workflow_monthly`;
+
+    try {
+        //打印
+        const res = await superagent.get(queryURL);
+
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+
+        //流程日同比率
+        const ratio = (res.body[0]['total']);
+
+        //返回流程日同比率
+        return ratio;
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * @function 查询流程总数
+ */
+export async function queryWflowDayCount() {
+
+    //获取日期格式
+    var ctime = formatDate(new Date(), 'yyyy-MM-dd');
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_workflow_total?_where=(ctime,eq,${ctime})`;
+
+    try {
+        const res = await superagent.get(queryURL);
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+        return res.body.length;
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询流程总数
+ */
+export async function queryWflowDailyRatio() {
+
+    debugger;
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_workflow_daily`;
+
+    try {
+        //打印
+        const res = await superagent.get(queryURL);
+
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+
+        //流程日同比率
+        const ratio = parseInt((res.body[0]['total'] - res.body[1]['total']) / res.body[1]['total'] * 10000) / 100;
+
+        //返回流程日同比率
+        return ratio;
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询流程总数
+ */
+export async function queryWflowMonthlyRatio() {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_workflow_monthly`;
+
+    try {
+        //打印
+        const res = await superagent.get(queryURL);
+
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+
+        //流程日同比率
+        const ratio = parseInt((res.body[0]['total'] - res.body[1]['total']) / res.body[1]['total'] * 10000) / 100;
+
+        //返回流程日同比率
+        return ratio;
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询月度新增用户数
+ */
+export async function queryNewUserTotal() {
+
+    debugger;
+
+    //获取日期格式
+    var cmonth = formatDate(new Date(), 'yyyy-MM');
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/v_user_monthly?_where=(month,eq,${cmonth})`;
+
+    try {
+        //发送请求
+        const res = await superagent.get(queryURL);
+
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+
+        //月度新增用户数
+        const ratio = (res.body[0]['total']);
+
+        //返回月度新增用户数
+        return ratio;
+
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+/**
+ * @function 查询业务数据
+ */
+export async function queryBusinessTotal() {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/onl_cgform_head/count`;
+
+    try {
+        //发送请求
+        const res = await superagent.get(queryURL);
+
+        console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
+
+        //业务数据
+        const ratio = (res.body[0]['no_of_rows']);
+
+        //返回业务数据
+        return ratio;
+
+    } catch (err) {
+        console.error(err);
+    }
+}

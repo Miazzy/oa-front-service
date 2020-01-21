@@ -2,28 +2,34 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-        <chart-card :loading="loading" title="总流程数" total="126,560">
+        <chart-card :loading="loading" title="总流程数" :total="vwflowTotal">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <trend flag="up" style="margin-right: 16px;">
-              <span slot="term">周同比</span>
-              12%
+            <trend :flag="vwflowMonthlyRatio > 0 ? 'up' : 'down'" style="margin-right: 16px;">
+              <span slot="term">月同比</span>
+              {{vwflowMonthlyRatio}}%
             </trend>
-            <trend flag="down">
+            <trend :flag=" vwflowDailyRatio > 0 ? 'up' : 'down'">
               <span slot="term">日同比</span>
-              11%
+              {{vwflowDailyRatio}}%
             </trend>
           </div>
           <template slot="footer">
-            日流程数
-            <span>24</span>
+            <trend style="margin-right: 16px;">
+              <span slot="term">月流程数</span>
+              {{vwflowMonthTotal}}
+            </trend>
+            <trend style="margin-left: 16px;">
+              <span slot="term">日流程数</span>
+              {{vwflowDayTotal}}
+            </trend>
           </template>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-        <chart-card :loading="loading" title="总用户数" :total="6560 | NumberFormat">
+        <chart-card :loading="loading" title="总用户数" :total="vuserTotal | NumberFormat">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -31,8 +37,8 @@
             <mini-bar :height="40" />
           </div>
           <template slot="footer">
-            入职率
-            <span>60%</span>
+            月新增用户数
+            <span>{{vNewUserTotal}}</span>
           </template>
         </chart-card>
       </a-col>
@@ -51,7 +57,7 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-        <chart-card :loading="loading" title="总业务数" :total="6560 | NumberFormat">
+        <chart-card :loading="loading" title="总业务数" :total="vBussinessTotal | NumberFormat">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -573,6 +579,14 @@ export default {
       loginfo: {},
       visitFields: ["ip", "visit"],
       visitInfo: [],
+      vuserTotal: "-",
+      vNewUserTotal: "-",
+      vwflowTotal: "-",
+      vwflowMonthTotal: "-",
+      vwflowDayTotal: "-",
+      vwflowDailyRatio: "-",
+      vwflowMonthlyRatio: "-",
+      vBussinessTotal: "-",
       indicator: <a-icon type="loading" style="font-size: 24px" spin />,
       dataWaitList: [],
       dataDoneList: [],
@@ -782,12 +796,39 @@ export default {
           this.loginfo = res.result;
         }
       });
+
       //查询访问统计数据
       getVisitInfo().then(res => {
         if (res.success) {
           this.visitInfo = res.result;
         }
       });
+
+      //查询用户信息
+      this.vuserTotal = await manageAPI.queryUserCount();
+
+      //查询流程统计
+      this.vwflowTotal = await manageAPI.queryWflowCount();
+
+      //查询月度流程统计
+      this.vwflowMonthTotal = await manageAPI.queryWflowMonthCount();
+
+      //查询日常流程统计
+      this.vwflowDayTotal = await manageAPI.queryWflowDayCount();
+
+      //查询日同比率
+      this.vwflowDailyRatio = await manageAPI.queryWflowDailyRatio();
+
+      //查询月同比率
+      this.vwflowMonthlyRatio = await manageAPI.queryWflowMonthlyRatio();
+
+      //查询月度新增用户数
+      this.vNewUserTotal = await manageAPI.queryNewUserTotal();
+
+      //查询业务数据
+      this.vBussinessTotal = await manageAPI.queryBusinessTotal();
+
+      console.log(this.vuserTotal);
     }
   }
 };
