@@ -1,11 +1,6 @@
 <template>
-  <div class="main" style="">
-    <a-form
-      :form="form"
-      class="user-layout-login"
-      ref="formLogin"
-      id="formLogin"
-    >
+  <div class="main" style>
+    <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
       <a-tabs
         :activeKey="customActiveKey"
         :tabBarStyle="{textAlign: 'center', borderBottom: 'unset'}"
@@ -23,11 +18,7 @@
               type="text"
               placeholder="请输入帐户名"
             >
-              <a-icon
-                slot="prefix"
-                type="user"
-                :style="{color: 'rgba(0,0,0,.25)'}"
-              />
+              <a-icon slot="prefix" type="user" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
@@ -39,11 +30,7 @@
               autocomplete="false"
               placeholder="密码"
             >
-              <a-icon
-                slot="prefix"
-                type="lock"
-                :style="{color: 'rgba(0,0,0,.25)'}"
-              />
+              <a-icon slot="prefix" type="lock" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
@@ -63,20 +50,12 @@
                     type="smile"
                     :style="{color: 'rgba(0,0,0,.25)'}"
                   />
-                  <a-icon
-                    slot="prefix"
-                    v-else
-                    type="frown"
-                    :style="{color: 'rgba(0,0,0,.25)'}"
-                  />
+                  <a-icon slot="prefix" v-else type="frown" :style="{color: 'rgba(0,0,0,.25)'}" />
                 </a-input>
               </a-form-item>
             </a-col>
             <a-col :span="10">
-              <j-graphic-code
-                @success="generateCode"
-                style="float: right"
-              ></j-graphic-code>
+              <j-graphic-code @success="generateCode" style="float: right"></j-graphic-code>
             </a-col>
           </a-row>
         </a-tab-pane>
@@ -88,11 +67,7 @@
               type="text"
               placeholder="手机号"
             >
-              <a-icon
-                slot="prefix"
-                type="mobile"
-                :style="{color: 'rgba(0,0,0,.25)'}"
-              />
+              <a-icon slot="prefix" type="mobile" :style="{color: 'rgba(0,0,0,.25)'}" />
             </a-input>
           </a-form-item>
 
@@ -105,11 +80,7 @@
                   type="text"
                   placeholder="请输入验证码"
                 >
-                  <a-icon
-                    slot="prefix"
-                    type="mail"
-                    :style="{color: 'rgba(0,0,0,.25)'}"
-                  />
+                  <a-icon slot="prefix" type="mail" :style="{color: 'rgba(0,0,0,.25)'}" />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -129,19 +100,9 @@
       </a-tabs>
 
       <a-form-item>
-        <a-checkbox v-model="formLogin.rememberMe" style="color:black;"
-          >记住密码</a-checkbox
-        >
-        <a-checkbox v-model="formLogin.autoLogin" style="color:black;"
-          >自动登陆</a-checkbox
-        >
-        <router-link
-          :to="{name: 'alteration'}"
-          class="forge-password"
-          style="float: right;"
-        >
-          忘记密码
-        </router-link>
+        <a-checkbox v-model="formLogin.rememberMe" style="color:black;">记住密码</a-checkbox>
+        <a-checkbox v-model="formLogin.autoLogin" style="color:black;">自动登陆</a-checkbox>
+        <router-link :to="{name: 'alteration'}" class="forge-password" style="float: right;">忘记密码</router-link>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -153,19 +114,24 @@
           :loading="loginBtn"
           @click.stop.prevent="handleSubmit"
           :disabled="loginBtn"
-          >确定</a-button
-        >
+        >确定</a-button>
       </a-form-item>
 
       <div class="user-login-other">
         <span>其他登陆方式</span>
-        <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
-        <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
-        <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
-        <a><a-icon class="item-icon" type="wechat"></a-icon></a>
-        <router-link class="register" :to="{name: 'register'}">
-          注册账户
-        </router-link>
+        <a>
+          <a-icon class="item-icon" type="alipay-circle"></a-icon>
+        </a>
+        <a>
+          <a-icon class="item-icon" type="taobao-circle"></a-icon>
+        </a>
+        <a>
+          <a-icon class="item-icon" type="weibo-circle"></a-icon>
+        </a>
+        <a>
+          <a-icon class="item-icon" type="wechat"></a-icon>
+        </a>
+        <router-link class="register" :to="{name: 'register'}">注册账户</router-link>
       </div>
     </a-form>
 
@@ -211,8 +177,7 @@
               v-for="d in departList"
               :key="d.id"
               :value="d.orgCode"
-              >{{ d.departName }}</a-select-option
-            >
+            >{{ d.departName }}</a-select-option>
           </a-select>
         </a-form-item>
       </a-form>
@@ -222,21 +187,21 @@
 
 <script>
 //import md5 from "md5"
-import api from '@/api';
-import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha';
-import {mapActions} from 'vuex';
-import {timeFix, deNull} from '@/utils/util';
-import Vue from 'vue';
-import {ACCESS_TOKEN, ENCRYPTED_STRING} from '@/store/mutation-types';
-import JGraphicCode from '@/components/jeecg/JGraphicCode';
-import {putAction} from '@/api/manage';
-import {postAction} from '@/api/manage';
-import {encryption, getEncryptedString} from '@/utils/encryption/aesEncrypt';
-import store from '@/store/';
-import {setStore, getStore, clearStore, clearAll} from '@/utils/storage';
-import {USER_INFO} from '@/store/mutation-types';
-import CryptoJS from 'crypto-js';
-import crypto from '@/assets/crypto';
+import api from "@/api";
+import TwoStepCaptcha from "@/components/tools/TwoStepCaptcha";
+import { mapActions } from "vuex";
+import { timeFix, deNull } from "@/utils/util";
+import Vue from "vue";
+import { ACCESS_TOKEN, ENCRYPTED_STRING } from "@/store/mutation-types";
+import JGraphicCode from "@/components/jeecg/JGraphicCode";
+import { putAction } from "@/api/manage";
+import { postAction } from "@/api/manage";
+import { encryption, getEncryptedString } from "@/utils/encryption/aesEncrypt";
+import store from "@/store/";
+import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
+import { USER_INFO } from "@/store/mutation-types";
+import CryptoJS from "crypto-js";
+import crypto from "@/assets/crypto";
 
 //注册crypto
 Vue.use(crypto);
@@ -244,11 +209,11 @@ Vue.use(crypto);
 export default {
   components: {
     TwoStepCaptcha,
-    JGraphicCode,
+    JGraphicCode
   },
   data() {
     return {
-      customActiveKey: 'tab1',
+      customActiveKey: "tab1",
       loginBtn: false,
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
@@ -256,48 +221,50 @@ export default {
       stepCaptchaVisible: false,
       form: this.$form.createForm(this),
       encryptedString: {
-        key: '',
-        iv: '',
+        key: "",
+        iv: ""
       },
       state: {
         time: 60,
-        smsSendBtn: false,
+        smsSendBtn: false
       },
       formLogin: {
-        username: '',
-        password: '',
-        captcha: '',
-        mobile: '',
+        username: "",
+        password: "",
+        captcha: "",
+        mobile: "",
         rememberMe: false,
-        autoLogin: false,
+        autoLogin: false
       },
       validatorRules: {
         username: {
           rules: [
-            {required: true, message: '请输入用户名!', validator: 'click'},
-          ],
+            { required: true, message: "请输入用户名!", validator: "click" }
+          ]
         },
         password: {
-          rules: [{required: true, message: '请输入密码!', validator: 'click'}],
+          rules: [
+            { required: true, message: "请输入密码!", validator: "click" }
+          ]
         },
-        mobile: {rules: [{validator: this.validateMobile}]},
-        captcha: {rule: [{required: true, message: '请输入验证码!'}]},
+        mobile: { rules: [{ validator: this.validateMobile }] },
+        captcha: { rule: [{ required: true, message: "请输入验证码!" }] },
         inputCode: {
           rules: [
-            {required: true, message: '请输入验证码!'},
-            {validator: this.validateInputCode},
-          ],
-        },
+            { required: true, message: "请输入验证码!" },
+            { validator: this.validateInputCode }
+          ]
+        }
       },
-      verifiedCode: '',
-      inputCodeContent: '',
+      verifiedCode: "",
+      inputCodeContent: "",
       inputCodeNull: true,
 
       departList: [],
       departVisible: false,
-      departSelected: '',
-      currentUsername: '',
-      validate_status: '',
+      departSelected: "",
+      currentUsername: "",
+      validate_status: ""
     };
   },
   created() {
@@ -311,10 +278,10 @@ export default {
     setTimeout(() => {
       try {
         //获取用户信息
-        var info = getStore('__LOGIN_ACCOUNT__');
+        var info = getStore("__LOGIN_ACCOUNT__");
 
         //如果没有获取到缓存信息，则不自动设置为记住密码、自动登录
-        if (typeof info == 'undefined' || info == null || info == '') {
+        if (typeof info == "undefined" || info == null || info == "") {
           this.formLogin.autoLogin = false;
           this.formLogin.rememberMe = false;
         } else {
@@ -333,13 +300,13 @@ export default {
           //如果用户上次登录，勾选了记住账户，则直接回填数据
           if (info.remember_me == true) {
             this.form.setFieldsValue({
-              username: info.username,
+              username: info.username
             });
             this.form.setFieldsValue({
-              password: info.password,
+              password: info.password
             });
             this.form.setFieldsValue({
-              inputCode: this.verifiedCode,
+              inputCode: this.verifiedCode
             });
           }
 
@@ -354,12 +321,12 @@ export default {
           }
         }
       } catch (error) {
-        console.log('获取用户信息异常：' + error);
+        console.log("获取用户信息异常：" + error);
       }
     }, 1000);
   },
   methods: {
-    ...mapActions(['Login', 'Logout', 'PhoneLogin']),
+    ...mapActions(["Login", "Logout", "PhoneLogin"]),
     // handler
     handleUsernameOrEmail(rule, value, callback) {
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
@@ -378,14 +345,14 @@ export default {
       let that = this;
       let loginParams = {
         remember_me: that.formLogin.rememberMe,
-        auto_login: that.formLogin.autoLogin,
+        auto_login: that.formLogin.autoLogin
       };
       that.loginBtn = true;
       // 使用账户密码登陆
-      if (that.customActiveKey === 'tab1') {
+      if (that.customActiveKey === "tab1") {
         that.form.validateFields(
-          ['username', 'password', 'inputCode'],
-          {force: true},
+          ["username", "password", "inputCode"],
+          { force: true },
           (err, values) => {
             if (!err) {
               loginParams.username = values.username;
@@ -402,17 +369,25 @@ export default {
                 //对Base64进行AES加密 //将Base64转为des //console.log('secrets to des : ' + secrets);
                 secrets = this.encodeAES(this.encodeAES(secrets));
                 //保存账户缓存信息 //将des转为aes加密串 //console.log('secrets to aes : ' + secrets);
-                setStore('__LOGIN_ACCOUNT__', secrets, 7 * 24 * 60 * 60 * 1000);
+                setStore(
+                  "__LOGIN_ACCOUNT__",
+                  secrets,
+                  365 * 24 * 60 * 60 * 1000
+                );
               } else {
                 //清除账户缓存信息
-                clearStore('__LOGIN_ACCOUNT__');
+                clearStore("__LOGIN_ACCOUNT__");
               }
 
               that
                 .Login(loginParams)
                 .then(res => {
                   try {
-                    setStore('cur_user', res['result']['userInfo'], 36000);
+                    setStore(
+                      "cur_user",
+                      res["result"]["userInfo"],
+                      365 * 24 * 60 * 60 * 1000
+                    );
                     this.departConfirm(res);
                   } catch (err) {
                     console.log(err);
@@ -429,8 +404,8 @@ export default {
         // 使用手机号登陆
       } else {
         that.form.validateFields(
-          ['mobile', 'captcha'],
-          {force: true},
+          ["mobile", "captcha"],
+          { force: true },
           (err, values) => {
             if (!err) {
               loginParams.mobile = values.mobile;
@@ -452,9 +427,9 @@ export default {
     getCaptcha(e) {
       e.preventDefault();
       let that = this;
-      this.form.validateFields(['mobile'], {force: true}, (err, values) => {
+      this.form.validateFields(["mobile"], { force: true }, (err, values) => {
         if (!values.mobile) {
-          that.cmsFailed('请输入手机号');
+          that.cmsFailed("请输入手机号");
         } else if (!err) {
           this.state.smsSendBtn = true;
           let interval = window.setInterval(() => {
@@ -465,11 +440,11 @@ export default {
             }
           }, 1000);
 
-          const hide = this.$message.loading('验证码发送中..', 0);
+          const hide = this.$message.loading("验证码发送中..", 0);
           let smsParams = {};
           smsParams.mobile = values.mobile;
-          smsParams.smsmode = '0';
-          postAction(`${window._CONFIG['domain']}/sys/sms`, smsParams)
+          smsParams.smsmode = "0";
+          postAction(`${window._CONFIG["domain"]}/sys/sms`, smsParams)
             .then(res => {
               if (!res.success) {
                 setTimeout(hide, 0);
@@ -501,10 +476,10 @@ export default {
       // update-begin- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
       // this.loginBtn = false
       // update-end- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
-      this.$router.push({name: 'dashboard'});
+      this.$router.push({ name: "dashboard" });
       this.$notification.success({
-        message: '欢迎',
-        description: `${timeFix()}，欢迎回来`,
+        message: "欢迎",
+        description: `${timeFix()}，欢迎回来`
       });
       //如果登录3000秒没有响应，则刷新页面
       setTimeout(() => {
@@ -516,11 +491,11 @@ export default {
           //获取相对路径
           url = url.substring(url.indexOf(domain) + domain.length);
           //如果3秒后，还在登录页面，则刷新页面
-          if (url.includes('/user/login') || url == '/user/login') {
+          if (url.includes("/user/login") || url == "/user/login") {
             location.reload();
           }
         } catch (error) {
-          console.log('query url :' + error);
+          console.log("query url :" + error);
         }
       }, 3000);
       //如果登录3000秒没有响应,同时进入首页
@@ -529,7 +504,7 @@ export default {
           //跳转到工作台
           this.$router.push(`/dashboard/analysis`);
         } catch (error) {
-          console.log('$router go to error :' + error);
+          console.log("$router go to error :" + error);
         }
       }, 1000);
       //如果登录3000秒没有响应,同时进入个人中心
@@ -538,7 +513,7 @@ export default {
           //跳转到个人中心
           this.$router.push(`/account/center`);
         } catch (error) {
-          console.log('$router go to error :' + error);
+          console.log("$router go to error :" + error);
         }
       }, 1000);
       //如果登录3000秒没有响应,同时进入工作台
@@ -547,25 +522,25 @@ export default {
           //跳转到工作台
           this.$router.push(`/dashboard/workplace`);
         } catch (error) {
-          console.log('$router go to error :' + error);
+          console.log("$router go to error :" + error);
         }
       }, 1000);
     },
     cmsFailed(err) {
-      this.$notification['error']({
-        message: '登录失败',
+      this.$notification["error"]({
+        message: "登录失败",
         description: err,
-        duration: 4,
+        duration: 4
       });
     },
     requestFailed(err) {
-      this.$notification['error']({
-        message: '登录失败',
+      this.$notification["error"]({
+        message: "登录失败",
         description:
           ((err.response || {}).data || {}).message ||
           err.message ||
-          '请求出现错误，请稍后再试',
-        duration: 4,
+          "请求出现错误，请稍后再试",
+        duration: 4
       });
       this.loginBtn = false;
     },
@@ -578,7 +553,7 @@ export default {
       ) {
         callback();
       } else {
-        callback('您的手机号码格式不正确!');
+        callback("您的手机号码格式不正确!");
       }
     },
     validateInputCode(rule, value, callback) {
@@ -589,7 +564,7 @@ export default {
       ) {
         callback();
       } else {
-        callback('您输入的验证码不正确!');
+        callback("您输入的验证码不正确!");
       }
     },
     generateCode(value) {
@@ -611,13 +586,13 @@ export default {
         if (multi_depart == 0) {
           this.loginSuccess();
           this.$notification.warn({
-            message: '提示',
+            message: "提示",
             description: `您尚未归属部门,请确认账号信息`,
-            duration: 3,
+            duration: 3
           });
         } else if (multi_depart == 2) {
           this.departVisible = true;
-          this.currentUsername = this.form.getFieldValue('username');
+          this.currentUsername = this.form.getFieldValue("username");
           this.departList = res.result.departs;
         } else {
           this.loginSuccess();
@@ -629,19 +604,19 @@ export default {
     },
     departOk() {
       if (!this.departSelected) {
-        this.validate_status = 'error';
+        this.validate_status = "error";
         return false;
       }
       let obj = {
         orgCode: this.departSelected,
-        username: this.form.getFieldValue('username'),
+        username: this.form.getFieldValue("username")
       };
-      putAction(`${window._CONFIG['domain']}/sys/selectDepart`, obj).then(
+      putAction(`${window._CONFIG["domain"]}/sys/selectDepart`, obj).then(
         res => {
           if (res.success) {
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
-            store.commit('SET_INFO', userInfo);
+            store.commit("SET_INFO", userInfo);
             //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
             this.departClear();
             this.loginSuccess();
@@ -656,19 +631,19 @@ export default {
     },
     departClear() {
       this.departList = [];
-      this.departSelected = '';
-      this.currentUsername = '';
+      this.departSelected = "";
+      this.currentUsername = "";
       this.departVisible = false;
-      this.validate_status = '';
+      this.validate_status = "";
     },
     departChange(value) {
-      this.validate_status = 'success';
+      this.validate_status = "success";
       this.departSelected = value;
     },
     getRouterData() {
       this.$nextTick(() => {
         this.form.setFieldsValue({
-          username: this.$route.params.username,
+          username: this.$route.params.username
         });
       });
     },
@@ -682,8 +657,8 @@ export default {
       } else {
         this.encryptedString = encryptedString;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

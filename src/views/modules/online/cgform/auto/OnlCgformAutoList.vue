@@ -723,6 +723,7 @@ export default {
               this.table.pagination.total = Number(res.result.total);
 
               res.result.records = _.filter(res.result.records, function(item) {
+                let userInfo = getStore("cur_user");
                 if (
                   "create_by" in item &&
                   that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
