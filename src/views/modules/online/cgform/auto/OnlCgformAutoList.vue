@@ -102,12 +102,19 @@
         style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
       >导出</a-button>
       <template v-if="hasBpmStatus">
+        <!-- 处理自由流程功能 -->
+        <a-button
+          @click="handleFreeWF"
+          type="primary"
+          icon="share-alt"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+        >自由流</a-button>
         <!-- 提交审批操作功能 -->
         <a-button
           @click="handleSubmitWF"
           type="primary"
           icon="cloud-upload"
-          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
+          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;display:none;"
         >提交</a-button>
         <!-- 撤销审批操作功能 -->
         <a-button
@@ -116,13 +123,6 @@
           icon="cloud-download"
           style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >撤销</a-button>
-        <!-- 处理自由流程功能 -->
-        <a-button
-          @click="handleFreeWF"
-          type="primary"
-          icon="share-alt"
-          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
-        >自由流</a-button>
         <a-button
           @click="handleNotifyWF"
           type="primary"
