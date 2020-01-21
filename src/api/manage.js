@@ -691,12 +691,20 @@ export async function queryProcessLogWait(username, realname) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        result = _.filter(result, function(item) {
+
+            //格式化日期
             var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = deNull(item['username']).split(',');
+
+            //查询是否存在此用户名
+            var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
+
+            //返回结果
+            return flag;
         });
 
         return result;
@@ -755,12 +763,20 @@ export async function queryProcessLogWaitByParam(username, param) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        result = _.filter(result, function(item) {
+
+            //格式化日期
             var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = deNull(item['username']).split(',');
+
+            //查询是否存在此用户名
+            var flag = _.contains(item['username'], username);
+
+            //返回结果
+            return flag;
         });
 
         return result;
@@ -782,12 +798,20 @@ export async function queryProcessLogDone(username, realname) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        result = _.filter(result, function(item) {
+
+            //格式化日期
             var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = deNull(item['username']).split(',');
+
+            //查询是否存在此用户名
+            var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
+
+            //返回结果
+            return flag;
         });
 
         return result;
@@ -845,12 +869,20 @@ export async function queryProcessLogDoneByParam(username, param) {
         result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        result = _.filter(result, function(item) {
+
+            //格式化日期
             var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = deNull(item['username']).split(',');
+
+            //查询是否存在此用户名
+            var flag = _.contains(item['username'], username);
+
+            //返回结果
+            return flag;
         });
 
         return result;
