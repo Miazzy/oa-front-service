@@ -11,6 +11,8 @@ import * as manageAPI from "@/api/manage";
  */
 export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus) {
 
+    debugger;
+
     //执行处理的结果
     var result = null;
 
@@ -73,23 +75,35 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
  */
 export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeNode, nextWflowNode, bpmStatus) {
 
+    debugger;
+
     //执行处理的结果
     var result = null;
 
+    //状态节点
+    var statusNode = {
+        bpm_status: bpmStatus
+    };
+
     try {
+
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
         result = await manageAPI.postProcessFreeNode(freeWFNode);
+
         //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
         result = await manageAPI.postProcessLogHistory(startFreeNode);
+
         //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
         result = await manageAPI.postProcessLog(nextWflowNode);
-        //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1:待提交 2:处理中 3:审批中 4:已完成 5:已完成）
+
+        //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1:待提交 2:处理中 3:审批中 4:已完成 5:已完成） //修改审批状态为处理中，并记录审批日志；将当前审批状态修改为处理中 
         result = await manageAPI.patchTableData(
             tableName,
-            this.curRow["id"], {
-                bpm_status: bpmStatus
-            }
+            curRow["id"],
+            statusNode
         );
+
+
     } catch (error) {
         console.log("处理自由流程发起提交审批操作异常：" + error)
     }
