@@ -1757,11 +1757,11 @@ export default {
       //打印表单名称
       let tableName = value["table_name"];
 
-      //已经提交审批，无法再次提交
+      //已经提交审批，无法再次提交；或者：如果流程状态是未提交，则可以撤销审批，因为有时，进入流程状态，且有审批日志，但是出现Bug导致状态为未提交，则也应该可以撤销审批
       if (curRow["bpm_status"] == "1") {
-        that.tipVisible = true;
-        that.tipContent = "该记录尚未提交审批，无法撤销审批！";
-        return false;
+        // that.tipVisible = true;
+        // that.tipContent = "该记录尚未提交审批，无法撤销审批！";
+        // return false;
       } else if (curRow["bpm_status"] == "4" || curRow["bpm_status"] == "5") {
         that.tipVisible = true;
         that.tipContent = "该记录已完成审批，无法撤销审批！";
