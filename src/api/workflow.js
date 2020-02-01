@@ -1,4 +1,5 @@
 import * as manageAPI from "@/api/manage";
+import * as tools from "@/utils/util";
 
 /**
  * @function 审批同意处理
@@ -111,4 +112,51 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
     //返回执行结果
     return result;
 
+}
+
+/**
+ * @function 校验提交信息是否准确
+ */
+export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) {
+
+    //审批用户不能为空
+    if (tools.deNull(approver) == "" && pageType == "workflowing") {
+        $confirm({
+            title: "温馨提示",
+            content: "请选择审批用户!"
+        });
+        return false;
+    }
+
+    //如果审批用户含有多个，则不能提交
+    if (
+        tools.deNull(approver).includes(",") &&
+        this.pageType == "workflowing"
+    ) {
+        $confirm({
+            title: "温馨提示",
+            content: "审批用户只能选择一个!"
+        });
+        return false;
+    }
+
+    //知会用户不能为空
+    if (tools.deNull(nfUsers) == "" && this.pageType == "notifying") {
+        //显示提示信息
+        $confirm({
+            title: "温馨提示",
+            content: "请选择知会用户!"
+        });
+        return false;
+    }
+
+    //如果审批人员，出现在审核流程中，则提示错误
+    if (("," + wfUsers + ",").includes("," + approver + ",")) {
+        //显示提示信息
+        $confirm({
+            title: "温馨提示",
+            content: `审批流程中，审批人员[${approver}]不能出现在审核人员中!`
+        });
+        return false;
+    }
 }

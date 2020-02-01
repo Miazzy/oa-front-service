@@ -1772,6 +1772,29 @@ export default {
      * @function 提交自由流程
      */
     async handleSubmitWF() {
+      //获取审核用户记录
+      var wfUsers = this.wflowUsers;
+
+      //获取知会用户记录
+      var nfUsers = this.notifyUsers;
+
+      //获取审批用户，审批用户为终审节点
+      var approver = this.approveUser;
+
+      //校验提交信息是否准确
+      var checkFlag = workflowAPI.checkSubmitInfo(
+        wfUsers,
+        nfUsers,
+        approver,
+        this.pageType,
+        this.$confirm_
+      );
+
+      //如果校验标识有误，则直接返回
+      if (!checkFlag) {
+        return checkFlag;
+      }
+
       //是否确认提交此自由流程?
       this.$confirm_({
         title: "确认操作",
@@ -1794,35 +1817,6 @@ export default {
 
           //当前时间
           var ctime = tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
-
-          //审批用户不能为空
-          if (tools.deNull(approver) == "" && this.pageType == "workflowing") {
-            this.$confirm_({
-              title: "温馨提示",
-              content: "请选择审批用户!"
-            });
-            return false;
-          }
-          //如果审批用户含有多个，则不能提交
-          if (
-            tools.deNull(approver).includes(",") &&
-            this.pageType == "workflowing"
-          ) {
-            this.$confirm_({
-              title: "温馨提示",
-              content: "审批用户只能选择一个!"
-            });
-            return false;
-          }
-          //知会用户不能为空
-          if (tools.deNull(nfUsers) == "" && this.pageType == "notifying") {
-            //显示提示信息
-            this.$confirm_({
-              title: "温馨提示",
-              content: "请选择知会用户!"
-            });
-            return false;
-          }
 
           //获取此表单，关联的流程业务模块
           var tableName = tools.queryUrlString("table_name");
