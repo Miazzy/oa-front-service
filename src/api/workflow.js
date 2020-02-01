@@ -129,10 +129,7 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
     }
 
     //如果审批用户含有多个，则不能提交
-    if (
-        tools.deNull(approver).includes(",") &&
-        this.pageType == "workflowing"
-    ) {
+    if (tools.deNull(approver).includes(",") && pageType == "workflowing") {
         $confirm({
             title: "温馨提示",
             content: "审批用户只能选择一个!"
@@ -141,7 +138,7 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
     }
 
     //知会用户不能为空
-    if (tools.deNull(nfUsers) == "" && this.pageType == "notifying") {
+    if (tools.deNull(nfUsers) == "" && pageType == "notifying") {
         //显示提示信息
         $confirm({
             title: "温馨提示",
