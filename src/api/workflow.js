@@ -73,6 +73,13 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
 
 /**
  * @function 处理自由流程发起提交审批操作
+ * @param tableName     
+ * @param curRow        当前记录数
+ * @param freeWFNode    自由流程节点
+ * @param startFreeNode 流程发起节点
+ * @param nextWflowNode 下一流程处理节点
+ * @param bpmStatus   审批处理关联的业务数据应变更的状态
+ * @define bpmStatus （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
  */
 export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeNode, nextWflowNode, bpmStatus) {
 
@@ -115,7 +122,12 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
 }
 
 /**
- * @function 校验提交信息是否准确
+ * @function 校验自由流程提交信息是否准确
+ * @param wfUsers 审核人员
+ * @param nfUsers 知会人员
+ * @param approver 审批人员
+ * @param pageType page类型
+ * @param $confirm 提示函数
  */
 export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) {
 
