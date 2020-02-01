@@ -1187,6 +1187,14 @@ export default {
               }
             }
 
+            //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
+            if (
+              allAudit.indexOf("," + curAuditor + ",") !=
+              allAudit.lastIndexOf("," + curAuditor + ",")
+            ) {
+              allAudit = allAudit.replace("," + curAuditor + ",", ",");
+            }
+
             //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
             var auditArray = allAudit.split("," + curAuditor + ",");
             //如果存在审核人
