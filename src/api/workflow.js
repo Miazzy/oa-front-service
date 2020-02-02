@@ -12,8 +12,6 @@ import * as tools from "@/utils/util";
  */
 export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus) {
 
-    debugger;
-
     //执行处理的结果
     var result = null;
 
@@ -73,7 +71,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
 
 /**
  * @function 处理自由流程发起提交审批操作
- * @param tableName     
+ * @param tableName     表单名称
  * @param curRow        当前记录数
  * @param freeWFNode    自由流程节点
  * @param startFreeNode 流程发起节点
@@ -82,8 +80,6 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
  * @define bpmStatus （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
  */
 export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeNode, nextWflowNode, bpmStatus) {
-
-    debugger;
 
     //执行处理的结果
     var result = null;
@@ -131,41 +127,49 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
  */
 export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) {
 
-    //审批用户不能为空
-    if (tools.deNull(approver) == "" && pageType == "workflowing") {
-        $confirm({
-            title: "温馨提示",
-            content: "请选择审批用户!"
-        });
-        return false;
+    try {
+
+        //审批用户不能为空
+        if (tools.deNull(approver) == "" && pageType == "workflowing") {
+            $confirm({
+                title: "温馨提示",
+                content: "请选择审批用户!"
+            });
+            return false;
+        }
+
+        //如果审批用户含有多个，则不能提交
+        if (tools.deNull(approver).includes(",") && pageType == "workflowing") {
+            $confirm({
+                title: "温馨提示",
+                content: "审批用户只能选择一个!"
+            });
+            return false;
+        }
+
+        //知会用户不能为空
+        if (tools.deNull(nfUsers) == "" && pageType == "notifying") {
+            //显示提示信息
+            $confirm({
+                title: "温馨提示",
+                content: "请选择知会用户!"
+            });
+            return false;
+        }
+
+        //如果审批人员，出现在审核流程中，则提示错误
+        if (("," + wfUsers + ",").includes("," + approver + ",")) {
+            //显示提示信息
+            $confirm({
+                title: "温馨提示",
+                content: `审批流程中，审批人员[${approver}]不能出现在审核人员中!`
+            });
+            return false;
+        }
+
+    } catch (error) {
+        console.log("check submit info error : " + error);
     }
 
-    //如果审批用户含有多个，则不能提交
-    if (tools.deNull(approver).includes(",") && pageType == "workflowing") {
-        $confirm({
-            title: "温馨提示",
-            content: "审批用户只能选择一个!"
-        });
-        return false;
-    }
-
-    //知会用户不能为空
-    if (tools.deNull(nfUsers) == "" && pageType == "notifying") {
-        //显示提示信息
-        $confirm({
-            title: "温馨提示",
-            content: "请选择知会用户!"
-        });
-        return false;
-    }
-
-    //如果审批人员，出现在审核流程中，则提示错误
-    if (("," + wfUsers + ",").includes("," + approver + ",")) {
-        //显示提示信息
-        $confirm({
-            title: "温馨提示",
-            content: `审批流程中，审批人员[${approver}]不能出现在审核人员中!`
-        });
-        return false;
-    }
+    return true;
 }

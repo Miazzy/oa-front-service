@@ -790,7 +790,7 @@ export async function queryProcessLogWaitByParam(username, param) {
  */
 export async function queryProcessLogDone(username, realname) {
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=0&_size=30&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=0&_size=30&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');

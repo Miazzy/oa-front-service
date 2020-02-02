@@ -91,8 +91,6 @@ export function filterObj(obj) {
  */
 export function formatDate(value, fmt) {
 
-    debugger;
-
     //如果时间格式含有T，yyyy-MM-ddThh:mm:ss,yyyy-MM-ddThh:mm:ss.SSSZ，这样做可以自动把+0:00时区的时间转为+8:00的时间
     if (typeof value == "string" && value.includes('T')) {
         value = new Date(value);
