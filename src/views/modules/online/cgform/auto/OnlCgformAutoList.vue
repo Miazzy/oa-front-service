@@ -1155,7 +1155,7 @@ export default {
      */
     async handleApproveWF() {
       //设置this的别名
-      var that = this;
+      let that = this;
       //返回结果
       var result;
       //获取当前用户
@@ -1590,7 +1590,8 @@ export default {
       //获取当前用户信息
       let userInfo = storage.getStore("cur_user");
 
-      //检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
+      //TODO 检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
+      debugger;
 
       //第一步，获取此表单，关联的流程业务模块
       let value = await queryTableName();
@@ -1598,6 +1599,10 @@ export default {
       //打印表单名称
       let tableName = value["table_name"];
       //console.log(' tableName : ' + value['table_name'] + ' 执行提交审批操作')
+
+      //TODO 获取是否存在待审批处理的日志记录
+
+      //TODO 如果审批状态是待提交，但是存在待处理的审批日志的，则修改状态为审批中，且提示，已经提交审批，无法再次提交审批
 
       //查询SQL , 获取流程权责中关联业务含有tableName的流程权责
       let rights = await queryBusinessInfo(tableName);
