@@ -716,6 +716,47 @@ export async function queryProcessLogWait(username, realname) {
 /**
  * 查询我的待办数据
  */
+export async function queryUserName() {
+    //查询URL
+    var index = 0;
+    var queryURL;
+    var result = [];
+
+    try {
+
+        //从缓存中获取用户数据
+        var userlist = getStore('cache_all_user_name');
+
+        if (typeof userlist == 'undefined' || userlist == null || userlist.length == 0) {
+
+            while (index < 10000) {
+                queryURL = `${api.restapi}/api/v_uname?_p=${index++}&_size=50`;
+                var res = await superagent.get(queryURL).set('accept', 'json');
+                result = result.concat(res.body);
+                //如果返回结果数据小于size，则表示查询到末页，不在查询
+                if (res.body.length < 50) {
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            //将用户数据设置到缓存中
+            setStore('cache_all_user_name', result, 3600 * 24);
+
+        } else {
+            result = userlist;
+        }
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/**
+ * 查询我的待办数据
+ */
 export async function queryProcessLogWaitByParam(username, param) {
 
     //条件SQL

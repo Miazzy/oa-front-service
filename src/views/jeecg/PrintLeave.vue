@@ -585,11 +585,19 @@
                   <j-select-multi-user v-model="wflowUsers"></j-select-multi-user>
                 </a-form-item>
 
-                <a-form-item label="审批用户" style="width: 500px">
+                <div style="width:500px;" v-if="auditData != null && auditData.length > 0">
+                  <a-table :columns="wflowcolumns" :dataSource="auditData" :pagination="false"></a-table>
+                </div>
+
+                <a-form-item label="审批用户" style="width: 500px; margin-top:10px;">
                   <j-select-multi-user v-model="approveUser"></j-select-multi-user>
                 </a-form-item>
 
-                <a-form-item label="知会用户" style="width: 500px">
+                <div style="width:500px;" v-if="approveData != null && approveData.length > 0">
+                  <a-table :columns="wflowcolumns" :dataSource="approveData" :pagination="false"></a-table>
+                </div>
+
+                <a-form-item label="知会用户" style="width: 500px; margin-top:10px;">
                   <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
               </a-form>
@@ -771,7 +779,26 @@ export default {
       qrcodeUrl: "",
       qrcodeVisible: false,
       shortUrlVisible: false,
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      wflowcolumns: [
+        {
+          title: "序号",
+          dataIndex: "no",
+          key: "no"
+        },
+        {
+          title: "中文",
+          dataIndex: "name",
+          key: "name"
+        },
+        {
+          title: "英文",
+          dataIndex: "nickname",
+          key: "nickname"
+        }
+      ],
+      auditData: [],
+      approveData: []
     };
   },
 
@@ -794,6 +821,40 @@ export default {
       let result = await manageAPI.colorProcessDetail(that, this);
       //返回结果
       return result;
+    },
+    async wflowUsers(users) {
+      var userlist = await manageAPI.queryUserName();
+      var ulist = users.split(",");
+      this.auditData = [];
+      _.each(ulist, (item, index) => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        this.auditData.push({
+          no: index + 1,
+          name: user.realname,
+          nickname: user.username
+        });
+      });
+      console.log("审核用户列表：" + users);
+    },
+    async approveUser(users) {
+      var userlist = await manageAPI.queryUserName();
+      var ulist = users.split(",");
+      this.approveData = [];
+      _.each(ulist, (item, index) => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        this.approveData.push({
+          no: index + 1,
+          name: user.realname,
+          nickname: user.username
+        });
+      });
+      console.log("审批用户列表：" + users);
     }
   },
   methods: {
