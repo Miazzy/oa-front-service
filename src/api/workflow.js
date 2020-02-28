@@ -54,11 +54,8 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
                 bpmStatus
             );
 
-            //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史
-
-            //TODO 以前此表单的自由流程进入历史
-
-            //TODO 删除以前此表单对应的自由流程
+            //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史，以前此表单的自由流程进入历史，并删除以前此表单对应的自由流程
+            result = await manageAPI.transFreeWflowHis(curRow["business_data_id"]);
         }
     } catch (error) {
         console.log("审批处理当前节点的审批信息", error);
@@ -174,4 +171,37 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
     }
 
     return true;
+}
+
+
+/**
+ * @function 将当前自由流程的数据转移到历史数据中
+ * @param {*} id 
+ */
+export async function transFreeWflowHis(id) {
+
+    //定义返回结果
+    var result;
+
+    try {
+
+        //获取本表单业务的所有的自由流程数据
+        let wflist = await manageAPI.queryHisFreeWorkflow(id);
+
+        //将历史数据插入到历史自由流程表中
+        let wcode = await manageAPI.insertTableData("bs_free_process_h", wflist);
+
+        //删除当前自由流程表中历史数据
+        result = await manageAPI.deleteTableItem("bs_free_process", wflist);
+
+        //打印返回结果
+        console.log("result :" + result + " wcode :" + wcode);
+
+
+    } catch (error) {
+        console.log("transfer free workflow node into history " + error);
+    }
+
+    return result;
+
 }

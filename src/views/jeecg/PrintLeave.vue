@@ -811,8 +811,10 @@ export default {
     let result = await manageAPI.colorProcessDetail(that, this);
     //加载流程节点信息
     let wfnode = await this.loadWorkflowNode();
-    //打印加载的流程节点信息
-    console.log(wfnode);
+    //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
+    let wftransfer = await this.transferFreeWorkflow();
+    //打印加载的流程节点信息和自由流程处理信息
+    console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
     //返回结果
     return result;
   },
@@ -826,8 +828,10 @@ export default {
       let result = await manageAPI.colorProcessDetail(that, this);
       //加载流程节点信息
       let wfnode = await this.loadWorkflowNode();
-      //打印加载的流程节点信息
-      console.log(wfnode);
+      //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
+      let wftransfer = await this.transferFreeWorkflow();
+      //打印加载的流程节点信息和自由流程处理信息
+      console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
       //返回结果
       return result;
     },
@@ -893,6 +897,22 @@ export default {
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
       let result = await manageAPI.colorProcessDetail(that, this);
+      //加载流程节点信息
+      let wfnode = await this.loadWorkflowNode();
+      //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
+      let wftransfer = await this.transferFreeWorkflow();
+      //打印加载的流程节点信息和自由流程处理信息
+      console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
+      //返回结果
+      return result;
+    },
+
+    /**
+     * @function 执行自由流程转入历史操作
+     */
+    async transferFreeWorkflow() {
+      //执行自由流程转历史操作
+      let result = await workflowAPI.transFreeWflowHis(this.curRow.id);
       //返回结果
       return result;
     },
@@ -910,9 +930,28 @@ export default {
         return user.username == node.start;
       });
 
+      //设置start节点信息
+      try {
+        startInfo = JSON.parse(JSON.stringify(startInfo));
+      } catch (error) {
+        console.log(error);
+      }
+
       var approveInfo = _.find(userlist, user => {
         return user.username == node.approve;
       });
+
+      //设置approve节点信息
+      try {
+        approveInfo = JSON.parse(JSON.stringify(approveInfo));
+      } catch (error) {
+        console.log(error);
+      }
+
+      //如果当前处理节点为审批节点，则审批节点添加处理中标识
+      if (approveInfo.username == node.operate) {
+        approveInfo.realname = "🏁" + approveInfo.realname + "(处理中)";
+      }
 
       try {
         var ulist = node.audit.split(",");
@@ -923,7 +962,6 @@ export default {
             var user = _.find(userlist, user => {
               return user.username == item;
             });
-            debugger;
             if (item == node.operate) {
               auditInfo.realname =
                 auditInfo.realname + "->🏁" + user.realname + "(处理中)";

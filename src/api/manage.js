@@ -15,6 +15,7 @@ import {
     queryUrlString
 } from '@/utils/util';
 import $ from 'jquery';
+import * as workflowAPI from "@/api/workflow";
 
 axios_.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
@@ -803,10 +804,9 @@ export async function queryWorkflowNode(id) {
             console.log('知会人员：' + result.notify);
         }
 
-        if (result.audit != null && result.audit != '') {
-            let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
-            result.operate = auditnode.employee;
-        }
+        //获取当前正在审批用户
+        let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
+        result.operate = auditnode.employee;
 
 
     } catch (err) {
@@ -2008,6 +2008,38 @@ export function queryUserRealName(name) {
     }
     return user;
 
+}
+
+/**
+ * @function 查询表单对应的历史自由流程
+ */
+export async function queryHisFreeWorkflow(id) {
+
+    debugger;
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_free_process?_where=(main_key,eq,${id})&_sort=-create_time`;
+    //根据业务编号，查询业务数据
+    var wflist = [];
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        //如果只有一条数据，则返回[]；如果有多条数据，则返回多个数据
+        if (typeof res.body == 'undefined' || res.body == null || res.body == '') {
+            wflist = [];
+        } else if (res.body.length == 1) {
+            wflist = [];
+        } else {
+            wflist = res.body.splice(1);
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    return wflist;
 }
 
 /**
@@ -3366,4 +3398,20 @@ export async function queryBusinessTotal() {
     } catch (err) {
         console.error(err);
     }
+}
+
+/**
+ * @function 将当前自由流程的数据转移到历史数据中
+ * @param {*} id 
+ */
+export async function transFreeWflowHis(id) {
+
+    //将当前自由流程的数据转移到历史数据中
+    let result = await workflowAPI.transFreeWflowHis(id);
+
+    //打印返回结果
+    console.log("result :" + result);
+
+    return result;
+
 }
