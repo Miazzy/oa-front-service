@@ -926,7 +926,6 @@ export default {
       //获取当前流程的节点信息
       var node = await manageAPI.queryWorkflowNode(this.curRow.id);
 
-      debugger;
       //如果本表单没有获取当历史自由流程记录，则从本业务类别中获取曾经的历史自由流程
       if (
         typeof node == "undefined" ||

@@ -390,6 +390,7 @@ import {
   postProcessLogHistory,
   deleteProcessLogInf,
   queryProcessLogInfByID,
+  queryExistWorkflow,
   queryPRLogHistoryByDataID
 } from "@/api/manage";
 import Vue from "vue";
@@ -1571,9 +1572,15 @@ export default {
       let index = that.table.selectedRowKeys[0];
       //当前被选中记录数据
       let curRow = that.table.selectionRows[0];
+      //查询是否存在流程，如果存在流程，则不能提交审批
+      let exnode = await queryExistWorkflow(curRow.id);
 
       //已经提交审批，无法再次提交
-      if (curRow["bpm_status"] == "2" || curRow["bpm_status"] == "3") {
+      if (
+        curRow["bpm_status"] == "2" ||
+        curRow["bpm_status"] == "3" ||
+        (typeof exnode != "undefined" && exnode != null)
+      ) {
         that.tipVisible = true;
         that.tipContent = "待审记录中，已经存在此记录，无法再次提交审批！";
         return false;
