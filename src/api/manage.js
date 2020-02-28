@@ -755,6 +755,30 @@ export async function queryUserName() {
 }
 
 /**
+ * 查询工作流程的节点配置(审核节点、审批节点、知会节点)
+ */
+export async function queryWorkflowNode(id) {
+
+    //查询URL
+    var queryURL = `${api.restapi}/api/v_workflow_node?_where=(id,eq,${id})`;
+    //返回结果对象
+    var result = {};
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (typeof res.body != "undefined" && res.body != null && res.body.length > 0) {
+            result = res.body[0];
+        }
+
+    } catch (err) {
+        console.log("打印错误日志：" + err);
+    }
+
+    return result;
+}
+
+/**
  * 查询我的待办数据
  */
 export async function queryProcessLogWaitByParam(username, param) {

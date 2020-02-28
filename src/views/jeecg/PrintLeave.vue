@@ -459,16 +459,16 @@
             <div style="margin-bottom:20px;">流程进度</div>
             <template>
               <a-steps style="width:80%;margin-bottom:10px;">
-                <a-step :status="wflowstatus.start.status" title="发起">
+                <a-step :status="wflowstatus.start.status" title="发起" :description="startusers">
                   <a-icon type="user" slot="icon" />
                 </a-step>
-                <a-step :status="wflowstatus.audit.status" title="审核">
+                <a-step :status="wflowstatus.audit.status" title="审核" :description="auditusers">
                   <a-icon type="solution" slot="icon" />
                 </a-step>
-                <a-step :status="wflowstatus.approve.status" title="审批">
+                <a-step :status="wflowstatus.approve.status" title="审批" :description="approveusers">
                   <a-icon type="audit" slot="icon" />
                 </a-step>
-                <a-step :status="wflowstatus.message.status" title="知会">
+                <a-step :status="wflowstatus.message.status" title="知会" :description="messageusers">
                   <a-icon type="mail" slot="icon" />
                 </a-step>
               </a-steps>
@@ -600,10 +600,14 @@
                 <a-form-item label="知会用户" style="width: 500px; margin-top:10px;">
                   <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
+
+                <div style="width:500px;" v-if="notifyData != null && notifyData.length > 0">
+                  <a-table :columns="wflowcolumns" :dataSource="notifyData" :pagination="false"></a-table>
+                </div>
               </a-form>
             </template>
             <template>
-              <div style="width:88%;margin-top:10px;">
+              <div style="width:88%;margin-top:15px;">
                 <a-button
                   ghost
                   type="primary"
@@ -720,6 +724,7 @@ import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
 import * as _ from "underscore";
+import * as $ from "jquery";
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -732,6 +737,8 @@ Vue.component(VueQrcode.name, VueQrcode);
 
 //默认预览图片
 const images = [];
+//审核、审批、知会列表columns
+const wfcolumns = `[{"title":"序号","dataIndex":"no","key":"no"},{"title":"中文","dataIndex":"name","key":"name"},{"title":"英文","dataIndex":"nickname","key":"nickname"}]`;
 
 export default {
   components: {
@@ -780,45 +787,164 @@ export default {
       qrcodeVisible: false,
       shortUrlVisible: false,
       form: this.$form.createForm(this),
-      wflowcolumns: [
-        {
-          title: "序号",
-          dataIndex: "no",
-          key: "no"
-        },
-        {
-          title: "中文",
-          dataIndex: "name",
-          key: "name"
-        },
-        {
-          title: "英文",
-          dataIndex: "nickname",
-          key: "nickname"
-        }
-      ],
+      wflowcolumns: JSON.parse(wfcolumns),
       auditData: [],
-      approveData: []
+      approveData: [],
+      notifyData: [],
+      startusers: "",
+      auditusers: "",
+      approveusers: "",
+      messageusers: ""
     };
   },
 
   async created() {},
 
   async mounted() {
+    //查询用户信息
+    var userlist = await manageAPI.queryUserName();
     //查询当前节点信息
     let that = await manageAPI.watchFormLeave(this);
     //获取返回结果
     let result = await manageAPI.colorProcessDetail(that, this);
+    //获取当前流程的节点信息
+    let node = await manageAPI.queryWorkflowNode(this.curRow.id);
+
+    var startInfo = _.find(userlist, user => {
+      return user.username == node.start;
+    });
+
+    var approveInfo = _.find(userlist, user => {
+      return user.username == node.approve;
+    });
+
+    try {
+      var ulist = node.audit.split(",");
+      var auditInfo = { realname: "" };
+      _.each(ulist, item => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        auditInfo.realname = auditInfo.realname + "," + user.realname;
+      });
+
+      //如果是逗号开头，则去掉第一个字符
+      if (auditInfo.realname.startsWith(",")) {
+        auditInfo.realname = auditInfo.realname.substring(1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      var nlist = node.notify.split(",");
+      var notifyInfo = { realname: "" };
+      _.each(nlist, item => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        notifyInfo.realname = notifyInfo.realname + "," + user.realname;
+      });
+
+      //如果是逗号开头，则去掉第一个字符
+      if (notifyInfo.realname.startsWith(",")) {
+        notifyInfo.realname = notifyInfo.realname.substring(1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    //设置流程节点信息
+    if (node.start != null && node.start != "") {
+      this.startusers = `发起: ${startInfo.realname}`;
+    }
+    if (node.audit != null && node.audit != "") {
+      this.auditusers = `审核: ${auditInfo.realname}`;
+    }
+    if (node.approve != null && node.approve != "") {
+      this.approveusers = `审批: ${approveInfo.realname}`;
+    }
+    if (node.notify != null && node.notify != "") {
+      this.messageusers = `知会：${notifyInfo.realname}`;
+    }
+    //设置发起、审核、审批、知会节点的width
+    setTimeout(() => {
+      $(".ant-steps-item-description").css("max-width", "220px");
+    }, 300);
+
     //返回结果
     return result;
   },
 
+  //Vue动态监控区域
   watch: {
     async $route() {
+      var userlist = await manageAPI.queryUserName();
+
       //查询当前节点信息
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
       let result = await manageAPI.colorProcessDetail(that, this);
+      //获取当前流程的节点信息
+      let node = await manageAPI.queryWorkflowNode(this.curRow.id);
+
+      var startInfo = _.find(userlist, user => {
+        return user.username == node.start;
+      });
+
+      var approveInfo = _.find(userlist, user => {
+        return user.username == node.approve;
+      });
+
+      try {
+        var ulist = node.audit.split(",");
+        var auditInfo = { realname: "" };
+        _.each(ulist, item => {
+          //查询用户信息
+          var user = _.find(userlist, user => {
+            return user.username == item;
+          });
+          auditInfo.realname = auditInfo.realname + "," + user.realname;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        var nlist = node.notify.split(",");
+        var notifyInfo = { realname: "" };
+        _.each(nlist, item => {
+          //查询用户信息
+          var user = _.find(userlist, user => {
+            return user.username == item;
+          });
+          notifyInfo.realname = notifyInfo.realname + "," + user.realname;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      //设置流程节点信息
+      if (node.start != null && node.start != "") {
+        this.startusers = `发起人: ${startInfo.realname}`;
+      }
+      if (node.audit != null && node.audit != "") {
+        this.auditusers = `审核人: ${auditInfo.realname}`;
+      }
+      if (node.approve != null && node.approve != "") {
+        this.approveusers = `审批人: ${approveInfo.realname}`;
+      }
+      if (node.notify != null && node.notify != "") {
+        this.messageusers = `知会：${notifyInfo.realname}`;
+      }
+
+      //设置发起、审核、审批、知会节点的width
+      setTimeout(() => {
+        $(".ant-steps-item-description").css("max-width", "220px");
+      }, 300);
+
       //返回结果
       return result;
     },
@@ -855,8 +981,26 @@ export default {
         });
       });
       console.log("审批用户列表：" + users);
+    },
+    async notifyUsers(users) {
+      var userlist = await manageAPI.queryUserName();
+      var ulist = users.split(",");
+      this.notifyData = [];
+      _.each(ulist, (item, index) => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        this.notifyData.push({
+          no: index + 1,
+          name: user.realname,
+          nickname: user.username
+        });
+      });
+      console.log("知会用户列表：" + users);
     }
   },
+  //Vue方法定义区域
   methods: {
     /**
      * @function 加载数据函数
@@ -886,7 +1030,6 @@ export default {
         this.tipConfirmLoading = false;
       }, 300);
     },
-
     /**
      * @function 弹出框取消操作
      */
@@ -894,14 +1037,12 @@ export default {
       this.loadData();
       this.tipVisible = false;
     },
-
     /**
      * @function 获取字段值
      */
     async getFormFieldValue(field) {
       return this.form.getFieldValue(field);
     },
-
     /**
      * @function 处理打印操作
      */
@@ -2090,6 +2231,12 @@ export default {
   }
 };
 </script>
+<style>
+.ant-steps-item-description {
+  max-width: 220px;
+  white-space: normal;
+}
+</style>
 <style scoped>
 .abcdefg .ant-card-body {
   margin-left: 0%;
@@ -2120,6 +2267,11 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+.ant-steps-horizontal:not(.ant-steps-label-vertical)
+  .ant-steps-item-description {
+  max-width: 220px;
+  white-space: normal;
 }
 .fileshow {
   display: block;
