@@ -924,7 +924,26 @@ export default {
       //查询用户信息
       var userlist = await manageAPI.queryUserName();
       //获取当前流程的节点信息
-      let node = await manageAPI.queryWorkflowNode(this.curRow.id);
+      var node = await manageAPI.queryWorkflowNode(this.curRow.id);
+
+      debugger;
+      //如果本表单没有获取当历史自由流程记录，则从本业务类别中获取曾经的历史自由流程
+      if (
+        typeof node == "undefined" ||
+        node == null ||
+        node == "" ||
+        Object.keys(node).length == 0
+      ) {
+        //获取表单名称
+        var tableName = tools.queryUrlString("table_name");
+        //获取当前用户
+        var userInfo = storage.getStore("cur_user");
+        //获取历史自由流程节点
+        node = await manageAPI.queryWorkflowNodeByUser(
+          tableName,
+          userInfo["username"]
+        );
+      }
 
       var startInfo = _.find(userlist, user => {
         return user.username == node.start;

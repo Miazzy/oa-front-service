@@ -796,18 +796,43 @@ export async function queryWorkflowNode(id) {
 
         if (typeof res.body != "undefined" && res.body != null && res.body.length > 0) {
             result = res.body[0];
+
+            if (result.notify == null || result.notify == '') {
+                let notifynode = getStore(`workflows_notify_node_by_data_id@${id}`);
+                result.notify = notifynode.employee + ',' + notifynode.appruser;
+                console.log('知会人员：' + result.notify);
+            }
+
+            //获取当前正在审批用户
+            let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
+            result.operate = auditnode.employee;
         }
 
-        if (result.notify == null || result.notify == '') {
-            let notifynode = getStore(`workflows_notify_node_by_data_id@${id}`);
-            result.notify = notifynode.employee + ',' + notifynode.appruser;
-            console.log('知会人员：' + result.notify);
+
+
+    } catch (err) {
+        console.log("打印错误日志：" + err);
+    }
+
+    return result;
+}
+
+/**
+ * 查询工作流程的节点配置(审核节点、审批节点、知会节点)
+ */
+export async function queryWorkflowNodeByUser(tableName, username) {
+
+    //查询URL
+    var queryURL = `${api.restapi}/api/v_workflow_type_node?_where=(tname,eq,${tableName})~and(cname,eq,${username})`;
+    //返回结果对象
+    var result = {};
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (typeof res.body != "undefined" && res.body != null && res.body.length > 0) {
+            result = res.body[0];
         }
-
-        //获取当前正在审批用户
-        let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
-        result.operate = auditnode.employee;
-
 
     } catch (err) {
         console.log("打印错误日志：" + err);
