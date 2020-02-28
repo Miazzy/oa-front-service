@@ -624,6 +624,10 @@
                 <a-form-item label="知会用户" style="width: 500px">
                   <j-select-multi-user v-model="notifyUsers"></j-select-multi-user>
                 </a-form-item>
+
+                <div style="width:500px;" v-if="notifyData != null && notifyData.length > 0">
+                  <a-table :columns="wflowcolumns" :dataSource="notifyData" :pagination="false"></a-table>
+                </div>
               </a-form>
             </template>
             <template>
@@ -914,11 +918,15 @@ export default {
         var ulist = node.audit.split(",");
         var auditInfo = { realname: "" };
         _.each(ulist, item => {
-          //查询用户信息
-          var user = _.find(userlist, user => {
-            return user.username == item;
-          });
-          auditInfo.realname = auditInfo.realname + "->" + user.realname;
+          try {
+            //查询用户信息
+            var user = _.find(userlist, user => {
+              return user.username == item;
+            });
+            auditInfo.realname = auditInfo.realname + "->" + user.realname;
+          } catch (error) {
+            console.log(error);
+          }
         });
 
         //如果是逗号开头，则去掉第一个字符
@@ -933,16 +941,20 @@ export default {
         var nlist = node.notify.split(",");
         var notifyInfo = { realname: "" };
         _.each(nlist, item => {
-          //查询用户信息
-          var user = _.find(userlist, user => {
-            return user.username == item;
-          });
-          notifyInfo.realname = notifyInfo.realname + "," + user.realname;
+          try {
+            //查询用户信息
+            var user = _.find(userlist, user => {
+              return user.username == item;
+            });
+            notifyInfo.realname = notifyInfo.realname + "," + user.realname;
+          } catch (error) {
+            console.log(error);
+          }
         });
 
         //如果是逗号开头，则去掉第一个字符
-        if (notifyInfo.realname.startsWith(",")) {
-          notifyInfo.realname = notifyInfo.realname.substring(1);
+        if (notifyInfo.realname.trim().startsWith(",")) {
+          notifyInfo.realname = notifyInfo.realname.trim().substring(1);
         }
       } catch (error) {
         console.log(error);

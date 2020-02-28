@@ -797,6 +797,12 @@ export async function queryWorkflowNode(id) {
             result = res.body[0];
         }
 
+        if (result.notify == null || result.notify == '') {
+            let notifynode = getStore(`workflows_notify_node_by_data_id@${id}`);
+            result.notify = notifynode.employee + ',' + notifynode.appruser;
+            console.log('知会人员：' + result.notify);
+        }
+
     } catch (err) {
         console.log("打印错误日志：" + err);
     }
@@ -1960,25 +1966,41 @@ export function queryUserRealName(name) {
     var userlist = queryUserNameByCache();
     var user = '';
 
-    //如果用户信息不存在，则直接返回，否则，查询用户的真实名称
-    if (typeof userlist == 'undefined' || userlist == null || userlist.length == 0) {
-        return user;
-    } else {
-        try {
-            //查询用户信息
-            user = _.find(userlist, user => {
-                return user.username == name;
-            });
+    try {
+        //如果用户信息不存在，则直接返回，否则，查询用户的真实名称
+        if (typeof userlist == 'undefined' || userlist == null || userlist.length == 0) {
+            return user;
+        } else {
+            if (name.includes(',')) {
+                var ulist = name.split(",");
+                _.each(ulist, item => {
+                    //查询用户信息
+                    var obj = _.find(userlist, user => {
+                        return user.username == item;
+                    });
+                    user = user + "," + obj.realname;
+                });
 
-            if (typeof user.realname != 'undefined' && user.realname != '') {
-                user = user.realname;
+                //如果是逗号开头，则去掉第一个字符
+                if (user.startsWith(",")) {
+                    user = user.substring(1);
+                }
+            } else {
+                //查询用户信息
+                user = _.find(userlist, user => {
+                    return user.username == name;
+                });
+
+                if (typeof user.realname != 'undefined' && user.realname != '') {
+                    user = user.realname;
+                }
+
             }
-
-        } catch (error) {
-            console.log(error);
         }
-        return user;
+    } catch (error) {
+        console.log(error);
     }
+    return user;
 
 }
 
@@ -2101,6 +2123,8 @@ export async function queryWorkflows(business_data_id) {
         try {
             //获取正在审批的知会日志信息
             processLogs = await queryPRLogInfByDataID(business_data_id);
+            //最后一条知会节点
+            var notifynode = {};
 
             _.each(processLogs, (item, index) => {
                 //获取操作时间
@@ -2108,17 +2132,24 @@ export async function queryWorkflows(business_data_id) {
                 var appruser = deNull(item.approve_user);
                 var node = {
                     id: item.id,
+                    employee: item.employee,
+                    appruser: appruser,
                     color: 'orange',
                     content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
-            item.employee
-          )} ,  已处理人： ${deNull(appruser)} , 审批：知会 , 时间：${deNull(
+                        queryUserRealName(item.employee)
+          )} ,  已处理人： ${deNull(queryUserRealName(appruser))} , 审批：知会 , 时间：${deNull(
             optime
           )} `,
                     status: 'sound',
                     index: index,
                 };
                 workflows.push(node);
+                //设置知会节点
+                notifynode = node;
             });
+
+            //获取知会的最后一条数据
+            setStore(`workflows_notify_node_by_data_id@${business_data_id}`, JSON.stringify(notifynode), 60);
         } catch (error) {
             console.log('获取正在审批的知会日志信息异常：' + error);
         }

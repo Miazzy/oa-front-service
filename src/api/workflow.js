@@ -129,6 +129,8 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
 
     try {
 
+        debugger;
+
         //审批用户不能为空
         if (tools.deNull(approver) == "" && pageType == "workflowing") {
             $confirm({
@@ -158,7 +160,7 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
         }
 
         //如果审批人员，出现在审核流程中，则提示错误
-        if (("," + wfUsers + ",").includes("," + approver + ",")) {
+        if (("," + wfUsers + ",").includes("," + approver + ",") && pageType == "workflowing") {
             //显示提示信息
             $confirm({
                 title: "温馨提示",
