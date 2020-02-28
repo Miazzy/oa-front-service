@@ -803,6 +803,12 @@ export async function queryWorkflowNode(id) {
             console.log('知会人员：' + result.notify);
         }
 
+        if (result.audit != null && result.audit != '') {
+            let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
+            result.operate = auditnode.employee;
+        }
+
+
     } catch (err) {
         console.log("打印错误日志：" + err);
     }
@@ -2101,12 +2107,16 @@ export async function queryWorkflows(business_data_id) {
         }
 
         try {
+            //最后一条审核节点
+            var auditnode = {};
             //获取正在审批的审批日志信息
             processLogs = await queryPRLogByDataID(business_data_id);
+
             //遍历数据
             _.each(processLogs, (item, index) => {
                 var node = {
                     id: item.id,
+                    employee: item.employee,
                     color: 'pink',
                     content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
                         queryUserRealName(item.employee)
@@ -2115,16 +2125,21 @@ export async function queryWorkflows(business_data_id) {
                     index: index,
                 };
                 workflows.push(node);
+                //设置最后一条审核节点
+                auditnode = node;
             });
+
+            //获取正在审批的最后一条数据
+            setStore(`workflows_audit_node_by_data_id@${business_data_id}`, JSON.stringify(auditnode), 60);
         } catch (error) {
             console.log('获取正在审批的审批日志信息失败 :' + error);
         }
 
         try {
-            //获取正在审批的知会日志信息
-            processLogs = await queryPRLogInfByDataID(business_data_id);
             //最后一条知会节点
             var notifynode = {};
+            //获取正在审批的知会日志信息
+            processLogs = await queryPRLogInfByDataID(business_data_id);
 
             _.each(processLogs, (item, index) => {
                 //获取操作时间
@@ -2144,7 +2159,7 @@ export async function queryWorkflows(business_data_id) {
                     index: index,
                 };
                 workflows.push(node);
-                //设置知会节点
+                //设置最后一条知会节点
                 notifynode = node;
             });
 

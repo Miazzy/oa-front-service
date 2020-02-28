@@ -923,7 +923,13 @@ export default {
             var user = _.find(userlist, user => {
               return user.username == item;
             });
-            auditInfo.realname = auditInfo.realname + "->" + user.realname;
+            debugger;
+            if (item == node.operate) {
+              auditInfo.realname =
+                auditInfo.realname + "->🏁" + user.realname + "(处理中)";
+            } else {
+              auditInfo.realname = auditInfo.realname + "->" + user.realname;
+            }
           } catch (error) {
             console.log(error);
           }
