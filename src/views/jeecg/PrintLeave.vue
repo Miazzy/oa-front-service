@@ -1010,12 +1010,15 @@ export default {
       }
       if (node.audit != null && node.audit != "") {
         this.auditusers = `审核: ${auditInfo.realname}`;
+        this.wflowUsers = node.audit;
       }
       if (node.approve != null && node.approve != "") {
         this.approveusers = `审批: ${approveInfo.realname}`;
+        this.approveUser = node.approve;
       }
       if (node.notify != null && node.notify != "") {
         this.messageusers = `知会：${notifyInfo.realname}`;
+        this.notifyUsers = node.notify;
       }
       //设置发起、审核、审批、知会节点的width
       setTimeout(() => {
