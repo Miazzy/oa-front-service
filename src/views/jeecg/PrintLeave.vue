@@ -513,7 +513,7 @@
                       type="close-circle"
                       style="font-size: 16px;"
                       theme="twoTone"
-                      twoToneColor="#ff0000"
+                      twoToneColor="#cecece"
                       v-bind:color="item.color"
                     />
                     <a-icon
@@ -801,79 +801,14 @@ export default {
   async created() {},
 
   async mounted() {
-    //查询用户信息
-    var userlist = await manageAPI.queryUserName();
     //查询当前节点信息
     let that = await manageAPI.watchFormLeave(this);
     //获取返回结果
     let result = await manageAPI.colorProcessDetail(that, this);
-    //获取当前流程的节点信息
-    let node = await manageAPI.queryWorkflowNode(this.curRow.id);
-
-    var startInfo = _.find(userlist, user => {
-      return user.username == node.start;
-    });
-
-    var approveInfo = _.find(userlist, user => {
-      return user.username == node.approve;
-    });
-
-    try {
-      var ulist = node.audit.split(",");
-      var auditInfo = { realname: "" };
-      _.each(ulist, item => {
-        //查询用户信息
-        var user = _.find(userlist, user => {
-          return user.username == item;
-        });
-        auditInfo.realname = auditInfo.realname + "," + user.realname;
-      });
-
-      //如果是逗号开头，则去掉第一个字符
-      if (auditInfo.realname.startsWith(",")) {
-        auditInfo.realname = auditInfo.realname.substring(1);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-    try {
-      var nlist = node.notify.split(",");
-      var notifyInfo = { realname: "" };
-      _.each(nlist, item => {
-        //查询用户信息
-        var user = _.find(userlist, user => {
-          return user.username == item;
-        });
-        notifyInfo.realname = notifyInfo.realname + "," + user.realname;
-      });
-
-      //如果是逗号开头，则去掉第一个字符
-      if (notifyInfo.realname.startsWith(",")) {
-        notifyInfo.realname = notifyInfo.realname.substring(1);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-    //设置流程节点信息
-    if (node.start != null && node.start != "") {
-      this.startusers = `发起: ${startInfo.realname}`;
-    }
-    if (node.audit != null && node.audit != "") {
-      this.auditusers = `审核: ${auditInfo.realname}`;
-    }
-    if (node.approve != null && node.approve != "") {
-      this.approveusers = `审批: ${approveInfo.realname}`;
-    }
-    if (node.notify != null && node.notify != "") {
-      this.messageusers = `知会：${notifyInfo.realname}`;
-    }
-    //设置发起、审核、审批、知会节点的width
-    setTimeout(() => {
-      $(".ant-steps-item-description").css("max-width", "220px");
-    }, 300);
-
+    //加载流程节点信息
+    let wfnode = await this.loadWorkflowNode();
+    //打印加载的流程节点信息
+    console.log(wfnode);
     //返回结果
     return result;
   },
@@ -881,70 +816,14 @@ export default {
   //Vue动态监控区域
   watch: {
     async $route() {
-      var userlist = await manageAPI.queryUserName();
-
       //查询当前节点信息
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
       let result = await manageAPI.colorProcessDetail(that, this);
-      //获取当前流程的节点信息
-      let node = await manageAPI.queryWorkflowNode(this.curRow.id);
-
-      var startInfo = _.find(userlist, user => {
-        return user.username == node.start;
-      });
-
-      var approveInfo = _.find(userlist, user => {
-        return user.username == node.approve;
-      });
-
-      try {
-        var ulist = node.audit.split(",");
-        var auditInfo = { realname: "" };
-        _.each(ulist, item => {
-          //查询用户信息
-          var user = _.find(userlist, user => {
-            return user.username == item;
-          });
-          auditInfo.realname = auditInfo.realname + "," + user.realname;
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      try {
-        var nlist = node.notify.split(",");
-        var notifyInfo = { realname: "" };
-        _.each(nlist, item => {
-          //查询用户信息
-          var user = _.find(userlist, user => {
-            return user.username == item;
-          });
-          notifyInfo.realname = notifyInfo.realname + "," + user.realname;
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      //设置流程节点信息
-      if (node.start != null && node.start != "") {
-        this.startusers = `发起人: ${startInfo.realname}`;
-      }
-      if (node.audit != null && node.audit != "") {
-        this.auditusers = `审核人: ${auditInfo.realname}`;
-      }
-      if (node.approve != null && node.approve != "") {
-        this.approveusers = `审批人: ${approveInfo.realname}`;
-      }
-      if (node.notify != null && node.notify != "") {
-        this.messageusers = `知会：${notifyInfo.realname}`;
-      }
-
-      //设置发起、审核、审批、知会节点的width
-      setTimeout(() => {
-        $(".ant-steps-item-description").css("max-width", "220px");
-      }, 300);
-
+      //加载流程节点信息
+      let wfnode = await this.loadWorkflowNode();
+      //打印加载的流程节点信息
+      console.log(wfnode);
       //返回结果
       return result;
     },
@@ -1012,6 +891,83 @@ export default {
       let result = await manageAPI.colorProcessDetail(that, this);
       //返回结果
       return result;
+    },
+
+    /**
+     * @function 加载流程信息
+     */
+    async loadWorkflowNode() {
+      //查询用户信息
+      var userlist = await manageAPI.queryUserName();
+      //获取当前流程的节点信息
+      let node = await manageAPI.queryWorkflowNode(this.curRow.id);
+
+      var startInfo = _.find(userlist, user => {
+        return user.username == node.start;
+      });
+
+      var approveInfo = _.find(userlist, user => {
+        return user.username == node.approve;
+      });
+
+      try {
+        var ulist = node.audit.split(",");
+        var auditInfo = { realname: "" };
+        _.each(ulist, item => {
+          //查询用户信息
+          var user = _.find(userlist, user => {
+            return user.username == item;
+          });
+          auditInfo.realname = auditInfo.realname + "->" + user.realname;
+        });
+
+        //如果是逗号开头，则去掉第一个字符
+        if (auditInfo.realname.startsWith("->")) {
+          auditInfo.realname = auditInfo.realname.substring(2);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        var nlist = node.notify.split(",");
+        var notifyInfo = { realname: "" };
+        _.each(nlist, item => {
+          //查询用户信息
+          var user = _.find(userlist, user => {
+            return user.username == item;
+          });
+          notifyInfo.realname = notifyInfo.realname + "," + user.realname;
+        });
+
+        //如果是逗号开头，则去掉第一个字符
+        if (notifyInfo.realname.startsWith(",")) {
+          notifyInfo.realname = notifyInfo.realname.substring(1);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      //设置流程节点信息
+      if (node.start != null && node.start != "") {
+        this.startusers = `发起: ${startInfo.realname}`;
+      }
+      if (node.audit != null && node.audit != "") {
+        this.auditusers = `审核: ${auditInfo.realname}`;
+      }
+      if (node.approve != null && node.approve != "") {
+        this.approveusers = `审批: ${approveInfo.realname}`;
+      }
+      if (node.notify != null && node.notify != "") {
+        this.messageusers = `知会：${notifyInfo.realname}`;
+      }
+      //设置发起、审核、审批、知会节点的width
+      setTimeout(() => {
+        var width = $(".ant-steps-item").width() - 10;
+        $(".ant-steps-item-description").css("max-width", width + "px");
+        $(".ant-steps-item-description").css("margin-left", "-30px");
+        $(".ant-steps-item-description").css("font-size", "12px");
+      }, 255);
     },
 
     /**
