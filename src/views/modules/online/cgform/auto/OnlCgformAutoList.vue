@@ -1591,7 +1591,6 @@ export default {
       let userInfo = storage.getStore("cur_user");
 
       //TODO 检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
-      debugger;
 
       //第一步，获取此表单，关联的流程业务模块
       let value = await queryTableName();

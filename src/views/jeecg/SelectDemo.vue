@@ -354,7 +354,6 @@ sayHi('hello, world!')`
     },
     //通过组织机构筛选选择用户
     onSearchDepUser() {
-      debugger;
       this.$refs.JSearchUserByDep.showModal();
       this.selectedDepUsers = "";
       this.$refs.JSearchUserByDep.title = "根据部门查询用户";

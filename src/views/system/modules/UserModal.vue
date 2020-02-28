@@ -189,7 +189,7 @@ import { getAction, patchTableData, queryTableData } from "@/api/manage";
 import { addUser, editUser, queryUserRole, queryall } from "@/api/api";
 import { disabledAuthFilter } from "@/utils/authFilter";
 import { duplicateCheck } from "@/api/api";
-import { deNull } from '@/utils/util';
+import { deNull } from "@/utils/util";
 
 export default {
   name: "RoleModal",
@@ -290,13 +290,11 @@ export default {
       form: this.$form.createForm(this),
       picUrl: "",
       url: {
-        fileUpload:  deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
+        fileUpload: deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
         imgerver: window._CONFIG["imgDomainURL"],
         userWithDepart: `${window._CONFIG["domain"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
         userId: `${window._CONFIG["domain"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
-        syncUserByUserName: `${
-          window._CONFIG["domain"]
-        }/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
+        syncUserByUserName: `${window._CONFIG["domain"]}/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
       }
     };
   },
@@ -454,7 +452,7 @@ export default {
           } else {
             obj = editUser(formData);
           }
-          debugger;
+
           //此次设置用户岗位
           await patchTableData("sys_user", formData.id, {
             id: formData.id,

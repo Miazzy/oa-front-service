@@ -17,39 +17,38 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { deNull } from '@/utils/util';
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import Vue from "vue";
+import { deNull } from "@/utils/util";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
 
-const FILE_TYPE_ALL = 'all'
-const FILE_TYPE_IMG = 'image'
-const FILE_TYPE_TXT = 'file'
+const FILE_TYPE_ALL = "all";
+const FILE_TYPE_IMG = "image";
+const FILE_TYPE_TXT = "file";
 const uidGenerator = () => {
-  return '-' + parseInt(Math.random() * 10000 + 1, 10)
-}
+  return "-" + parseInt(Math.random() * 10000 + 1, 10);
+};
 const getFileName = path => {
-  if (path.lastIndexOf('\\') >= 0) {
-    let reg = new RegExp('\\\\', 'g')
-    path = path.replace(reg, '/')
+  if (path.lastIndexOf("\\") >= 0) {
+    let reg = new RegExp("\\\\", "g");
+    path = path.replace(reg, "/");
   }
-  return path.substring(path.lastIndexOf('/') + 1)
-}
+  return path.substring(path.lastIndexOf("/") + 1);
+};
 export default {
-  name: 'JUpload',
+  name: "JUpload",
   data() {
-    debugger;
     return {
-      uploadAction: deNull(window._CONFIG['domainURL']) + '/sys/common/upload',
-      urlDownload: deNull(window._CONFIG['downloadURL'])+ '/',
+      uploadAction: deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
+      urlDownload: deNull(window._CONFIG["downloadURL"]) + "/",
       headers: {},
       fileList: []
-    }
+    };
   },
   props: {
     text: {
       type: String,
       required: false,
-      default: '点击上传'
+      default: "点击上传"
     },
     fileType: {
       type: String,
@@ -60,7 +59,7 @@ export default {
     bizPath: {
       type: String,
       required: false,
-      default: 'temp'
+      default: "temp"
     },
     value: {
       type: String,
@@ -75,13 +74,13 @@ export default {
   },
   watch: {
     value(val) {
-      console.log(' fileList : ' + val)
-      this.initFileList(val)
+      console.log(" fileList : " + val);
+      this.initFileList(val);
     }
   },
   created() {
-    const token = Vue.ls.get(ACCESS_TOKEN)
-    this.headers = { 'X-Access-Token': token }
+    const token = Vue.ls.get(ACCESS_TOKEN);
+    this.headers = { "X-Access-Token": token };
   },
 
   methods: {
@@ -89,91 +88,91 @@ export default {
       if (!paths || paths.length == 0) {
         //return [];
         // update-begin- --- author:os_chengtgen ------ date:20190729 ---- for:issues:326,Jupload组件初始化bug
-        this.fileList = []
-        return
+        this.fileList = [];
+        return;
         // update-end- --- author:os_chengtgen ------ date:20190729 ---- for:issues:326,Jupload组件初始化bug
       }
-      let fileList = []
-      let arr = paths.split(',')
+      let fileList = [];
+      let arr = paths.split(",");
       for (var a = 0; a < arr.length; a++) {
         fileList.push({
           uid: uidGenerator(),
           name: getFileName(arr[a]),
-          status: 'done',
+          status: "done",
           url: this.urlDownload + arr[a],
           response: {
-            status: 'history',
+            status: "history",
             message: arr[a]
           }
-        })
+        });
       }
-      this.fileList = fileList
+      this.fileList = fileList;
     },
     handlePathChange() {
-      let uploadFiles = this.fileList
-      let path = ''
+      let uploadFiles = this.fileList;
+      let path = "";
       if (!uploadFiles || uploadFiles.length == 0) {
-        path = ''
+        path = "";
       }
-      let arr = []
+      let arr = [];
 
       for (var a = 0; a < uploadFiles.length; a++) {
-        arr.push(uploadFiles[a].response.message)
+        arr.push(uploadFiles[a].response.message);
       }
       if (arr.length > 0) {
-        path = arr.join(',')
+        path = arr.join(",");
       }
-      this.$emit('change', path)
+      this.$emit("change", path);
     },
     beforeUpload(file) {
-      var fileType = file.type
+      var fileType = file.type;
       if (fileType === FILE_TYPE_IMG) {
-        if (fileType.indexOf('image') < 0) {
-          this.$message.warning('请上传图片')
-          return false
+        if (fileType.indexOf("image") < 0) {
+          this.$message.warning("请上传图片");
+          return false;
         }
       } else if (fileType === FILE_TYPE_TXT) {
-        if (fileType.indexOf('image') >= 0) {
-          this.$message.warning('请上传文件')
-          return false
+        if (fileType.indexOf("image") >= 0) {
+          this.$message.warning("请上传文件");
+          return false;
         }
       }
       //TODO 扩展功能验证文件大小
-      return true
+      return true;
     },
     handleChange(info) {
-      console.log('--文件列表改变--')
-      let fileList = info.fileList
-      if (info.file.status === 'done') {
+      console.log("--文件列表改变--");
+      let fileList = info.fileList;
+      if (info.file.status === "done") {
         if (info.file.response.success) {
           fileList = fileList.map(file => {
             if (file.response) {
-              file.url = this.urlDownload + file.response.message
+              file.url = this.urlDownload + file.response.message;
             }
-            return file
-          })
+            return file;
+          });
         }
-        this.$message.success(`${info.file.name} 上传成功!`)
-      } else if (info.file.status === 'error') {
-        this.$message.error(`${info.file.name} 上传失败.`)
-      } else if (info.file.status === 'removed') {
-        this.handleDelete(info.file)
+        this.$message.success(`${info.file.name} 上传成功!`);
+      } else if (info.file.status === "error") {
+        this.$message.error(`${info.file.name} 上传失败.`);
+      } else if (info.file.status === "removed") {
+        this.handleDelete(info.file);
       }
-      this.fileList = fileList
-      if (info.file.status === 'done' || info.file.status === 'removed') {
-        this.handlePathChange()
+      this.fileList = fileList;
+      if (info.file.status === "done" || info.file.status === "removed") {
+        this.handlePathChange();
       }
     },
     handleDelete(file) {
       //如有需要新增 删除逻辑
-      console.log(file)
+      console.log(file);
     }
   },
   model: {
-    prop: 'value',
-    event: 'change'
+    prop: "value",
+    event: "change"
   }
-}
+};
 </script>
 
 <style scoped>
