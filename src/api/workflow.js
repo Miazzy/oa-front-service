@@ -126,8 +126,6 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType, $confirm) 
 
     try {
 
-        debugger;
-
         //审批用户不能为空
         if (tools.deNull(approver) == "" && pageType == "workflowing") {
             $confirm({
