@@ -405,7 +405,21 @@ export async function queryTableData(tableName, id) {
     var queryURL = `${api.restapi}/api/${tableName}/${id}`;
 
     try {
+
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_user_cache@${tableName}&id${id}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
         const res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_cache@${tableName}&id${id}`, res.body[0], 2);
+        }
+
         return res.body[0];
     } catch (err) {
         console.error(err);
@@ -684,6 +698,7 @@ export async function queryProcessLogWait(username, realname) {
         result = res.body;
 
         //遍历并格式化日期
+        debugger;
         result = _.filter(result, function(item) {
 
             //格式化日期
@@ -693,8 +708,8 @@ export async function queryProcessLogWait(username, realname) {
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
 
-            //查询是否存在此用户名
-            var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
+            //查询是否存在此用户名，且已处理用户中，不含登录用户
+            var flag = (_.contains(item['username'], username) || _.contains(item['username'], realname)) && !item.user.includes(username);
 
             //返回结果
             return flag;

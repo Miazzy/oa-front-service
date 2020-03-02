@@ -152,6 +152,22 @@
           />
         </a-form-item>
 
+        <a-form-item label="入职日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-date-picker
+            style="width: 100%"
+            placeholder="请选择入职日期"
+            v-decorator="['join_date', {initialValue:!model.join_date?null:moment(model.join_date,dateFormat)}]"
+          />
+        </a-form-item>
+
+        <a-form-item label="离职日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-date-picker
+            style="width: 100%"
+            placeholder="请选择离职日期"
+            :value="model.leave_date != null ? moment(model.leave_date, dateFormat) : ''"
+          />
+        </a-form-item>
+
         <a-form-item label="地址信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入地址信息" v-decorator="[ 'address', validatorRules.address]" />
         </a-form-item>
@@ -189,7 +205,7 @@ import { getAction, patchTableData, queryTableData } from "@/api/manage";
 import { addUser, editUser, queryUserRole, queryall } from "@/api/api";
 import { disabledAuthFilter } from "@/utils/authFilter";
 import { duplicateCheck } from "@/api/api";
-import { deNull } from "@/utils/util";
+import * as tools from "@/utils/util";
 
 export default {
   name: "RoleModal",
@@ -268,8 +284,11 @@ export default {
         address: {},
         nickname: {},
         bio: {},
-        tags: {}
-        //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
+        tags: {},
+        leave_date: {},
+        join_date: {},
+        birthday: {},
+        sex: {}
       },
       title: "操作",
       visible: false,
@@ -290,7 +309,8 @@ export default {
       form: this.$form.createForm(this),
       picUrl: "",
       url: {
-        fileUpload: deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
+        fileUpload:
+          tools.deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
         imgerver: window._CONFIG["imgDomainURL"],
         userWithDepart: `${window._CONFIG["domain"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
         userId: `${window._CONFIG["domain"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
@@ -350,42 +370,92 @@ export default {
       this.refresh();
       this.edit({ activitiSync: "1" });
     },
-    edit(record) {
+    async edit(record) {
+      var user = await queryTableData("sys_user", this.model.id);
       this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
-      let that = this;
-      that.initialRoleList();
-      that.checkedDepartNameString = "";
-      that.form.resetFields();
-      if (record.hasOwnProperty("id")) {
-        that.loadUserRoles(record.id);
-        this.picUrl = "Has no pic url yet";
+      var that = this;
+
+      try {
+        that.initialRoleList();
+        that.checkedDepartNameString = "";
+        that.form.resetFields();
+        if (record.hasOwnProperty("id")) {
+          that.loadUserRoles(record.id);
+          this.picUrl = "Has no pic url yet";
+        }
+      } catch (error) {
+        console.log(error);
       }
-      that.userId = record.id;
-      that.visible = true;
-      that.model = Object.assign({}, record);
+      try {
+        that.userId = record.id;
+        that.model = Object.assign({}, record);
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        that.model.join_date =
+          tools.deNull(user.join_date) == ""
+            ? null
+            : tools.formatDate(user.join_date, "yyyy-MM-dd");
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        that.model.leave_date =
+          tools.deNull(user.leave_date) == ""
+            ? null
+            : tools.formatDate(user.leave_date, "yyyy-MM-dd");
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        that.visible = true;
+      } catch (error) {
+        console.log(error);
+      }
       that.$nextTick(async () => {
-        let user = await queryTableData("sys_user", this.model.id);
+        var user = await queryTableData("sys_user", this.model.id);
+        console.log("model :" + JSON.stringify(this.model));
         this.model.post = user.post;
         this.model.address = user.address;
+        this.model.join_date =
+          tools.deNull(user.join_date) == ""
+            ? null
+            : tools.formatDate(user.join_date, "yyyy-MM-dd");
+        this.model.leave_date =
+          tools.deNull(user.leave_date) == ""
+            ? null
+            : tools.formatDate(user.leave_date, "yyyy-MM-dd");
+        this.model.birthday =
+          tools.deNull(user.birthday) == ""
+            ? null
+            : tools.formatDate(user.birthday, "yyyy-MM-dd");
         this.model.tags = user.tags;
         this.model.bio = user.bio;
         this.model.nickname = user.nickname;
-        that.form.setFieldsValue(
-          pick(
-            this.model,
-            "username",
-            "sex",
-            "realname",
-            "email",
-            "phone",
-            "post",
-            "address",
-            "nickname",
-            "bio",
-            "tags",
-            "activitiSync"
-          )
-        );
+        this.model.activitiSync = user.activiti_sync;
+        console.log(JSON.stringify(this.model));
+        setTimeout(() => {
+          that.form.setFieldsValue(
+            pick(
+              this.model,
+              "username",
+              "sex",
+              "realname",
+              "email",
+              "phone",
+              "post",
+              "address",
+              "nickname",
+              "join_date",
+              "leave_date",
+              "birthday",
+              "bio",
+              "tags",
+              "activitiSync"
+            )
+          );
+        }, 1500);
       });
       // 调用查询用户对应的部门信息的方法
       that.checkedDepartKeys = [];
@@ -427,41 +497,62 @@ export default {
       const that = this;
       // 触发表单验证
       this.form.validateFields(async (err, values) => {
+        debugger;
         if (!err) {
           that.confirmLoading = true;
-          let avatar = that.model.avatar;
-          if (!values.birthday) {
-            values.birthday = "";
-          } else {
-            values.birthday = values.birthday.format(this.dateFormat);
+          var avatar = that.model.avatar;
+          try {
+            if (!values.birthday) {
+              values.birthday = "";
+            } else {
+              values.birthday = tools.formatDate(values.birthday, "yyyy-MM-dd");
+            }
+          } catch (error) {
+            console.log(error);
           }
-          let formData = Object.assign(this.model, values);
-          formData.avatar = avatar;
-          formData.selectedroles =
-            this.selectedRole.length > 0 ? this.selectedRole.join(",") : "";
-          formData.selecteddeparts =
-            this.userDepartModel.departIdList.length > 0
-              ? this.userDepartModel.departIdList.join(",")
-              : "";
+          var formData = Object.assign(this.model, values);
 
-          // that.addDepartsToUser(that,formData); // 调用根据当前用户添加部门信息的方法
-          let obj;
-          if (!this.model.id) {
-            formData.id = this.userId;
-            obj = addUser(formData);
-          } else {
-            obj = editUser(formData);
+          try {
+            formData.avatar = avatar;
+            formData.selectedroles =
+              this.selectedRole.length > 0 ? this.selectedRole.join(",") : "";
+            formData.selecteddeparts =
+              this.userDepartModel.departIdList.length > 0
+                ? this.userDepartModel.departIdList.join(",")
+                : "";
+          } catch (error) {
+            console.log(error);
           }
 
-          //此次设置用户岗位
-          await patchTableData("sys_user", formData.id, {
-            id: formData.id,
-            post: formData.post,
-            address: formData.address,
-            nickname: formData.nickname,
-            bio: formData.bio,
-            tags: formData.tags
-          });
+          var obj;
+
+          try {
+            if (!this.model.id) {
+              formData.id = this.userId;
+              obj = addUser(formData);
+            } else {
+              obj = editUser(formData);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
+            //此次设置用户岗位
+            await patchTableData("sys_user", formData.id, {
+              id: formData.id,
+              post: formData.post,
+              address: formData.address,
+              nickname: formData.nickname,
+              join_date: formData.join_date,
+              leave_date: formData.leave_date,
+              bio: formData.bio,
+              tags: formData.tags
+            });
+          } catch (error) {
+            console.log(error);
+          }
+
           obj
             .then(async res => {
               if (res.success) {
@@ -636,6 +727,7 @@ export default {
 
     // 获取用户对应部门弹出框提交给返回的数据
     modalFormOk(formData) {
+      debugger;
       this.checkedDepartNames = [];
       this.selectedDepartKeys = [];
       this.checkedDepartNameString = "";
