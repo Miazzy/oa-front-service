@@ -401,7 +401,8 @@ export async function postDynamicNotify(tableName, curRow) {
         var timestamp = new Date().getTime();
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
-        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+        var random = (Math.floor(Math.random() * 10000000000000000000000) + "").substring(0, 6);
+        id = id + random;
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
