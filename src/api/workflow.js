@@ -128,7 +128,7 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         }
 
         //表单内容
-        var title = '<div><span>' + userInfo['realname'] + '</span> 发起了 <a>' + tname + '</a> 的 <a>流程申请</a> ' + '</div>';
+        var title = '<div><span>' + userInfo['realname'] + `</span> 发起了 <a href="/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify">` + tname + `</a> 的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify">流程申请</a> ` + '</div>';
 
         //待发布动态节点内容
         dynamicNode = {
@@ -214,7 +214,7 @@ export async function postWorkflowCancel(tableName, curRow, node) {
         }
 
         //表单内容
-        var title = '<div><span>' + userInfo['realname'] + '</span> 撤销了 <a>' + tname + '</a> 的 <a>流程申请</a> ' + '</div>';
+        var title = '<div><span>' + userInfo['realname'] + `</span> 撤销了 <a href="/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify">` + tname + `</a> 的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify">流程申请</a> ` + '</div>';
 
         //待发布动态节点内容
         dynamicNode = {
@@ -296,7 +296,7 @@ export async function postDynamicReject(tableName, curRow) {
         });
 
         //表单内容
-        var title = "<div><span>" + userInfo['realname'] + '</span> 驳回了 <span>' + proponents.realname + '</span> 发起的 <a>' + tname + '</a> 的 <a>流程申请</a> ' + "</div>";
+        var title = "<div><span>" + userInfo['realname'] + '</span> 驳回了 <span>' + proponents.realname + `</span> 发起的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify">` + tname + `</a> 的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify">流程申请</a> ` + "</div>";
 
         //待发布动态节点内容
         dynamicNode = {
@@ -360,7 +360,7 @@ export async function postDynamicAgree(tableName, curRow) {
         });
 
         //表单内容
-        var title = '<div><span>' + userInfo['realname'] + '</span> 同意了 <span>' + proponents.realname + '</span> 发起的 <a>' + tname + '</a> 的 <a>流程申请</a> ' + '</div>';
+        var title = '<div><span>' + userInfo['realname'] + '</span> 同意了 <span>' + proponents.realname + `</span> 发起的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify">` + tname + `</a> 的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify">流程申请</a> ` + '</div>';
 
         //待发布动态节点内容
         dynamicNode = {
@@ -430,7 +430,7 @@ export async function postDynamicNotify(tableName, curRow) {
         });
 
         //表单内容
-        var title = "<div><span>" + proponents.realname + '</span> 发起的 <a>' + tname + '</a> 的 <a>流程申请</a> 流程走完且知会通知完毕' + "</div>";
+        var title = "<div><span>" + proponents.realname + `</span> 发起的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify">` + tname + `</a> 的 <a href="/workflow/view?table_name=${tableName}&id=${curRow.main_value}&user=${userInfo.username}&type=notify" >流程申请</a> 流程走完且知会通知完毕` + "</div>";
 
         //待发布动态节点内容
         dynamicNode = {
