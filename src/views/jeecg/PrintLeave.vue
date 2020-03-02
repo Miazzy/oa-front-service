@@ -2193,6 +2193,12 @@ export default {
               tools.queryUrlString("id")
             );
 
+            let countinfo = await manageAPI.queryTableDataByField(
+              "v_handling_events",
+              "id",
+              tools.queryUrlString("id")
+            );
+
             //如果当前流程状态没有审批通过，则无法发送知会信息
             if (curRow["bpm_status"] != 4 && curRow["bpm_status"] != 5) {
               this.$confirm_({
@@ -2216,6 +2222,15 @@ export default {
               this.$confirm_({
                 title: "温馨提示",
                 content: "同一业务数据，总计最多知会10次！"
+              });
+              return true;
+            }
+
+            //同一业务数据，同时只能知会一次，本次知会确认完毕后，可以再次知会
+            if (tools.deNull(countinfo) != "" && countinfo.length >= 1) {
+              this.$confirm_({
+                title: "温馨提示",
+                content: "此表单业务已进行了知会操作，请不要重复提交!"
               });
               return true;
             }

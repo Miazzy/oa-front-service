@@ -848,10 +848,26 @@ export default {
       //当前被选中记录数据
       var curRow = this.table.selectionRows[0];
 
+      //获取知会统计信息
+      var countinfo = await manageAPI.queryTableDataByField(
+        "v_handling_events",
+        "id",
+        curRow.id
+      );
+
       //如果流程状态不是待提交，则无法进行自由流程选择
       if (curRow.bpm_status != 4 && curRow.bpm_status != 5) {
         this.$message.warning("此记录尚未审批通过，无法进行知会操作！");
         return false;
+      }
+
+      //同一业务数据，同时只能知会一次，本次知会确认完毕后，可以再次知会
+      if (tools.deNull(countinfo) != "" && countinfo.length >= 1) {
+        this.$confirm_({
+          title: "温馨提示",
+          content: "此表单业务已进行了知会操作，请不要重复提交!"
+        });
+        return true;
       }
 
       //缓存当前选中数据
