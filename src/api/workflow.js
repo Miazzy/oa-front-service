@@ -1,5 +1,6 @@
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
+import * as storage from "@/utils/storage";
 
 /**
  * @function 审批同意处理
@@ -86,6 +87,48 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         bpm_status: bpmStatus
     };
 
+    //动态内容
+    var dynamicNode = {};
+
+    //构造用户动态内容
+    try {
+
+        //日期格式化
+        var timestamp = new Date().getTime();
+        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
+        console.log('动态编号 :' + id);
+        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+
+        //获取用户信息
+        var userInfo = storage.getStore("cur_user");
+
+        //获取表单的中文名称
+        var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+        try {
+            tname = tname[0]['name'];
+        } catch (error) {
+            console.log(error);
+        }
+
+        //表单内容
+        var title = userInfo['realname'] + ' 发起了 ' + tname + ' 的 流程申请 ';
+
+        //待发布动态节点内容
+        dynamicNode = {
+            id: id,
+            create_by: userInfo['username'],
+            title: title,
+            content: title,
+            main_key: curRow.id,
+            main_table: tableName,
+        };
+
+    } catch (error) {
+        console.log(error);
+    }
+
+
+    //执行提交审批流程的业务操作
     try {
 
         //将审批用户记录，知会用户记录，写入相应的自由流程表单中
@@ -104,9 +147,89 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
             statusNode
         );
 
+        //第五步，新增动态数据，内容：XXX 发起了 XX 业务的流程申请。
+        result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
 
     } catch (error) {
         console.log("处理自由流程发起提交审批操作异常：" + error)
+    }
+
+    //返回执行结果
+    return result;
+
+}
+
+/**
+ * @function 处理自由流程发起提交审批操作
+ * @param tableName     表单名称
+ * @param curRow        当前记录数
+ * @param node          流程节点信息
+ * @define bpmStatus （1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
+ */
+export async function postWorkflowCancel(tableName, curRow, node) {
+
+    //执行结果
+    var result;
+
+    //动态内容
+    var dynamicNode = {};
+
+    //构造用户动态内容
+    try {
+
+        //日期格式化
+        var timestamp = new Date().getTime();
+        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
+        console.log('动态编号 :' + id);
+        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+
+        //获取用户信息
+        var userInfo = storage.getStore("cur_user");
+
+        //获取表单的中文名称
+        var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+        try {
+            tname = tname[0]['name'];
+        } catch (error) {
+            console.log(error);
+        }
+
+        //表单内容
+        var title = userInfo['realname'] + ' 撤销了 ' + tname + ' 的 流程申请 ';
+
+        //待发布动态节点内容
+        dynamicNode = {
+            id: id,
+            create_by: userInfo['username'],
+            title: title,
+            content: title,
+            main_key: curRow.id,
+            main_table: tableName,
+        };
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+
+        //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+        result = await manageAPI.postProcessLogHistory(node);
+
+        //删除当前审批节点中的所有记录
+        result = await manageAPI.deleteProcessLog(tableName, node);
+
+        //修改当前审批状态为待处理
+        result = await manageAPI.patchTableData(tableName, curRow["id"], {
+            bpm_status: "1"
+        });
+
+        //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
+        result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
+    } catch (error) {
+        console.log(error);
     }
 
     //返回执行结果

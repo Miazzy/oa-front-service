@@ -148,32 +148,8 @@
           style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
         >分享</a-button>
       </template>
-      <template v-if="code == '0b511f234f3847baa50106a14fff6215' ">
-        <!--
-        <a-button
-          @click="handleApproveWF"
-          type="primary"
-          icon="check-circle"
-          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
-        >同意</a-button>
-        <a-button
-          @click="handleRejectWF"
-          type="primary"
-          icon="close-circle"
-          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
-        >驳回</a-button>
-        -->
-      </template>
-      <template v-if="code == 'd11901bc44f24a66b25b37a7a04c611e' ">
-        <!--
-        <a-button
-          @click="handleConfirmWF"
-          type="primary"
-          icon="check-circle"
-          style="margin-left:6px;font-size: 12px;height: 28px;padding: 0 10px;"
-        >确认</a-button>
-        -->
-      </template>
+      <template v-if="code == '0b511f234f3847baa50106a14fff6215' "></template>
+      <template v-if="code == 'd11901bc44f24a66b25b37a7a04c611e' "></template>
       <template v-if="cgButtonList && cgButtonList.length>0" v-for="(item,index) in cgButtonList">
         <a-button
           v-if=" item.optType=='js' "
@@ -340,15 +316,6 @@
         </span>
       </a-table>
 
-      <!--
-      <Modal v-model="modelModal" title="请指定具体流程权责配置！" @on-ok="modalOk" width="360">
-        <span style="margin-left:25px;margin-right:10px;">流程权责:</span>
-        <Select v-model="modelWFlowSelection" style="width:180px">
-          <Option v-for="item in rights" :value="item.id" :key="item.id">{{ item.items }}</Option>
-        </Select>
-      </Modal>
-      -->
-
       <a-modal
         title="温馨提示"
         :visible="tipVisible"
@@ -367,39 +334,17 @@
 </template>
 
 <script>
-import {
-  postAction,
-  getAction,
-  deleteAction,
-  downFile,
-  queryTableName,
-  queryBusinessInfo,
-  queryProcessNodeEmployee,
-  queryProcessNodeProcName,
-  queryRandomStr,
-  queryApprovalExist,
-  patchTableData,
-  queryProcessLog,
-  postProcessLog,
-  deleteProcessLog,
-  queryProcessLogByID,
-  queryProcessLogToApproved,
-  queryProcessLogHisApproved,
-  queryProcessLogInfApproved,
-  postProcessLogInformed,
-  postProcessLogHistory,
-  deleteProcessLogInf,
-  queryProcessLogInfByID,
-  queryExistWorkflow,
-  queryPRLogHistoryByDataID
-} from "@/api/manage";
 import Vue from "vue";
-import { getLoginfo, getVisitInfo } from "@/api/api";
 import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
-import { filterObj, formatDate, deNull, queryUrlString } from "@/utils/util";
 import JImportModal from "@/components/jeecg/JImportModal";
-import _ from "underscore";
+
+import * as manageAPI from "@/api/manage";
+import * as systemAPI from "@/api/api";
+import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
+import * as tools from "@/utils/util";
+import * as _ from "underscore";
+import * as $ from "jquery";
 
 import {
   ACCESS_TOKEN,
@@ -502,24 +447,33 @@ export default {
       hasBpmStatus: false
     };
   },
-  created() {
+  async created() {
     //创建页面后，设置选中数据为空
     this.initAutoList();
     this.table.selectionRows = [];
     this.table.selectedRowKeys = [];
+
+    //查询用户数据，将数据缓存到浏览器缓存
+    await manageAPI.queryUserName();
   },
-  mounted() {
+  async mounted() {
     //创建页面后，设置选中数据为空
     this.initAutoList();
     this.table.selectionRows = [];
     this.table.selectedRowKeys = [];
+
+    //查询用户数据，将数据缓存到浏览器缓存
+    await manageAPI.queryUserName();
   },
   watch: {
-    $route() {
+    async $route() {
       // 刷新参数放到这里去触发，就可以刷新相同界面了
       this.initAutoList();
       this.table.selectionRows = [];
       this.table.selectedRowKeys = [];
+
+      //查询用户数据，将数据缓存到浏览器缓存
+      await manageAPI.queryUserName();
     }
   },
   methods: {
@@ -568,7 +522,7 @@ export default {
       }
     },
     initQueryInfo() {
-      getAction(`${this.url.getQueryInfo}${this.code}`).then(res => {
+      manageAPI.getAction(`${this.url.getQueryInfo}${this.code}`).then(res => {
         console.log("--onlineList-获取查询条件配置", res);
         if (res.success) {
           this.queryInfo = res.result;
@@ -583,7 +537,7 @@ export default {
       }
       this.table.loading = true;
       this.code = this.$route.params.code;
-      getAction(`${this.url.getColumns}${this.code}`).then(res => {
+      manageAPI.getAction(`${this.url.getColumns}${this.code}`).then(res => {
         console.log("--onlineList-加载动态列>>", res);
         if (res.success) {
           this.dictOptions = res.result.dictOptions;
@@ -628,7 +582,9 @@ export default {
 
       if (htmlInfo == null || htmlInfo == "") {
         //获取审批日志信息
-        let processLogs = await queryPRLogHistoryByDataID(business_data_id);
+        let processLogs = await manageAPI.queryPRLogHistoryByDataID(
+          business_data_id
+        );
 
         //遍历审批日志
         processLogs.forEach(item => {
@@ -671,7 +627,7 @@ export default {
       ) {
         var userInfo = storage.getStore("cur_user");
 
-        let result = await queryProcessLogToApproved(
+        let result = await manageAPI.queryProcessLogToApproved(
           userInfo["username"],
           userInfo["realname"],
           params
@@ -689,7 +645,7 @@ export default {
         this.description == "流程审批日志历史表"
       ) {
         let userInfo = storage.getStore("cur_user");
-        let result = await queryProcessLogHisApproved(
+        let result = await manageAPI.queryProcessLogHisApproved(
           userInfo["username"],
           userInfo["realname"],
           params
@@ -708,7 +664,7 @@ export default {
       ) {
         let userInfo = storage.getStore("cur_user");
         //获取待知会列表数据
-        let result = await queryProcessLogInfApproved(
+        let result = await manageAPI.queryProcessLogInfApproved(
           userInfo["username"],
           userInfo["realname"],
           params
@@ -722,66 +678,74 @@ export default {
         }
         this.table.loading = false;
       } else {
-        getAction(`${this.url.getData}${this.code}`, params).then(async res => {
-          console.log("--onlineList-列表数据", res);
-          if (res.success) {
-            var result = res.result;
-            var userInfo = storage.getStore("cur_user");
-            if (Number(result.total) > 0) {
-              this.table.pagination.total = Number(res.result.total);
+        manageAPI
+          .getAction(`${this.url.getData}${this.code}`, params)
+          .then(async res => {
+            console.log("--onlineList-列表数据", res);
+            if (res.success) {
+              var result = res.result;
+              var userInfo = storage.getStore("cur_user");
+              if (Number(result.total) > 0) {
+                this.table.pagination.total = Number(res.result.total);
 
-              res.result.records = _.filter(res.result.records, function(item) {
-                let userInfo = storage.getStore("cur_user");
-                if (
-                  "create_by" in item &&
-                  that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                res.result.records = _.filter(res.result.records, function(
+                  item
                 ) {
-                  return (
-                    item["create_by"] == userInfo["username"] ||
-                    item["create_by"] == userInfo["realname"]
-                  );
-                } else if (
-                  "employee" in item &&
-                  that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                  let userInfo = storage.getStore("cur_user");
+                  if (
+                    "create_by" in item &&
+                    that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                  ) {
+                    return (
+                      item["create_by"] == userInfo["username"] ||
+                      item["create_by"] == userInfo["realname"]
+                    );
+                  } else if (
+                    "employee" in item &&
+                    that.code != "bd3d13e4fa5c4b0d91d589cd554397bd"
+                  ) {
+                    return (
+                      item["employee"] == userInfo["username"] ||
+                      item["employee"] == userInfo["realname"]
+                    );
+                  } else if (
+                    "proposer" in item &&
+                    that.code == "933e21cf445440abb8cfdae366082a62"
+                  ) {
+                    //外出页面使用
+                    return (
+                      item["proposer"] == userInfo["username"] ||
+                      item["proposer"] == userInfo["realname"]
+                    );
+                  } else {
+                    return true;
+                  }
+                });
+
+                //对返回数据进行过滤,只展示创建人为自己的数据
+                this.table.dataSource = res.result.records;
+
+                //遍历数据，设置参数
+                for (
+                  let index = 0;
+                  index < res.result.records.length;
+                  index++
                 ) {
-                  return (
-                    item["employee"] == userInfo["username"] ||
-                    item["employee"] == userInfo["realname"]
-                  );
-                } else if (
-                  "proposer" in item &&
-                  that.code == "933e21cf445440abb8cfdae366082a62"
-                ) {
-                  //外出页面使用
-                  return (
-                    item["proposer"] == userInfo["username"] ||
-                    item["proposer"] == userInfo["realname"]
-                  );
-                } else {
-                  return true;
+                  const item = res.result.records[index];
+                  const info = "";
+                  item.log_info_html = info;
+                  console.log(`html info : ${info}`);
                 }
-              });
-
-              //对返回数据进行过滤,只展示创建人为自己的数据
-              this.table.dataSource = res.result.records;
-
-              //遍历数据，设置参数
-              for (let index = 0; index < res.result.records.length; index++) {
-                const item = res.result.records[index];
-                const info = ""; //await queryProcessLogHtml(item.id, item)
-                item.log_info_html = info;
-                console.log(`html info : ${info}`);
+              } else {
+                this.table.pagination.total = 0;
+                this.table.dataSource = [];
+                //this.$message.warning("查无数据")
               }
             } else {
-              this.table.pagination.total = 0;
-              this.table.dataSource = [];
-              //this.$message.warning("查无数据")
+              this.$message.warning(res.message);
             }
-          } else {
-            this.$message.warning(res.message);
-          }
-          this.table.loading = false;
-        });
+            this.table.loading = false;
+          });
       }
     },
 
@@ -795,7 +759,7 @@ export default {
       }
       param.pageNo = this.table.pagination.current;
       param.pageSize = this.table.pagination.pageSize;
-      return filterObj(param);
+      return tools.filterObj(param);
     },
 
     handleChangeInTableSelect(selectedRowKeys, selectionRows) {
@@ -839,7 +803,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName();
+      var value = await manageAPI.queryTableName();
 
       //获取选中记录的所属表单名称
       var tableName = value["table_name"];
@@ -878,7 +842,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName();
+      var value = await manageAPI.queryTableName();
 
       //获取选中记录的所属表单名称
       var tableName = value["table_name"];
@@ -923,7 +887,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName();
+      var value = await manageAPI.queryTableName();
 
       //获取选中记录的所属表单名称
       var tableName = value["table_name"];
@@ -967,7 +931,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName();
+      var value = await manageAPI.queryTableName();
 
       //获取选中记录的所属表单名称
       var tableName = value["table_name"];
@@ -1007,7 +971,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
 
       //获取此表单，关联的流程业务模块
-      var value = await queryTableName();
+      var value = await manageAPI.queryTableName();
 
       //获取选中记录的所属表单名称
       var tableName = value["table_name"];
@@ -1051,7 +1015,7 @@ export default {
       //获取当前用户
       var userInfo = storage.getStore("cur_user");
       //获取当前时间
-      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
       var operation = operation || "知会";
@@ -1075,26 +1039,26 @@ export default {
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogInfByID(tableName, processLogID);
+      curRow = await manageAPI.queryProcessLogInfByID(tableName, processLogID);
       //设置本次知会确认创建时间
       curRow["create_time"] = date;
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
       if (
-        deNull(curRow["approve_user"]).length >=
-        deNull(curRow["employee"]).length
+        tools.deNull(curRow["approve_user"]).length >=
+        tools.deNull(curRow["employee"]).length
       ) {
         //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await postProcessLogHistory(curRow);
+        result = await manageAPI.postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
-        result = await deleteProcessLogInf(tableName, [curRow]);
+        result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
         that.tipVisible = true;
         that.tipContent = "知会确认成功！";
         return true;
       }
 
-      var employeeList = "," + deNull(curRow["employee"]) + ",";
-      var appoveUserList = "," + deNull(curRow["approve_user"]) + ",";
+      var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
+      var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -1120,8 +1084,8 @@ export default {
 
       //设置知会确认人员
       curRow["approve_user"] =
-        deNull(curRow["approve_user"]) +
-        (deNull(curRow["approve_user"]) == "" ? "" : ",") +
+        tools.deNull(curRow["approve_user"]) +
+        (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
         userInfo["username"];
       //设置操作内容
       curRow["action"] = operation;
@@ -1129,19 +1093,19 @@ export default {
       curRow["operate_time"] = date;
       //设置操作意见
       curRow["action_opinion"] =
-        deNull(curRow["action_opinion"]) +
-        (deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+        tools.deNull(curRow["action_opinion"]) +
+        (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
         `${userInfo["username"]}:${message}`;
 
       //保存当前数据到数据库中
-      await patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
+      await manageAPI.patchTableData("PR_LOG_INFORMED", curRow["id"], curRow);
 
       //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
       if (curRow["approve_user"].length >= curRow["employee"].length) {
         //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-        result = await postProcessLogHistory(curRow);
+        result = await manageAPI.postProcessLogHistory(curRow);
         //删除当前审批节点中的所有记录
-        result = await deleteProcessLogInf(tableName, [curRow]);
+        result = await manageAPI.deleteProcessLogInf(tableName, [curRow]);
       }
 
       that.tipVisible = true;
@@ -1162,7 +1126,7 @@ export default {
       //获取当前用户
       var userInfo = storage.getStore("cur_user");
       //获取当前时间
-      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
       var operation = operation || "同意";
@@ -1191,7 +1155,7 @@ export default {
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, processLogID);
+      curRow = await manageAPI.queryProcessLogByID(tableName, processLogID);
 
       //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
       if (
@@ -1207,7 +1171,7 @@ export default {
       }
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, bussinessCodeID);
+      let node = await manageAPI.queryProcessLog(tableName, bussinessCodeID);
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
@@ -1222,17 +1186,17 @@ export default {
         //设置操作意见
         item["action_opinion"] = message;
         //设置创建时间
-        item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
+        item["create_time"] = tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node);
+      result = await manageAPI.postProcessLogHistory(node);
 
       //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node);
+      result = await manageAPI.deleteProcessLog(tableName, node);
 
       //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      let rights = await queryBusinessInfo(tableName);
+      let rights = await manageAPI.queryBusinessInfo(tableName);
 
       //选定流程权责
       that.fixedWFlow = rights[0];
@@ -1254,7 +1218,8 @@ export default {
         //当前审核节点
         var curAuditor = processAudit;
         //知会节点数组
-        var notifyArray = deNull(allNotify) == "" ? "" : allNotify.split(",");
+        var notifyArray =
+          tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
 
         //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
         if (curRow.business_code != "000000000") {
@@ -1285,7 +1250,9 @@ export default {
               "," + freeNode.audit_node + "," + freeNode.approve_node + ",";
             //根据自由流程配置，获取所有待知会人员列表
             notifyArray =
-              deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
+              tools.deNull(freeNode.notify_node) == ""
+                ? []
+                : [freeNode.notify_node];
             //获取自由流程配置，当前审核节点
             curAuditor = curRow["employee"];
             //设置审批节点信息
@@ -1308,23 +1275,29 @@ export default {
           //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
 
           //检测当前审批节点是否为最后一个节点，如果是最后一个节点，则将审批状态修改为4：已完成，修改当前审批状态为待处理
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: "4"
-          });
+          result = await manageAPI.patchTableData(
+            tableName,
+            curRow["business_data_id"],
+            {
+              bpm_status: "4"
+            }
+          );
 
           //执行知会流程，添加多条知会记录。将知会节点的所有待知会节点，拆分成为数组，遍历数组，数组中每个元素，推送一条知会记录，注意forEach不能使用await
           for (let item of notifyArray) {
             //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            var employee = await queryProcessNodeEmployee(item);
+            var employee = await manageAPI.queryProcessNodeEmployee(item);
             //流程岗位
-            var process_station = await queryProcessNodeProcName(item);
+            var process_station = await manageAPI.queryProcessNodeProcName(
+              item
+            );
             //审批相关流程节点
             var pnode = {};
 
             if (curRow.business_code != "000000000") {
               //提交审批相关处理信息
               pnode = {
-                id: queryRandomStr(32), //获取随机数
+                id: manageAPI.queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["main_value"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1342,7 +1315,7 @@ export default {
             } else {
               //提交审批相关处理信息
               pnode = {
-                id: queryRandomStr(32), //获取随机数
+                id: manageAPI.queryRandomStr(32), //获取随机数
                 table_name: tableName, //业务表名
                 main_value: curRow["business_data_id"], //表主键值
                 business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1360,7 +1333,7 @@ export default {
             }
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await postProcessLogInformed(pnode);
+            result = await manageAPI.postProcessLogInformed(pnode);
           }
 
           //当前已经是最后一个审批节点，流程已经处理完毕
@@ -1383,21 +1356,29 @@ export default {
           }
 
           //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow["business_data_id"], {
-            bpm_status: bpm_status_code
-          });
+          result = await manageAPI.patchTableData(
+            tableName,
+            curRow["business_data_id"],
+            {
+              bpm_status: bpm_status_code
+            }
+          );
 
           //审批相关处理信息
           var pnode = {};
 
           if (curRow.business_code != "000000000") {
             //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-            var employee = await queryProcessNodeEmployee(firstAuditor);
+            var employee = await manageAPI.queryProcessNodeEmployee(
+              firstAuditor
+            );
             //流程岗位
-            var process_station = await queryProcessNodeProcName(firstAuditor);
+            var process_station = await manageAPI.queryProcessNodeProcName(
+              firstAuditor
+            );
             //提交审批相关处理信息
             pnode = {
-              id: queryRandomStr(32), //获取随机数
+              id: manageAPI.queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["main_value"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1414,7 +1395,7 @@ export default {
           } else {
             //提交审批相关处理信息
             pnode = {
-              id: queryRandomStr(32), //获取随机数
+              id: manageAPI.queryRandomStr(32), //获取随机数
               table_name: tableName, //业务表名
               main_value: curRow["business_data_id"], //表主键值
               business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -1432,7 +1413,7 @@ export default {
           }
 
           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-          let vflag = await queryApprovalExist(
+          let vflag = await manageAPI.queryApprovalExist(
             tableName,
             curRow["business_data_id"]
           );
@@ -1445,7 +1426,7 @@ export default {
             //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await postProcessLog(pnode);
+            result = await manageAPI.postProcessLog(pnode);
 
             //第三步，根据流程审批节点，向第一个节点推送一条审批信息；根据流程审批节点，找到当前审批节点，修改节点审批状态为审批通过，增加审批意见
             console.log(
@@ -1480,7 +1461,7 @@ export default {
       //获取当前用户
       let userInfo = storage.getStore("cur_user");
       //获取当前时间
-      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      let date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
       let operation = operation || "驳回";
@@ -1513,10 +1494,13 @@ export default {
       }
 
       //获取当前审批节点的所有数据
-      curRow = await queryProcessLogByID(tableName, curRow["id"]);
+      curRow = await manageAPI.queryProcessLogByID(tableName, curRow["id"]);
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, curRow["business_data_id"]);
+      let node = await manageAPI.queryProcessLog(
+        tableName,
+        curRow["business_data_id"]
+      );
 
       //遍历node,设置approve_user，action
       _.each(node, function(item) {
@@ -1527,19 +1511,27 @@ export default {
       });
 
       //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node);
+      result = await manageAPI.postProcessLogHistory(node);
 
       //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node);
+      result = await manageAPI.deleteProcessLog(tableName, node);
 
       //修改当前审批状态为待处理
-      result = await patchTableData(tableName, curRow["business_data_id"], {
-        bpm_status: "1"
-      });
+      result = await manageAPI.patchTableData(
+        tableName,
+        curRow["business_data_id"],
+        {
+          bpm_status: "1"
+        }
+      );
       //再次执行修改流程状态的操作，防止网络异常
-      result = await patchTableData(tableName, curRow["business_data_id"], {
-        bpm_status: "1"
-      });
+      result = await manageAPI.patchTableData(
+        tableName,
+        curRow["business_data_id"],
+        {
+          bpm_status: "1"
+        }
+      );
 
       //提示用户撤销审批操作成功
       that.tipVisible = true;
@@ -1561,7 +1553,7 @@ export default {
       let that = this;
       let result = {};
       //获取当前时间
-      var date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       if (that.table.selectionRows.length != 1) {
         that.$message.warning("请选择一条记录！");
@@ -1573,7 +1565,7 @@ export default {
       //当前被选中记录数据
       let curRow = that.table.selectionRows[0];
       //查询是否存在流程，如果存在流程，则不能提交审批
-      let exnode = await queryExistWorkflow(curRow.id);
+      let exnode = await manageAPI.queryExistWorkflow(curRow.id);
 
       //已经提交审批，无法再次提交
       if (
@@ -1600,7 +1592,7 @@ export default {
       //TODO 检查审批权限，当前用户必须申请人员，才可以进行提交审批操作
 
       //第一步，获取此表单，关联的流程业务模块
-      let value = await queryTableName();
+      let value = await manageAPI.queryTableName();
 
       //打印表单名称
       let tableName = value["table_name"];
@@ -1611,7 +1603,7 @@ export default {
       //TODO 如果审批状态是待提交，但是存在待处理的审批日志的，则修改状态为审批中，且提示，已经提交审批，无法再次提交审批
 
       //查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-      let rights = await queryBusinessInfo(tableName);
+      let rights = await manageAPI.queryBusinessInfo(tableName);
 
       //选定流程权责
       that.fixedWFlow = rights[0];
@@ -1628,9 +1620,11 @@ export default {
         //如果存在审核人
         var firstAuditor = that.fixedWFlow["audit"].split(",")[0];
         //操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-        var employee = await queryProcessNodeEmployee(firstAuditor);
+        var employee = await manageAPI.queryProcessNodeEmployee(firstAuditor);
         //流程岗位
-        var process_station = await queryProcessNodeProcName(firstAuditor);
+        var process_station = await manageAPI.queryProcessNodeProcName(
+          firstAuditor
+        );
 
         //没有获取到审核节点的用户信息，请在流程设计->节点配置中设置审核节点的审核用户
         if (Array.isArray(employee) && employee.length == 0) {
@@ -1645,7 +1639,7 @@ export default {
 
         //提交审批相关处理信息
         var node = {
-          id: queryRandomStr(32), //获取随机数
+          id: manageAPI.queryRandomStr(32), //获取随机数
           table_name: tableName, //业务表名
           main_value: value["id"], //表主键值
           business_data_id: curRow["id"], //业务具体数据主键值
@@ -1661,7 +1655,7 @@ export default {
         };
 
         //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-        let vflag = await queryApprovalExist(tableName, curRow["id"]);
+        let vflag = await manageAPI.queryApprovalExist(tableName, curRow["id"]);
 
         if (vflag) {
           //数据库中已经存在此记录，提示用户无法提交审批
@@ -1671,7 +1665,7 @@ export default {
           //第二步，根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
           var firstNode = {
-            id: queryRandomStr(32), //获取随机数
+            id: manageAPI.queryRandomStr(32), //获取随机数
             table_name: tableName, //业务表名
             main_value: value["id"], //表主键值
             business_data_id: curRow["id"], //业务具体数据主键值
@@ -1691,10 +1685,10 @@ export default {
           };
 
           //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-          result = await postProcessLogHistory(firstNode);
+          result = await manageAPI.postProcessLogHistory(firstNode);
 
           //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-          result = await postProcessLog(node);
+          result = await manageAPI.postProcessLog(node);
 
           //打印提交审批返回结果
           console.log(" 提交审批返回结果: " + JSON.stringify(result));
@@ -1702,11 +1696,11 @@ export default {
           //第三步，根据流程审批节点，向第一个节点推送一条审批信息
 
           //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （待提交	1	处理中	2	已完成	3	已作废	4）
-          result = await patchTableData(tableName, curRow["id"], {
+          result = await manageAPI.patchTableData(tableName, curRow["id"], {
             bpm_status: "2"
           });
           //再次执行一次修改流程状态的操作，防止网络异常
-          result = await patchTableData(tableName, curRow["id"], {
+          result = await manageAPI.patchTableData(tableName, curRow["id"], {
             bpm_status: "2"
           });
 
@@ -1747,7 +1741,7 @@ export default {
       //获取当前用户
       let userInfo = storage.getStore("cur_user");
       //获取当前时间
-      let date = formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+      let date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
 
       //审批动作
       let operation = "撤销";
@@ -1763,7 +1757,7 @@ export default {
       }
 
       //第一步，获取此表单，关联的流程业务模块
-      let value = await queryTableName();
+      let value = await manageAPI.queryTableName();
 
       //打印表单名称
       let tableName = value["table_name"];
@@ -1784,7 +1778,7 @@ export default {
       }
 
       //获取关于此表单的所有当前审批日志信息
-      let node = await queryProcessLog(tableName, curRow["id"]);
+      let node = await manageAPI.queryProcessLog(tableName, curRow["id"]);
 
       //检查审批权限，当前用户必须申请人员，才可以进行撤销审批操作
 
@@ -1801,19 +1795,12 @@ export default {
         //设置操作意见
         item["action_opinion"] = message;
         //设置创建时间
-        item["create_time"] = formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
+        item["create_time"] = tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
       });
 
-      //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-      result = await postProcessLogHistory(node);
+      //执行撤销流程
+      workflowAPI.postWorkflowCancel(tableName, curRow, node);
 
-      //删除当前审批节点中的所有记录
-      result = await deleteProcessLog(tableName, node);
-
-      //修改当前审批状态为待处理
-      result = await patchTableData(tableName, curRow["id"], {
-        bpm_status: "1"
-      });
       //设置当前表单中的审批状态为待处理
       curRow["bpm_status"] = "1";
 
@@ -1822,9 +1809,6 @@ export default {
       that.tipContent = "撤销审批成功！";
 
       that.loadData();
-
-      //打印撤销审批处理日志
-      console.log("撤销审批成功");
 
       return result;
     },
@@ -1854,9 +1838,10 @@ export default {
         param["selections"] = this.table.selectedRowKeys.join(",");
       }
       console.log("导出参数", param);
-      let paramsStr = JSON.stringify(filterObj(param));
-      downFile(this.url.exportXls + this.code, { paramsStr: paramsStr }).then(
-        data => {
+      let paramsStr = JSON.stringify(tools.filterObj(param));
+      manageAPI
+        .downFile(this.url.exportXls + this.code, { paramsStr: paramsStr })
+        .then(data => {
           if (!data) {
             this.$message.warning("文件下载失败");
             return;
@@ -1877,8 +1862,7 @@ export default {
             document.body.removeChild(link); //下载完成移除元素
             window.URL.revokeObjectURL(url); //释放掉blob对象
           }
-        }
-      );
+        });
     },
     handleEdit(record) {
       this.cgButtonLinkHandler(record, "beforeEdit", "js");
@@ -1892,14 +1876,16 @@ export default {
       this.handleDelete(record.id);
     },
     handleDelete(id) {
-      deleteAction(this.url.optPre + this.code + "/" + id).then(res => {
-        if (res.success) {
-          this.$message.success(res.message);
-          this.loadData();
-        } else {
-          this.$message.warning(res.message);
-        }
-      });
+      manageAPI
+        .deleteAction(this.url.optPre + this.code + "/" + id)
+        .then(res => {
+          if (res.success) {
+            this.$message.success(res.message);
+            this.loadData();
+          } else {
+            this.$message.warning(res.message);
+          }
+        });
     },
 
     handleFormSuccess() {
@@ -2027,7 +2013,11 @@ export default {
       //console.log("--onlineList-js增强",enhanceJs)
       if (enhanceJs) {
         let Obj = eval("(" + enhanceJs + ")");
-        this.EnhanceJS = new Obj(getAction, postAction, deleteAction);
+        this.EnhanceJS = new Obj(
+          manageAPI.getAction,
+          manageAPI.postAction,
+          manageAPI.deleteAction
+        );
         this.cgButtonJsHandler("created");
       } else {
         this.EnhanceJS = "";
@@ -2073,7 +2063,7 @@ export default {
         dataId: this.table.selectedRowKeys[0]
       };
       console.log("自定义按钮请求后台参数：", params);
-      postAction(this.url.buttonAction, params).then(res => {
+      manageAPI.postAction(this.url.buttonAction, params).then(res => {
         if (res.success) {
           this.loadData();
           this.$message.success("处理完成!");
@@ -2094,7 +2084,7 @@ export default {
           dataId: record.id
         };
         console.log("自定义按钮link请求后台参数：", params);
-        postAction(this.url.buttonAction, params).then(res => {
+        manageAPI.postAction(this.url.buttonAction, params).then(res => {
           if (res.success) {
             this.loadData();
             this.$message.success("处理完成!");

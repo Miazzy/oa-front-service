@@ -802,7 +802,10 @@ export default {
     };
   },
 
-  async created() {},
+  async created() {
+    //查询用户数据，将数据缓存到浏览器缓存
+    await manageAPI.queryUserName();
+  },
 
   async mounted() {
     //查询当前节点信息

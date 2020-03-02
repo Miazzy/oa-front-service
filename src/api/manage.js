@@ -759,9 +759,8 @@ export async function queryUserName() {
  * 查询用户名称信息
  */
 export function queryUserNameByCache() {
-    //查询URL
-    var index = 0;
-    var queryURL;
+
+    //返回对象结果
     var result = [];
 
     try {
@@ -775,10 +774,11 @@ export function queryUserNameByCache() {
             result = userlist;
         }
 
-        return result;
     } catch (err) {
         console.error(err);
     }
+
+    return result;
 }
 
 /**
