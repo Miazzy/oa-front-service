@@ -399,9 +399,13 @@ export async function postDynamicNotify(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+        //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
+        //定义随机编码
         var random = (Math.floor(Math.random() * 10000000000000000000000) + "").substring(0, 6);
+        console.log('随机编号 :' + random);
+        //合成动态编码
         id = id + random;
 
         //获取用户信息
