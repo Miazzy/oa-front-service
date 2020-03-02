@@ -1,6 +1,7 @@
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import * as storage from "@/utils/storage";
+import * as _ from 'underscore';
 
 /**
  * @function 审批同意处理
@@ -60,6 +61,22 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         }
     } catch (error) {
         console.log("审批处理当前节点的审批信息", error);
+    }
+
+    //审批处理过程中，添加相关的动态信息
+    try {
+
+        //如果流程状态为1，则提交驳回动态到数据库，如果流程状态为4或者5，则提交审批通过动态到数据库
+        if (bpmStatus.bpm_status == "1") {
+            await postDynamicReject(tableName, curRow);
+        } else if (bpmStatus.bpm_status == "4") {
+            await postDynamicAgree(tableName, curRow);
+        } else if (bpmStatus.bpm_status == "5") {
+            await postDynamicNotify(tableName, curRow);
+        }
+
+    } catch (error) {
+        console.log(error);
     }
 
     //返回执行结果
@@ -189,6 +206,7 @@ export async function postWorkflowCancel(tableName, curRow, node) {
 
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+
         try {
             tname = tname[0]['name'];
         } catch (error) {
@@ -233,6 +251,199 @@ export async function postWorkflowCancel(tableName, curRow, node) {
     }
 
     //返回执行结果
+    return result;
+
+}
+
+/**
+ * @function 处理驳回的动态消息函数
+ */
+export async function postDynamicReject(tableName, curRow) {
+
+    //返回对象结果
+    var result;
+
+    //动态内容
+    var dynamicNode = {};
+
+    //构造用户动态内容
+    try {
+
+        //日期格式化
+        var timestamp = new Date().getTime();
+        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
+        console.log('动态编号 :' + id);
+        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+
+        //获取用户信息
+        var userInfo = storage.getStore("cur_user");
+        //查询用户信息
+        var userlist = await manageAPI.queryUserName();
+
+        //获取表单的中文名称
+        var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+        try {
+            tname = tname[0]['name'];
+        } catch (error) {
+            console.log(error);
+        }
+
+        //流程发起人
+        var proponents = curRow.proponents;
+        //获取流程发起人的中文信息
+        proponents = _.find(userlist, (item) => {
+            return curRow.proponents == item.username;
+        });
+
+        //表单内容
+        var title = userInfo['realname'] + ' 驳回了 ' + proponents.realname + ' 发起的 ' + tname + ' 的 流程申请 ';
+
+        //待发布动态节点内容
+        dynamicNode = {
+            id: id,
+            create_by: userInfo['username'],
+            title: title,
+            content: title,
+            main_key: curRow.main_value,
+            main_table: tableName,
+        };
+
+        //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
+        result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    return result;
+
+}
+
+/**
+ * @function 处理驳回的动态消息函数
+ */
+export async function postDynamicAgree(tableName, curRow) {
+
+    //返回对象结果
+    var result;
+
+    //动态内容
+    var dynamicNode = {};
+
+    //构造用户动态内容
+    try {
+
+        //日期格式化
+        var timestamp = new Date().getTime();
+        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
+        console.log('动态编号 :' + id);
+        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+
+        //获取用户信息
+        var userInfo = storage.getStore("cur_user");
+        //查询用户信息
+        var userlist = await manageAPI.queryUserName();
+
+        //获取表单的中文名称
+        var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+        try {
+            tname = tname[0]['name'];
+        } catch (error) {
+            console.log(error);
+        }
+
+        //流程发起人
+        var proponents = curRow.proponents;
+        //获取流程发起人的中文信息
+        proponents = _.find(userlist, (item) => {
+            return curRow.proponents == item.username;
+        });
+
+        //表单内容
+        var title = userInfo['realname'] + ' 同意了 ' + proponents.realname + ' 发起的 ' + tname + ' 的 流程申请 ';
+
+        //待发布动态节点内容
+        dynamicNode = {
+            id: id,
+            create_by: userInfo['username'],
+            title: title,
+            content: title,
+            main_key: curRow.main_value,
+            main_table: tableName,
+        };
+
+        //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
+        result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    return result;
+
+}
+
+/**
+ * @function 处理驳回的动态消息函数
+ */
+export async function postDynamicNotify(tableName, curRow) {
+
+    //返回对象结果
+    var result;
+
+    //动态内容
+    var dynamicNode = {};
+
+    //构造用户动态内容
+    try {
+
+        //日期格式化
+        var timestamp = new Date().getTime();
+        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
+        console.log('动态编号 :' + id);
+        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+
+        //获取用户信息
+        var userInfo = storage.getStore("cur_user");
+        //查询用户信息
+        var userlist = await manageAPI.queryUserName();
+
+        //获取表单的中文名称
+        var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+
+        try {
+            tname = tname[0]['name'];
+        } catch (error) {
+            console.log(error);
+        }
+
+        //流程发起人
+        var proponents = curRow.proponents;
+        //获取流程发起人的中文信息
+        proponents = _.find(userlist, (item) => {
+            return curRow.proponents == item.username;
+        });
+
+        //表单内容
+        var title = proponents.realname + ' 发起的 ' + tname + ' 的 流程申请 流程走完且知会通知完毕';
+
+        //待发布动态节点内容
+        dynamicNode = {
+            id: id,
+            create_by: userInfo['username'],
+            title: title,
+            content: title,
+            main_key: curRow.main_value,
+            main_table: tableName,
+        };
+
+        //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
+        result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
+    } catch (error) {
+        console.log(error);
+    }
+
     return result;
 
 }

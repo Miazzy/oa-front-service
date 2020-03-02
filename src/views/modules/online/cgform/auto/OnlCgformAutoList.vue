@@ -425,8 +425,6 @@ export default {
         title: "操作",
         dataIndex: "action",
         scopedSlots: {
-          //filterDropdown: 'filterDropdown',
-          //filterIcon: 'filterIcon',
           customRender: "action"
         },
         fixed: "right",
