@@ -3,18 +3,10 @@ import {
 } from '@/utils/request';
 import axios_ from 'axios';
 import superagent from 'superagent';
-import _ from 'underscore';
-import {
-    setStore,
-    getStore
-} from '@/utils/storage';
-import {
-    formatDate,
-    queryDateDiff,
-    deNull,
-    queryUrlString
-} from '@/utils/util';
-import $ from 'jquery';
+import * as _ from 'underscore';
+import * as storage from '@/utils/storage';
+import * as tools from '@/utils/util';
+import * as $ from 'jquery';
 import * as workflowAPI from "@/api/workflow";
 
 axios_.defaults.headers.post['Content-Type'] =
@@ -183,7 +175,7 @@ export async function saveService(parameter) {
  */
 export async function queryToken() {
     try {
-        var token = getStore('pro__Access-Token');
+        var token = storage.getStore('pro__Access-Token');
 
         var queryURL = `${api.token}/${token.value}`;
 
@@ -588,7 +580,7 @@ export async function queryUserList(params) {
 
     //用户名称
     var whereFlag =
-        deNull(params.name) == '' ?
+        tools.deNull(params.name) == '' ?
         '' :
         `_where=(username,like,~${params.name}~)~or(realname,like,~${params.name}~)&`;
     //获取排序标识，升序 ‘’ ， 降序 ‘-’
@@ -663,7 +655,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
 
         //遍历并格式化日期
         _.each(result.records, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd hh:mm:ss');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd hh:mm:ss');
             optime = optime.replace('T', ' ');
             item['operate_time'] = optime;
         });
@@ -695,11 +687,11 @@ export async function queryProcessLogWait(username, realname) {
         result = _.filter(result, function(item) {
 
             //格式化日期
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
@@ -726,7 +718,7 @@ export async function queryUserName() {
     try {
 
         //从缓存中获取用户数据
-        var userlist = getStore('cache_all_user_name');
+        var userlist = storage.getStore('cache_all_user_name');
 
         if (typeof userlist == 'undefined' || userlist == null || userlist.length == 0) {
 
@@ -743,7 +735,7 @@ export async function queryUserName() {
             }
 
             //将用户数据设置到缓存中
-            setStore('cache_all_user_name', result, 3600 * 24);
+            storage.setStore('cache_all_user_name', result, 3600 * 24);
 
         } else {
             result = userlist;
@@ -766,7 +758,7 @@ export function queryUserNameByCache() {
     try {
 
         //从缓存中获取用户数据
-        var userlist = getStore('cache_all_user_name');
+        var userlist = storage.getStore('cache_all_user_name');
 
         if (typeof userlist == 'undefined' || userlist == null || userlist.length == 0) {
             result = [];
@@ -821,13 +813,13 @@ export async function queryWorkflowNode(id) {
             result = res.body[0];
 
             if (result.notify == null || result.notify == '') {
-                let notifynode = getStore(`workflows_notify_node_by_data_id@${id}`);
+                let notifynode = storage.getStore(`workflows_notify_node_by_data_id@${id}`);
                 result.notify = notifynode.employee + ',' + notifynode.appruser;
                 console.log('知会人员：' + result.notify);
             }
 
             //获取当前正在审批用户
-            let auditnode = getStore(`workflows_audit_node_by_data_id@${id}`);
+            let auditnode = storage.getStore(`workflows_audit_node_by_data_id@${id}`);
             result.operate = auditnode.employee;
         }
 
@@ -873,16 +865,16 @@ export async function queryProcessLogWaitByParam(username, param) {
     var whereSQL = "";
 
     //根据条件构造参数
-    if (deNull(param.type) != "") {
+    if (tools.deNull(param.type) != "") {
         whereSQL = whereSQL + `~and(type,eq,${param.type})`;
     }
-    if (deNull(param.name) != "") {
+    if (tools.deNull(param.name) != "") {
         whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
     }
-    if (deNull(param.topic) != "") {
+    if (tools.deNull(param.topic) != "") {
         whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
     }
-    if (deNull(param.time) != "") {
+    if (tools.deNull(param.time) != "") {
         var starttime = '';
         var endtime = '';
 
@@ -898,8 +890,8 @@ export async function queryProcessLogWaitByParam(username, param) {
             endtime = param.time[1].format('YYYY-MM-DD');
         }
 
-        starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-        endtime = formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+        starttime = tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+        endtime = tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
         whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
     }
@@ -917,11 +909,11 @@ export async function queryProcessLogWaitByParam(username, param) {
         result = _.filter(result, function(item) {
 
             //格式化日期
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username);
@@ -952,11 +944,11 @@ export async function queryProcessLogDone(username, realname) {
         result = _.filter(result, function(item) {
 
             //格式化日期
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
@@ -980,16 +972,16 @@ export async function queryProcessLogDoneByParam(username, param) {
     var whereSQL = "";
 
     //根据条件构造参数
-    if (deNull(param.type) != "") {
+    if (tools.deNull(param.type) != "") {
         whereSQL = whereSQL + `~and(type,eq,${param.type})`;
     }
-    if (deNull(param.name) != "") {
+    if (tools.deNull(param.name) != "") {
         whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
     }
-    if (deNull(param.topic) != "") {
+    if (tools.deNull(param.topic) != "") {
         whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
     }
-    if (deNull(param.time) != "") {
+    if (tools.deNull(param.time) != "") {
         var starttime = '';
         var endtime = '';
 
@@ -1005,8 +997,8 @@ export async function queryProcessLogDoneByParam(username, param) {
             endtime = param.time[1].format('YYYY-MM-DD');
         }
 
-        starttime = formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-        endtime = formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+        starttime = tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+        endtime = tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
         whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
     }
@@ -1023,11 +1015,11 @@ export async function queryProcessLogDoneByParam(username, param) {
         result = _.filter(result, function(item) {
 
             //格式化日期
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username);
@@ -1464,11 +1456,11 @@ export async function queryAnnounceList() {
 
         //遍历并格式化日期
         _.each(result, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
         });
 
         return result;
@@ -1491,11 +1483,11 @@ export async function queryHeadList() {
 
         //遍历并格式化日期
         _.each(result, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
         });
 
         return result;
@@ -1518,11 +1510,11 @@ export async function queryNewsList() {
 
         //遍历并格式化日期
         _.each(result, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
         });
 
         return result;
@@ -1544,11 +1536,11 @@ export async function queryNoticeList() {
 
         //遍历并格式化日期
         _.each(result, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
         });
 
         return result;
@@ -1570,11 +1562,11 @@ export async function queryViewsList() {
 
         //遍历并格式化日期
         _.each(result, function(item) {
-            var optime = formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = formatDate(item['create_time'], 'yyyy-MM-dd');
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['username'] = deNull(item['username']).split(',');
+            item['username'] = tools.deNull(item['username']).split(',');
         });
 
         return result;
@@ -1620,7 +1612,7 @@ export async function queryPRLogInfByDataID(business_data_id) {
  */
 export async function queryPRLogInfTotal(business_data_id) {
     //获取今天日期
-    var ctime = formatDate(new Date(), 'yyyy-MM-dd');
+    var ctime = tools.formatDate(new Date(), 'yyyy-MM-dd');
 
     //提交URL
     var queryURL = `${api.restapi}/api/pr_log_informed/count?_where=(business_data_id,eq,${business_data_id})`;
@@ -2063,8 +2055,6 @@ export function queryUserRealName(name) {
  */
 export async function queryHisFreeWorkflow(id) {
 
-    debugger;
-
     //提交URL
     var queryURL = `${api.restapi}/api/bs_free_process?_where=(main_key,eq,${id})&_sort=-create_time`;
     //根据业务编号，查询业务数据
@@ -2099,7 +2089,7 @@ export async function queryWorkflows(business_data_id) {
 
     //从浏览器缓存中获取审批日志数据
     try {
-        workflows = getStore(`workflows_by_data_id@${business_data_id}`);
+        workflows = storage.getStore(`workflows_by_data_id@${business_data_id}`);
     } catch (error) {
         console.log('query store info of workflows error :' + error);
     }
@@ -2133,13 +2123,13 @@ export async function queryWorkflows(business_data_id) {
                 //获取标识
                 var flag = index == processLogs.length - 1;
                 //获取操作时间
-                var optime = formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
+                var optime = tools.formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
 
-                var content = `节点：${deNull(
+                var content = `节点：${tools.deNull(
                     item.process_station
-                )} , 处理人： ${deNull(queryUserRealName(item.approve_user))} , 审批：${deNull(
+                )} , 处理人： ${tools.deNull(queryUserRealName(item.approve_user))} , 审批：${tools.deNull(
                     item.action
-                )} , 审批意见：${deNull(item.action_opinion)}  时间：${deNull(
+                )} , 审批意见：${tools.deNull(item.action_opinion)}  时间：${tools.deNull(
                     optime
                 )} `;
 
@@ -2198,7 +2188,7 @@ export async function queryWorkflows(business_data_id) {
                     id: item.id,
                     employee: item.employee,
                     color: 'pink',
-                    content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+                    content: `节点：${tools.deNull(item.process_station)} , 待处理人： ${tools.deNull(
                         queryUserRealName(item.employee)
           )} , 审批：待处理 , 时间：-- `,
                     status: 'wait',
@@ -2210,7 +2200,7 @@ export async function queryWorkflows(business_data_id) {
             });
 
             //获取正在审批的最后一条数据
-            setStore(`workflows_audit_node_by_data_id@${business_data_id}`, JSON.stringify(auditnode), 60);
+            storage.setStore(`workflows_audit_node_by_data_id@${business_data_id}`, JSON.stringify(auditnode), 60);
         } catch (error) {
             console.log('获取正在审批的审批日志信息失败 :' + error);
         }
@@ -2223,16 +2213,16 @@ export async function queryWorkflows(business_data_id) {
 
             _.each(processLogs, (item, index) => {
                 //获取操作时间
-                var optime = formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
-                var appruser = deNull(item.approve_user);
+                var optime = tools.formatDate(new Date(item.operate_time), 'yyyy-MM-dd hh:mm:ss');
+                var appruser = tools.deNull(item.approve_user);
                 var node = {
                     id: item.id,
                     employee: item.employee,
                     appruser: appruser,
                     color: 'orange',
-                    content: `节点：${deNull(item.process_station)} , 待处理人： ${deNull(
+                    content: `节点：${tools.deNull(item.process_station)} , 待处理人： ${tools.deNull(
                         queryUserRealName(item.employee)
-          )} ,  已处理人： ${deNull(queryUserRealName(appruser))} , 审批：知会 , 时间：${deNull(
+          )} ,  已处理人： ${tools.deNull(queryUserRealName(appruser))} , 审批：知会 , 时间：${tools.deNull(
             optime
           )} `,
                     status: 'sound',
@@ -2244,13 +2234,13 @@ export async function queryWorkflows(business_data_id) {
             });
 
             //获取知会的最后一条数据
-            setStore(`workflows_notify_node_by_data_id@${business_data_id}`, JSON.stringify(notifynode), 60);
+            storage.setStore(`workflows_notify_node_by_data_id@${business_data_id}`, JSON.stringify(notifynode), 60);
         } catch (error) {
             console.log('获取正在审批的知会日志信息异常：' + error);
         }
 
         try {
-            setStore(
+            storage.setStore(
                 `workflows_by_data_id@${business_data_id}`,
                 JSON.stringify(workflows),
                 10
@@ -2289,11 +2279,11 @@ export async function watchFormLeave(that) {
     //获取部门信息
     var department = '';
     //获取对应表单信息
-    var tableName = queryUrlString('table_name');
+    var tableName = tools.queryUrlString('table_name');
     //查询主键ID
-    var id = queryUrlString('id');
+    var id = tools.queryUrlString('id');
     //获取用户名称
-    var username = queryUrlString('user');
+    var username = tools.queryUrlString('user');
 
     //如果不是表单详情页面，则直接返回
     if (!(path.includes('/workflow/view') || path.includes('/basewflow/view'))) {
@@ -2378,14 +2368,14 @@ export async function watchFormLeave(that) {
 
     try {
         //查询申请开始日期
-        that.curRow.starttime = formatDate(
+        that.curRow.starttime = tools.formatDate(
             that.curRow.starttime,
             'yyyy-MM-dd hh:mm:ss'
         );
 
         //如果未查询到开始日期，则使用申请日期
         if (that.curRow.starttime == '--') {
-            that.curRow.starttime = formatDate(
+            that.curRow.starttime = tools.formatDate(
                 that.curRow.create_time,
                 'yyyy-MM-dd hh:mm:ss'
             );
@@ -2396,12 +2386,12 @@ export async function watchFormLeave(that) {
 
     try {
         //查询申请结束日期
-        that.curRow.endtime = formatDate(
+        that.curRow.endtime = tools.formatDate(
             that.curRow.endtime,
             'yyyy-MM-dd hh:mm:ss'
         );
         //查询申请创建日期
-        that.curRow.create_time = formatDate(
+        that.curRow.create_time = tools.formatDate(
             that.curRow.create_time,
             'yyyy-MM-dd hh:mm:ss'
         );
@@ -2505,11 +2495,11 @@ export async function transWflowToHistory(tableName, id) {
         //对应表单没有数据，故此知会/流程通知转移到历史记录中，获取关于此表单的所有当前知会日志信息
         var messageNode = await queryProcessLogInformed(tableName, id);
         //如果审批日志信息不为空，则将审批日志信息转化为历史数据
-        if (deNull(wfnode) != '') {
+        if (tools.deNull(wfnode) != '') {
             result = await transWflowHistoring(tableName, wfnode);
         }
         //如果知会日志信息不为空，则将知会日志信息转化为历史数据
-        if (deNull(messageNode) != '') {
+        if (tools.deNull(messageNode) != '') {
             result = await transWflowHistoring(tableName, messageNode);
         }
     } catch (error) {
@@ -2539,11 +2529,11 @@ export async function transWflowHistoring(tableName, wfnode) {
         if (wfnode instanceof Array && wfnode.length > 0) {
             for (const item of wfnode) {
                 //转化日期格式
-                item['operate_time'] = formatDate(
+                item['operate_time'] = tools.formatDate(
                     item['operate_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
-                item['create_time'] = formatDate(
+                item['create_time'] = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -2552,11 +2542,11 @@ export async function transWflowHistoring(tableName, wfnode) {
             }
         } else {
             //转化日期格式
-            wfnode['operate_time'] = formatDate(
+            wfnode['operate_time'] = tools.formatDate(
                 wfnode['operate_time'],
                 'yyyy-MM-dd hh:mm:ss'
             );
-            wfnode['create_time'] = formatDate(
+            wfnode['create_time'] = tools.formatDate(
                 wfnode['create_time'],
                 'yyyy-MM-dd hh:mm:ss'
             );
@@ -2583,7 +2573,7 @@ export async function queryFileViewURL(text) {
     //查询文档对应预览地址
     try {
         //获取小写文档下载地址
-        var textURL = deNull(text).toLowerCase();
+        var textURL = tools.deNull(text).toLowerCase();
         //如果不含有office文档
         if (!(
                 textURL.includes('doc') ||
@@ -2606,7 +2596,7 @@ export async function queryFileViewURL(text) {
         //获取第一个office文档
         url = _.find(fileList, function(text) {
             //获取小写字符串
-            text = deNull(text).toLowerCase();
+            text = tools.deNull(text).toLowerCase();
             return (
                 text.includes('doc') ||
                 text.includes('ppt') ||
@@ -2629,16 +2619,16 @@ export async function queryFileViewURL(text) {
         xurl = xurl.substring(0, xurl.lastIndexOf('.'));
 
         //获取文件后缀
-        var suffix = deNull(url)
+        var suffix = tools.deNull(url)
             .substring(url.lastIndexOf('.'), url.length)
             .toLowerCase();
 
         //如果word文档，则使用微软API打开
-        url = deNull(suffix).includes('xls') ? xurl + '.html' : url;
+        url = tools.deNull(suffix).includes('xls') ? xurl + '.html' : url;
         //如果word文档，则使用微软API打开
-        url = deNull(suffix).includes('doc') ||
-            deNull(suffix).includes('ppt') ||
-            deNull(suffix).includes('pdf') ?
+        url = tools.deNull(suffix).includes('doc') ||
+            tools.deNull(suffix).includes('ppt') ||
+            tools.deNull(suffix).includes('pdf') ?
             xurl + '.pdf' :
             url;
 
@@ -2653,9 +2643,9 @@ export async function queryFileViewURL(text) {
 
         //如果word文档，则使用微软API打开
         url =
-            deNull(suffix).includes('doc') ||
-            deNull(suffix).includes('ppt') ||
-            deNull(suffix).includes('pdf') ?
+            tools.deNull(suffix).includes('doc') ||
+            tools.deNull(suffix).includes('ppt') ||
+            tools.deNull(suffix).includes('pdf') ?
             previewURL + xurl + '.pdf' :
             url;
 
@@ -2692,7 +2682,7 @@ export function queryFileType(text) {
 
     try {
         //获取文件后缀
-        suffix = deNull(text).toLowerCase();
+        suffix = tools.deNull(text).toLowerCase();
     } catch (error) {
         suffix = `${text}`;
     }
@@ -2735,11 +2725,11 @@ export function queryImageURL(text) {
 
     try {
         //如果text为空，则返回空数组
-        if (deNull(text) == '') {
+        if (tools.deNull(text) == '') {
             return [];
         }
         //如果含有多个地址，则split后获取数组
-        if (deNull(text).indexOf(',') > 0) {
+        if (tools.deNull(text).indexOf(',') > 0) {
             fileList = text.split(',');
         } else {
             fileList.push(text);
@@ -2752,7 +2742,7 @@ export function queryImageURL(text) {
         //遍历并筛选出里面的图片信息
         fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
-            var ptext = deNull(text).toLowerCase();
+            var ptext = tools.deNull(text).toLowerCase();
 
             //获取图片标识
             var flag =
@@ -2765,7 +2755,7 @@ export function queryImageURL(text) {
                 ptext.includes('png');
 
             //获取文件后缀
-            var suffix = deNull(ptext)
+            var suffix = tools.deNull(ptext)
                 .substring(ptext.lastIndexOf('.'), ptext.length)
                 .toLowerCase();
 
@@ -2818,11 +2808,11 @@ export function queryVideoURL(text) {
 
     try {
         //如果text为空，则返回空数组
-        if (deNull(text) == '') {
+        if (tools.deNull(text) == '') {
             return [];
         }
         //如果含有多个地址，则split后获取数组
-        if (deNull(text).indexOf(',') > 0) {
+        if (tools.deNull(text).indexOf(',') > 0) {
             fileList = text.split(',');
         } else {
             fileList.push(text);
@@ -2835,7 +2825,7 @@ export function queryVideoURL(text) {
         //遍历并筛选出里面的图片信息
         fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
-            var ptext = deNull(text).toLowerCase();
+            var ptext = tools.deNull(text).toLowerCase();
 
             //获取图片标识
             var flag =
@@ -2844,7 +2834,7 @@ export function queryVideoURL(text) {
                 ptext.includes('avi');
 
             //获取文件后缀
-            var suffix = deNull(ptext)
+            var suffix = tools.deNull(ptext)
                 .substring(ptext.lastIndexOf('.'), ptext.length)
                 .toLowerCase();
 
@@ -2877,11 +2867,11 @@ export async function queryOfficeURL(text) {
 
     try {
         //如果text为空，则返回空数组
-        if (deNull(text) == '') {
+        if (tools.deNull(text) == '') {
             return [];
         }
         //如果含有多个地址，则split后获取数组
-        if (deNull(text).indexOf(',') > 0) {
+        if (tools.deNull(text).indexOf(',') > 0) {
             fileList = text.split(',');
         } else {
             fileList.push(text);
@@ -2894,7 +2884,7 @@ export async function queryOfficeURL(text) {
         //遍历并筛选出里面的图片信息
         fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
-            var ptext = deNull(text).toLowerCase();
+            var ptext = tools.deNull(text).toLowerCase();
             //定义下载地址
             var download = window._CONFIG['downloadURL'] + '/';
             //文档预览URL
@@ -2929,21 +2919,21 @@ export async function queryOfficeURL(text) {
             xurl = xurl.substring(0, xurl.lastIndexOf('.'));
 
             //获取文件后缀
-            var suffix = deNull(download)
+            var suffix = tools.deNull(download)
                 .substring(download.lastIndexOf('.'), download.length)
                 .toLowerCase();
 
             //如果word文档，则使用微软API打开
-            text = deNull(suffix).includes('xls') ? xurl + '.html' : download;
+            text = tools.deNull(suffix).includes('xls') ? xurl + '.html' : download;
 
             //如果word文档，则使用微软API打开
-            text = deNull(suffix).includes('svg') ? download : download;
+            text = tools.deNull(suffix).includes('svg') ? download : download;
 
             //如果word文档，则使用微软API打开
             text =
-                deNull(suffix).includes('doc') ||
-                deNull(suffix).includes('ppt') ||
-                deNull(suffix).includes('pdf') ? xurl + '.pdf' : download;
+                tools.deNull(suffix).includes('doc') ||
+                tools.deNull(suffix).includes('ppt') ||
+                tools.deNull(suffix).includes('pdf') ? xurl + '.pdf' : download;
 
             //file文件URL路径
             var fileURL = `${text}`;
@@ -2953,9 +2943,9 @@ export async function queryOfficeURL(text) {
 
             //如果word文档，则使用微软API打开
             text =
-                deNull(suffix).includes('doc') ||
-                deNull(suffix).includes('ppt') ||
-                deNull(suffix).includes('pdf') ?
+                tools.deNull(suffix).includes('doc') ||
+                tools.deNull(suffix).includes('ppt') ||
+                tools.deNull(suffix).includes('pdf') ?
                 previewURL + xurl + '.pdf' :
                 text;
 
@@ -3036,27 +3026,27 @@ export function postcss() {
  */
 export async function queryCurNodePageType(pageType) {
     //获取页面类型
-    var type = queryUrlString('type');
+    var type = tools.queryUrlString('type');
 
     try {
         //如果审批详情或者知会详情页面，则设置pageType
         if (type == 'workflow' || type == 'notify') {
             //获取当前节点审批流程数据）
             var flag = await queryProcessLogByID(
-                queryUrlString('table_name'),
-                queryUrlString('processLogID')
+                tools.queryUrlString('table_name'),
+                tools.queryUrlString('processLogID')
             );
 
             //获取当前节点知会流程数据
-            if (deNull(flag) == '') {
+            if (tools.deNull(flag) == '') {
                 flag = await queryProcessLogInfByID(
-                    queryUrlString('table_name'),
-                    queryUrlString('processLogID')
+                    tools.queryUrlString('table_name'),
+                    tools.queryUrlString('processLogID')
                 );
             }
 
             //获取页面类型
-            pageType = deNull(flag) == '' ? 'view' : pageType;
+            pageType = tools.deNull(flag) == '' ? 'view' : pageType;
         } else if (type == 'workflowing') {
             //
             console.log('TODO 暂时不做');
@@ -3099,12 +3089,12 @@ export async function colorProcessDetail(that, main) {
         console.log('set curRow sub_data error :' + error);
     }
     try {
-        main.pageType = queryUrlString('type');
+        main.pageType = tools.queryUrlString('type');
     } catch (error) {
         console.log('set curRow pageType error :' + error);
     }
     try {
-        main.curRow.fileStatus = deNull(main.curRow.files) == '' ? 1 : 0;
+        main.curRow.fileStatus = tools.deNull(main.curRow.files) == '' ? 1 : 0;
     } catch (error) {
         console.log('set curRow fileStatus error :' + error);
     }
@@ -3129,7 +3119,7 @@ export async function colorProcessDetail(that, main) {
         console.log('set curRow slides error :' + error);
     }
     try {
-        main.tableName = queryUrlString('table_name');
+        main.tableName = tools.queryUrlString('table_name');
     } catch (error) {
         console.log('set curRow tableName error :' + error);
     }
@@ -3169,15 +3159,15 @@ export async function queryTableFieldInfoJSON(tableName) {
             tableName
         );
         //如果信息不为空，则解析表单信息
-        if (deNull(tableInfo) != '' && tableInfo.length > 0) {
+        if (tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
             try {
-                tableInfo = deNull(tableInfo[0]['value']);
+                tableInfo = tools.deNull(tableInfo[0]['value']);
             } catch (error) {
                 console.log('tabale info :' + tableInfo);
             }
         }
         //如果信息不为空，则进行解析数据
-        if (deNull(tableInfo) != '') {
+        if (tools.deNull(tableInfo) != '') {
             try {
                 tableInfo = JSON.parse(tableInfo);
             } catch (error) {
@@ -3222,15 +3212,15 @@ export async function queryWorkflowStatus(tableName, id) {
     var curRow = await queryTableData(tableName, id);
 
     //根据流程状态，设置流程图渲染状态
-    if (deNull(curRow) != '' && curRow.bpm_status == 1) {
+    if (tools.deNull(curRow) != '' && curRow.bpm_status == 1) {
         node = node_0;
-    } else if (deNull(curRow) != '' && curRow.bpm_status == 2) {
+    } else if (tools.deNull(curRow) != '' && curRow.bpm_status == 2) {
         node = node_1;
-    } else if (deNull(curRow) != '' && curRow.bpm_status == 3) {
+    } else if (tools.deNull(curRow) != '' && curRow.bpm_status == 3) {
         node = node_2;
-    } else if (deNull(curRow) != '' && curRow.bpm_status == 4) {
+    } else if (tools.deNull(curRow) != '' && curRow.bpm_status == 4) {
         node = node_3;
-    } else if (deNull(curRow) != '' && curRow.bpm_status == 5) {
+    } else if (tools.deNull(curRow) != '' && curRow.bpm_status == 5) {
         node = node_4;
     } else {
         node = node_0;
@@ -3329,7 +3319,7 @@ export async function queryWflowMonthCount() {
 export async function queryWflowDayCount() {
 
     //获取日期格式
-    var ctime = formatDate(new Date(), 'yyyy-MM-dd');
+    var ctime = tools.formatDate(new Date(), 'yyyy-MM-dd');
 
     //提交URL
     var queryURL = `${api.restapi}/api/v_workflow_total?_where=(ctime,eq,${ctime})`;
@@ -3400,7 +3390,7 @@ export async function queryWflowMonthlyRatio() {
 export async function queryNewUserTotal() {
 
     //获取日期格式
-    var cmonth = formatDate(new Date(), 'yyyy-MM');
+    var cmonth = tools.formatDate(new Date(), 'yyyy-MM');
 
     //提交URL
     var queryURL = `${api.restapi}/api/v_user_monthly?_where=(month,eq,${cmonth})`;
