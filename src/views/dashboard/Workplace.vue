@@ -102,16 +102,117 @@
             :bordered="false"
             :body-style="{padding: 0}"
           >
-            <div style="min-height: 400px;">
-              <radar :data="radarData" />
+            <div style="min-height: 280px;position:relative;">
+              <a-tag
+                color="blue"
+                @click="handleAblityTest()"
+                style="margin-bottom:10px;position:absolute;top:-48px;right:20px;"
+              >能力测评</a-tag>
+              <radar :data="radarData" style="margin-top:10px;" />
             </div>
           </a-card>
-          <a-card :loading="loading" title="团队" :bordered="false">
+
+          <a-card :loading="loading" title="团队" :bordered="false" style="position:relative;">
+            <a-tag
+              color="blue"
+              @click="handleTeamInfo()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >团队设置</a-tag>
             <div class="members">
               <a-row>
                 <a-col :span="12" v-for="(item, index) in teams" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
+          <a-card :loading="loading" title="博客" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              @click="handleWriteBlog()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >发布博客</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                  <a>
+                    <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
+          <a-card :loading="loading" title="文库" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              @click="handleWriteBlog()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >检索资料</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                  <a>
+                    <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
+          <a-card :loading="loading" title="课堂" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              @click="handleWriteBlog()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >学习课程</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                  <a>
+                    <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
+          <a-card :loading="loading" title="视频" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              @click="handleWriteBlog()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >分享视频</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in video" :key="index">
+                  <a>
+                    <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
+          <a-card :loading="loading" title="网盘" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              @click="handleWriteBlog()"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >分享资源</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in yundisk" :key="index">
+                  <a>
+                    <a-avatar size="small" />
                     <span class="member">{{ item.name }}</span>
                   </a>
                 </a-col>
@@ -163,6 +264,21 @@ export default {
       activities: [],
       nodelist: [],
       teams: [],
+      yundisk: [
+        { name: "全部" },
+        { name: "文档" },
+        { name: "图片" },
+        { name: "视频" },
+        { name: "音乐" }
+      ],
+      video: [
+        { name: "活动视频" },
+        { name: "短视频" },
+        { name: "纪录片" },
+        { name: "电视剧" },
+        { name: "电影" },
+        { name: "动漫" }
+      ],
 
       // data
       axis1Opts: {
