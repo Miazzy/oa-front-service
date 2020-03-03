@@ -23,19 +23,27 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-//import ViewUI from 'view-design';
+import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
 import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import formCreate from '@form-create/element-ui';
+//import formCreate from '@form-create/element-ui';
+
+import leMarkdownEditor from 'le-markdown-editor'
 
 //import EleForm from 'vue-ele-form';
 //import F2 from '@antv/f2';
 
 //import axios from 'axios';
 import qs from 'qs';
+
+try {
+    Vue.use(leMarkdownEditor)
+} catch (error) {
+    console.log(error);
+}
 
 try {
     axios.defaults.headers.post['Content-Type'] =
@@ -201,7 +209,7 @@ try {
 
 try {
     //注册表单生成控件
-    Vue.use(formCreate);
+    //Vue.use(formCreate);
 } catch (error) {
     console.log(error);
 }

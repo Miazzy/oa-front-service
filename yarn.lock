@@ -5198,6 +5198,11 @@ etag@~1.8.1:
   resolved "https://registry.npm.taobao.org/etag/download/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+eve-raphael@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.npm.taobao.org/eve-raphael/download/eve-raphael-0.5.0.tgz#17c754b792beef3fa6684d79cf5a47c63c4cda30"
+  integrity sha1-F8dUt5K+7z+maE15z1pHxjxM2jA=
+
 event-emitter@~0.3.5:
   version "0.3.5"
   resolved "https://registry.npm.taobao.org/event-emitter/download/event-emitter-0.3.5.tgz#df8c69eef1647923c7157b9ce83840610b02cc39"
@@ -5665,6 +5670,13 @@ flatten@^1.0.2:
   version "1.0.3"
   resolved "https://registry.npm.taobao.org/flatten/download/flatten-1.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fflatten%2Fdownload%2Fflatten-1.0.3.tgz#c1283ac9f27b368abc1e36d1ff7b04501a30356b"
   integrity sha1-wSg6yfJ7Noq8HjbR/3sEUBowNWs=
+
+flowchart.js@^1.12.0:
+  version "1.13.0"
+  resolved "https://registry.npm.taobao.org/flowchart.js/download/flowchart.js-1.13.0.tgz#fd966270bd310ddefb168d6826c792c5f345372f"
+  integrity sha1-/ZZicL0xDd77Fo1oJseSxfNFNy8=
+  dependencies:
+    raphael "2.3.0"
 
 flush-write-stream@^1.0.0:
   version "1.1.1"
@@ -6142,6 +6154,16 @@ hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/hex-color-regex/download/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
+
+highlight.js-async-webpack@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/highlight.js-async-webpack/download/highlight.js-async-webpack-1.0.4.tgz#c06b67bf99f049045d62b756e5855b0912ec616c"
+  integrity sha1-wGtnv5nwSQRdYrdW5YVbCRLsYWw=
+
+highlight.js@^9.11.0, highlight.js@^9.16.2:
+  version "9.18.1"
+  resolved "https://registry.npm.taobao.org/highlight.js/download/highlight.js-9.18.1.tgz#ed21aa001fe6252bb10a3d76d47573c6539fe13c"
+  integrity sha1-7SGqAB/mJSuxCj121HVzxlOf4Tw=
 
 highlight.js@^9.6.0:
   version "9.17.1"
@@ -7195,6 +7217,14 @@ lcid@^2.0.0:
   integrity sha1-bvXS32DlL4LrIopMNz6NHzlyU88=
   dependencies:
     invert-kv "^2.0.0"
+
+le-markdown-editor@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npm.taobao.org/le-markdown-editor/download/le-markdown-editor-0.0.6.tgz#609ebebb7447edb52276558d8d1f470ce4f07515"
+  integrity sha1-YJ6+u3RH7bUidlWNjR9HDOTwdRU=
+  dependencies:
+    flowchart.js "^1.12.0"
+    highlight.js "^9.16.2"
 
 less-loader@^4.1.0:
   version "4.1.0"
@@ -9717,6 +9747,13 @@ range-parser@^1.0.3, range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.npm.taobao.org/range-parser/download/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha1-PPNwI9GZ4cJNGlW4SADC8+ZGgDE=
 
+raphael@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npm.taobao.org/raphael/download/raphael-2.3.0.tgz#eabeb09dba861a1d4cee077eaafb8c53f3131f89"
+  integrity sha1-6r6wnbqGGh1M7gd+qvuMU/MTH4k=
+  dependencies:
+    eve-raphael "0.5.0"
+
 raw-body@2.4.0:
   version "2.4.0"
   resolved "https://registry.npm.taobao.org/raw-body/download/raw-body-2.4.0.tgz#a1ce6fb9c9bc356ca52e89256ab59059e13d0332"
@@ -11852,6 +11889,14 @@ vue-apexcharts@^1.3.2, vue-apexcharts@^1.5.2:
   version "1.5.2"
   resolved "https://registry.npm.taobao.org/vue-apexcharts/download/vue-apexcharts-1.5.2.tgz#d1f55b889718aa9e1c753e267c8cb59055ff89f3"
   integrity sha1-0fVbiJcYqp4cdT4mfIy1kFX/ifM=
+
+vue-bl-markdown-editor@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/vue-bl-markdown-editor/download/vue-bl-markdown-editor-2.0.1.tgz#e582040f5afb914ecfc76ce0495ee3b444734f90"
+  integrity sha1-5YIED1r7kU7Px2zgSV7jtERzT5A=
+  dependencies:
+    highlight.js "^9.11.0"
+    highlight.js-async-webpack "^1.0.4"
 
 vue-class-component@^6.0.0, vue-class-component@^6.2.0:
   version "6.3.2"
