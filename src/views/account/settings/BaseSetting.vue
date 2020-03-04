@@ -35,27 +35,6 @@
             <a-input :placeholder="userinfo.idcard" v-model="fdata.idcard" />
           </a-form-item>
 
-          <a-form-item label="密保问题" :required="false" style="margin-top:20px;display:none;">
-            <a-form-item label="你的小学名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-            <a-form-item label="你的母亲名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-            <a-form-item label="你的父亲名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-            <a-form-item label="你的初恋名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-            <a-form-item label="你的大学名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-            <a-form-item label="你的大学校长名称？" :required="false">
-              <a-input :placeholder="userinfo.question" v-model="fdata.question" />
-            </a-form-item>
-          </a-form-item>
-
           <a-form-item>
             <a-button type="primary" @click="postUserInfo();">提交</a-button>
           </a-form-item>
@@ -113,17 +92,26 @@ export default {
     }
   },
   async created() {
-    await this.getAvatar();
+    await this.loadData();
   },
   methods: {
     /**
      * @function 获取用户基本信息
      */
-    async getAvatar() {
+    async loadData() {
+      //清空缓存数据
+      storage.clearStore(
+        `system_v_user_info@username$${this.userInfo.username}`
+      );
+
+      //获取用户数据库数据
       this.v_user = await manageAPI.queryUserInfoByView(this.userInfo.username);
+
+      //获取头像信息
       this.avatar = this.option.img =
         window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
 
+      //设置用户基本信息
       this.userinfo.id = this.v_user[0]["id"];
       this.userinfo.realname = this.v_user[0]["realname"];
       this.userinfo.nickname = this.v_user[0]["nickname"];
@@ -132,6 +120,8 @@ export default {
       this.userinfo.email = this.v_user[0]["email"];
       this.userinfo.address = this.v_user[0]["address"];
       this.userinfo.idcard = this.v_user[0]["idcard"];
+
+      //格式化生日
       this.userinfo.birthday = tools.formatDate(
         this.v_user[0]["birthday"],
         "yyyy-MM-dd"
