@@ -102,6 +102,7 @@ import RouteView from "@/components/layouts/RouteView";
 import { AppPage, ArticlePage, ProjectPage } from "./page";
 import { mapGetters } from "vuex";
 import * as manageAPI from "@/api/manage";
+import * as storage from "@/utils/storage";
 
 export default {
   components: {
@@ -138,6 +139,9 @@ export default {
           tab: "项目(8)"
         }
       ],
+      fdata: null,
+      userinfo: null,
+      v_user: null,
       noTitleKey: "app"
     };
   },
@@ -159,11 +163,8 @@ export default {
       this.bio = this.v_user[0]["bio"];
       this.avatar = this.v_user[0]["avatar"];
 
-      if (this.v_user[0]["tags"].indexOf("，")) {
-        this.tags = this.v_user[0]["tags"].split("，");
-      } else if (this.v_user[0]["tags"].indexOf(",")) {
-        this.tags = this.v_user[0]["tags"].split(",");
-      }
+      this.v_user[0]["tags"] = this.v_user[0]["tags"].replace(/，/g, ",");
+      this.tags = this.v_user[0]["tags"].split(",");
     } catch (error) {
       console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
@@ -203,18 +204,62 @@ export default {
       this.tagInputValue = e.target.value;
     },
 
-    handleTagInputConfirm() {
+    async handleTagInputConfirm() {
+      debugger;
+
+      //获取输入数据
       const inputValue = this.tagInputValue;
-      let tags = this.tags;
-      if (inputValue && tags.indexOf(inputValue) === -1) {
-        tags = [...tags, inputValue];
+
+      //定义tags内容
+      var tags = this.tags;
+
+      try {
+        //将新输入的tag加入tags
+        if (inputValue && tags.indexOf(inputValue) === -1) {
+          tags = [...tags, inputValue];
+        }
+      } catch (error) {
+        console.log(error);
       }
 
-      Object.assign(this, {
-        tags,
-        tagInputVisible: false,
-        tagInputValue: ""
-      });
+      try {
+        //待保存数据
+        this.fdata = { tags: tags.toString() };
+
+        //获取用户信息
+        this.v_user = await manageAPI.queryUserInfoByView(
+          this.userInfo.username
+        );
+
+        //此次设置用户岗位
+        await manageAPI.patchTableData(
+          "sys_user",
+          this.v_user[0].id,
+          this.fdata
+        );
+
+        //属性合并
+        this.v_user[0] = Object.assign({}, this.v_user[0], this.fdata);
+
+        //用户信息修改，修改缓存信息
+        storage.setStore(
+          `system_v_user_info@username$${this.userInfo.username}`,
+          this.v_user,
+          3600 * 24
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        Object.assign(this, {
+          tags,
+          tagInputVisible: false,
+          tagInputValue: ""
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
