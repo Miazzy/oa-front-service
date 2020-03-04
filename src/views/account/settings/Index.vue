@@ -85,6 +85,11 @@ export default {
       pageTitle: ""
     };
   },
+  computed: {
+    userInfo() {
+      return this.$store.getters.userInfo;
+    }
+  },
   created() {
     this.updateMenu();
   },

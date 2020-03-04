@@ -497,7 +497,6 @@ export default {
       const that = this;
       // 触发表单验证
       this.form.validateFields(async (err, values) => {
-        debugger;
         if (!err) {
           that.confirmLoading = true;
           var avatar = that.model.avatar;

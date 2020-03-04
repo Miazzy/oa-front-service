@@ -514,9 +514,9 @@ export function formatDate(value, fmt) {
  * @function 过滤空对象
  * @param {*} data
  */
-export function deNull(data) {
+export function deNull(data, defaultValue = '') {
     if (typeof data == 'undefined' || data == null || data == '') {
-        return '';
+        return defaultValue;
     } else {
         return data;
     }
