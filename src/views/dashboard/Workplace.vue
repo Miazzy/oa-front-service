@@ -112,7 +112,12 @@
             </div>
           </a-card>
 
-          <a-card :loading="loading" title="团队" :bordered="false" style="position:relative;">
+          <a-card
+            :loading="loading"
+            title="团队"
+            :bordered="false"
+            style="display:none;position:relative;"
+          >
             <a-tag
               color="blue"
               @click="handleTeamInfo()"
@@ -138,7 +143,7 @@
             >发布博客</a-tag>
             <div class="members">
               <a-row>
-                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                <a-col :span="12" v-for="(item, index) in blog" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
@@ -156,7 +161,7 @@
             >检索资料</a-tag>
             <div class="members">
               <a-row>
-                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                <a-col :span="12" v-for="(item, index) in dochub" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
@@ -174,7 +179,7 @@
             >学习课程</a-tag>
             <div class="members">
               <a-row>
-                <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                <a-col :span="12" v-for="(item, index) in courses" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
@@ -212,7 +217,7 @@
               <a-row>
                 <a-col :span="12" v-for="(item, index) in yundisk" :key="index">
                   <a>
-                    <a-avatar size="small" />
+                    <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
                   </a>
                 </a-col>
@@ -232,11 +237,6 @@ import { mapGetters } from "vuex";
 import PageLayout from "@/components/page/PageLayout";
 import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
-import {
-  getRoleList,
-  getServiceList,
-  queryTableDataByField
-} from "@/api/manage";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 
@@ -265,19 +265,36 @@ export default {
       nodelist: [],
       teams: [],
       yundisk: [
-        { name: "全部" },
-        { name: "文档" },
-        { name: "图片" },
-        { name: "视频" },
-        { name: "音乐" }
+        { name: "全部", avatar: "/images/icon-all.svg" },
+        { name: "文档", avatar: "/images/icon-doc.svg" },
+        { name: "图片", avatar: "/images/icon-pic.svg" },
+        { name: "视频", avatar: "/images/icon-video.svg" },
+        { name: "音乐", avatar: "/images/icon-music.svg" }
       ],
       video: [
-        { name: "活动视频" },
-        { name: "短视频" },
-        { name: "纪录片" },
-        { name: "电视剧" },
-        { name: "电影" },
-        { name: "动漫" }
+        { name: "活动视频", avatar: "/images/icon-activiti.svg" },
+        { name: "短视频", avatar: "/images/icon-photo.svg" },
+        { name: "纪录片", avatar: "/images/icon-log.svg" },
+        { name: "电影", avatar: "/images/icon-movie.svg" }
+      ],
+      courses: [
+        { name: "全部课程", avatar: "/images/icon-course-01.svg" },
+        { name: "最新课程", avatar: "/images/icon-course-02.svg" },
+        { name: "热门课程", avatar: "/images/icon-course-hot.svg" },
+        { name: "我的课程", avatar: "/images/icon-course-03.svg" }
+      ],
+      dochub: [
+        { name: "专业资料", avatar: "/images/icon-file-01.svg" },
+        { name: "实用文档", avatar: "/images/icon-file-02.svg" },
+        { name: "资格考试", avatar: "/images/icon-file-03.svg" },
+        { name: "精品文档", avatar: "/images/icon-file-04.svg" },
+        { name: "个人中心", avatar: "/images/icon-file-center.svg" }
+      ],
+      blog: [
+        { name: "热门博客", avatar: "/images/icon-blog-hot.svg" },
+        { name: "知名博主", avatar: "/images/icon-blog-01.svg" },
+        { name: "博文排行", avatar: "/images/icon-rank-01.svg" },
+        { name: "博客中心", avatar: "/images/icon-center-01.svg" }
       ],
 
       // data
@@ -331,12 +348,12 @@ export default {
     this.avatar = window._CONFIG["imgDomainURL"] + "/" + this.userInfo.avatar;
     console.log("this.avatar :" + this.avatar);
 
-    getRoleList().then(res => {
-      console.log("workplace -> call getRoleList()", res);
+    manageAPI.getRoleList().then(res => {
+      console.log("workplace -> call manageAPI.getRoleList()", res);
     });
 
-    getServiceList().then(res => {
-      console.log("workplace -> call getServiceList()", res);
+    manageAPI.getServiceList().then(res => {
+      console.log("workplace -> call manageAPI.getServiceList()", res);
     });
 
     //设置岗位style
@@ -344,7 +361,7 @@ export default {
 
     //设置员工岗位信息/部门信息
     try {
-      this.v_user = await queryTableDataByField(
+      this.v_user = await manageAPI.queryTableDataByField(
         "v_user",
         "username",
         this.user.username
@@ -355,18 +372,12 @@ export default {
       console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
 
-    debugger;
-
     //获取动态数据，并设置到动态列表中
-    this.nodelist = await manageAPI.queryTableAll(
-      "bs_dynamic?_sort=-create_time"
-    );
-
-    //遍历并格式化日期
-    _.each(this.nodelist, function(item) {
-      var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
-      item["create_time"] = optime;
-    });
+    try {
+      this.nodelist = await manageAPI.queryDynamic();
+    } catch (error) {
+      console.log(error);
+    }
 
     console.log("动态信息：" + JSON.stringify(this.nodelist));
   },

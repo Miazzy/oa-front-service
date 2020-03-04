@@ -435,13 +435,71 @@ export async function queryTableAll(tableName) {
     tableName = tableName.toLowerCase();
     //查询URL Get	/api/tableName	query all rows by tableName
     var queryURL = `${api.restapi}/api/${tableName}`;
+    //定义查询结果
+    var result = null;
 
     try {
-        const res = await superagent.get(queryURL).set('accept', 'json');
-        return res.body;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        result = storage.getStore('system_table_data_info_all');
+
+        if (!(typeof result != 'undefined' && result != null && result != '')) {
+
+            //发送HTTP请求，获取返回值后，设置数据
+            const res = await superagent.get(queryURL).set('accept', 'json');
+            result = res.body;
+
+            //遍历并格式化日期
+            _.each(result, function(item) {
+                var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                item["create_time"] = optime;
+            });
+
+            //设置缓存数据，缓存时间，暂定为5秒钟
+            storage.setStore('system_table_data_info_all', result, 5);
+        }
     } catch (err) {
         console.error(err);
     }
+
+    //返回查询后的数据
+    return result;
+}
+
+export async function queryDynamic() {
+
+    //设置查询URL
+    var queryURL = `${api.restapi}/api/bs_dynamic?_sort=-create_time`;
+    //定义查询结果
+    var result = null;
+
+    try {
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        result = storage.getStore('system_dynamic_info_all');
+
+        if (!(typeof result != 'undefined' && result != null && result != '')) {
+
+            //发送HTTP请求，获取返回值后，设置数据
+            const res = await superagent.get(queryURL).set('accept', 'json');
+            result = res.body;
+
+            //遍历并格式化日期
+            _.each(result, function(item) {
+                var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                item["create_time"] = optime;
+            });
+
+            //设置缓存数据，缓存时间，暂定为5秒钟
+            storage.setStore('system_dynamic_info_all', result, 3600 * 2);
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    //返回查询后的动态数据
+    return result;
+
 }
 
 /**
@@ -462,6 +520,39 @@ export async function queryTableDataByField(tableName, field, value) {
     } catch (err) {
         console.error(err);
     }
+}
+
+export async function queryUserInfoByView(username) {
+
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${api.restapi}/api/v_user?_where=(username,eq,${username})`;
+
+    //定义查询结果
+    var result = null;
+
+    try {
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        result = storage.getStore(`system_v_user_info@username$${username}`);
+
+        if (!(typeof result != 'undefined' && result != null && result != '')) {
+
+            //发送HTTP请求，获取返回值后，设置数据
+            const res = await superagent.get(queryURL).set('accept', 'json');
+            //设置返回结果
+            result = res.body;
+
+            //设置缓存数据，缓存时间，暂定为5秒钟
+            storage.setStore(`system_v_user_info@username$${username}`, result, 3600 * 24);
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    //返回查询后的动态数据
+    return result;
+
 }
 
 /**

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>navic/video_nor</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="navic/video_nor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_video_nor">
+            <rect id="Rectangle-7" x="0" y="0" width="24" height="24"></rect>
+            <path d="M4,4 L20,4 C20.5522847,4 21,4.44771525 21,5 L21,19 C21,19.5522847 20.5522847,20 20,20 L4,20 C3.44771525,20 3,19.5522847 3,19 L3,5 C3,4.44771525 3.44771525,4 4,4 Z M9.74806947,8.42746827 C9.67252062,8.3842975 9.58701347,8.36158984 9.5,8.36158984 C9.22385763,8.36158984 9,8.58544746 9,8.86158984 L9,15.1384102 C9,15.2254236 9.02270766,15.3109308 9.06587843,15.3864796 C9.20288341,15.6262384 9.50831075,15.7095367 9.74806947,15.5725317 L15.2402873,12.4341216 C15.3178029,12.3898269 15.3820447,12.3255851 15.4263394,12.2480695 C15.5633443,12.0083107 15.480046,11.7028834 15.2402873,11.5658784 L9.74806947,8.42746827 Z" id="Combined-Shape" fill="#7C878E"></path>
+        </g>
+    </g>
+</svg>

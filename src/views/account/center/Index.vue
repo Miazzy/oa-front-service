@@ -101,7 +101,7 @@ import PageLayout from "@/components/page/PageLayout";
 import RouteView from "@/components/layouts/RouteView";
 import { AppPage, ArticlePage, ProjectPage } from "./page";
 import { mapGetters } from "vuex";
-import { queryTableDataByField } from "@/api/manage";
+import * as manageAPI from "@/api/manage";
 
 export default {
   components: {
@@ -151,15 +151,14 @@ export default {
     this.user = this.userInfo;
     //设置员工岗位信息/部门信息
     try {
-      this.v_user = await queryTableDataByField(
-        "v_user",
-        "username",
-        this.user.username
-      );
+      this.v_user = await manageAPI.queryUserInfoByView(this.user.username);
+
       this.postName = this.v_user[0]["post"];
       this.departName = this.v_user[0]["name"];
       this.address = this.v_user[0]["address"];
       this.bio = this.v_user[0]["bio"];
+      this.avatar = this.v_user[0]["avatar"];
+
       if (this.v_user[0]["tags"].indexOf("，")) {
         this.tags = this.v_user[0]["tags"].split("，");
       } else if (this.v_user[0]["tags"].indexOf(",")) {
@@ -175,7 +174,7 @@ export default {
   methods: {
     ...mapGetters(["nickname", "avatar"]),
     getAvatar() {
-      return window._CONFIG["imgDomainURL"] + "/" + this.avatar();
+      return window._CONFIG["imgDomainURL"] + "/" + this.avatar;
     },
     getTeams() {
       this.$http.get("/api/workplace/teams").then(res => {
