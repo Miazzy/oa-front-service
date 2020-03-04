@@ -11,6 +11,30 @@
             <a-input :placeholder="userinfo.nickname" v-model="fdata.nickname" />
           </a-form-item>
 
+          <a-form-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-upload
+              listType="picture-card"
+              class="avatar-uploader"
+              :showUploadList="false"
+              :action="uploadAction"
+              :data="{'isup':1}"
+              :headers="headers"
+              :beforeUpload="beforeUpload"
+              @change="handleChange"
+            >
+              <img
+                v-if="picUrl"
+                :src="getAvatarView()"
+                alt="头像"
+                style="height:104px;max-width:300px"
+              />
+              <div v-else>
+                <a-icon :type="uploadLoading ? 'loading' : 'plus'" />
+                <div class="ant-upload-text">上传</div>
+              </div>
+            </a-upload>
+          </a-form-item>
+
           <a-form-item label="签名" :required="true">
             <a-textarea rows="4" :placeholder="userinfo.bio" v-model="fdata.bio" />
           </a-form-item>
@@ -53,7 +77,13 @@
 </template>
 
 <script>
+import Vue from "vue";
 import AvatarModal from "./AvatarModal";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
+import { getAction, patchTableData, queryTableData } from "@/api/manage";
+import { addUser, editUser, queryUserRole, queryall } from "@/api/api";
+import { disabledAuthFilter } from "@/utils/authFilter";
+import { duplicateCheck } from "@/api/api";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import * as storage from "@/utils/storage";
@@ -83,15 +113,32 @@ export default {
       },
       avatar: "",
       userinfo: {},
-      fdata: {}
+      fdata: {},
+      model: {},
+      uploadLoading: false,
+      confirmLoading: false,
+      picUrl: "",
+      url: {
+        fileUpload:
+          tools.deNull(window._CONFIG["domainURL"]) + "/sys/common/upload",
+        imgerver: window._CONFIG["imgDomainURL"],
+        userWithDepart: `${window._CONFIG["domain"]}/sys/user/userDepartList`, // 引入为指定用户查看部门信息需要的url
+        userId: `${window._CONFIG["domain"]}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
+        syncUserByUserName: `${window._CONFIG["domain"]}/jeecg-boot/process/extActProcess/doSyncUserByUserName` //同步用户到工作流
+      }
     };
   },
   computed: {
     userInfo() {
       return this.$store.getters.userInfo;
+    },
+    uploadAction: function() {
+      return this.url.fileUpload;
     }
   },
   async created() {
+    const token = Vue.ls.get(ACCESS_TOKEN);
+    this.headers = { "X-Access-Token": token };
     await this.loadData();
   },
   methods: {
@@ -120,6 +167,7 @@ export default {
       this.userinfo.email = this.v_user[0]["email"];
       this.userinfo.address = this.v_user[0]["address"];
       this.userinfo.idcard = this.v_user[0]["idcard"];
+      this.userinfo.avatar = this.model.avatar;
 
       //格式化生日
       this.userinfo.birthday = tools.formatDate(
@@ -142,6 +190,7 @@ export default {
         email: tools.deNull(fdata.email, userinfo.email),
         birthday: tools.deNull(fdata.birthday, userinfo.birthday),
         address: tools.deNull(fdata.address, userinfo.address),
+        avatar: tools.deNull(fdata.avatar, userinfo.avatar),
         idcard: tools.deNull(fdata.idcard, userinfo.idcard)
       };
       return fdata;
@@ -151,6 +200,9 @@ export default {
      */
     async postUserInfo() {
       try {
+        //设置头像信息
+        this.userinfo.avatar = this.model.avatar;
+
         //获取fdata的值，如果fdata的值为空，则使用userinfo的值
         this.fdata = await this.cloneData(this.fdata, this.userinfo);
 
@@ -183,6 +235,59 @@ export default {
         this.$emit("ok");
       } catch (error) {
         console.log(error);
+      }
+    },
+    /**
+     * @function 获取用户头像信息
+     */
+    async getAvatarView() {
+      return this.url.imgerver + "/" + this.model.avatar;
+    },
+    /**
+     * @function 文件上传前检查函数
+     */
+    async beforeUpload(file) {
+      var fileType = file.type;
+      if (fileType.indexOf("image") < 0) {
+        this.$message.warning("请上传图片");
+        return false;
+      }
+      //TODO 验证文件大小
+    },
+    /**
+     * @function 上传处理函数
+     */
+    async handleChange(info) {
+      this.picUrl = "";
+      if (info.file.status === "uploading") {
+        this.uploadLoading = true;
+        return;
+      }
+
+      //如果上传完毕，则根据返回结果设置头像信息
+      if (info.file.status === "done") {
+        var response = info.file.response;
+        this.uploadLoading = false;
+
+        console.log("上传后头像返回信息：" + response);
+        console.log("上传后头像返回信息：" + JSON.stringify(response));
+
+        if (response.success) {
+          //获取返回后的头像地址信息
+          this.model.avatar = response.message;
+
+          //立即刷新头像信息
+          this.avatar = this.option.img =
+            window._CONFIG["imgDomainURL"] + "/" + response.message;
+
+          //立即提交头像信息
+          await this.postUserInfo();
+
+          //设置pirurl内容
+          this.picUrl = "Has no pic url yet";
+        } else {
+          this.$message.warning(response.message);
+        }
       }
     }
   }

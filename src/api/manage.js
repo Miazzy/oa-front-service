@@ -788,9 +788,6 @@ export async function queryProcessLogWait(username, realname) {
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
         result = res.body;
-
-        //遍历并格式化日期
-        debugger;
         result = _.filter(result, function(item) {
 
             //格式化日期

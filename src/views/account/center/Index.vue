@@ -205,8 +205,6 @@ export default {
     },
 
     async handleTagInputConfirm() {
-      debugger;
-
       //获取输入数据
       const inputValue = this.tagInputValue;
 
