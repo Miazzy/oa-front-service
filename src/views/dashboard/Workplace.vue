@@ -345,7 +345,7 @@ export default {
   },
   async created() {
     this.user = this.userInfo;
-    this.avatar = window._CONFIG["imgDomainURL"] + "/" + this.userInfo.avatar;
+
     console.log("this.avatar :" + this.avatar);
 
     manageAPI.getRoleList().then(res => {
@@ -361,13 +361,17 @@ export default {
 
     //设置员工岗位信息/部门信息
     try {
-      this.v_user = await manageAPI.queryTableDataByField(
-        "v_user",
-        "username",
-        this.user.username
-      );
+      this.v_user = await manageAPI.queryUserInfoByView(this.user.username);
+
       this.postName = this.v_user[0]["post"];
       this.departName = this.v_user[0]["name"];
+
+      this.address = this.v_user[0]["address"];
+      this.bio = this.v_user[0]["bio"];
+
+      //设置头像信息
+      this.avatar =
+        window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
     } catch (error) {
       console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
