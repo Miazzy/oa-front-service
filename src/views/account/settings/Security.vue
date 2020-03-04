@@ -67,6 +67,11 @@ export default {
      * @function 获取用户基本信息
      */
     async loadData() {
+      //清空缓存数据
+      storage.clearStore(
+        `system_v_user_info@username$${this.userInfo.username}`
+      );
+
       //查询数据库，获取用户信息
       this.v_user = await manageAPI.queryUserInfoByView(this.userInfo.username);
 
