@@ -144,7 +144,7 @@
             <div class="members">
               <a-row>
                 <a-col :span="12" v-for="(item, index) in blog" :key="index">
-                  <a>
+                  <a :href="item.href">
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
                   </a>
@@ -200,7 +200,7 @@
                 <a-col :span="12" v-for="(item, index) in video" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
+                    <span class="member" @click="item.click">{{ item.name }}</span>
                   </a>
                 </a-col>
               </a-row>
@@ -216,7 +216,7 @@
             <div class="members">
               <a-row>
                 <a-col :span="12" v-for="(item, index) in yundisk" :key="index">
-                  <a>
+                  <a :href="item.href">
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
                   </a>
@@ -291,10 +291,26 @@ export default {
         { name: "个人中心", avatar: "/images/icon-file-center.svg" }
       ],
       blog: [
-        { name: "热门博客", avatar: "/images/icon-blog-hot.svg" },
-        { name: "知名博主", avatar: "/images/icon-blog-01.svg" },
-        { name: "博文排行", avatar: "/images/icon-rank-01.svg" },
-        { name: "博客中心", avatar: "/images/icon-center-01.svg" }
+        {
+          name: "热门博客",
+          avatar: "/images/icon-blog-hot.svg",
+          href: "/blog/hot"
+        },
+        {
+          name: "知名博主",
+          avatar: "/images/icon-blog-01.svg",
+          href: "/blog/writer"
+        },
+        {
+          name: "博文排行",
+          avatar: "/images/icon-rank-01.svg",
+          href: "/blog/rank"
+        },
+        {
+          name: "博客中心",
+          avatar: "/images/icon-center-01.svg",
+          href: "/blog/center"
+        }
       ],
 
       // data
@@ -551,6 +567,15 @@ export default {
         meta: { title: "印章借阅" }
       });
     },
+    /**
+     * @function 跳转到博客中心页面
+     *
+     */
+    handleWriteBlog() {
+      var path = "/blog/center";
+      window.location.href = path;
+    },
+
     /**
      * @function 跳转到用印申请(非合同)列表
      */
