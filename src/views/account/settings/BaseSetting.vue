@@ -240,7 +240,7 @@ export default {
     /**
      * @function 获取用户头像信息
      */
-    async getAvatarView() {
+    getAvatarView() {
       return this.url.imgerver + "/" + this.model.avatar;
     },
     /**
