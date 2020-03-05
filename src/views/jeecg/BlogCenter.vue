@@ -255,7 +255,7 @@ export default {
       count: [
         {
           name: '博文统计',
-          avatar: '/images/icon-blog-hot.svg',
+          avatar: '/images/icon-statistics-03.svg',
         },
         {
           name: '热搜词条',
@@ -265,19 +265,19 @@ export default {
       manage: [
         {
           name: '发布博客',
-          avatar: '/images/icon-blog-hot.svg',
+          avatar: '/images/icon-publish-01.svg',
         },
         {
           name: '文章管理',
-          avatar: '/images/icon-blog-hot.svg',
+          avatar: '/images/icon-manage-02.svg',
         },
         {
           name: '评论管理',
-          avatar: '/images/icon-blog-hot.svg',
+          avatar: '/images/icon-comment-03.svg',
         },
         {
           name: '专栏管理',
-          avatar: '/images/icon-blog-hot.svg',
+          avatar: '/images/icon-column-01.svg',
         },
       ],
       blog: [
