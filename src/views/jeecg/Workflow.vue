@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false" :class="{'abcdefg':true}">
+  <a-card :bordered="false" :class="{abcdefg: true}">
     <div class="no-print" style="text-align: right">
       <a-button v-print="'#printContent'" ghost type="primary" @click="handlePrint">打印</a-button>
       <a-button ghost type="primary" @click="handleQRcode" style="margin-left:10px;">打码</a-button>
@@ -9,7 +9,7 @@
       <div style="text-align: center">
         <p
           style="font-size: 24px;font-weight: 800;margin-bottom:10px;margin-top:15px;margin-bottom:35px;"
-        >{{formName}}</p>
+        >{{ formName }}</p>
       </div>
       <!--签字-->
       <a-col :md="24" :sm="24">
@@ -19,7 +19,7 @@
             style="margin-top: 10px;margin-bottom:10px;"
             v-if="typeof curRow.no != 'undefined' && curRow.no != null"
           >
-            <span style="float:left;display:block;">{{tableInfo.no}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.no }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.no"
@@ -29,9 +29,11 @@
           <a-col
             :span="24"
             style="margin-top: 10px;margin-bottom:10px;"
-            v-if="typeof curRow.file_name != 'undefined' && curRow.file_name != null"
+            v-if="
+              typeof curRow.file_name != 'undefined' && curRow.file_name != null
+            "
           >
-            <span style="float:left;display:block;">{{curRow.fileNameTitle}}:</span>
+            <span style="float:left;display:block;">{{ curRow.fileNameTitle }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.file_name"
@@ -41,9 +43,12 @@
           <a-col
             :span="24"
             style="margin-top: 10px; margin-bottom:10px;"
-            v-if="typeof curRow.sigillum_name != 'undefined' && curRow.sigillum_name != null"
+            v-if="
+              typeof curRow.sigillum_name != 'undefined' &&
+                curRow.sigillum_name != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.sigillum_name}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.sigillum_name }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.sigillum_name"
@@ -51,58 +56,73 @@
           </a-col>
 
           <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
-            <span>{{tableInfo.create_by}}:</span>
+            <span>{{ tableInfo.create_by }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.create_by" />
           </a-col>
 
           <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
-            <span style="margin-left: 0%">{{tableInfo.create_time}}:</span>
+            <span style="margin-left: 0%">{{ tableInfo.create_time }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.create_time" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.depart_name != 'undefined' && curRow.depart_name != null"
+            v-if="
+              typeof curRow.depart_name != 'undefined' &&
+                curRow.depart_name != null
+            "
           >
-            <span>{{tableInfo.depart_name}}:</span>
+            <span>{{ tableInfo.depart_name }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.depart_name" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.leave_type_name != 'undefined' && curRow.leave_type_name != null"
+            v-if="
+              typeof curRow.leave_type_name != 'undefined' &&
+                curRow.leave_type_name != null
+            "
           >
-            <span style="margin-left: 0%">{{curRow.formTypeName}}类型:</span>
+            <span style="margin-left: 0%">{{ curRow.formTypeName }}类型:</span>
             <a-input style="width: 70%" readonly v-model="curRow.leave_type_name" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.announce_type != 'undefined' && curRow.announce_type != null"
+            v-if="
+              typeof curRow.announce_type != 'undefined' &&
+                curRow.announce_type != null
+            "
           >
-            <span style="margin-left: 0%">{{tableInfo.announce_type}}:</span>
+            <span style="margin-left: 0%">{{ tableInfo.announce_type }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.announce_type" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof curRow.announce_title != 'undefined' && curRow.announce_title != null"
+            v-if="
+              typeof curRow.announce_title != 'undefined' &&
+                curRow.announce_title != null
+            "
           >
-            <span style="margin-left: 0%">{{tableInfo.announce_title}}:</span>
+            <span style="margin-left: 0%">{{ tableInfo.announce_title }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.announce_title" />
           </a-col>
 
           <a-col
             :span="24"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.employee_rank != 'undefined' && tableInfo.employee_rank != null"
+            v-if="
+              typeof tableInfo.employee_rank != 'undefined' &&
+                tableInfo.employee_rank != null
+            "
           >
             <a-col :span="12">
-              <span>{{tableInfo.employee_rank}}:</span>
+              <span>{{ tableInfo.employee_rank }}:</span>
               <a-input style="width: 70%" readonly v-model="curRow.employee_rank" />
             </a-col>
           </a-col>
@@ -110,50 +130,65 @@
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.starttime != 'undefined' && tableInfo.starttime != null"
+            v-if="
+              typeof tableInfo.starttime != 'undefined' &&
+                tableInfo.starttime != null
+            "
           >
-            <span>{{tableInfo.starttime}}:</span>
+            <span>{{ tableInfo.starttime }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.starttime" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.endtime != 'undefined' && tableInfo.endtime != null"
+            v-if="
+              typeof tableInfo.endtime != 'undefined' &&
+                tableInfo.endtime != null
+            "
           >
-            <span style="margin-left: 0%">{{tableInfo.endtime}}:</span>
+            <span style="margin-left: 0%">{{ tableInfo.endtime }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.endtime" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.total_days != 'undefined' && tableInfo.total_days != null"
+            v-if="
+              typeof tableInfo.total_days != 'undefined' &&
+                tableInfo.total_days != null
+            "
           >
-            <span>{{tableInfo.total_days}}:</span>
+            <span>{{ tableInfo.total_days }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.total_days" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.seal_copies != 'undefined' && tableInfo.seal_copies != null"
+            v-if="
+              typeof tableInfo.seal_copies != 'undefined' &&
+                tableInfo.seal_copies != null
+            "
           >
-            <span>{{tableInfo.seal_copies}}:</span>
+            <span>{{ tableInfo.seal_copies }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.seal_copies" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.declare_type != 'undefined' && tableInfo.declare_type != null"
+            v-if="
+              typeof tableInfo.declare_type != 'undefined' &&
+                tableInfo.declare_type != null
+            "
           >
-            <span>{{tableInfo.declare_type}}:</span>
+            <span>{{ tableInfo.declare_type }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.declare_type" />
           </a-col>
 
           <a-col :span="12" style="margin-bottom:10px;">
-            <span style="margin-left: 0%">{{tableInfo.bpm_status}}:</span>
+            <span style="margin-left: 0%">{{ tableInfo.bpm_status }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.bpm_status_name" />
           </a-col>
           <a-col :span="24"></a-col>
@@ -161,9 +196,11 @@
           <a-col
             :span="24"
             style="margin-top: 10px; margin-bottom:10px;"
-            v-if="typeof curRow.seal_name != 'undefined' && curRow.seal_name != null"
+            v-if="
+              typeof curRow.seal_name != 'undefined' && curRow.seal_name != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.seal_name}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.seal_name }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.seal_name"
@@ -173,45 +210,67 @@
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.employee_post != 'undefined' && tableInfo.employee_post != null && typeof curRow.employee_post != 'undefined' && curRow.employee_post != null"
+            v-if="
+              typeof tableInfo.employee_post != 'undefined' &&
+                tableInfo.employee_post != null &&
+                typeof curRow.employee_post != 'undefined' &&
+                curRow.employee_post != null
+            "
           >
-            <span style="margin-left:28px;">{{tableInfo.employee_post}}:</span>
+            <span style="margin-left:28px;">{{ tableInfo.employee_post }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.employee_post" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.traffic_models != 'undefined' && tableInfo.traffic_models != null && typeof curRow.traffic_models != 'undefined' && curRow.traffic_models != null"
+            v-if="
+              typeof tableInfo.traffic_models != 'undefined' &&
+                tableInfo.traffic_models != null &&
+                typeof curRow.traffic_models != 'undefined' &&
+                curRow.traffic_models != null
+            "
           >
-            <span style="margin-left:28px;">{{tableInfo.traffic_models}}:</span>
+            <span style="margin-left:28px;">{{ tableInfo.traffic_models }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.traffic_models" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.licence_number != 'undefined' && tableInfo.licence_number != null && typeof curRow.licence_number != 'undefined' && curRow.licence_number != null"
+            v-if="
+              typeof tableInfo.licence_number != 'undefined' &&
+                tableInfo.licence_number != null &&
+                typeof curRow.licence_number != 'undefined' &&
+                curRow.licence_number != null
+            "
           >
-            <span style="margin-left:14px;">{{tableInfo.licence_number}}:</span>
+            <span style="margin-left:14px;">{{ tableInfo.licence_number }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.licence_number" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.traffic_amount != 'undefined' && tableInfo.traffic_amount != null && typeof curRow.traffic_amount != 'undefined' && curRow.traffic_amount != null"
+            v-if="
+              typeof tableInfo.traffic_amount != 'undefined' &&
+                tableInfo.traffic_amount != null &&
+                typeof curRow.traffic_amount != 'undefined' &&
+                curRow.traffic_amount != null
+            "
           >
-            <span style="margin-left:28px;">{{tableInfo.traffic_amount.padStart(4,' ')}}:</span>
+            <span style="margin-left:28px;">{{ tableInfo.traffic_amount.padStart(4, ' ') }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.traffic_amount" />
           </a-col>
 
           <a-col
             :span="24"
             style="margin-top: 20px;margin-bottom: 10px;"
-            v-if="typeof curRow.content != 'undefined' && curRow.content != null"
+            v-if="
+              typeof curRow.content != 'undefined' && curRow.content != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.content}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.content }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.content"
@@ -221,9 +280,14 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.entourage != 'undefined' && tableInfo.entourage != null && typeof curRow.entourage != 'undefined' && curRow.entourage != null"
+            v-if="
+              typeof tableInfo.entourage != 'undefined' &&
+                tableInfo.entourage != null &&
+                typeof curRow.entourage != 'undefined' &&
+                curRow.entourage != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.entourage}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.entourage }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.entourage"
@@ -233,54 +297,74 @@
           <a-col
             :span="12"
             style="margin-top:10px;margin-bottom:10px;"
-            v-if="typeof tableInfo.travel_address != 'undefined' && tableInfo.travel_address != null"
+            v-if="
+              typeof tableInfo.travel_address != 'undefined' &&
+                tableInfo.travel_address != null
+            "
           >
-            <span>{{tableInfo.travel_address}}:</span>
+            <span>{{ tableInfo.travel_address }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.travel_address" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-top:10px;margin-bottom:10px;"
-            v-if="typeof tableInfo.predict_fee != 'undefined' && tableInfo.predict_fee != null"
+            v-if="
+              typeof tableInfo.predict_fee != 'undefined' &&
+                tableInfo.predict_fee != null
+            "
           >
-            <span>{{tableInfo.predict_fee}}:</span>
+            <span>{{ tableInfo.predict_fee }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.predict_fee" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.drive_type != 'undefined' && tableInfo.drive_type != null"
+            v-if="
+              typeof tableInfo.drive_type != 'undefined' &&
+                tableInfo.drive_type != null
+            "
           >
-            <span>{{tableInfo.drive_type}}:</span>
+            <span>{{ tableInfo.drive_type }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.drive_type" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.predict_mileage != 'undefined' && tableInfo.predict_mileage != null"
+            v-if="
+              typeof tableInfo.predict_mileage != 'undefined' &&
+                tableInfo.predict_mileage != null
+            "
           >
-            <span>{{tableInfo.predict_mileage}}:</span>
+            <span>{{ tableInfo.predict_mileage }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.predict_mileage" />
           </a-col>
 
           <a-col
             :span="12"
             style="margin-bottom:10px;"
-            v-if="typeof tableInfo.travel_transport != 'undefined' && tableInfo.travel_transport != null"
+            v-if="
+              typeof tableInfo.travel_transport != 'undefined' &&
+                tableInfo.travel_transport != null
+            "
           >
-            <span>{{tableInfo.travel_transport}}:</span>
+            <span>{{ tableInfo.travel_transport }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.travel_transport" />
           </a-col>
 
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.traffic_standards != 'undefined' && tableInfo.traffic_standards != null && typeof curRow.traffic_standards != 'undefined' && curRow.traffic_standards != null"
+            v-if="
+              typeof tableInfo.traffic_standards != 'undefined' &&
+                tableInfo.traffic_standards != null &&
+                typeof curRow.traffic_standards != 'undefined' &&
+                curRow.traffic_standards != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.traffic_standards}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.traffic_standards }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.traffic_standards"
@@ -290,9 +374,14 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.traffic_numbers != 'undefined' && tableInfo.traffic_numbers != null && typeof curRow.traffic_numbers != 'undefined' && curRow.traffic_numbers != null"
+            v-if="
+              typeof tableInfo.traffic_numbers != 'undefined' &&
+                tableInfo.traffic_numbers != null &&
+                typeof curRow.traffic_numbers != 'undefined' &&
+                curRow.traffic_numbers != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.traffic_numbers}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.traffic_numbers }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.traffic_numbers"
@@ -302,9 +391,12 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.travel_remarks != 'undefined' && tableInfo.travel_remarks != null"
+            v-if="
+              typeof tableInfo.travel_remarks != 'undefined' &&
+                tableInfo.travel_remarks != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.travel_remarks}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.travel_remarks }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.travel_remarks"
@@ -314,9 +406,11 @@
           <a-col
             :span="24"
             style="margin-top: 30px"
-            v-if="typeof curRow.location != 'undefined' && curRow.location != null"
+            v-if="
+              typeof curRow.location != 'undefined' && curRow.location != null
+            "
           >
-            <span style="float:left;display:block;">{{curRow.formTypeName}}地址:</span>
+            <span style="float:left;display:block;">{{ curRow.formTypeName }}地址:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.location"
@@ -326,9 +420,12 @@
           <a-col
             :span="24"
             style="margin-bottom:10px;margin-top:10px;"
-            v-if="typeof curRow.announce_content != 'undefined' && curRow.announce_content != null"
+            v-if="
+              typeof curRow.announce_content != 'undefined' &&
+                curRow.announce_content != null
+            "
           >
-            <span style="float:left;display:block;">{{tableInfo.announce_content}}:</span>
+            <span style="float:left;display:block;">{{ tableInfo.announce_content }}:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.announce_content"
@@ -344,7 +441,12 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow != null && this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('office')"
+            v-if="
+              this.curRow != null &&
+                this.curRow.fileStatus != 1 &&
+                this.pageType != 'print' &&
+                this.curRow.fileType.includes('office')
+            "
           >
             <div style="width:98%;">
               <a-divider style="width:98%;" dashed></a-divider>
@@ -358,7 +460,7 @@
           >
             <template>
               <div
-                :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
+                :class="[this.curRow.fileStatus != 1 ? 'fileshow' : 'filenone']"
                 v-if="this.curRow.fileType.includes('office')"
                 style="width:100%;display:block;"
               >
@@ -385,7 +487,7 @@
               <div class="office-container" style="margin-top:0px;">
                 <div
                   class="ant-upload-list-item-info"
-                  v-for="(item,index) in curRow.officeList"
+                  v-for="(item, index) in curRow.officeList"
                   :key="index"
                 >
                   <span style="hover{background: #efeffe;}">
@@ -401,7 +503,7 @@
                         :title="item.title"
                         @click="handlePreview(item)"
                         style="float:left;width:80%;margin-top:4px;margin-right:5px;hover{background: #efeffe; cursor:point;}"
-                      >{{item.name}}</span>
+                      >{{ item.name }}</span>
                       <a-icon
                         type="download"
                         @click="handleDownLoad(item)"
@@ -417,7 +519,11 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="this.curRow.fileStatus != 1 && this.pageType != 'print' && this.curRow.fileType.includes('image')"
+            v-if="
+              this.curRow.fileStatus != 1 &&
+                this.pageType != 'print' &&
+                this.curRow.fileType.includes('image')
+            "
           >
             <div style="width:98%;">
               <a-divider style="width:98%;" dashed>·</a-divider>
@@ -431,7 +537,7 @@
           >
             <template>
               <div
-                :class="[this.curRow.fileStatus != 1 ? 'fileshow':'filenone']"
+                :class="[this.curRow.fileStatus != 1 ? 'fileshow' : 'filenone']"
                 v-if="this.curRow.fileType.includes('image')"
                 style="margin-botton:0px;"
               >
@@ -444,7 +550,7 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
+            v-if="curRow.bpm_status != 1 || workflows.length > 0"
           >
             <div style="width:98%;">
               <a-divider style="width:98%;" dashed>·</a-divider>
@@ -454,7 +560,10 @@
           <a-col
             :span="24"
             style="margin-top:10px;margin-bottom:20px;"
-            v-if="(curRow.bpm_status != 1 || workflows.length > 0 ) && (pageType != 'print')"
+            v-if="
+              (curRow.bpm_status != 1 || workflows.length > 0) &&
+                pageType != 'print'
+            "
           >
             <div style="margin-bottom:20px;">流程进度</div>
             <template>
@@ -482,12 +591,12 @@
           <a-col
             :span="24"
             style="margin-top:10px;"
-            v-if="(curRow.bpm_status != 1 || workflows.length > 0 )"
+            v-if="curRow.bpm_status != 1 || workflows.length > 0"
           >
             <div style="margin-bottom:20px;">审批流程</div>
             <template>
               <a-timeline>
-                <div v-for="(item,index) in workflows" :key="index">
+                <div v-for="(item, index) in workflows" :key="index">
                   <a-timeline-item v-bind:color="item.color">
                     <a-icon
                       v-if="item.status == 'wait'"
@@ -552,7 +661,7 @@
                       twoToneColor="orange"
                       v-bind:color="item.color"
                     />
-                    {{item.content}}
+                    {{ item.content }}
                   </a-timeline-item>
                 </div>
               </a-timeline>
@@ -562,22 +671,31 @@
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
-            v-if="typeof tableInfo.traffic_numbers != 'undefined' && tableInfo.traffic_numbers != null"
+            v-if="
+              typeof tableInfo.traffic_numbers != 'undefined' &&
+                tableInfo.traffic_numbers != null
+            "
           >
             <span style="float:left;display:block;">注:</span>
             <div
               style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:20px;"
             >
               <p>1. 此表批准后原价由综合部存档，复印件交财务部。</p>
-              <p>2. 此表批准日期在15号（含15号）以前则从当月开始享有车辆补贴，在15号以后则从下月开始享有。</p>
-              <p>3. 驾驶证、行驶证和身份证的复印件是该表的必备附件，驾驶证必须是申请人本人证件，行驶证与驾驶证户名不一致，需另附行驶证所有人的身份证复印件及关系证明、书面说明。</p>
+              <p>
+                2.
+                此表批准日期在15号（含15号）以前则从当月开始享有车辆补贴，在15号以后则从下月开始享有。
+              </p>
+              <p>
+                3.
+                驾驶证、行驶证和身份证的复印件是该表的必备附件，驾驶证必须是申请人本人证件，行驶证与驾驶证户名不一致，需另附行驶证所有人的身份证复印件及关系证明、书面说明。
+              </p>
             </div>
           </a-col>
 
           <a-col
             :span="24"
             style="margin-top:30px;"
-            v-if="pageType == 'workflow' && curRow.bpm_status == 2 "
+            v-if="pageType == 'workflow' && curRow.bpm_status == 2"
           >
             <template>
               <a-form :form="form">
@@ -612,10 +730,14 @@
               style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:0px;margin-top:30px;margin-bottom:30px;"
             >
               <p>注意：不能同时选择会签用户和加签用户！</p>
-              <p style="margin-top:10px;">1. 选择加签用户后，流程会在此审核节点走完后，立即转入加签用户节点进行处理，加签节点处理完毕后，转入原流程。</p>
-              <p
-                style="margin-top:10px;"
-              >2. 选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。</p>
+              <p style="margin-top:10px;">
+                1.
+                选择加签用户后，流程会在此审核节点走完后，立即转入加签用户节点进行处理，加签节点处理完毕后，转入原流程。
+              </p>
+              <p style="margin-top:10px;">
+                2.
+                选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。
+              </p>
             </div>
 
             <div style="width:98%;margin-top:50px;margin-bottom:30px;">
@@ -626,7 +748,7 @@
           <a-col
             :span="24"
             style="margin-top:30px;"
-            v-if="pageType == 'workflow' && curRow.bpm_status == 3 "
+            v-if="pageType == 'workflow' && curRow.bpm_status == 3"
           >
             <template>
               <a-form :form="form">
@@ -733,7 +855,7 @@
                   style="align:left;text-align:left;"
                   placeholder="请输入审批意见"
                   v-model="curRow.idea_content"
-                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  :autosize="{minRows: 2, maxRows: 10}"
                 />
               </div>
               <div style="width:88%;margin-top:10px;">
@@ -758,7 +880,7 @@
                   style="align:left;text-align:left;"
                   placeholder="请输入知会意见"
                   v-model="curRow.idea_content"
-                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  :autosize="{minRows: 2, maxRows: 10}"
                 />
               </div>
               <div style="width:88%;margin-top:10px;">
@@ -778,12 +900,12 @@
             :confirmLoading="tipConfirmLoading"
             @cancel="tipHandleCancel"
           >
-            <p>{{tipContent}}</p>
+            <p>{{ tipContent }}</p>
           </a-modal>
 
           <el-dialog title="二维码分享" :visible.sync="qrcodeVisible" width="30%">
             <div style="text-align:center;">
-              <qrcode :value="qrcodeUrl" :options="{ width: 200 }" style="text-align:center;"></qrcode>
+              <qrcode :value="qrcodeUrl" :options="{width: 200}" style="text-align:center;"></qrcode>
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="qrcodeVisible = false">取 消</el-button>
@@ -805,7 +927,7 @@
     </section>
   </a-card>
 </template>
-       
+
 <script>
 import * as manageAPI from "@/api/manage";
 import * as workflowAPI from "@/api/workflow";
@@ -883,6 +1005,7 @@ export default {
       notifyData: [],
       wflowAddData: [],
       wflowNotifyData: [],
+      wfreeNode: "",
       startusers: "",
       auditusers: "",
       approveusers: "",
@@ -897,13 +1020,15 @@ export default {
 
   async mounted() {
     //查询当前节点信息
-    let that = await manageAPI.watchFormLeave(this);
+    var that = await manageAPI.watchFormLeave(this);
     //获取返回结果
-    let result = await manageAPI.colorProcessDetail(that, this);
+    var result = await manageAPI.colorProcessDetail(that, this);
     //加载流程节点信息
-    let wfnode = await this.loadWorkflowNode();
+    var wfnode = await this.loadWorkflowNode();
     //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
-    let wftransfer = await this.transferFreeWorkflow();
+    var wftransfer = await this.transferFreeWorkflow();
+    //自由流程节点
+    var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
     //打印加载的流程节点信息和自由流程处理信息
     console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
     //打印page类型
@@ -928,6 +1053,8 @@ export default {
       let wfnode = await this.loadWorkflowNode();
       //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
       let wftransfer = await this.transferFreeWorkflow();
+      //自由流程节点
+      var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
       //打印加载的流程节点信息和自由流程处理信息
       console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
       //打印page类型
@@ -1033,13 +1160,15 @@ export default {
      */
     async loadData() {
       //查询当前节点信息
-      let that = await manageAPI.watchFormLeave(this);
+      var that = await manageAPI.watchFormLeave(this);
       //获取返回结果
-      let result = await manageAPI.colorProcessDetail(that, this);
+      var result = await manageAPI.colorProcessDetail(that, this);
       //加载流程节点信息
-      let wfnode = await this.loadWorkflowNode();
+      var wfnode = await this.loadWorkflowNode();
       //检查是否含有多个自由流程信息，将历史自由流程信息，转入自由流程历史表中
-      let wftransfer = await this.transferFreeWorkflow();
+      var wftransfer = await this.transferFreeWorkflow();
+      //自由流程节点
+      var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
       //打印加载的流程节点信息和自由流程处理信息
       console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
       //打印page类型
@@ -1366,13 +1495,16 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
+      //设置this的别名
+      var that = this;
+
       //确认提交此自由流程
       this.$confirm_({
         title: "确认操作",
         content: "是否确认提交此自由流程?",
         onOk: async () => {
-          //设置this的别名
-          var that = this;
+          debugger;
+
           //返回结果
           var result;
 
@@ -1409,6 +1541,10 @@ export default {
           var prLogHisNode = null;
           //流程权责
           var rights = null;
+          //自由流程节点
+          var freeNode = null;
+
+          debugger;
 
           try {
             //获取当前审批节点的所有数据
@@ -1528,18 +1664,85 @@ export default {
               }
             } else {
               try {
-                //自由流程配置消息
-                var freeNode = JSON.parse(curRow.business_data);
+                //获取自由流程配置，当前审核节点
+                curAuditor = curRow["employee"];
+
+                try {
+                  //自由流程配置消息
+                  freeNode = JSON.parse(curRow.business_data);
+                } catch (error) {
+                  console.log(error);
+                }
+
                 //检查是否存在自由流程节点audit_node & approve_node & notify_node , 如果不存在，在下级节点中寻找
                 if (
                   !("audit_node" in freeNode) &&
                   !("approve_node" in freeNode) &&
                   !("notify_node" in freeNode)
                 ) {
-                  freeNode = JSON.parse(freeNode.business_data);
+                  try {
+                    freeNode = JSON.parse(freeNode.business_data);
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }
 
-                //如果仍然为获取到自由流程节点，则从自由流程表中找
+                debugger;
+
+                //如果仍然未获取到自由流程节点，则从自由流程表中找
+                var freeNodeBack = await manageAPI.queryCurFreeWorkflow(
+                  bussinessCodeID
+                );
+
+                //如果从数据库中查询出，自由流程数据，则替换数据
+                if (tools.deNull(freeNodeBack) != "") {
+                  freeNode = freeNodeBack;
+
+                  //that.wflowAddUsers = freeNode.add_node;
+                  //that.wflowNotifyUsers = freeNode.sign_node;
+                }
+
+                console.log("free node back data : " + freeNodeBack);
+
+                //将加签、会签数据、添加到自由流程数据中
+                freeNode.audit_node = `,${freeNode.audit_node},`;
+                if (
+                  freeNode.audit_node.indexOf("," + curAuditor + ",") !=
+                  freeNode.audit_node.lastIndexOf("," + curAuditor + ",")
+                ) {
+                  //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
+                  freeNode.audit_node = freeNode.audit_node.replace(
+                    "," + curAuditor + ",",
+                    ","
+                  );
+                }
+
+                //添加加签用户数据
+                if (tools.deNull(that.wflowAddUsers) != "") {
+                  freeNode.audit_node = freeNode.audit_node.replace(
+                    `,${curAuditor},`,
+                    `,${curAuditor},${that.wflowAddUsers},`
+                  );
+                }
+
+                //添加会签用户数据
+                if (tools.deNull(that.wflowNotifyUsers) != "") {
+                  freeNode.audit_node = freeNode.audit_node.replace(
+                    `,${curAuditor},`,
+                    `,${curAuditor},${that.wflowNotifyUsers},${curAuditor},`
+                  );
+                }
+
+                //去掉开头、结尾的逗号
+                if (
+                  freeNode.audit_node.startsWith(",") &&
+                  freeNode.audit_node.endsWith(",")
+                ) {
+                  freeNode.audit_node = freeNode.audit_node.substring(
+                    1,
+                    freeNode.audit_node.length - 2
+                  );
+                }
 
                 //根据自由流程配置，获取所有待审核人员列表
                 allAudit =
@@ -1557,9 +1760,6 @@ export default {
 
                 //设置审批节点
                 approveNode = freeNode.approve_node;
-
-                //获取自由流程配置，当前审核节点
-                curAuditor = curRow["employee"];
               } catch (error) {
                 that.tipVisible = true;
                 that.tipContent = "自由流程设置节点失败，无法进行审批操作！";
@@ -1568,12 +1768,20 @@ export default {
               }
             }
 
-            //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
+            //当不存在加签、会签操作时，则进行重复用户消除操作
             if (
-              allAudit.indexOf("," + curAuditor + ",") !=
-              allAudit.lastIndexOf("," + curAuditor + ",")
+              !(
+                tools.deNull(that.wflowAddUsers) != "" ||
+                tools.deNull(that.wflowNotifyUsers) != ""
+              )
             ) {
-              allAudit = allAudit.replace("," + curAuditor + ",", ",");
+              //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
+              if (
+                allAudit.indexOf("," + curAuditor + ",") !=
+                allAudit.lastIndexOf("," + curAuditor + ",")
+              ) {
+                allAudit = allAudit.replace("," + curAuditor + ",", ",");
+              }
             }
 
             //当前审核分割组，第一组是已经审核通过的，第二组是待审核的
@@ -1700,8 +1908,10 @@ export default {
                 null,
                 prLogHisNode,
                 bpmStatus,
+                freeNode,
                 that.wflowAddUsers,
-                that.wflowNotifyUsers
+                that.wflowNotifyUsers,
+                curAuditor
               );
 
               //当前已经是最后一个审批节点，流程已经处理完毕
@@ -1838,7 +2048,11 @@ export default {
                   operationData,
                   pnode,
                   prLogHisNode,
-                  bpmStatus
+                  bpmStatus,
+                  freeNode,
+                  that.wflowAddUsers,
+                  that.wflowNotifyUsers,
+                  curAuditor
                 );
 
                 //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
@@ -2132,10 +2346,6 @@ export default {
             } catch (error) {
               console.log(error);
             }
-
-            //TODO 以前此表单的自由流程进入历史
-
-            //TODO 删除以前此表单对应的自由流程
           }
 
           that.tipVisible = true;

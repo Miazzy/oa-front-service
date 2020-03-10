@@ -10,11 +10,12 @@ import * as _ from 'underscore';
  * @param pnode     审批处理下一节点的审批信息
  * @param prLogHisNode     审批处理当前节点的审批信息
  * @param bpmStatus 审批处理关联的业务数据应变更的状态
+ * @param freeNode  审批流程中自由流程节点
  * @param wflowAddUser 审批流程中加签用户
  * @param wflowNotifyUser 审批流程中会签用户
  * @define bpmStatus（1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
  */
-export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus, wflowAddUser, wflowNotifyUser) {
+export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus, freeNode, wflowAddUser, wflowNotifyUser, curAuditor) {
 
     //执行处理的结果
     var result = null;
@@ -63,6 +64,62 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         }
     } catch (error) {
         console.log("审批处理当前节点的审批信息", error);
+    }
+
+    debugger;
+
+    //如果加签、会签用户不为空，则需要将加签、会签用户，追加至自由流程审批表中
+    try {
+
+        freeNode.audit_node = `,${freeNode.audit_node},`;
+
+        //如果加签用户数据不为空，则向自由流程数据表中，添加加签数据
+        if (tools.deNull(wflowAddUser) && !freeNode.audit_node.includes(wflowAddUser)) {
+            // result = await manageAPI.patchTableData(
+            //     'bs_free_process',
+            //     freeNode["id"], {
+            //         add_node: wflowAddUser
+            //     }
+            // );
+            freeNode.audit_node = freeNode.audit_node.replace(
+                `,${curAuditor},`,
+                `,${curAuditor},${wflowAddUser},`
+            );
+        }
+
+        //如果会签用户数据不为空，则向自由流程数据表中，添加会签数据
+        if (tools.deNull(wflowNotifyUser) && !freeNode.audit_node.includes(wflowNotifyUser)) {
+            // result = await manageAPI.patchTableData(
+            //     'bs_free_process',
+            //     freeNode["id"], {
+            //         sign_node: wflowNotifyUser
+            //     }
+            // );
+            freeNode.audit_node = freeNode.audit_node.replace(
+                `,${curAuditor},`,
+                `,${curAuditor},${wflowNotifyUser},${curAuditor},`
+            );
+        }
+
+        //去掉开头、结尾的逗号
+        if (freeNode.audit_node.startsWith(",")) {
+            freeNode.audit_node = freeNode.audit_node.substring(1);
+        }
+
+        //去掉开头、结尾的逗号
+        if (freeNode.audit_node.endsWith(",")) {
+            freeNode.audit_node = freeNode.audit_node.substring(0, freeNode.audit_node.length - 1);
+        }
+
+        result = await manageAPI.patchTableData(
+            'bs_free_process',
+            freeNode["id"], {
+                audit_node: freeNode.audit_node
+            }
+        );
+
+    } catch (error) {
+        console.log(error);
     }
 
     //审批处理过程中，添加相关的动态信息

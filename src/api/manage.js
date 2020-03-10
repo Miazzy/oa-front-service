@@ -2185,6 +2185,36 @@ export async function queryHisFreeWorkflow(id) {
 }
 
 /**
+ * @function 查询表单对应的历史自由流程
+ */
+export async function queryCurFreeWorkflow(id) {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_free_process?_where=(main_key,eq,${id})&_sort=-create_time`;
+    //根据业务编号，查询业务数据
+    var wflow = [];
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        debugger;
+
+        //如果只有一条数据，则返回[]；如果有多条数据，则返回多个数据
+        if (typeof res.body == 'undefined' || res.body == null || res.body == '' || res.body.length == 0) {
+            wflow = null;
+        } else if (res.body.length >= 1) {
+            wflow = res.body[0];
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    return wflow;
+}
+
+/**
  * @function 查询审批流程信息
  */
 export async function queryWorkflows(business_data_id) {
