@@ -577,6 +577,55 @@
           <a-col
             :span="24"
             style="margin-top:30px;"
+            v-if="pageType == 'workflow' && (curRow.bpm_status == 2 || curRow.bpm_status == 3)"
+          >
+            <template>
+              <a-form :form="form">
+                <a-form-item label="加签用户" style="width: 500px">
+                  <j-select-multi-user v-model="wflowAddUsers"></j-select-multi-user>
+                </a-form-item>
+
+                <div style="width:500px;" v-if="wflowAddData != null && wflowAddData.length > 0">
+                  <a-table :columns="wflowcolumns" :dataSource="wflowAddData" :pagination="false"></a-table>
+                </div>
+              </a-form>
+
+              <a-form :form="form">
+                <a-form-item label="会签用户" style="width: 500px;margin-top:20px;">
+                  <j-select-multi-user v-model="wflowNotifyUsers"></j-select-multi-user>
+                </a-form-item>
+
+                <div
+                  style="width:500px;"
+                  v-if="wflowNotifyData != null && wflowNotifyData.length > 0"
+                >
+                  <a-table
+                    :columns="wflowcolumns"
+                    :dataSource="wflowNotifyData"
+                    :pagination="false"
+                  ></a-table>
+                </div>
+              </a-form>
+            </template>
+
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:0px;margin-top:30px;margin-bottom:30px;"
+            >
+              <p>注意：不能同时选择会签用户和加签用户！</p>
+              <p style="margin-top:10px;">1. 选择加签用户后，流程会在此审核节点走完后，立即转入加签用户节点进行处理，加签节点处理完毕后，转入原流程。</p>
+              <p
+                style="margin-top:10px;"
+              >2. 选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。</p>
+            </div>
+
+            <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:30px;"
             v-if="pageType == 'workflowing' && curRow.bpm_status == 1"
           >
             <template>
@@ -779,6 +828,8 @@ export default {
       pageType: "view",
       tableName: "",
       wflowUsers: "",
+      wflowAddUsers: "",
+      wflowNotifyUsers: "",
       notifyUsers: "",
       approveUser: "",
       tableInfo: "",
@@ -795,6 +846,8 @@ export default {
       auditData: [],
       approveData: [],
       notifyData: [],
+      wflowAddData: [],
+      wflowNotifyData: [],
       startusers: "",
       auditusers: "",
       approveusers: "",
@@ -837,6 +890,40 @@ export default {
       console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
       //返回结果
       return result;
+    },
+    async wflowAddUsers(users) {
+      var userlist = await manageAPI.queryUserName();
+      var ulist = users.split(",");
+      this.wflowAddData = [];
+      _.each(ulist, (item, index) => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        this.wflowAddData.push({
+          no: index + 1,
+          name: user.realname,
+          nickname: user.username
+        });
+      });
+      console.log("加签用户列表：" + users);
+    },
+    async wflowNotifyUsers(users) {
+      var userlist = await manageAPI.queryUserName();
+      var ulist = users.split(",");
+      this.wflowNotifyData = [];
+      _.each(ulist, (item, index) => {
+        //查询用户信息
+        var user = _.find(userlist, user => {
+          return user.username == item;
+        });
+        this.wflowNotifyData.push({
+          no: index + 1,
+          name: user.realname,
+          nickname: user.username
+        });
+      });
+      console.log("会签用户列表：" + users);
     },
     async wflowUsers(users) {
       var userlist = await manageAPI.queryUserName();

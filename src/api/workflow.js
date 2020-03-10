@@ -10,9 +10,11 @@ import * as _ from 'underscore';
  * @param pnode     审批处理下一节点的审批信息
  * @param prLogHisNode     审批处理当前节点的审批信息
  * @param bpmStatus 审批处理关联的业务数据应变更的状态
+ * @param wflowAddUser 审批流程中加签用户
+ * @param wflowNotifyUser 审批流程中会签用户
  * @define bpmStatus（1：待提交	2：审核中	3：审批中	4：已完成	5：已完成 10：已作废）
  */
-export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus) {
+export async function postWorkflowApprove(tableName, curRow, operationData, pnode, prLogHisNode, bpmStatus, wflowAddUser, wflowNotifyUser) {
 
     //执行处理的结果
     var result = null;
@@ -78,6 +80,10 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
     } catch (error) {
         console.log(error);
     }
+
+    //打印会签用户、加签用户数据
+    console.log("加签用户：" + wflowAddUser);
+    console.log("会签用户：" + wflowNotifyUser);
 
     //返回执行结果
     return result;
