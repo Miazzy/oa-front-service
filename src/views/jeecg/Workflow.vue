@@ -1698,9 +1698,6 @@ export default {
                 //如果从数据库中查询出，自由流程数据，则替换数据
                 if (tools.deNull(freeNodeBack) != "") {
                   freeNode = freeNodeBack;
-
-                  //that.wflowAddUsers = freeNode.add_node;
-                  //that.wflowNotifyUsers = freeNode.sign_node;
                 }
 
                 console.log("free node back data : " + freeNodeBack);

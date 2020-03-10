@@ -66,8 +66,6 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         console.log("审批处理当前节点的审批信息", error);
     }
 
-    debugger;
-
     //如果加签、会签用户不为空，则需要将加签、会签用户，追加至自由流程审批表中
     try {
 
@@ -88,6 +86,14 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
                 `,${wflowNotifyUser},${curAuditor},`
+            );
+        }
+
+        //如果当前用户，进行了会签操作，则不应在audit_node记录多次，删除第一次记录
+        if (tools.deNull(wflowNotifyUser) && freeNode.audit_node.indexOf(curAuditor) != freeNode.audit_node.lastIndexOf(curAuditor)) {
+            freeNode.audit_node = freeNode.audit_node.replace(
+                `,${curAuditor},`,
+                `,`
             );
         }
 
