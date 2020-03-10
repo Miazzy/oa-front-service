@@ -2,7 +2,7 @@
   <page-layout :avatar="avatar">
     <div slot="headerContent">
       <div class="title" style="font-size:16px;">
-        {{ timeFix }}，{{ nickname() }}，
+        {{ timeFix }}，{{ userInfo.realname }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
       <div :style="postStyle">{{ postName }} | {{ departName }}</div>
@@ -156,7 +156,6 @@
           <a-card :loading="loading" title="文库" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
-              @click="handleWriteBlog()"
               style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
             >检索资料</a-tag>
             <div class="members">
@@ -174,7 +173,6 @@
           <a-card :loading="loading" title="课堂" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
-              @click="handleWriteBlog()"
               style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
             >学习课程</a-tag>
             <div class="members">
@@ -192,7 +190,6 @@
           <a-card :loading="loading" title="视频" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
-              @click="handleWriteBlog()"
               style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
             >分享视频</a-tag>
             <div class="members">
@@ -200,7 +197,7 @@
                 <a-col :span="12" v-for="(item, index) in video" :key="index">
                   <a>
                     <a-avatar size="small" :src="item.avatar" />
-                    <span class="member" @click="item.click">{{ item.name }}</span>
+                    <span class="member">{{ item.name }}</span>
                   </a>
                 </a-col>
               </a-row>
@@ -210,7 +207,6 @@
           <a-card :loading="loading" title="网盘" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
-              @click="handleWriteBlog()"
               style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
             >分享资源</a-tag>
             <div class="members">
@@ -380,8 +376,12 @@ export default {
       console.log(error);
     }
 
-    //设置岗位style
-    this.handlePostStyle();
+    try {
+      //设置岗位style
+      this.handlePostStyle();
+    } catch (error) {
+      console.log(error);
+    }
 
     //设置员工岗位信息/部门信息
     try {
@@ -410,14 +410,18 @@ export default {
     console.log("动态信息：" + JSON.stringify(this.nodelist));
   },
   mounted() {
-    this.getProjects();
-    this.getActivity();
-    this.getTeams();
-    this.initRadar();
-    this.handlePostStyle();
+    try {
+      this.getProjects();
+      this.getActivity();
+      this.getTeams();
+      this.initRadar();
+      this.handlePostStyle();
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
-    ...mapGetters(["nickname", "welcome"]),
+    //...mapGetters(["nickname", "welcome"]),
     getProjects() {
       this.$http.get("/api/list/search/projects").then(res => {
         this.projects = res.result && res.result.data;
@@ -583,6 +587,14 @@ export default {
       var path = "/blog/center";
       window.location.href = path;
     },
+    /**
+     * @function 综合能力测评函数
+     */
+    handleAblityTest() {},
+    /**
+     * @function 团队信息设置函数
+     */
+    handleTeamInfo() {},
 
     /**
      * @function 跳转到用印申请(非合同)列表

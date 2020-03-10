@@ -101,9 +101,9 @@ export default {
     return {
       loadding: false,
       url: {
-        listCementByUser: `${window._CONFIG['domain']}/sys/annountCement/listByUser`,
-        editCementSend: `${window._CONFIG['domain']}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
-        queryById: `${window._CONFIG['domain']}/sys/annountCement/queryById`
+        listCementByUser: `${window._CONFIG["domain"]}/sys/annountCement/listByUser`,
+        editCementSend: `${window._CONFIG["domain"]}/sys/sysAnnouncementSend/editByAnntIdAndUserId`,
+        queryById: `${window._CONFIG["domain"]}/sys/annountCement/queryById`
       },
       hovered: false,
       announcement1: [],
@@ -119,33 +119,49 @@ export default {
   },
   computed: {
     msgTotal() {
-      return (
-        parseInt(this.msg1Count) +
-        parseInt(this.msg2Count) +
-        +parseInt(this.msg3Count)
-      );
+      try {
+        return (
+          parseInt(this.msg1Count) +
+          parseInt(this.msg2Count) +
+          +parseInt(this.msg3Count)
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   mounted() {
-    this.loadData();
-    //this.timerFun();
-    this.initWebSocket();
+    try {
+      this.loadData();
+      //this.timerFun();
+      this.initWebSocket();
+    } catch (error) {
+      console.log(error);
+    }
   },
   destroyed: function() {
-    // 离开页面生命周期函数
-    this.websocketclose();
+    try {
+      // 离开页面生命周期函数
+      this.websocketclose();
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     timerFun() {
-      this.stopTimer = false;
-      let myTimer = setInterval(() => {
-        // 停止定时器
-        if (this.stopTimer == true) {
-          clearInterval(myTimer);
-          return;
-        }
-        this.loadData();
-      }, 6000);
+      try {
+        this.stopTimer = false;
+        let myTimer = setInterval(() => {
+          // 停止定时器
+          if (this.stopTimer == true) {
+            clearInterval(myTimer);
+            return;
+          }
+          this.loadData();
+        }, 6000);
+      } catch (error) {
+        console.log(error);
+      }
     },
     loadData() {
       try {
@@ -175,118 +191,164 @@ export default {
       }
     },
     fetchNotice() {
-      if (this.loadding) {
-        this.loadding = false;
-        return;
+      try {
+        if (this.loadding) {
+          this.loadding = false;
+          return;
+        }
+        this.loadding = true;
+        setTimeout(() => {
+          this.loadding = false;
+        }, 200);
+      } catch (error) {
+        console.log(error);
       }
-      this.loadding = true;
-      setTimeout(() => {
-        this.loadding = false;
-      }, 200);
     },
     showAnnouncement(record) {
-      putAction(this.url.editCementSend, { anntId: record.id }).then(res => {
-        if (res.success) {
-          this.loadData();
-        }
-      });
-      this.hovered = false;
-      this.$refs.ShowAnnouncement.detail(record);
+      try {
+        putAction(this.url.editCementSend, { anntId: record.id }).then(res => {
+          if (res.success) {
+            this.loadData();
+          }
+        });
+        this.hovered = false;
+        this.$refs.ShowAnnouncement.detail(record);
+      } catch (error) {
+        console.log(error);
+      }
     },
     toMyAnnouncement() {
-      this.$router.push({
-        path: "/isps/userAnnouncement",
-        name: "isps-userAnnouncement"
-      });
+      try {
+        this.$router.push({
+          path: "/isps/userAnnouncement",
+          name: "isps-userAnnouncement"
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     toMyApprove() {
-      this.$router.push({
-        path: "/online/cgformList/0b511f234f3847baa50106a14fff6215",
-        meta: {
-          title: "审批处理"
-        }
-      });
-      // window.location.href = '/online/cgformList/0b511f234f3847baa50106a14fff6215'
+      try {
+        this.$router.push({
+          path: "/online/cgformList/0b511f234f3847baa50106a14fff6215",
+          meta: {
+            title: "审批处理"
+          }
+        });
+        // window.location.href = '/online/cgformList/0b511f234f3847baa50106a14fff6215'
+      } catch (error) {
+        console.log(error);
+      }
     },
     modalFormOk() {},
     handleHoverChange(visible) {
-      this.hovered = visible;
+      try {
+        this.hovered = visible;
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     initWebSocket: function() {
-      // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-      var userId = store.getters.userInfo.id;
-      var url =
-         window._CONFIG["domainURL"]
-          .replace("https://", "wss://")
-          .replace("http://", "ws://") +
-        "/websocket/" +
-        userId;
-      //console.log(url);
       try {
-        this.websock = new WebSocket(url);
-        this.websock.onopen = this.websocketonopen;
-        this.websock.onerror = this.websocketonerror;
-        this.websock.onmessage = this.websocketonmessage;
-        this.websock.onclose = this.websocketclose;
+        // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
+        var userId = store.getters.userInfo.id;
+        var url =
+          window._CONFIG["domainURL"]
+            .replace("https://", "wss://")
+            .replace("http://", "ws://") +
+          "/websocket/" +
+          userId;
+        //console.log(url);
+        try {
+          this.websock = new WebSocket(url);
+          this.websock.onopen = this.websocketonopen;
+          this.websock.onerror = this.websocketonerror;
+          this.websock.onmessage = this.websocketonmessage;
+          this.websock.onclose = this.websocketclose;
+        } catch (error) {
+          console.log("init websock error:" + error);
+        }
       } catch (error) {
-        console.log('init websock error:' + error);
+        console.log(error);
       }
     },
     websocketonopen: function() {
-      console.log("WebSocket连接成功");
+      try {
+        console.log("WebSocket连接成功");
+      } catch (error) {
+        console.log(error);
+      }
     },
     websocketonerror: function(e) {
-      console.log("WebSocket连接发生错误");
+      try {
+        console.log("WebSocket连接发生错误");
+      } catch (error) {
+        console.log(error);
+      }
     },
     websocketonmessage: function(e) {
+      try {
+        console.log("-----接收消息-------", e.data);
 
-      console.log("-----接收消息-------", e.data);
-
-      var data = eval("(" + e.data + ")"); //解析对象
-      this.loadData();
-      this.openNotification(data);
-
+        var data = eval("(" + e.data + ")"); //解析对象
+        this.loadData();
+        this.openNotification(data);
+      } catch (error) {
+        console.log(error);
+      }
     },
     websocketclose: function(e) {
-      console.log("connection closed (" + JSON.stringify(e) + ")");
+      try {
+        console.log("connection closed (" + JSON.stringify(e) + ")");
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     openNotification(data) {
-      var text = data.msgTxt;
-      const key = `open${Date.now()}`;
-      this.$notification.open({
-        message: "消息提醒",
-        placement: "bottomRight",
-        description: text,
-        key,
-        btn: h => {
-          return h(
-            "a-button",
-            {
-              props: {
-                type: "primary",
-                size: "small"
+      try {
+        var text = data.msgTxt;
+        const key = `open${Date.now()}`;
+        this.$notification.open({
+          message: "消息提醒",
+          placement: "bottomRight",
+          description: text,
+          key,
+          btn: h => {
+            return h(
+              "a-button",
+              {
+                props: {
+                  type: "primary",
+                  size: "small"
+                },
+                on: {
+                  click: () => this.showDetail(key, data)
+                }
               },
-              on: {
-                click: () => this.showDetail(key, data)
-              }
-            },
-            "查看详情"
-          );
-        }
-      });
+              "查看详情"
+            );
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     showDetail(key, data) {
-      this.$notification.close(key);
-      var id = data.msgId;
-      getAction(this.url.queryById, { id: id }).then(res => {
-        if (res.success) {
-          var record = res.result;
-          this.showAnnouncement(record);
-        }
-      });
+      try {
+        this.$notification.close(key);
+        var id = data.msgId;
+        getAction(this.url.queryById, { id: id }).then(res => {
+          if (res.success) {
+            var record = res.result;
+            this.showAnnouncement(record);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
