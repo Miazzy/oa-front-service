@@ -9,28 +9,13 @@
     <div slot="extra" style="height:60px;">
       <a-row class="more-info">
         <a-col :span="6">
-          <head-info
-            title="总博文数"
-            content="56"
-            :center="false"
-            :bordered="false"
-          />
+          <head-info title="总博文数" content="56" :center="false" :bordered="false" />
         </a-col>
         <a-col :span="6">
-          <head-info
-            title="博文排名"
-            content="8/24"
-            :center="false"
-            :bordered="false"
-          />
+          <head-info title="博文排名" content="8/24" :center="false" :bordered="false" />
         </a-col>
         <a-col :span="6">
-          <head-info
-            title="博文积分"
-            content="100"
-            :center="false"
-            :bordered="false"
-          />
+          <head-info title="博文积分" content="100" :center="false" :bordered="false" />
         </a-col>
         <a-col :span="6">
           <head-info title="总访问数" content="2,223" :center="false" />
@@ -40,20 +25,8 @@
 
     <div>
       <a-row :gutter="24">
-        <a-col
-          style="padding: 0 12px"
-          :xl="4"
-          :lg="24"
-          :md="24"
-          :sm="24"
-          :xs="24"
-        >
-          <a-card
-            :loading="loading"
-            title="博客管理"
-            :bordered="false"
-            style="margin-top:0px;"
-          >
+        <a-col style="padding: 0 12px" :xl="4" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-card :loading="loading" title="博客管理" :bordered="false" style="margin-top:0px;">
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in manage" :key="index">
@@ -66,12 +39,7 @@
             </div>
           </a-card>
 
-          <a-card
-            :loading="loading"
-            title="统计管理"
-            :bordered="false"
-            style="margin-top:20px;"
-          >
+          <a-card :loading="loading" title="统计管理" :bordered="false" style="margin-top:20px;">
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in count" :key="index">
@@ -84,12 +52,7 @@
             </div>
           </a-card>
 
-          <a-card
-            :loading="loading"
-            title="博客"
-            :bordered="false"
-            style="margin-top:20px;"
-          >
+          <a-card :loading="loading" title="博客" :bordered="false" style="margin-top:20px;">
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in blog" :key="index">
@@ -102,12 +65,7 @@
             </div>
           </a-card>
 
-          <a-card
-            :loading="loading"
-            title="最新博文"
-            :bordered="false"
-            style="margin-top:20px;"
-          >
+          <a-card :loading="loading" title="最新博文" :bordered="false" style="margin-top:20px;">
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in news" :key="index">
@@ -129,58 +87,37 @@
               style="width: '100%';border:1px solid #eeeeee;margin-top:0px;margin-bottom:20px;height:42px;background:#fefefe;"
               v-model="title"
               placeholder="请输入博文标题"
-            >
-            </a-input>
+            ></a-input>
 
             <div id="editor">
-              <mavon-editor
-                style="height: 720px;width: 100%;"
-                ref="md"
-                v-model="article.mdContent"
-              ></mavon-editor>
+              <mavon-editor style="height: 720px;width: 100%;" ref="md" v-model="article.mdContent"></mavon-editor>
             </div>
 
             <a-form-item :required="false" style="margin-top:20px;">
               <div style="float:left;margin-right:10px;">文章标签：</div>
               <div style="float:left;margin-right:10px;">
-                <a-input
-                  placeholder="请输入文章标签"
-                  v-model="tags"
-                  style="width:200px;"
-                />
+                <a-input placeholder="请输入文章标签" v-model="tags" style="width:200px;" />
               </div>
             </a-form-item>
 
-            <a-form-item label="" :required="false">
+            <a-form-item label :required="false">
               <div style="float:left;margin-right:10px;">分类专栏：</div>
               <div style="float:left;margin-right:10px;">
-                <a-input
-                  placeholder="请选择所属专栏"
-                  v-model="tags"
-                  style="width:200px;"
-                />
+                <a-input placeholder="请选择所属专栏" v-model="tags" style="width:200px;" />
               </div>
             </a-form-item>
 
             <a-form-item :required="false">
               <div style="float:left;margin-right:10px;">文章类型：</div>
               <div style="float:left;margin-right:10px;">
-                <a-input
-                  placeholder="请选择文章类型"
-                  v-model="tags"
-                  style="width:200px;"
-                />
+                <a-input placeholder="请选择文章类型" v-model="tags" style="width:200px;" />
               </div>
             </a-form-item>
 
             <a-form-item :required="false">
               <div style="float:left;margin-right:10px;">发布形式：</div>
               <div style="float:left;margin-right:10px;">
-                <a-input
-                  placeholder="请选择发布形式"
-                  v-model="tags"
-                  style="width:200px;"
-                />
+                <a-input placeholder="请选择发布形式" v-model="tags" style="width:200px;" />
               </div>
             </a-form-item>
 
@@ -189,14 +126,12 @@
                 type="primary"
                 style="margin-right:10px;margin-top:10px;border: 1px solid #fefefe;"
                 @click="handleApproveWF"
-                >发布博文</a-button
-              >
+              >发布博文</a-button>
               <a-button
                 type="primary"
                 style="margin-right:10px;margin-top:10px;border: 1px solid #fefefe;"
                 @click="handleRejectWF"
-                >保存草稿</a-button
-              >
+              >保存草稿</a-button>
             </div>
           </a-card>
         </a-col>
@@ -206,39 +141,39 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 
-import {timeFix, welcome} from '@/utils/util';
-import {mapGetters} from 'vuex';
+import { timeFix, welcome } from "@/utils/util";
+import { mapGetters } from "vuex";
 
-import PageLayout from '@/components/page/PageLayout';
-import HeadInfo from '@/components/tools/HeadInfo';
-import Radar from '@/components/chart/Radar';
-import * as manageAPI from '@/api/manage';
-import * as tools from '@/utils/util';
-import mavonEditor from 'mavon-editor';
-import 'mavon-editor/dist/css/index.css';
+import PageLayout from "@/components/page/PageLayout";
+import HeadInfo from "@/components/tools/HeadInfo";
+import Radar from "@/components/chart/Radar";
+import * as manageAPI from "@/api/manage";
+import * as tools from "@/utils/util";
+import mavonEditor from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 
-const DataSet = require('@antv/data-set');
+const DataSet = require("@antv/data-set");
 
 Vue.use(mavonEditor);
 
 export default {
-  name: 'Workplace',
+  name: "Workplace",
   components: {
     PageLayout,
     HeadInfo,
-    Radar,
+    Radar
   },
   data() {
     return {
       timeFix: timeFix(),
       welcome: welcome(),
-      postName: '',
-      departName: '',
-      avatar: '',
+      postName: "",
+      departName: "",
+      avatar: "",
       user: {},
-      postStyle: {'margin-top': '-5px'},
+      postStyle: { "margin-top": "-5px" },
       projects: [],
       loading: true,
       radarLoading: true,
@@ -246,143 +181,151 @@ export default {
       nodelist: [],
       teams: [],
       article: {
-        id: '-1',
+        id: "-1",
         dynamicTags: [],
-        title: '',
-        mdContent: '',
-        cid: '',
+        title: "",
+        mdContent: "",
+        cid: ""
       },
       count: [
         {
-          name: '博文统计',
-          avatar: '/images/icon-statistics-03.svg',
+          name: "博文统计",
+          avatar: "/images/icon-statistics-03.svg"
         },
         {
-          name: '热搜词条',
-          avatar: '/images/icon-blog-hot.svg',
-        },
+          name: "热搜词条",
+          avatar: "/images/icon-blog-hot.svg"
+        }
       ],
       manage: [
         {
-          name: '发布博客',
-          avatar: '/images/icon-publish-01.svg',
+          name: "发布博客",
+          avatar: "/images/icon-publish-01.svg"
         },
         {
-          name: '文章管理',
-          avatar: '/images/icon-manage-02.svg',
+          name: "文章管理",
+          avatar: "/images/icon-manage-02.svg"
         },
         {
-          name: '评论管理',
-          avatar: '/images/icon-comment-03.svg',
+          name: "评论管理",
+          avatar: "/images/icon-comment-03.svg"
         },
         {
-          name: '专栏管理',
-          avatar: '/images/icon-column-01.svg',
-        },
+          name: "专栏管理",
+          avatar: "/images/icon-column-01.svg"
+        }
       ],
       blog: [
         {
-          name: '热门博客',
-          avatar: '/images/icon-blog-hot.svg',
-          href: '/blog/hot',
+          name: "热门博客",
+          avatar: "/images/icon-blog-hot.svg",
+          href: "/blog/hot"
         },
         {
-          name: '知名博主',
-          avatar: '/images/icon-blog-01.svg',
-          href: '/blog/writer',
+          name: "知名博主",
+          avatar: "/images/icon-blog-01.svg",
+          href: "/blog/writer"
         },
         {
-          name: '博文排行',
-          avatar: '/images/icon-rank-01.svg',
-          href: '/blog/rank',
+          name: "博文排行",
+          avatar: "/images/icon-rank-01.svg",
+          href: "/blog/rank"
         },
         {
-          name: '博客中心',
-          avatar: '/images/icon-center-01.svg',
-          href: '/blog/center',
-        },
+          name: "博客中心",
+          avatar: "/images/icon-center-01.svg",
+          href: "/blog/center"
+        }
       ],
       news: [
         {
-          name: '钉钉的日本扩...',
-          avatar: '/images/icon-blog-hot.svg',
+          name: "钉钉的日本扩...",
+          avatar: "/images/icon-blog-hot.svg"
         },
         {
-          name: '支付宝的日本...',
-          avatar: '/images/icon-blog-hot.svg',
+          name: "支付宝的日本...",
+          avatar: "/images/icon-blog-hot.svg"
         },
         {
-          name: '淘宝的美国征...',
-          avatar: '/images/icon-blog-hot.svg',
+          name: "淘宝的美国征...",
+          avatar: "/images/icon-blog-hot.svg"
         },
         {
-          name: '微软的中国征...',
-          avatar: '/images/icon-blog-hot.svg',
+          name: "微软的中国征...",
+          avatar: "/images/icon-blog-hot.svg"
         },
         {
-          name: '脸书的欧洲征...',
-          avatar: '/images/icon-blog-hot.svg',
-        },
+          name: "脸书的欧洲征...",
+          avatar: "/images/icon-blog-hot.svg"
+        }
       ],
 
       // data
       axis1Opts: {
-        dataKey: 'item',
+        dataKey: "item",
         line: null,
         tickLine: null,
         grid: {
           lineStyle: {
-            lineDash: null,
+            lineDash: null
           },
-          hideFirstLine: false,
-        },
+          hideFirstLine: false
+        }
       },
       axis2Opts: {
-        dataKey: 'score',
+        dataKey: "score",
         line: null,
         tickLine: null,
         grid: {
-          type: 'polygon',
+          type: "polygon",
           lineStyle: {
-            lineDash: null,
-          },
-        },
+            lineDash: null
+          }
+        }
       },
       scale: [
         {
-          dataKey: 'score',
+          dataKey: "score",
           min: 0,
-          max: 80,
-        },
+          max: 80
+        }
       ],
       axisData: [
-        {item: '引用', a: 70, b: 30, c: 40},
-        {item: '口碑', a: 60, b: 70, c: 40},
-        {item: '产量', a: 50, b: 60, c: 40},
-        {item: '贡献', a: 40, b: 50, c: 40},
-        {item: '热度', a: 60, b: 70, c: 40},
-        {item: '引用', a: 70, b: 50, c: 40},
+        { item: "引用", a: 70, b: 30, c: 40 },
+        { item: "口碑", a: 60, b: 70, c: 40 },
+        { item: "产量", a: 50, b: 60, c: 40 },
+        { item: "贡献", a: 40, b: 50, c: 40 },
+        { item: "热度", a: 60, b: 70, c: 40 },
+        { item: "引用", a: 70, b: 50, c: 40 }
       ],
-      radarData: [],
+      radarData: []
     };
   },
   computed: {
     userInfo() {
       return this.$store.getters.userInfo;
-    },
+    }
   },
   async created() {
     this.user = this.userInfo;
 
-    console.log('this.avatar :' + this.avatar);
+    console.log("this.avatar :" + this.avatar);
 
-    manageAPI.getRoleList().then(res => {
-      console.log('workplace -> call manageAPI.getRoleList()', res);
-    });
+    try {
+      manageAPI.getRoleList().then(res => {
+        console.log("workplace -> call manageAPI.getRoleList()", res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
-    manageAPI.getServiceList().then(res => {
-      console.log('workplace -> call manageAPI.getServiceList()', res);
-    });
+    try {
+      manageAPI.getServiceList().then(res => {
+        console.log("workplace -> call manageAPI.getServiceList()", res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     //设置岗位style
     this.handlePostStyle();
@@ -391,17 +334,17 @@ export default {
     try {
       this.v_user = await manageAPI.queryUserInfoByView(this.user.username);
 
-      this.postName = this.v_user[0]['post'];
-      this.departName = this.v_user[0]['name'];
+      this.postName = this.v_user[0]["post"];
+      this.departName = this.v_user[0]["name"];
 
-      this.address = this.v_user[0]['address'];
-      this.bio = this.v_user[0]['bio'];
+      this.address = this.v_user[0]["address"];
+      this.bio = this.v_user[0]["bio"];
 
       //设置头像信息
       this.avatar =
-        window._CONFIG['imgDomainURL'] + '/' + this.v_user[0]['avatar'];
+        window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
     } catch (error) {
-      console.log('工作台设置员工岗位信息/部门信息异常：' + error);
+      console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
 
     //获取动态数据，并设置到动态列表中
@@ -411,7 +354,7 @@ export default {
       console.log(error);
     }
 
-    console.log('动态信息：' + JSON.stringify(this.nodelist));
+    console.log("动态信息：" + JSON.stringify(this.nodelist));
   },
   mounted() {
     this.getProjects();
@@ -421,20 +364,20 @@ export default {
     this.handlePostStyle();
   },
   methods: {
-    ...mapGetters(['nickname', 'welcome']),
+    ...mapGetters(["nickname", "welcome"]),
     getProjects() {
-      this.$http.get('/api/list/search/projects').then(res => {
+      this.$http.get("/api/list/search/projects").then(res => {
         this.projects = res.result && res.result.data;
         this.loading = false;
       });
     },
     getActivity() {
-      this.$http.get('/api/workplace/activity').then(res => {
+      this.$http.get("/api/workplace/activity").then(res => {
         this.activities = res.result;
       });
     },
     getTeams() {
-      this.$http.get('/api/workplace/teams').then(res => {
+      this.$http.get("/api/workplace/teams").then(res => {
         this.teams = res.result;
       });
     },
@@ -443,10 +386,10 @@ export default {
      */
     handlePostStyle() {
       if (this.welcome.length > 30) {
-        this.postStyle = {'margin-top': '-10px'};
+        this.postStyle = { "margin-top": "-10px" };
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

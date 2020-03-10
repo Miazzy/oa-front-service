@@ -244,7 +244,7 @@ var workFlowNode = {
         },
         {
             path: '/workflow/view',
-            component: 'jeecg/PrintLeave',
+            component: 'jeecg/Workflow',
             route: '1',
             hidden: true,
             meta: {
@@ -465,7 +465,7 @@ var isystemNode = {
 
 //查看审批详情叶子节点
 const viewSubNode =
-    '{"path":"/workflow/view","component":"jeecg/PrintLeave","route":"1","hidden":true,"meta":{"keepAlive":false,"title":"流程详情"},"name":"workflow-view","id":"423b32588d8a1a41a041ca41828c3335"}';
+    '{"path":"/workflow/view","component":"jeecg/Workflow","route":"1","hidden":true,"meta":{"keepAlive":false,"title":"流程详情"},"name":"workflow-view","id":"423b32588d8a1a41a041ca41828c3335"}';
 
 router.beforeEach((to, from, next) => {
     NProgress.start(); // start progress bar

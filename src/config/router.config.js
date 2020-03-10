@@ -15,7 +15,9 @@ export const asyncRouterMap = [{
         path: '/',
         name: 'dashboard',
         component: TabLayout,
-        meta: { title: '首页' },
+        meta: {
+            title: '首页'
+        },
         redirect: '/dashboard/workplace',
         children: [
             // dashboard
@@ -65,7 +67,7 @@ export const constantRouterMap = [{
                 path: 'workflow',
                 name: 'workflow',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/jeecg/PrintLeave'),
+                    import ( /* webpackChunkName: "user" */ '@/views/jeecg/Workflow'),
             },
         ],
     },
@@ -83,7 +85,7 @@ export const constantRouterMap = [{
                 path: 'view',
                 name: 'view',
                 component: () =>
-                    import ('@/views/jeecg/PrintLeave'),
+                    import ('@/views/jeecg/Workflow'),
             },
         ],
     },

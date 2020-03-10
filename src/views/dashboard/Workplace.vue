@@ -364,13 +364,21 @@ export default {
 
     console.log("this.avatar :" + this.avatar);
 
-    manageAPI.getRoleList().then(res => {
-      console.log("workplace -> call manageAPI.getRoleList()", res);
-    });
+    try {
+      manageAPI.getRoleList().then(res => {
+        console.log("workplace -> call manageAPI.getRoleList()", res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
-    manageAPI.getServiceList().then(res => {
-      console.log("workplace -> call manageAPI.getServiceList()", res);
-    });
+    try {
+      manageAPI.getServiceList().then(res => {
+        console.log("workplace -> call manageAPI.getServiceList()", res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     //设置岗位style
     this.handlePostStyle();

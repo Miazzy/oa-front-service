@@ -577,7 +577,7 @@
           <a-col
             :span="24"
             style="margin-top:30px;"
-            v-if="pageType == 'workflow' && (curRow.bpm_status == 2 || curRow.bpm_status == 3)"
+            v-if="pageType == 'workflow' && curRow.bpm_status == 2 "
           >
             <template>
               <a-form :form="form">
@@ -650,11 +650,7 @@
             <div
               style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:0px;margin-top:30px;margin-bottom:30px;"
             >
-              <p>注意：不能同时选择会签用户和加签用户！</p>
-              <p style="margin-top:10px;">1. 选择加签用户后，流程会在此审核节点走完后，立即转入加签用户节点进行处理，加签节点处理完毕后，转入原流程。</p>
-              <p
-                style="margin-top:10px;"
-              >2. 选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。</p>
+              <p>注意：选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。</p>
             </div>
 
             <div style="width:98%;margin-top:50px;margin-bottom:30px;">
