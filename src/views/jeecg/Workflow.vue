@@ -626,6 +626,45 @@
           <a-col
             :span="24"
             style="margin-top:30px;"
+            v-if="pageType == 'workflow' && curRow.bpm_status == 3 "
+          >
+            <template>
+              <a-form :form="form">
+                <a-form-item label="会签用户" style="width: 500px;margin-top:20px;">
+                  <j-select-multi-user v-model="wflowNotifyUsers"></j-select-multi-user>
+                </a-form-item>
+
+                <div
+                  style="width:500px;"
+                  v-if="wflowNotifyData != null && wflowNotifyData.length > 0"
+                >
+                  <a-table
+                    :columns="wflowcolumns"
+                    :dataSource="wflowNotifyData"
+                    :pagination="false"
+                  ></a-table>
+                </div>
+              </a-form>
+            </template>
+
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:0px;margin-top:30px;margin-bottom:30px;"
+            >
+              <p>注意：不能同时选择会签用户和加签用户！</p>
+              <p style="margin-top:10px;">1. 选择加签用户后，流程会在此审核节点走完后，立即转入加签用户节点进行处理，加签节点处理完毕后，转入原流程。</p>
+              <p
+                style="margin-top:10px;"
+              >2. 选择会签用户后，流程会在此审核节点走完前，立即转入会签用户节点进行处理，加签节点处理完毕后，再次转入当前审核节点，继续原流程。</p>
+            </div>
+
+            <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:30px;"
             v-if="pageType == 'workflowing' && curRow.bpm_status == 1"
           >
             <template>
@@ -871,6 +910,13 @@ export default {
     let wftransfer = await this.transferFreeWorkflow();
     //打印加载的流程节点信息和自由流程处理信息
     console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
+    //打印page类型
+    console.log(
+      "pageType : " +
+        this.pageType +
+        " \n\r curRow.bpm_status :" +
+        this.curRow.bpm_status
+    );
     //返回结果
     return result;
   },
@@ -888,6 +934,13 @@ export default {
       let wftransfer = await this.transferFreeWorkflow();
       //打印加载的流程节点信息和自由流程处理信息
       console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
+      //打印page类型
+      console.log(
+        "pageType : " +
+          this.pageType +
+          " \n\r curRow.bpm_status :" +
+          this.curRow.bpm_status
+      );
       //返回结果
       return result;
     },
@@ -993,6 +1046,13 @@ export default {
       let wftransfer = await this.transferFreeWorkflow();
       //打印加载的流程节点信息和自由流程处理信息
       console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
+      //打印page类型
+      console.log(
+        "pageType : " +
+          this.pageType +
+          " \n\r curRow.bpm_status :" +
+          this.curRow.bpm_status
+      );
       //返回结果
       return result;
     },
@@ -1634,6 +1694,8 @@ export default {
                 other_data: JSON.stringify({})
               };
 
+              debugger;
+
               //执行审批业务
               await workflowAPI.postWorkflowApprove(
                 tableName,
@@ -1641,7 +1703,9 @@ export default {
                 operationData,
                 null,
                 prLogHisNode,
-                bpmStatus
+                bpmStatus,
+                that.wflowAddUsers,
+                that.wflowNotifyUsers
               );
 
               //当前已经是最后一个审批节点，流程已经处理完毕
