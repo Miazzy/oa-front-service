@@ -745,10 +745,11 @@
             </div>
           </a-col>
 
+          <!-- 暂时不支持，审批节点的加签、会签功能 -->
           <a-col
             :span="24"
             style="margin-top:30px;"
-            v-if="pageType == 'workflow' && curRow.bpm_status == 3"
+            v-if="pageType == 'workflow' && curRow.bpm_status == 1000"
           >
             <template>
               <a-form :form="form">
@@ -1734,13 +1735,15 @@ export default {
                 }
 
                 //去掉开头、结尾的逗号
-                if (
-                  freeNode.audit_node.startsWith(",") &&
-                  freeNode.audit_node.endsWith(",")
-                ) {
+                if (freeNode.audit_node.startsWith(",")) {
+                  freeNode.audit_node = freeNode.audit_node.substring(1);
+                }
+
+                //去掉开头、结尾的逗号
+                if (freeNode.audit_node.endsWith(",")) {
                   freeNode.audit_node = freeNode.audit_node.substring(
-                    1,
-                    freeNode.audit_node.length - 2
+                    0,
+                    freeNode.audit_node.length - 1
                   );
                 }
 

@@ -75,12 +75,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
 
         //如果加签用户数据不为空，则向自由流程数据表中，添加加签数据
         if (tools.deNull(wflowAddUser) && !freeNode.audit_node.includes(wflowAddUser)) {
-            // result = await manageAPI.patchTableData(
-            //     'bs_free_process',
-            //     freeNode["id"], {
-            //         add_node: wflowAddUser
-            //     }
-            // );
+
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
                 `,${curAuditor},${wflowAddUser},`
@@ -89,15 +84,10 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
 
         //如果会签用户数据不为空，则向自由流程数据表中，添加会签数据
         if (tools.deNull(wflowNotifyUser) && !freeNode.audit_node.includes(wflowNotifyUser)) {
-            // result = await manageAPI.patchTableData(
-            //     'bs_free_process',
-            //     freeNode["id"], {
-            //         sign_node: wflowNotifyUser
-            //     }
-            // );
+
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
-                `,${curAuditor},${wflowNotifyUser},${curAuditor},`
+                `,${wflowNotifyUser},${curAuditor},`
             );
         }
 
