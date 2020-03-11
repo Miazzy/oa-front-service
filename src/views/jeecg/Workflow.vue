@@ -1499,13 +1499,22 @@ export default {
       //设置this的别名
       var that = this;
 
+      //如果加签、会签同时选择，则无法提交
+      if (
+        tools.deNull(that.wflowAddUsers) != "" &&
+        tools.deNull(that.wflowNotifyUsers) != ""
+      ) {
+        that.$message.warning("无法同时进行加签、会签操作！");
+        return false;
+      }
+
+      //加签会签选中的用户，不能是流程中已经存在的用户
+
       //确认提交此自由流程
       this.$confirm_({
         title: "确认操作",
         content: "是否确认提交此自由流程?",
         onOk: async () => {
-          debugger;
-
           //返回结果
           var result;
 
@@ -1544,8 +1553,6 @@ export default {
           var rights = null;
           //自由流程节点
           var freeNode = null;
-
-          debugger;
 
           try {
             //获取当前审批节点的所有数据
@@ -1687,8 +1694,6 @@ export default {
                     console.log(error);
                   }
                 }
-
-                debugger;
 
                 //如果仍然未获取到自由流程节点，则从自由流程表中找
                 var freeNodeBack = await manageAPI.queryCurFreeWorkflow(
@@ -1898,8 +1903,6 @@ export default {
                 other_data: JSON.stringify({})
               };
 
-              debugger;
-
               //执行审批业务
               await workflowAPI.postWorkflowApprove(
                 tableName,
@@ -1993,7 +1996,7 @@ export default {
                   "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
               } else {
                 //执行事务处理
-                var operationData = {
+                let operationData = {
                   id: manageAPI.queryRandomStr(32),
                   type: "next",
                   create_by: userInfo["username"],
@@ -2038,7 +2041,7 @@ export default {
                     tableName: "",
                     data: ""
                   }),
-                  other_data: JSON.stringify({})
+                  other_data: ""
                 };
 
                 //执行审批业务
@@ -2057,6 +2060,8 @@ export default {
 
                 //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
                 that.tipContent = "同意审批成功，审批流程已推向后续处理人！";
+
+                console.log("operationData : " + operationData);
               }
             }
           }
