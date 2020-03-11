@@ -1020,6 +1020,8 @@ export default {
   },
 
   async mounted() {
+    //业务编码
+    var bussinessCodeID = tools.queryUrlString("id");
     //查询当前节点信息
     var that = await manageAPI.watchFormLeave(this);
     //获取返回结果
@@ -1030,14 +1032,9 @@ export default {
     var wftransfer = await this.transferFreeWorkflow();
     //自由流程节点
     var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
-    //打印加载的流程节点信息和自由流程处理信息
-    console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
-    //打印page类型
+    //打印加载的流程节点信息、自由流程处理信息、page类型
     console.log(
-      "pageType : " +
-        this.pageType +
-        " \n\r curRow.bpm_status :" +
-        this.curRow.bpm_status
+      `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
     );
     //返回结果
     return result;
@@ -1046,6 +1043,8 @@ export default {
   //Vue动态监控区域
   watch: {
     async $route() {
+      //业务编码
+      var bussinessCodeID = tools.queryUrlString("id");
       //查询当前节点信息
       let that = await manageAPI.watchFormLeave(this);
       //获取返回结果
@@ -1056,14 +1055,9 @@ export default {
       let wftransfer = await this.transferFreeWorkflow();
       //自由流程节点
       var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
-      //打印加载的流程节点信息和自由流程处理信息
-      console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
-      //打印page类型
+      //打印加载的流程节点信息、自由流程处理信息、page类型
       console.log(
-        "pageType : " +
-          this.pageType +
-          " \n\r curRow.bpm_status :" +
-          this.curRow.bpm_status
+        `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
       );
       //返回结果
       return result;
@@ -1160,6 +1154,8 @@ export default {
      * @function 加载数据函数
      */
     async loadData() {
+      //业务编码
+      var bussinessCodeID = tools.queryUrlString("id");
       //查询当前节点信息
       var that = await manageAPI.watchFormLeave(this);
       //获取返回结果
@@ -1170,14 +1166,9 @@ export default {
       var wftransfer = await this.transferFreeWorkflow();
       //自由流程节点
       var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
-      //打印加载的流程节点信息和自由流程处理信息
-      console.log("wfnode :" + wfnode + " wftransfer :" + wftransfer);
-      //打印page类型
+      //打印加载的流程节点信息、自由流程处理信息、page类型
       console.log(
-        "pageType : " +
-          this.pageType +
-          " \n\r curRow.bpm_status :" +
-          this.curRow.bpm_status
+        `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
       );
       //返回结果
       return result;
@@ -1496,19 +1487,49 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
+      debugger;
+      //查询业务编号
+      var bussinessCodeID = tools.queryUrlString("id");
+
       //设置this的别名
       var that = this;
+
+      //会签、加签用户
+      var wflowSpecUser = that.wflowAddUsers + "," + that.wflowNotifyUsers;
+
+      //查询自由流程节点
+      var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
 
       //如果加签、会签同时选择，则无法提交
       if (
         tools.deNull(that.wflowAddUsers) != "" &&
         tools.deNull(that.wflowNotifyUsers) != ""
       ) {
-        that.$message.warning("无法同时进行加签、会签操作！");
+        that.$message.warning(
+          "无法同时进行加签及会签操作，请单独选择加签用户或会签用户！"
+        );
         return false;
       }
 
+      //如果会签、加签用户以逗号开头，则去掉开头的逗号
+      wflowSpecUser = wflowSpecUser.startsWith(",")
+        ? wflowSpecUser.substring(1)
+        : wflowSpecUser;
+
+      console.log("会签/加签用户 : " + wflowSpecUser);
+
       //加签会签选中的用户，不能是流程中已经存在的用户
+      var readyUser = tools.contain(
+        wfreeNode.audit_node + "," + wfreeNode.approve_node,
+        wflowSpecUser
+      );
+      //如果用户流程中已经存在，则提示无法选择
+      if (!tools.isNull(readyUser)) {
+        that.$message.warning(
+          `加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`
+        );
+        return false;
+      }
 
       //确认提交此自由流程
       this.$confirm_({

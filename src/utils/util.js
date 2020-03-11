@@ -515,10 +515,38 @@ export function formatDate(value, fmt) {
  * @param {*} data
  */
 export function deNull(data, defaultValue = '') {
-    if (typeof data == 'undefined' || data == null || data == '') {
-        return defaultValue;
-    } else {
-        return data;
+    try {
+        if (typeof data == 'undefined' || data == null || data == '' || JSON.stringify(data) == "{}") {
+            return defaultValue;
+        } else {
+            return data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @function 过滤空对象
+ * @param {*} data
+ */
+export function isNull(data) {
+    try {
+        if (typeof data == 'undefined' || data == null || data == '' || JSON.stringify(data) == "{}") {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export function isBlank(data) {
+    try {
+        return isNull(data);
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -742,6 +770,59 @@ export function queryUrlString(name) {
 }
 
 /**
+ * 获取URL参数值
+ * @param {*} val
+ */
+export function queryUrl(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+
+/**
+ * @function 检测字符串是否包含字符函数
+ * @param {*} origin 
+ * @param {*} arg 
+ */
+export function contain(origin, arg) {
+
+    //设置前后缀信息
+    origin = `,${origin},`;
+
+    //设置包含的用户
+    var ready = '';
+
+    //设置数组信息
+    var array = null;
+
+    try {
+        array = arg.split(',');
+
+        //遍历数据，并查询出含有的用户数据
+        for (var item of array) {
+            ready = origin.includes(item) ? `${ready},${item}` : ready;
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    //去掉字符串开头的逗号
+    if (ready.startsWith(',')) {
+        ready = ready.substring(1);
+    }
+
+    //去掉字符串结尾的逗号
+    if (ready.endsWith(',')) {
+        ready = ready.substring(0, ready.length - 1);
+    }
+
+    //返回包含的用户数据
+    return ready;
+}
+
+/**
  * 计算两个日期之间的天数
  */
 export function queryDateDiff(date1, date2) {
@@ -815,11 +896,14 @@ export function queryDateDiff(date1, date2) {
  */
 export function parseDate(date) {
     var t = Date.parse(date);
-    if (!isNaN(t)) {
-        return new Date(Date.parse(date.replace(/-/g, '/')));
-    } else {
-        return new Date();
+    try {
+        if (!isNaN(t)) {
+            return new Date(Date.parse(date.replace(/-/g, '/')));
+        }
+    } catch (error) {
+        console.log(error);
     }
+    return new Date();
 }
 
 /**
