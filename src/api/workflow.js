@@ -171,9 +171,14 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
 
         //日期格式化
         var timestamp = new Date().getTime();
+        //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
-        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+        //定义随机编码
+        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+        console.log('随机编号 :' + random);
+        //合成动态编码
+        id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -256,9 +261,14 @@ export async function postWorkflowCancel(tableName, curRow, node) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+        //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
-        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+        //定义随机编码
+        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+        console.log('随机编号 :' + random);
+        //合成动态编码
+        id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -330,9 +340,14 @@ export async function postDynamicReject(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+        //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
-        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+        //定义随机编码
+        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+        console.log('随机编号 :' + random);
+        //合成动态编码
+        id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -394,9 +409,14 @@ export async function postDynamicAgree(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+        //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
-        id = id + Math.floor(Math.random() * 100000000000) % 1000000;
+        //定义随机编码
+        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+        console.log('随机编号 :' + random);
+        //合成动态编码
+        id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
