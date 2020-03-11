@@ -462,10 +462,10 @@ export async function postDynamicNotify(tableName, curRow) {
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
         //定义随机编码
-        var random = (Math.floor(Math.random() * 10000000000000000000000) + "").substring(0, 6);
+        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
         //合成动态编码
-        id = id + random;
+        id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");

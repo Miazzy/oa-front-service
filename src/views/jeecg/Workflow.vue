@@ -1487,7 +1487,6 @@ export default {
      * @function 同意审批
      */
     async handleApproveWF() {
-      debugger;
       //查询业务编号
       var bussinessCodeID = tools.queryUrlString("id");
 
@@ -1523,8 +1522,14 @@ export default {
         wfreeNode.audit_node + "," + wfreeNode.approve_node,
         wflowSpecUser
       );
+
       //如果用户流程中已经存在，则提示无法选择
       if (!tools.isNull(readyUser)) {
+        debugger;
+        //将英文名转化为中文名
+        readyUser = await manageAPI.patchEnameCname(readyUser);
+
+        //提示错误信息
         that.$message.warning(
           `加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`
         );

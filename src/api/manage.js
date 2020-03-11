@@ -3587,3 +3587,42 @@ export async function transFreeWflowHis(id) {
     return result;
 
 }
+
+/**
+ * @function 将英文名转化为中文名
+ */
+export async function patchEnameCname(origin) {
+
+    //中文名称
+    var chinese = '';
+
+    //原始英文名称列表
+    var originlist = origin.split(",");
+
+    //查询用户信息
+    var userlist = await queryUserName();
+
+    //遍历用户获取中文名称列表
+    for (var ename of originlist) {
+
+        //获取流程发起人的中文信息
+        var user = _.find(userlist, (item) => {
+            return ename == item.username;
+        });
+
+        chinese = `${chinese},${user.realname}`;
+    }
+
+    //去掉字符串开头的逗号
+    if (chinese.startsWith(',')) {
+        chinese = chinese.substring(1);
+    }
+
+    //去掉字符串结尾的逗号
+    if (chinese.endsWith(',')) {
+        chinese = chinese.substring(0, chinese.length - 1);
+    }
+
+    //返回中文名称列表
+    return chinese;
+}
