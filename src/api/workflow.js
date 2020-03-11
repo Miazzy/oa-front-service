@@ -198,6 +198,7 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             title: title,
             content: title,
             main_key: curRow.id,
@@ -290,6 +291,7 @@ export async function postWorkflowCancel(tableName, curRow, node) {
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             title: title,
             content: title,
             main_key: curRow.id,
@@ -378,6 +380,7 @@ export async function postDynamicReject(tableName, curRow) {
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             title: title,
             content: title,
             main_key: curRow.main_value,
@@ -448,6 +451,7 @@ export async function postDynamicAgree(tableName, curRow) {
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             title: title,
             content: title,
             main_key: curRow.main_value,
@@ -519,6 +523,7 @@ export async function postDynamicNotify(tableName, curRow) {
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             title: title,
             content: title,
             main_key: curRow.main_value,
