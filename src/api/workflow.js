@@ -183,6 +183,9 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
 
+        //表单数据库数据
+        var mainData = await manageAPI.queryTableData(tableName, curRow.id);
+
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
         try {
@@ -203,7 +206,7 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
             content: title,
             main_key: curRow.id,
             main_table: tableName,
-            main_data: JSON.stringify(curRow)
+            main_data: JSON.stringify(mainData)
         };
 
     } catch (error) {
@@ -275,6 +278,9 @@ export async function postWorkflowCancel(tableName, curRow, node) {
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
 
+        //表单数据库数据
+        var mainData = await manageAPI.queryTableData(tableName, curRow.id);
+
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
 
@@ -296,7 +302,7 @@ export async function postWorkflowCancel(tableName, curRow, node) {
             content: title,
             main_key: curRow.id,
             main_table: tableName,
-            main_data: JSON.stringify(curRow)
+            main_data: JSON.stringify(mainData)
         };
 
     } catch (error) {
@@ -358,6 +364,9 @@ export async function postDynamicReject(tableName, curRow) {
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
+        //表单数据库数据
+        var mainData = await manageAPI.queryTableData(tableName, curRow.main_value);
+
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
         try {
@@ -385,7 +394,7 @@ export async function postDynamicReject(tableName, curRow) {
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(curRow)
+            main_data: JSON.stringify(mainData)
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
@@ -429,6 +438,9 @@ export async function postDynamicAgree(tableName, curRow) {
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
+        //表单数据库数据
+        var mainData = await manageAPI.queryTableData(tableName, curRow.main_value);
+
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
         try {
@@ -456,7 +468,7 @@ export async function postDynamicAgree(tableName, curRow) {
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(curRow)
+            main_data: JSON.stringify(mainData)
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
@@ -500,6 +512,9 @@ export async function postDynamicNotify(tableName, curRow) {
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
+        //表单数据库数据
+        var mainData = await manageAPI.queryTableData(tableName, curRow.main_value);
+
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
 
@@ -528,7 +543,7 @@ export async function postDynamicNotify(tableName, curRow) {
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(curRow)
+            main_data: JSON.stringify(mainData)
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
