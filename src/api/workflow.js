@@ -209,10 +209,12 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
             main_data: JSON.stringify(mainData)
         };
 
+        //设置自由流程的表单业务数据
+        freeWFNode['main_data'] = JSON.stringify(mainData);
+
     } catch (error) {
         console.log(error);
     }
-
 
     //执行提交审批流程的业务操作
     try {

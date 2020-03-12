@@ -1,7 +1,7 @@
 <template>
   <page-layout :avatar="avatar">
     <div slot="headerContent">
-      <div class="title" style="font-size:16px;">
+      <div class="title" style="font-size:15px;">
         {{ timeFix }}，{{ userInfo.realname }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
@@ -9,13 +9,13 @@
     </div>
     <div slot="extra">
       <a-row class="more-info">
-        <a-col :span="8">
+        <a-col :span="6">
           <head-info title="项目数" content="56" :center="false" :bordered="false" />
         </a-col>
-        <a-col :span="8">
+        <a-col :span="6">
           <head-info title="团队排名" content="8/24" :center="false" :bordered="false" />
         </a-col>
-        <a-col :span="8">
+        <a-col :span="6">
           <head-info title="项目访问" content="2,223" :center="false" />
         </a-col>
       </a-row>
@@ -24,6 +24,468 @@
     <div>
       <a-row :gutter="24">
         <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-card
+            :loading="loading"
+            title="常用应用"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/leave.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">请假申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">请假申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/position.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">外出申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">外出申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/trip.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">出差申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">出差申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/overtime.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">加班申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">加班申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/person.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">考勤异常</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">考勤异常流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/material.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">档案借阅</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">档案借阅流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用印申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用印申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">印章借用</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">印章借用流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+
+          <a-card
+            :loading="loading"
+            title="人力资源"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/daka.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">考勤打卡</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">考勤打卡操作</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/qiandao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">签到</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">签到流程登记</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/wenjuan.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">问卷调查</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">问卷调查流程申请</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/leave.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">请假申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">请假申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/position.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">外出申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">外出申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/overtime.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">加班申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">加班申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/hire.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">招聘申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">招聘申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/person.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">考勤异常</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">考勤异常流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/material.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">物品领用</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">物品领用流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用章申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用章申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+
+          <a-card
+            :loading="loading"
+            title="财务管理"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/gongzidan.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">工资单</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">查看个人工资信息</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/pay.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">付款申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">付款申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/wallet.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">备用金申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">备用金申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/bought.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">采购申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">采购申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用章申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用章申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/finance.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">费用报销</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">费用报销流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+
+          <a-card
+            :loading="loading"
+            title="差旅商旅"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/trip.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">出差申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">国内外出差申请</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/position.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">外出申请</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">发起外出申请</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+
+          <a-card
+            :loading="loading"
+            title="沟通协作"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/ribao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">日报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写每日工作汇报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/zhoubao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">周报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写周工作进度</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/yuebao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">月报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写月度工作汇报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/huibao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">汇报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写汇报信息</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/announce.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">公告</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">重要信息全员播报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/shenpi.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">审批</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">简单、高效的审批工具</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+
+          <!--
           <a-card
             class="project-list"
             :loading="loading"
@@ -51,6 +513,7 @@
               </a-card-grid>
             </div>
           </a-card>
+          -->
 
           <a-card :loading="loading" title="动态" :bordered="false">
             <a-list>
