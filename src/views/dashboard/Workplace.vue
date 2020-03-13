@@ -266,7 +266,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/join.png" />
+                    <a-avatar size="large" src="/images/hire_us.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">员工入职</a>
