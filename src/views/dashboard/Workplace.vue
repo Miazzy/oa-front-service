@@ -14,6 +14,63 @@
         <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
           <a-card
             :loading="loading"
+            title="任务面板"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleWait()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/huibao.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的待办</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">处理待办消息记录</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleDone()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/flag.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的已办</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">查看已办消息记录</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/announce.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的公告</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">重要信息全员播报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+          </a-card>
+          <a-card
+            :loading="loading"
             title="常用应用"
             :bordered="false"
             style="margin-bottom: 24px;"
@@ -524,7 +581,7 @@
                   @click="handleUseSealCon()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/seal_sky.png" />
+                    <a-avatar size="large" src="/images/seal.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a
@@ -716,7 +773,12 @@
           >
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleDailyFeedback()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/ribao.png" />
                   </div>
@@ -729,7 +791,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleWeekFeedback()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/zhoubao.png" />
                   </div>
@@ -742,13 +809,36 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleMonthFeedback()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/yuebao.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">月报</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">填写月度工作汇报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleYearFeedback()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/flag.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">年报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写年度工作汇报</div>
                   </div>
                 </div>
               </a-card-meta>
@@ -1360,6 +1450,54 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "车辆补贴申请" }
+      });
+    },
+    /**
+     * @function 跳转到日报填写列表中
+     */
+    handleDailyFeedback() {
+      var path = "/online/cgformList/688a9ea8187d461e9e921fd5a5829201";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "日报管理" }
+      });
+    },
+    /**
+     * @function 跳转到周报填写列表中
+     */
+    handleWeekFeedback() {
+      var path = "/online/cgformList/9c4bf0f4951b44648659a34ead5d31cc";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "周报管理" }
+      });
+    },
+    /**
+     * @function 跳转到月报填写列表中
+     */
+    handleMonthFeedback() {
+      var path = "/online/cgformList/6bf6537008514d319a95330459464f3e";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "月报管理" }
+      });
+    },
+    /**
+     * @function 跳转到年报填写列表中
+     */
+    handleYearFeedback() {
+      var path = "/online/cgformList/878dd1f28f0b4dfdaa74534eec902c0c";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "年度汇报" }
       });
     },
     initRadar() {
