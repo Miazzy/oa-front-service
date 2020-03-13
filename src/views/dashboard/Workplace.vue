@@ -8,21 +8,6 @@
         :style="postStyle"
       >『 {{ userInfo.realname }} | {{ postName }} | {{ departName || '上级单位' }} 』</div>
     </div>
-    <!--
-    <div slot="extra">
-      <a-row class="more-info">
-        <a-col :span="6">
-          <head-info title="项目数" content="56" :center="false" :bordered="false" />
-        </a-col>
-        <a-col :span="6">
-          <head-info title="团队排名" content="8/24" :center="false" :bordered="false" />
-        </a-col>
-        <a-col :span="6">
-          <head-info title="项目访问" content="2,223" :center="false" />
-        </a-col>
-      </a-row>
-    </div>
-    -->
 
     <div>
       <a-row :gutter="24">
@@ -129,7 +114,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/seal.png" />
+                    <a-avatar size="large" src="/images/sealing.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">印章借用</a>
@@ -273,6 +258,32 @@
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用章申请</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">用章申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/join.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">员工入职</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工入职流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/dimission.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">员工离职</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工离职流程办理</div>
                   </div>
                 </div>
               </a-card-meta>
