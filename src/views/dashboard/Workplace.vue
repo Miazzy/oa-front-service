@@ -21,7 +21,12 @@
           >
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleLeave()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/leave.png" />
                   </div>
@@ -34,7 +39,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleGoOut()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/position.png" />
                   </div>
@@ -47,7 +57,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleTravel()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/trip.png" />
                   </div>
@@ -60,7 +75,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleOvertime()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/overtime.png" />
                   </div>
@@ -73,7 +93,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleAttendance()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/person.png" />
                   </div>
@@ -86,7 +111,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleFileBorrow()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/material.png" />
                   </div>
@@ -99,12 +129,19 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleUseSealCon()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/seal.png" />
                   </div>
                   <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用印申请</a>
+                    <a
+                      style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;"
+                    >用印申请(合同)</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">用印申请流程办理</div>
                   </div>
                 </div>
@@ -112,7 +149,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleSealDeclare()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/sealing.png" />
                   </div>
@@ -173,7 +215,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleLeave()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/leave.png" />
                   </div>
@@ -186,7 +233,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleGoOut()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/position.png" />
                   </div>
@@ -199,7 +251,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleOvertime()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/overtime.png" />
                   </div>
@@ -225,7 +282,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleAttendance()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/person.png" />
                   </div>
@@ -453,6 +515,46 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleUseSealCon()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal_sky.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a
+                      style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;"
+                    >用印申请(合同)</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用印申请流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleUseSealCom()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/seal_blue.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a
+                      style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;"
+                    >用印申请(非合)</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用印申请(非合同)流程办理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
           </a-card>
 
           <a-card
@@ -542,7 +644,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleTravelSubsidy()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/cheliang_2.png" />
                   </div>
@@ -564,7 +671,12 @@
           >
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleTravel()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/trip.png" />
                   </div>
@@ -577,7 +689,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleGoOut()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/position.png" />
                   </div>
@@ -1231,6 +1348,18 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "出差申请" }
+      });
+    },
+    /**
+     * @function 跳转到车辆补贴列表
+     */
+    handleTravelSubsidy() {
+      var path = "/online/cgformList/6bfb3ee6257a4066b1d26f195da83fe0";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "车辆补贴申请" }
       });
     },
     initRadar() {
