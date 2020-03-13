@@ -680,7 +680,7 @@
             <div
               style="float:left; width:88%; display:block; border-bottom: 0px solid #cecece;padding-left:20px;"
             >
-              <p>1. 此表批准后原价由综合部存档，复印件交财务部。</p>
+              <p>1. 此表批准后原件由综合部存档，复印件交财务部。</p>
               <p>
                 2.
                 此表批准日期在15号（含15号）以前则从当月开始享有车辆补贴，在15号以后则从下月开始享有。

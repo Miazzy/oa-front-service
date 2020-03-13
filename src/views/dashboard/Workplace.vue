@@ -418,7 +418,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/bought.png" />
+                    <a-avatar size="large" src="/images/社会关系.svg" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">车辆管理</a>
@@ -444,7 +444,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/社会关系.svg" />
+                    <a-avatar size="large" src="/images/buka.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">补卡申请</a>
