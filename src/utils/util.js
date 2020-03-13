@@ -927,3 +927,31 @@ export function parseJSON(json) {
 export function filterEmpty(children = []) {
     return children.filter(c => c.tag || (c.text && c.text.trim() !== ''))
 }
+
+/**
+ * @function 去除字符串中html标签
+ * @param {*} str 
+ */
+export function delHtmlTag(str) {
+    try {
+        return str.replace(/<[^>]+>/g, ""); //去掉所有的html标记
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @function 字符串缩略函数
+ * @param {*} str 
+ */
+export function abbreviation(str) {
+    try {
+        if (deNull(str).length < 50) {
+            return deNull(str).trim();
+        } else {
+            return deNull(str).trim().substring(0, 50) + '...';
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}

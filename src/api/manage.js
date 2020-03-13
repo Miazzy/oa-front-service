@@ -796,6 +796,9 @@ export async function queryProcessLogWait(username, realname) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
+
 
             //查询是否存在此用户名，且已处理用户中，不含登录用户
             var flag = (_.contains(item['username'], username) || _.contains(item['username'], realname)) && !item.user.includes(username);
@@ -1018,6 +1021,8 @@ export async function queryProcessLogWaitByParam(username, param) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username);
@@ -1036,6 +1041,7 @@ export async function queryProcessLogWaitByParam(username, param) {
  * 查询我的已办数据
  */
 export async function queryProcessLogDone(username, realname) {
+    debugger;
     //查询URL
     var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=0&_size=30&_sort=-create_time`;
     var result = {};
@@ -1053,6 +1059,8 @@ export async function queryProcessLogDone(username, realname) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username) || _.contains(item['username'], realname);
@@ -1124,6 +1132,8 @@ export async function queryProcessLogDoneByParam(username, param) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
             var flag = _.contains(item['username'], username);
