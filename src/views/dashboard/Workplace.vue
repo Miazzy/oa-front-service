@@ -2,11 +2,13 @@
   <page-layout :avatar="avatar">
     <div slot="headerContent">
       <div class="title" style="font-size:15px;">
-        {{ timeFix }}，{{ userInfo.realname }}，
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div :style="postStyle">{{ postName }} | {{ departName }}</div>
+      <div
+        :style="postStyle"
+      >『 {{ userInfo.realname }} | {{ postName }} | {{ departName || '上级单位' }} 』</div>
     </div>
+    <!--
     <div slot="extra">
       <a-row class="more-info">
         <a-col :span="6">
@@ -20,6 +22,7 @@
         </a-col>
       </a-row>
     </div>
+    -->
 
     <div>
       <a-row :gutter="24">
