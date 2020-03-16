@@ -202,11 +202,13 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
             id: id,
             create_by: userInfo['username'],
             create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            update_by: userInfo.username,
             title: title,
             content: title,
             main_key: curRow.id,
             main_table: tableName,
-            main_data: JSON.stringify(mainData)
+            main_data: JSON.stringify(mainData),
+            relate_users: `,${userInfo.username},admin,`,
         };
 
         //设置自由流程的表单业务数据
@@ -300,11 +302,13 @@ export async function postWorkflowCancel(tableName, curRow, node) {
             id: id,
             create_by: userInfo['username'],
             create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            update_by: userInfo.username,
             title: title,
             content: title,
             main_key: curRow.id,
             main_table: tableName,
-            main_data: JSON.stringify(mainData)
+            main_data: JSON.stringify(mainData),
+            relate_users: `,${userInfo.username},admin,`,
         };
 
     } catch (error) {
@@ -352,17 +356,21 @@ export async function postDynamicReject(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+
         //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
+
         //定义随机编码
         var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
+
         //合成动态编码
         id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
+
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
@@ -371,6 +379,8 @@ export async function postDynamicReject(tableName, curRow) {
 
         //获取表单的中文名称
         var tname = await manageAPI.queryTableDataByField('v_table_name', 'id', tableName);
+
+        //获取名称，并捕获异常
         try {
             tname = tname[0]['name'];
         } catch (error) {
@@ -379,6 +389,7 @@ export async function postDynamicReject(tableName, curRow) {
 
         //流程发起人
         var proponents = curRow.proponents;
+
         //获取流程发起人的中文信息
         proponents = _.find(userlist, (item) => {
             return curRow.proponents == item.username;
@@ -392,11 +403,13 @@ export async function postDynamicReject(tableName, curRow) {
             id: id,
             create_by: userInfo['username'],
             create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            update_by: proponents.username,
             title: title,
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(mainData)
+            main_data: JSON.stringify(mainData),
+            relate_users: `,${userInfo.username},${proponents.username},admin,`,
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
@@ -466,11 +479,13 @@ export async function postDynamicAgree(tableName, curRow) {
             id: id,
             create_by: userInfo['username'],
             create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            update_by: proponents.username,
             title: title,
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(mainData)
+            main_data: JSON.stringify(mainData),
+            relate_users: `,${userInfo.username},${proponents.username},admin,`,
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
@@ -500,17 +515,21 @@ export async function postDynamicNotify(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+
         //定义动态编码
         var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
         console.log('动态编号 :' + id);
+
         //定义随机编码
         var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
+
         //合成动态编码
         id = (id + random).substring(0, 23);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
+
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
@@ -528,6 +547,7 @@ export async function postDynamicNotify(tableName, curRow) {
 
         //流程发起人
         var proponents = curRow.proponents;
+
         //获取流程发起人的中文信息
         proponents = _.find(userlist, (item) => {
             return curRow.proponents == item.username;
@@ -541,11 +561,13 @@ export async function postDynamicNotify(tableName, curRow) {
             id: id,
             create_by: userInfo['username'],
             create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            update_by: proponents.username,
             title: title,
             content: title,
             main_key: curRow.main_value,
             main_table: tableName,
-            main_data: JSON.stringify(mainData)
+            main_data: JSON.stringify(mainData),
+            relate_users: `,${userInfo.username},${proponents.username},admin,`,
         };
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
