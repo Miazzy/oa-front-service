@@ -205,7 +205,7 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
         //合成动态编码
-        id = (id + random).substring(0, 23);
+        id = (id + random).substring(0, 24);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -313,7 +313,7 @@ export async function postWorkflowCancel(tableName, curRow, node) {
         var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
         //合成动态编码
-        id = (id + random).substring(0, 23);
+        id = (id + random).substring(0, 24);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -410,7 +410,7 @@ export async function postDynamicReject(tableName, curRow) {
         console.log('随机编号 :' + random);
 
         //合成动态编码
-        id = (id + random).substring(0, 23);
+        id = (id + random).substring(0, 24);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -490,7 +490,7 @@ export async function postDynamicAgree(tableName, curRow) {
         var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
         console.log('随机编号 :' + random);
         //合成动态编码
-        id = (id + random).substring(0, 23);
+        id = (id + random).substring(0, 24);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -569,7 +569,7 @@ export async function postDynamicNotify(tableName, curRow) {
         console.log('随机编号 :' + random);
 
         //合成动态编码
-        id = (id + random).substring(0, 23);
+        id = (id + random).substring(0, 24);
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");

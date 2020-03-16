@@ -957,3 +957,23 @@ export function abbreviation(str) {
         console.log(error);
     }
 }
+
+/**
+ * @function 合成唯一编码
+ */
+export function queryUniqueID() {
+    //日期格式化
+    var timestamp = new Date().getTime();
+    //定义动态编码
+    var id = formatDate(timestamp, "yyyyMMddhhmmssS");
+    //打印日志
+    console.log('动态编号 :' + id);
+    //定义随机编码
+    var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+    //打印随机编码
+    console.log('随机编号 :' + random);
+    //合成动态编码
+    id = (id + random).substring(0, 24);
+    //返回唯一编码
+    return id;
+}

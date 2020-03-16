@@ -894,6 +894,86 @@
             </template>
           </a-col>
 
+          <a-col :span="24" style="margin-top:30px;">
+            <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
+            <template>
+              <div v-for="(item, index) in replaylist" :key="index">
+                <a-comment>
+                  <template slot="actions">
+                    <span key="comment-basic-like">
+                      <a-tooltip title="Like">
+                        <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
+                      </a-tooltip>
+                      <span style="padding-left: '8px';cursor: 'auto'">{{item.likes}}</span>
+                    </span>
+                    <span key="comment-basic-dislike">
+                      <a-tooltip title="Dislike">
+                        <a-icon
+                          type="dislike"
+                          :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                        />
+                      </a-tooltip>
+                      <span style="padding-left: '8px';cursor: 'auto'">{{item.dislikes}}</span>
+                    </span>
+                    <span key="comment-basic-reply-to">回复</span>
+                  </template>
+                  <a slot="author">{{item.create_by}}</a>
+                  <a-avatar :src="item.avatar" :alt="item.create_by" slot="avatar" />
+                  <p slot="content">{{item.content}}</p>
+                  <a-tooltip slot="datetime" :title="item.create_time">
+                    <span>{{item.create_time}}</span>
+                  </a-tooltip>
+                </a-comment>
+              </div>
+            </template>
+
+            <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+              <a-divider style="width:98%;" dashed>·</a-divider>
+            </div>
+
+            <div>
+              <a-col :span="24">
+                <div style="float:left;width:50px;">
+                  <a-avatar
+                    style="float:left;text-align:left;"
+                    :src="avatar"
+                    :alt="userInfo.realname"
+                    slot="avatar"
+                  />
+                </div>
+                <div style="float:left;width:50%;height:50px;">
+                  <a-textarea
+                    :span="22"
+                    style="float:left;text-align:left;"
+                    v-model="replayvalue"
+                    placeholder="写下你的评论..."
+                    allowClear
+                    :autoSize="{ minRows: 4, maxRows: 10 }"
+                  />
+                </div>
+                <div style="width:50%;margin-left:50px;margin-top:10px;">
+                  <div style="float:right;margin-top:10px;">
+                    <a-button
+                      type="primary"
+                      @click="handleWriteComment()"
+                      style="margin-left:10px;font-size:12px;"
+                      size="small"
+                    >发布</a-button>
+                    <a-button
+                      color="gray"
+                      type="primary"
+                      @click="handleCancelComment()"
+                      style="margin-left:10px;background:pink;border: 1px solid pink;font-size:12px;"
+                      size="small"
+                    >取消</a-button>
+                  </div>
+                </div>
+              </a-col>
+            </div>
+          </a-col>
+
           <a-modal
             title="温馨提示"
             :visible="tipVisible"
@@ -967,6 +1047,8 @@ export default {
   },
   data() {
     return {
+      user: "",
+      avatar: "",
       columns: [],
       data: [],
       loading: false,
@@ -1010,13 +1092,36 @@ export default {
       startusers: "",
       auditusers: "",
       approveusers: "",
-      messageusers: ""
+      messageusers: "",
+      replayvalue: "",
+      replaylist: []
     };
   },
-
+  computed: {
+    userInfo() {
+      return this.$store.getters.userInfo;
+    }
+  },
   async created() {
     //查询用户数据，将数据缓存到浏览器缓存
     await manageAPI.queryUserName();
+
+    //设置员工岗位信息/部门信息
+    try {
+      this.v_user = await manageAPI.queryUserInfoByView(this.userInfo.username);
+
+      this.postName = this.v_user[0]["post"];
+      this.departName = this.v_user[0]["name"];
+
+      this.address = this.v_user[0]["address"];
+      this.bio = this.v_user[0]["bio"];
+
+      //设置头像信息
+      this.avatar =
+        window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
+    } catch (error) {
+      console.log("工作台设置员工岗位信息/部门信息异常：" + error);
+    }
   },
 
   async mounted() {
@@ -1032,6 +1137,8 @@ export default {
     var wftransfer = await this.transferFreeWorkflow();
     //自由流程节点
     var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
+    //查询评论信息
+    this.replaylist = await manageAPI.queryCurReplayList(bussinessCodeID);
     //打印加载的流程节点信息、自由流程处理信息、page类型
     console.log(
       `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
@@ -1055,6 +1162,8 @@ export default {
       let wftransfer = await this.transferFreeWorkflow();
       //自由流程节点
       var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
+      //查询评论信息
+      this.replaylist = await manageAPI.queryCurReplayList(bussinessCodeID);
       //打印加载的流程节点信息、自由流程处理信息、page类型
       console.log(
         `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
@@ -1166,6 +1275,8 @@ export default {
       var wftransfer = await this.transferFreeWorkflow();
       //自由流程节点
       var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
+      //查询评论信息
+      this.replaylist = await manageAPI.queryCurReplayList(bussinessCodeID);
       //打印加载的流程节点信息、自由流程处理信息、page类型
       console.log(
         `wfnode : ${wfnode}  wftransfer : ${wftransfer} wfreeNode : ${wfreeNode} pageType : ${this.pageType} curRow.bpm_status : ${this.curRow.bpm_status} `
@@ -1525,7 +1636,6 @@ export default {
 
       //如果用户流程中已经存在，则提示无法选择
       if (!tools.isNull(readyUser)) {
-        debugger;
         //将英文名转化为中文名
         readyUser = await manageAPI.patchEnameCname(readyUser);
 
@@ -2666,6 +2776,50 @@ export default {
           console.log("确认提交此自由流程！");
         }
       });
+    },
+
+    /**
+     * @function 发布评论
+     */
+    async handleWriteComment() {
+      //获取数据编号
+      var id = tools.isNull(this.curRow.id)
+        ? tools.queryUrlString("id")
+        : this.curRow.id;
+
+      //定义评论对象
+      var node = {
+        id: tools.queryUniqueID(),
+        create_by: this.userInfo.username,
+        create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+        content: this.replayvalue,
+        table_name: this.tableName,
+        main_key: id,
+        avatar: this.avatar
+      };
+
+      //提交评论信息
+      await manageAPI.postTableData("bs_comments", JSON.parse(JSON.stringify(node)));
+
+      //提示评论成功
+      this.$message.warning("评论成功！");
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //刷新页面数据
+      this.loadData();
+    },
+
+    /**
+     * @function 取消发布评论信息
+     */
+    async handleCancelComment() {
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提示评论成功
+      this.$message.warning("取消评论！");
     }
   }
 };
