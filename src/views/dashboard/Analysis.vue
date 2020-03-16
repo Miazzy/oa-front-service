@@ -82,7 +82,7 @@
         >
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
-              <a-tag color="cyan" @click="reloadData()">刷新❄️</a-tag>
+              <a-tag color="cyan" @click="reloadData()">&nbsp;刷&nbsp;新&nbsp;</a-tag>
             </div>
           </div>
           <a-tab-pane loading="true" tab="我的待办" key="1" style>
@@ -137,6 +137,10 @@
                     "
                     :key="tag"
                   >{{ tag }}</a-tag>
+                </span>
+
+                <span slot="proponents" slot-scope="text, record">
+                  <a-tag color="volcano" :key="record.proponents">{{ record.proponents }}</a-tag>
                 </span>
 
                 <span slot="create_time" slot-scope="text, record">
@@ -202,6 +206,10 @@
                     "
                     :key="tag"
                   >{{ tag }}</a-tag>
+                </span>
+
+                <span slot="proponents" slot-scope="text, record">
+                  <a-tag color="volcano" :key="record.proponents">{{ record.proponents }}</a-tag>
                 </span>
 
                 <span slot="create_time" slot-scope="text, record">
@@ -406,7 +414,7 @@
             style="position: relative;float:right;top: -63px;margin-left:5px;left:6px;"
           >
             <div class="extra-item">
-              <a-tag color="blue" @click="reloadVisitData()">刷新❄️</a-tag>
+              <a-tag color="blue" @click="reloadVisitData()">&nbsp;刷&nbsp;新&nbsp;</a-tag>
             </div>
           </div>
           <a-row>
@@ -485,7 +493,7 @@ const columns = [
   },
   {
     title: "业务",
-    width: 200,
+    width: 100,
     align: "center",
     key: "name",
     dataIndex: "name",
@@ -502,14 +510,22 @@ const columns = [
   {
     title: "操作人员",
     key: "username",
-    width: 300,
+    width: 150,
     align: "left",
     dataIndex: "username",
     scopedSlots: { customRender: "username" }
   },
   {
+    title: "流程发起人",
+    key: "proponents",
+    width: 100,
+    align: "left",
+    dataIndex: "proponents",
+    scopedSlots: { customRender: "proponents" }
+  },
+  {
     title: "创建时间",
-    width: 150,
+    width: 100,
     align: "center",
     key: "create_time",
     dataIndex: "create_time",

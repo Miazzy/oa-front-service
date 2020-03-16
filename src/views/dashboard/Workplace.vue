@@ -4,9 +4,10 @@
       <div class="title" style="font-size:15px;">
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div
-        :style="postStyle"
-      >『 {{ userInfo.realname }} | {{ postName }} | {{ departName || '上级单位' }} 』</div>
+      <div :style="postStyle">
+        『 {{ userInfo.realname }} | {{ postName }} |
+        {{ departName || '上级单位' }} 』
+      </div>
     </div>
 
     <div>
@@ -901,7 +902,7 @@
         </a-col>
         <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
           <a-card
-            title="快速开始 / 便捷导航"
+            title="便捷导航"
             style="margin-bottom: 24px"
             :bordered="false"
             :body-style="{padding: 0}"
@@ -1234,7 +1235,7 @@ export default {
 
     //获取动态数据，并设置到动态列表中
     try {
-      this.nodelist = await manageAPI.queryDynamic();
+      this.nodelist = await manageAPI.queryDynamicByUser(this.user.username);
     } catch (error) {
       console.log(error);
     }

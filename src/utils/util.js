@@ -935,7 +935,7 @@ export function filterEmpty(children = []) {
  */
 export function delHtmlTag(str) {
     try {
-        return str.replace(/<[^>]+>/g, ""); //去掉所有的html标记
+        return str.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
     } catch (error) {
         console.log(error);
     }
@@ -947,10 +947,11 @@ export function delHtmlTag(str) {
  */
 export function abbreviation(str) {
     try {
-        if (deNull(str).length < 50) {
+
+        if (deNull(str).length < 75) {
             return deNull(str).trim();
         } else {
-            return deNull(str).trim().substring(0, 50) + '...';
+            return deNull(str).trim().substring(0, 75) + '...';
         }
     } catch (error) {
         console.log(error);

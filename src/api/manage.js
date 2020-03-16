@@ -470,7 +470,7 @@ export async function queryTableAll(tableName) {
 export async function queryDynamic() {
 
     //设置查询URL
-    var queryURL = `${api.restapi}/api/bs_dynamic?_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/bs_dynamic?_size=10&_sort=-create_time`;
     //定义查询结果
     var result = null;
 
@@ -492,6 +492,42 @@ export async function queryDynamic() {
 
             //设置缓存数据，缓存时间，暂定为5秒钟
             storage.setStore('system_dynamic_info_all', result, 3600 * 2);
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    //返回查询后的动态数据
+    return result;
+
+}
+
+export async function queryDynamicByUser(username) {
+
+    //设置查询URL
+    var queryURL = `${api.restapi}/api/bs_dynamic?_where=(relate_users,like,~${username}~)&_size=10&_sort=-create_time`;
+    //定义查询结果
+    var result = null;
+
+    try {
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        result = storage.getStore(`system_dynamic_info_by_user@${username}`);
+
+        if (!(typeof result != 'undefined' && result != null && result != '')) {
+
+            //发送HTTP请求，获取返回值后，设置数据
+            const res = await superagent.get(queryURL).set('accept', 'json');
+            result = res.body;
+
+            //遍历并格式化日期
+            _.each(result, function(item) {
+                var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                item["create_time"] = optime;
+            });
+
+            //设置缓存数据，缓存时间，暂定为5秒钟
+            storage.setStore(`system_dynamic_info_by_user@${username}`, result, 3600 * 2);
         }
 
     } catch (err) {

@@ -179,6 +179,16 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
     try {
         //去掉undefined字符串
         freeWFNode.notify_node = freeWFNode.notify_node.replace(/undefined/g, '')
+
+        //如果字符串以逗号开头，则去掉开头的逗号
+        if (freeWFNode.notify_node.startsWith(',')) {
+            freeWFNode.notify_node = freeWFNode.notify_node.substring(1);
+        }
+
+        //如果字符串以逗号结束，则去掉结尾的逗号
+        if (freeWFNode.notify_node.endsWith(',')) {
+            freeWFNode.notify_node = freeWFNode.notify_node.substring(0, freeWFNode.notify_node.length - 1);
+        }
     } catch (error) {
         console.log(error);
     }
