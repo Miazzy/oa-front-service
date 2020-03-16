@@ -904,7 +904,11 @@
                   <template slot="actions">
                     <span key="comment-basic-like">
                       <a-tooltip title="Like">
-                        <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
+                        <a-icon
+                          type="like"
+                          :theme="action === 'liked' ? 'filled' : 'outlined'"
+                          @click="handleLikeComment(item.id)"
+                        />
                       </a-tooltip>
                       <span style="padding-left: '8px';cursor: 'auto'">{{item.likes}}</span>
                     </span>
@@ -913,6 +917,7 @@
                         <a-icon
                           type="dislike"
                           :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                          @click="handleDislikeComment(item.id)"
                         />
                       </a-tooltip>
                       <span style="padding-left: '8px';cursor: 'auto'">{{item.dislikes}}</span>
@@ -934,7 +939,7 @@
             </div>
 
             <div>
-              <a-col :span="24">
+              <a-col :span="24" v-if="commentFlag == 'yes'">
                 <div style="float:left;width:50px;">
                   <a-avatar
                     style="float:left;text-align:left;"
@@ -1094,7 +1099,8 @@ export default {
       approveusers: "",
       messageusers: "",
       replayvalue: "",
-      replaylist: []
+      replaylist: [],
+      commentFlag: "yes"
     };
   },
   computed: {
@@ -2792,17 +2798,20 @@ export default {
         id: tools.queryUniqueID(),
         create_by: this.userInfo.username,
         create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
-        content: this.replayvalue,
+        content: `${this.replayvalue} `,
         table_name: this.tableName,
         main_key: id,
         avatar: this.avatar
       };
 
-      //提交评论信息
-      await manageAPI.postTableData("bs_comments", JSON.parse(JSON.stringify(node)));
-
       //提示评论成功
       this.$message.warning("评论成功！");
+
+      //提交评论信息
+      await manageAPI.postTableData(
+        "bs_comments",
+        JSON.parse(JSON.stringify(node))
+      );
 
       //清除评论内容
       this.replayvalue = "";
@@ -2812,11 +2821,68 @@ export default {
     },
 
     /**
+     * @function 给评论点赞
+     */
+    async handleLikeComment(id) {
+      //先查询出相应评论数据
+      var node = await manageAPI.queryTableData("bs_comments", id);
+
+      //点赞数加1
+      var likesNode = {
+        id: id,
+        likes: node.likes + 1
+      };
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(likesNode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("点赞成功！");
+    },
+
+    /**
+     * @function 给评论取消点赞
+     */
+    async handleDislikeComment(id) {
+      //先查询出相应评论数据
+      var node = await manageAPI.queryTableData("bs_comments", id);
+
+      //点赞数加1
+      var dislikesNode = {
+        id: id,
+        dislikes: node.dislikes + 1
+      };
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(dislikesNode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("鄙视成功！");
+    },
+
+    /**
      * @function 取消发布评论信息
      */
     async handleCancelComment() {
       //清除评论内容
       this.replayvalue = "";
+
+      //隐藏评论输入框
+      this.commentFlag = "no";
 
       //提示评论成功
       this.$message.warning("取消评论！");
