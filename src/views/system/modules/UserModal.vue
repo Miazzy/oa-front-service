@@ -726,7 +726,6 @@ export default {
 
     // 获取用户对应部门弹出框提交给返回的数据
     modalFormOk(formData) {
-      debugger;
       this.checkedDepartNames = [];
       this.selectedDepartKeys = [];
       this.checkedDepartNameString = "";

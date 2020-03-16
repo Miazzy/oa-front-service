@@ -926,12 +926,44 @@
                       key="comment-basic-reply-to"
                       @click="handleReplayComments(item.id , item.create_by)"
                     >回复</span>
+                    <span
+                      key="comment-basic-reply-to"
+                      @click="handleDeleteComments(item.id , item.create_by)"
+                      v-if="userInfo.username == item.create_by"
+                    >删除</span>
                   </template>
                   <a slot="author">{{item.create_by}}</a>
                   <a-avatar :src="item.avatar" :alt="item.create_by" slot="avatar" />
                   <p slot="content">{{item.content}}</p>
                   <div v-for="(subitem, subindex) in item.replay" :key="subindex">
                     <a-comment>
+                      <template slot="actions">
+                        <span key="comment-basic-like">
+                          <a-tooltip title="Like">
+                            <a-icon
+                              type="like"
+                              :theme="action === 'liked' ? 'filled' : 'outlined'"
+                              @click="handleLikeSubComment(item.id , subitem.id)"
+                            />
+                          </a-tooltip>
+                          <span style="padding-left: '8px';cursor: 'auto'">{{subitem.likes}}</span>
+                        </span>
+                        <span key="comment-basic-dislike">
+                          <a-tooltip title="Dislike">
+                            <a-icon
+                              type="dislike"
+                              :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                              @click="handleDislikeSubComment(item.id , subitem.id )"
+                            />
+                          </a-tooltip>
+                          <span style="padding-left: '8px';cursor: 'auto'">{{subitem.dislikes}}</span>
+                        </span>
+                        <span
+                          key="comment-basic-reply-to"
+                          @click="handleDeleteSubComment(item.id , subitem.id , subitem.create_by)"
+                          v-if="userInfo.username == subitem.create_by"
+                        >删除</span>
+                      </template>
                       <a slot="author">{{subitem.create_by}}</a>
                       <a-avatar :src="subitem.avatar" :alt="subitem.create_by" slot="avatar" />
                       <p slot="content">{{subitem.content}}</p>
@@ -2926,6 +2958,156 @@ export default {
         "bs_comments",
         id,
         JSON.parse(JSON.stringify(dislikesNode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("鄙视成功！");
+    },
+
+    /**
+     * @function 删除上级评论
+     */
+    async handleDeleteComments(id, username) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      if (
+        this.userInfo.username != username ||
+        this.userInfo.username != node.create_by
+      ) {
+        //提示点赞成功
+        this.$message.warning("无法删除他人评论！");
+      } else {
+        //清除评论内容
+        this.replayvalue = "";
+
+        //提交评论信息
+        await manageAPI.deleteTableData("bs_comments", id);
+
+        //刷新页面数据
+        this.loadData();
+
+        //提示点赞成功
+        this.$message.warning("删除回复成功！");
+      }
+    },
+
+    /**
+     * @function 删除二级评论
+     */
+    async handleDeleteSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      replay = _.reject(replay, item => {
+        return item.id == subId;
+      });
+
+      //新增回复评论
+      var replaynode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(replaynode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("回复成功！");
+    },
+
+    /**
+     * @function 二级评论点赞
+     */
+    async handleLikeSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      _.each(replay, item => {
+        //设置点赞数
+        if (item.id == subId) {
+          //定义回复评论
+          item.likes = tools.isNull(item.likes) ? 1 : item.likes + 1;
+        }
+      });
+
+      //重新设置回复谢谢
+      var likenode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(likenode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("点赞成功！");
+    },
+
+    /**
+     * @function 二级评论点鄙视
+     */
+    async handleDislikeSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      _.each(replay, item => {
+        //设置点赞数
+        if (item.id == subId) {
+          //定义回复评论
+          item.dislikes = tools.isNull(item.dislikes) ? 1 : item.dislikes + 1;
+        }
+      });
+
+      //重新设置回复信息
+      var dislikenode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(dislikenode))
       );
 
       //刷新页面数据
