@@ -61,6 +61,16 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
 
             //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史，以前此表单的自由流程进入历史，并删除以前此表单对应的自由流程
             result = await manageAPI.transFreeWflowHis(curRow["business_data_id"]);
+
+            //二次提交审批状态
+            setTimeout(async() => {
+                //修改审批状态为审批中
+                result = await manageAPI.patchTableData(
+                    tableName,
+                    curRow["business_data_id"],
+                    bpmStatus
+                );
+            }, 100);
         }
     } catch (error) {
         console.log("审批处理当前节点的审批信息", error);
@@ -166,6 +176,13 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
     //动态内容
     var dynamicNode = {};
 
+    try {
+        //去掉undefined字符串
+        freeWFNode.notify_node = freeWFNode.notify_node.replace(/undefined/g, '')
+    } catch (error) {
+        console.log(error);
+    }
+
     //构造用户动态内容
     try {
 
@@ -208,7 +225,7 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
             main_key: curRow.id,
             main_table: tableName,
             main_data: JSON.stringify(mainData),
-            relate_users: `,${userInfo.username},admin,`,
+            relate_users: `${freeWFNode.audit_node},${freeWFNode.approve_node},${freeWFNode.notify_node},${userInfo.username},admin,`,
         };
 
         //设置自由流程的表单业务数据
@@ -240,6 +257,15 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
         //第五步，新增动态数据，内容：XXX 发起了 XX 业务的流程申请。
         result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
 
+        //二次修改状态为审批中
+        setTimeout(async() => {
+            //修改审批状态为审批中,第二次修改
+            result = await manageAPI.patchTableData(
+                tableName,
+                curRow["id"],
+                statusNode
+            );
+        }, 100)
 
     } catch (error) {
         console.log("处理自由流程发起提交审批操作异常：" + error)
@@ -330,6 +356,14 @@ export async function postWorkflowCancel(tableName, curRow, node) {
 
         //新增动态数据，内容：XXX 撤销了 XX 业务的流程申请。
         result = await manageAPI.postTableData('bs_dynamic', dynamicNode);
+
+        //二次修改状态为待提交
+        setTimeout(async() => {
+            //修改当前审批状态为待提交
+            result = await manageAPI.patchTableData(tableName, curRow["id"], {
+                bpm_status: "1"
+            });
+        }, 100)
 
     } catch (error) {
         console.log(error);
