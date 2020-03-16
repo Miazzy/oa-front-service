@@ -922,11 +922,24 @@
                       </a-tooltip>
                       <span style="padding-left: '8px';cursor: 'auto'">{{item.dislikes}}</span>
                     </span>
-                    <span key="comment-basic-reply-to">回复</span>
+                    <span
+                      key="comment-basic-reply-to"
+                      @click="handleReplayComments(item.id , item.create_by)"
+                    >回复</span>
                   </template>
                   <a slot="author">{{item.create_by}}</a>
                   <a-avatar :src="item.avatar" :alt="item.create_by" slot="avatar" />
                   <p slot="content">{{item.content}}</p>
+                  <div v-for="(subitem, subindex) in item.replay" :key="subindex">
+                    <a-comment>
+                      <a slot="author">{{subitem.create_by}}</a>
+                      <a-avatar :src="subitem.avatar" :alt="subitem.create_by" slot="avatar" />
+                      <p slot="content">{{subitem.content}}</p>
+                      <a-tooltip slot="datetime" :title="subitem.create_time">
+                        <span>{{subitem.create_time}}</span>
+                      </a-tooltip>
+                    </a-comment>
+                  </div>
                   <a-tooltip slot="datetime" :title="item.create_time">
                     <span>{{item.create_time}}</span>
                   </a-tooltip>
@@ -1100,6 +1113,7 @@ export default {
       messageusers: "",
       replayvalue: "",
       replaylist: [],
+      replayid: "",
       commentFlag: "yes"
     };
   },
@@ -2793,31 +2807,78 @@ export default {
         ? tools.queryUrlString("id")
         : this.curRow.id;
 
-      //定义评论对象
-      var node = {
-        id: tools.queryUniqueID(),
-        create_by: this.userInfo.username,
-        create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
-        content: `${this.replayvalue} `,
-        table_name: this.tableName,
-        main_key: id,
-        avatar: this.avatar
-      };
+      if (tools.isNull(this.replayid)) {
+        //定义评论对象
+        let node = {
+          id: tools.queryUniqueID(),
+          create_by: this.userInfo.username,
+          create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+          content: `${this.replayvalue} `,
+          table_name: this.tableName,
+          main_key: id,
+          avatar: this.avatar
+        };
 
-      //提示评论成功
-      this.$message.warning("评论成功！");
+        //清除评论内容
+        this.replayvalue = "";
 
-      //提交评论信息
-      await manageAPI.postTableData(
-        "bs_comments",
-        JSON.parse(JSON.stringify(node))
-      );
+        //提示评论成功
+        this.$message.warning("评论成功！");
 
+        //提交评论信息
+        await manageAPI.postTableData(
+          "bs_comments",
+          JSON.parse(JSON.stringify(node))
+        );
+
+        //刷新页面数据
+        this.loadData();
+      } else {
+        //先查询出相应评论数据
+        let node = await manageAPI.queryTableData("bs_comments", this.replayid);
+
+        //定义回复评论
+        var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+        //将回复评论加入数组
+        replay.push({
+          id: tools.queryUniqueID(),
+          create_by: this.userInfo.username,
+          create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+          content: `${this.replayvalue} `,
+          table_name: this.tableName,
+          avatar: this.avatar
+        });
+
+        //新增回复评论
+        var replaynode = {
+          id: this.replayid,
+          replay: JSON.stringify(replay)
+        };
+
+        //清除评论内容
+        this.replayvalue = "";
+
+        //提交评论信息
+        await manageAPI.patchTableData(
+          "bs_comments",
+          this.replayid,
+          JSON.parse(JSON.stringify(replaynode))
+        );
+
+        //刷新页面数据
+        this.loadData();
+
+        //提示点赞成功
+        this.$message.warning("回复成功！");
+      }
+    },
+
+    async handleReplayComments(id, username) {
       //清除评论内容
-      this.replayvalue = "";
-
-      //刷新页面数据
-      this.loadData();
+      this.replayvalue = `@${username} `;
+      //设置回复id
+      this.replayid = id;
     },
 
     /**
