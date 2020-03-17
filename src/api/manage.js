@@ -1300,11 +1300,21 @@ export async function queryProcessLogDoneByParam(username, param, page = 0, size
             starttime = new Date();
             endtime = new Date();
         } else if (param.time.length == 1) {
-            starttime = param.time[0].format('YYYY-MM-DD');
-            endtime = param.time[1].format('YYYY-MM-DD');
+            try {
+                starttime = param.time[0].format('YYYY-MM-DD');
+                endtime = param.time[1].format('YYYY-MM-DD');
+            } catch (error) {
+                starttime = param.time[0];
+                endtime = param.time[1];
+            }
         } else if (param.time.length >= 2) {
-            starttime = param.time[0].format('YYYY-MM-DD');
-            endtime = param.time[1].format('YYYY-MM-DD');
+            try {
+                starttime = param.time[0].format('YYYY-MM-DD');
+                endtime = param.time[1].format('YYYY-MM-DD');
+            } catch (error) {
+                starttime = param.time[0];
+                endtime = param.time[1];
+            }
         }
 
         starttime = tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
@@ -3832,7 +3842,6 @@ export async function transFreeWflowHis(id) {
  */
 export async function patchEnameCname(origin) {
 
-    debugger;
 
     //中文名称
     var chinese = '';

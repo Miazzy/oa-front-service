@@ -7,8 +7,8 @@
           <a-col :md="4" :sm="4">
             <a-form-item label="事项">
               <a-select style="width: 120px" v-model="queryParam.type">
-                <a-select-option value="approve">审批</a-select-option>
-                <a-select-option value="message">知会</a-select-option>
+                <a-select-option value="审批">审批</a-select-option>
+                <a-select-option value="知会">知会</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -117,6 +117,8 @@ import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as $ from "jquery";
+import * as tools from "@/utils/util";
+import * as moment from "moment";
 
 const columns = [
   {
@@ -210,11 +212,13 @@ export default {
     };
   },
   async created() {
-    this.getDate();
     this.loadData();
   },
   methods: {
     async loadData() {
+      //获取用户信息
+      var userInfo = storage.getStore("cur_user");
+
       //查询表单信息
       var tableNameList = await manageAPI.queryTableAll("v_table_name");
 
@@ -224,6 +228,40 @@ export default {
       setTimeout(() => {
         //$(".ant-tag").css("margin-top", "5px");
       }, 100);
+
+      //设置高级查询条件
+      this.queryParam = storage.getStore(
+        `system_done_list_user@${userInfo.username}`
+      );
+
+      //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
+      if (
+        this.queryParam == "" ||
+        this.queryParam == null ||
+        JSON.stringify(this.queryParam) == "{}"
+      ) {
+        this.queryParam = {};
+        await this.getDate();
+      } else {
+        //设置时间
+        if (this.queryParam.time.length > 0) {
+          this.queryParam.time[0] = tools.formatDate(
+            this.queryParam.time[0],
+            "yyyy-MM-dd"
+          );
+          this.queryParam.time[1] = tools.formatDate(
+            this.queryParam.time[1],
+            "yyyy-MM-dd"
+          );
+
+          this.queryParam.time = [
+            moment(this.queryParam.time[0], "YYYY-MM-DD"),
+            moment(this.queryParam.time[1], "YYYY-MM-DD")
+          ];
+        }
+
+        await this.searchQuery();
+      }
 
       console.log("table name list :" + JSON.stringify(tableNameList));
     },
@@ -293,6 +331,13 @@ export default {
       this.dataDoneList = await manageAPI.queryProcessLogDoneByParamAll(
         username,
         this.queryParam
+      );
+
+      //缓存本次查询条件，下次打开此页面，可以还原查询条件
+      storage.setStore(
+        `system_done_list_user@${userInfo.username}`,
+        JSON.stringify(this.queryParam),
+        3600
       );
 
       //打印日志信息
