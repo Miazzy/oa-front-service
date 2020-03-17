@@ -290,7 +290,7 @@ export default {
       let username = userInfo["username"];
 
       //获取我的待办数据
-      this.dataDoneList = await manageAPI.queryProcessLogDoneByParam(
+      this.dataDoneList = await manageAPI.queryProcessLogDoneByParamAll(
         username,
         this.queryParam
       );

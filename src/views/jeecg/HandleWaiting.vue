@@ -229,13 +229,13 @@ export default {
         let realname = userInfo["realname"];
         if (this.activeKey == 1) {
           //获取我的待办数据
-          this.dataWaitList = await manageAPI.queryProcessLogWait(
+          this.dataWaitList = await manageAPI.queryProcessLogWaitAll(
             username,
             realname
           );
         } else if (this.activeKey == 2) {
           //获取我的已办数据
-          this.dataDoneList = await manageAPI.queryProcessLogDone(
+          this.dataDoneList = await manageAPI.queryProcessLogDoneAll(
             username,
             realname
           );
@@ -283,7 +283,7 @@ export default {
       let username = userInfo["username"];
 
       //获取我的待办数据
-      this.dataWaitList = await manageAPI.queryProcessLogWaitByParam(
+      this.dataWaitList = await manageAPI.queryProcessLogWaitByParamAll(
         username,
         this.queryParam
       );
