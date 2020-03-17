@@ -977,7 +977,7 @@
             <div class="members">
               <a-row>
                 <a-col :span="12" v-for="(item, index) in blog" :key="index">
-                  <a :href="item.href">
+                  <a @click="item.click">
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member">{{ item.name }}</span>
                   </a>
@@ -1053,6 +1053,13 @@
               </a-row>
             </div>
           </a-card>
+
+          <template>
+            <div>
+              <!-- 向上箭头 -->
+              <a-back-top />
+            </div>
+          </template>
         </a-col>
       </a-row>
     </div>
@@ -1123,22 +1130,33 @@ export default {
         {
           name: "热门博客",
           avatar: "/images/icon-blog-hot.svg",
-          href: "/blog/hot"
+          href: "/blog/hot",
+          click: () => {}
         },
         {
           name: "知名博主",
           avatar: "/images/icon-blog-01.svg",
-          href: "/blog/writer"
+          href: "/blog/writer",
+          click: () => {}
         },
         {
           name: "博文排行",
           avatar: "/images/icon-rank-01.svg",
-          href: "/blog/rank"
+          href: "/blog/rank",
+          click: () => {}
         },
         {
           name: "博客中心",
           avatar: "/images/icon-center-01.svg",
-          href: "/blog/center"
+          href: "/blog/center",
+          click: () => {
+            //跳转到相应页面
+            this.$router.push({
+              path: "/blog/center",
+              fullPath: "/blog/center",
+              meta: { title: "博客中心" }
+            });
+          }
         }
       ],
 
@@ -1418,7 +1436,12 @@ export default {
      */
     handleWriteBlog() {
       var path = "/blog/center";
-      window.location.href = path;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "博客中心" }
+      });
     },
     /**
      * @function 综合能力测评函数

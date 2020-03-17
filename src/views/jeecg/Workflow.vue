@@ -1054,6 +1054,13 @@
             </span>
           </el-dialog>
         </div>
+
+        <template>
+          <div>
+            <!-- 向上箭头 -->
+            <a-back-top />
+          </div>
+        </template>
       </a-col>
     </section>
   </a-card>
@@ -2911,6 +2918,15 @@ export default {
       this.replayvalue = `@${username} `;
       //设置回复id
       this.replayid = id;
+      //设置文本框获取焦点
+      this.$nextTick(function() {
+        try {
+          this.$refs.input.focus();
+          this.$refs.textarea.focus();
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     /**

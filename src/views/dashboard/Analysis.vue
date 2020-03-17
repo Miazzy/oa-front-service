@@ -445,6 +445,13 @@
           </a-row>
           <line-chart-multid :fields="visitFields" :dataSource="visitInfo"></line-chart-multid>
         </a-card>
+
+        <template>
+          <div>
+            <!-- 向上箭头 -->
+            <a-back-top />
+          </div>
+        </template>
       </a-col>
     </a-row>
   </div>

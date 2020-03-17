@@ -969,11 +969,11 @@ export function queryUniqueID() {
     //打印日志
     console.log('动态编号 :' + id);
     //定义随机编码
-    var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
+    var random = (Math.floor(Math.random() * 100000000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000000) + "");
     //打印随机编码
     console.log('随机编号 :' + random);
     //合成动态编码
-    id = (id + random).substring(0, 24);
+    id = (id + random).replace(/\./g, '').substring(0, 32);
     //返回唯一编码
     return id;
 }
