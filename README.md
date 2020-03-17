@@ -16,7 +16,8 @@ Vue 开发的OA系统
 
 ### 源码地址：
 
-github: https://github.com/Miazzy/oa-front-service
+- github: https://github.com/Miazzy/oa-front-service
+- gitee: https://gitee.com/yunwisdoms/oa-front-service 
 - 注意：由于码云仓库最大只支持5G空间，现在容量不足，已经无法提交，故最新代码提交至github仓库，目前由于开发文档、部署文档尚未编写，在后续将抽空编写
 
 ### 依赖项目
