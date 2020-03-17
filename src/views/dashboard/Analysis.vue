@@ -525,7 +525,7 @@ const columns = [
   {
     title: "流程发起人",
     key: "proponents",
-    width: 100,
+    width: 150,
     align: "left",
     dataIndex: "proponents",
     scopedSlots: { customRender: "proponents" }

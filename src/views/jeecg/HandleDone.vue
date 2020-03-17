@@ -92,14 +92,6 @@
             >{{record.name}}</a-tag>
           </span>
 
-          <span slot="username" slot-scope="text , record">
-            <a-tag
-              v-for="tag in record.username"
-              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
-              :key="tag"
-            >{{tag}}</a-tag>
-          </span>
-
           <span slot="create_time" slot-scope="text , record">
             <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
           </span>
@@ -128,7 +120,7 @@ const columns = [
   },
   {
     title: "业务",
-    width: 200,
+    width: 100,
     align: "center",
     key: "name",
     dataIndex: "name",
@@ -145,14 +137,22 @@ const columns = [
   {
     title: "操作人员",
     key: "username",
-    width: 300,
+    width: 150,
     align: "left",
     dataIndex: "username",
     scopedSlots: { customRender: "username" }
   },
   {
-    title: "创建时间",
+    title: "流程发起人",
+    key: "proponents",
     width: 150,
+    align: "left",
+    dataIndex: "proponents",
+    scopedSlots: { customRender: "proponents" }
+  },
+  {
+    title: "创建时间",
+    width: 100,
     align: "center",
     key: "create_time",
     dataIndex: "create_time",
