@@ -92,6 +92,15 @@
             >{{record.name}}</a-tag>
           </span>
 
+          <span slot="username" slot-scope="username">
+            <a-tag
+              v-for="tag in username"
+              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+              :key="tag"
+              style="margin-top:5px;"
+            >{{tag}}</a-tag>
+          </span>
+
           <span slot="create_time" slot-scope="text , record">
             <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
           </span>
@@ -107,6 +116,7 @@ import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
+import * as $ from "jquery";
 
 const columns = [
   {
@@ -211,6 +221,10 @@ export default {
       //设置表单信息
       this.tableNameList = tableNameList;
 
+      setTimeout(() => {
+        //$(".ant-tag").css("margin-top", "5px");
+      }, 100);
+
       console.log("table name list :" + JSON.stringify(tableNameList));
     },
     async getDate() {
@@ -222,13 +236,13 @@ export default {
         let realname = userInfo["realname"];
         if (this.activeKey == 1) {
           //获取我的待办数据
-          this.dataWaitList = await manageAPI.queryProcessLogWait(
+          this.dataWaitList = await manageAPI.queryProcessLogWaitAll(
             username,
             realname
           );
         } else if (this.activeKey == 2) {
           //获取我的已办数据
-          this.dataDoneList = await manageAPI.queryProcessLogDone(
+          this.dataDoneList = await manageAPI.queryProcessLogDoneAll(
             username,
             realname
           );
@@ -325,5 +339,11 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+.ant-tag {
+  margin-bottom: 5px;
+}
+.ant-tag-geekblue {
+  margin-bottom: 5px;
 }
 </style>

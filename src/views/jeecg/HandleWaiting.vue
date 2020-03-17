@@ -91,6 +91,15 @@
             >{{record.name.toUpperCase()}}</a-tag>
           </span>
 
+          <span slot="username" slot-scope="username">
+            <a-tag
+              v-for="tag in username"
+              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
+              :key="tag"
+              style="margin-top:5px;"
+            >{{tag}}</a-tag>
+          </span>
+
           <span slot="create_time" slot-scope="text , record">
             <a-tag color="red" :key="record.create_time">{{record.create_time}}</a-tag>
           </span>
@@ -106,6 +115,7 @@ import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
+import * as $ from "jquery";
 
 const columns = [
   {
@@ -203,6 +213,10 @@ export default {
       //设置表单信息
       this.tableNameList = tableNameList;
 
+      setTimeout(() => {
+        //$(".ant-tag").css("margin-bottom", "5px");
+      }, 100);
+
       //打印表单信息
       console.log("table name list :" + JSON.stringify(tableNameList));
     },
@@ -298,6 +312,12 @@ export default {
   text-align: left;
   margin-left: 50px;
 }
+.ant-tag {
+  margin-bottom: 5px;
+}
+.ant-tag-geekblue {
+  margin-bottom: 5px;
+}
 .explain .ant-input,
 .sign .ant-input {
   font-weight: bolder;
@@ -318,5 +338,11 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+.ant-tag {
+  margin-bottom: 5px;
+}
+.ant-tag-geekblue {
+  margin-bottom: 5px;
 }
 </style>

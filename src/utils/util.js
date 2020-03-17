@@ -935,7 +935,11 @@ export function filterEmpty(children = []) {
  */
 export function delHtmlTag(str) {
     try {
-        return str.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
+        if (isNull(str)) {
+            return ""; //去掉所有的html标记
+        } else {
+            return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
+        }
     } catch (error) {
         console.log(error);
     }
