@@ -4,23 +4,7 @@
       <div class="title" style="font-size:14px;">
         <span class="welcome-text">{{ welcome }}</span>
       </div>
-      <div :style="postStyle">初级博主</div>
-    </div>
-    <div slot="extra" style="height:60px;">
-      <a-row class="more-info">
-        <a-col :span="6">
-          <head-info title="总博文数" content="56" :center="false" :bordered="false" />
-        </a-col>
-        <a-col :span="6">
-          <head-info title="博文排名" content="8/24" :center="false" :bordered="false" />
-        </a-col>
-        <a-col :span="6">
-          <head-info title="博文积分" content="100" :center="false" :bordered="false" />
-        </a-col>
-        <a-col :span="6">
-          <head-info title="总访问数" content="2,223" :center="false" />
-        </a-col>
-      </a-row>
+      <div :style="postStyle">初级博主 | 总博文数 0 | 博文排名 10 | 访问总数 2000</div>
     </div>
 
     <div>
@@ -220,7 +204,11 @@ export default {
       departName: "",
       avatar: "",
       user: {},
-      postStyle: { "margin-top": "-5px" },
+      postStyle: {
+        "margin-top": "-5px",
+        "margin-left": "-113px",
+        transform: "scale(0.8)"
+      },
       projects: [],
       loading: true,
       radarLoading: true,
@@ -442,8 +430,13 @@ export default {
      * @function 设置岗位style
      */
     handlePostStyle() {
-      if (this.welcome.length > 30) {
-        this.postStyle = { "margin-top": "-10px" };
+      if (this.welcome.length > 75) {
+        this.postStyle = {
+          display: "none",
+          "margin-top": "-5px",
+          "margin-left": "-113px",
+          transform: "scale(0.8)"
+        };
       }
     },
     handleTagClose() {

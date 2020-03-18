@@ -1,7 +1,7 @@
 <template>
   <page-layout :avatar="avatar">
     <div slot="headerContent">
-      <div class="title" style="font-size:15px;">
+      <div class="title" style="font-size:14px;">
         <span class="welcome-text">{{ welcome }}</span>
       </div>
       <div :style="postStyle">
@@ -1093,7 +1093,11 @@ export default {
       departName: "",
       avatar: "",
       user: {},
-      postStyle: { "margin-top": "-5px" },
+      postStyle: {
+        "margin-top": "-5px",
+        "margin-left": "-113px",
+        transform: "scale(0.8)"
+      },
       projects: [],
       loading: true,
       radarLoading: true,
@@ -1293,8 +1297,13 @@ export default {
      * @function 设置岗位style
      */
     handlePostStyle() {
-      if (this.welcome.length > 30) {
-        this.postStyle = { "margin-top": "-10px" };
+      if (this.welcome.length > 75) {
+        this.postStyle = {
+          display: "none",
+          "margin-top": "-5px",
+          "margin-left": "-113px",
+          transform: "scale(0.8)"
+        };
       }
     },
 
