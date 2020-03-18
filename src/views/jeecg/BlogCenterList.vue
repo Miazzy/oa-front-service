@@ -330,7 +330,7 @@ export default {
      * @function 设置岗位style
      */
     handlePostStyle() {
-      if (this.welcome.length > 100) {
+      if (this.welcome.length > 75) {
         this.postStyle = {
           display: "none",
           "margin-top": "-5px",
