@@ -2,7 +2,7 @@
   <page-layout :avatar="avatar">
     <div slot="headerContent">
       <div class="title" style="font-size:14px;">
-        <span class="welcome-text">{{ welcome }}</span>
+        <span class="welcome-text" :style="welcomeStyle">{{ welcome }}</span>
       </div>
       <div :style="postStyle">
         『 {{ userInfo.realname }} | {{ postName }} |
@@ -1093,6 +1093,7 @@ export default {
       departName: "",
       avatar: "",
       user: {},
+      welcomeStyle: {},
       postStyle: {
         "margin-top": "-5px",
         "margin-left": "-113px",
@@ -1306,8 +1307,17 @@ export default {
         };
       }
       //如果字数太多，则使用省略符号
-      if (this.welcome.length > 240) {
-        this.welcome = this.welcome.substring(0, 240) + "...";
+      if (this.welcome.length > 200) {
+        this.welcomeStyle = { "font-size": "13px" };
+      }
+      //如果字数太多，则使用省略符号
+      if (this.welcome.length > 250) {
+        this.welcomeStyle = { "font-size": "12px" };
+      }
+      //如果字数太多，则使用省略符号
+      if (this.welcome.length > 270) {
+        this.welcomeStyle = { "font-size": "12px" };
+        this.welcome = this.welcome.substring(0, 270) + "...";
       }
     },
 
