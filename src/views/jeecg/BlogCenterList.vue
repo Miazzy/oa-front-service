@@ -338,6 +338,10 @@ export default {
           transform: "scale(0.8)"
         };
       }
+      //如果字数太多，则使用省略符号
+      if (this.welcome.length > 240) {
+        this.welcome = this.welcome.substring(0, 240) + "...";
+      }
     },
     handleTagClose() {
       const tags = this.tags; //this.tags.filter(tag => tag !== "");
