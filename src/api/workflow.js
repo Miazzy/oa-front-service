@@ -198,14 +198,9 @@ export async function postWorkflowFree(tableName, curRow, freeWFNode, startFreeN
 
         //日期格式化
         var timestamp = new Date().getTime();
+
         //定义动态编码
-        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
-        console.log('动态编号 :' + id);
-        //定义随机编码
-        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
-        console.log('随机编号 :' + random);
-        //合成动态编码
-        id = (id + random).substring(0, 24);
+        var id = tools.queryUniqueID();
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -306,14 +301,9 @@ export async function postWorkflowCancel(tableName, curRow, node) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+
         //定义动态编码
-        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
-        console.log('动态编号 :' + id);
-        //定义随机编码
-        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
-        console.log('随机编号 :' + random);
-        //合成动态编码
-        id = (id + random).substring(0, 24);
+        var id = tools.queryUniqueID();
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -402,15 +392,7 @@ export async function postDynamicReject(tableName, curRow) {
         var timestamp = new Date().getTime();
 
         //定义动态编码
-        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
-        console.log('动态编号 :' + id);
-
-        //定义随机编码
-        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
-        console.log('随机编号 :' + random);
-
-        //合成动态编码
-        id = (id + random).substring(0, 24);
+        var id = tools.queryUniqueID();
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
@@ -483,17 +465,13 @@ export async function postDynamicAgree(tableName, curRow) {
 
         //日期格式化
         var timestamp = new Date().getTime();
+
         //定义动态编码
-        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
-        console.log('动态编号 :' + id);
-        //定义随机编码
-        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
-        console.log('随机编号 :' + random);
-        //合成动态编码
-        id = (id + random).substring(0, 24);
+        var id = tools.queryUniqueID();
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");
+
         //查询用户信息
         var userlist = await manageAPI.queryUserName();
 
@@ -510,6 +488,7 @@ export async function postDynamicAgree(tableName, curRow) {
 
         //流程发起人
         var proponents = curRow.proponents;
+
         //获取流程发起人的中文信息
         proponents = _.find(userlist, (item) => {
             return curRow.proponents == item.username;
@@ -561,15 +540,7 @@ export async function postDynamicNotify(tableName, curRow) {
         var timestamp = new Date().getTime();
 
         //定义动态编码
-        var id = tools.formatDate(timestamp, "yyyyMMddhhmmssS");
-        console.log('动态编号 :' + id);
-
-        //定义随机编码
-        var random = (Math.floor(Math.random() * 100000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000) + "");
-        console.log('随机编号 :' + random);
-
-        //合成动态编码
-        id = (id + random).substring(0, 24);
+        var id = tools.queryUniqueID();
 
         //获取用户信息
         var userInfo = storage.getStore("cur_user");

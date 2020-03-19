@@ -431,13 +431,8 @@ export default {
      * @function 设置岗位style
      */
     handlePostStyle() {
-      if (this.welcome.length > 75) {
-        this.postStyle = {
-          display: "none",
-          "margin-top": "-5px",
-          "margin-left": "-113px",
-          transform: "scale(0.8)"
-        };
+      if (this.welcome.length > 76) {
+        this.postStyle = { display: "none" };
       }
       //如果字数太多，则使用省略符号
       if (this.welcome.length > 200) {
