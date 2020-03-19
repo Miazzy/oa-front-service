@@ -249,7 +249,7 @@ export async function queryTableName(callback) {
 
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -274,7 +274,7 @@ export async function queryApprovalExist(tableName, businessID) {
 
         return vflag;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -301,7 +301,7 @@ export async function insertTableData(tableName, node) {
             .set('accept', 'json');
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -325,7 +325,7 @@ export async function postTableData(tableName, node) {
             .set('accept', 'json');
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -344,7 +344,7 @@ export async function deleteTableData(tableName, id) {
         const res = await superagent.delete(deleteURL).set('accept', 'json');
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -374,7 +374,7 @@ export async function patchTableData(tableName, id, node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -390,7 +390,7 @@ export async function patchTableItem(tableName, id, node) {
     try {
         return patchTableData(tableName, id, node);
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -424,7 +424,7 @@ export async function queryTableData(tableName, id) {
 
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -454,6 +454,9 @@ export async function queryTableAll(tableName) {
             //遍历并格式化日期
             _.each(result, function(item) {
                 var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                item['timestamp'] = time;
                 item["create_time"] = optime;
             });
 
@@ -461,7 +464,7 @@ export async function queryTableAll(tableName) {
             storage.setStore('system_table_data_info_all', result, 5);
         }
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     //返回查询后的数据
@@ -488,6 +491,9 @@ export async function queryDynamic() {
             //遍历并格式化日期
             _.each(result, function(item) {
                 var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                item['timestamp'] = time;
                 item["create_time"] = optime;
             });
 
@@ -496,7 +502,7 @@ export async function queryDynamic() {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     //返回查询后的动态数据
@@ -524,6 +530,9 @@ export async function queryDynamicByUser(username) {
             //遍历并格式化日期
             _.each(result, function(item) {
                 var optime = tools.formatDate(item["create_time"], "yyyy-MM-dd hh:mm:ss");
+                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                item['timestamp'] = time;
                 item["create_time"] = optime;
             });
 
@@ -532,7 +541,7 @@ export async function queryDynamicByUser(username) {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     //返回查询后的动态数据
@@ -556,7 +565,7 @@ export async function queryTableDataByField(tableName, field, value) {
         const res = await superagent.get(queryURL).set('accept', 'json');
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -585,7 +594,7 @@ export async function queryUserInfoByView(username) {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     //返回查询后的动态数据
@@ -609,7 +618,7 @@ export async function queryTableDataAll(tableName) {
         const res = await superagent.get(queryURL).set('accept', 'json');
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -629,7 +638,7 @@ export async function queryTableFieldInfo(tableName, field, value) {
         const res = await superagent.get(queryURL).set('accept', 'json');
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -657,7 +666,7 @@ export async function queryBusinessInfo(tableName, callback) {
 
         return JSON.parse(JSON.stringify(res.body));
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -683,7 +692,7 @@ export async function queryProcessNodeEmployee(node, callback) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -709,7 +718,7 @@ export async function queryProcessNodeProcName(node, callback) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -745,7 +754,7 @@ export async function queryUserList(params) {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -773,7 +782,7 @@ export async function queryProcessLogToApproved(username, realname, params) {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -809,7 +818,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
             count.body[0].no_of_rows;
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -830,6 +839,9 @@ export async function queryProcessLogWait(username, realname, page = 0, size = 3
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            item['timestamp'] = time;
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
@@ -846,7 +858,7 @@ export async function queryProcessLogWait(username, realname, page = 0, size = 3
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -887,7 +899,7 @@ export async function queryUserName() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -911,7 +923,7 @@ export function queryUserNameByCache() {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     return result;
@@ -1055,6 +1067,9 @@ export async function queryProcessLogWaitByParam(username, param, page = 0, size
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            item['timestamp'] = time;
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
@@ -1070,7 +1085,7 @@ export async function queryProcessLogWaitByParam(username, param, page = 0, size
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1080,7 +1095,7 @@ export async function queryProcessLogWaitByParam(username, param, page = 0, size
 export async function queryProcessLogDoneByTime(username, realname, page = 0, size = 100, time) {
 
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~and(create_time,gte,~${time}~)&_p=${page}&_size=${size}&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~and(create_time,gte,${time})&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -1094,9 +1109,10 @@ export async function queryProcessLogDoneByTime(username, realname, page = 0, si
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss')
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['time'] = time;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
@@ -1108,9 +1124,12 @@ export async function queryProcessLogDoneByTime(username, realname, page = 0, si
             return flag;
         });
 
+        //根据ID编号去掉重复的数据
+        result = _.uniq(result, false, 'id');
+
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1134,9 +1153,10 @@ export async function queryProcessLogDone(username, realname, page = 0, size = 1
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
-            item['time'] = time;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
@@ -1148,9 +1168,12 @@ export async function queryProcessLogDone(username, realname, page = 0, size = 1
             return flag;
         });
 
+        //根据ID编号去掉重复的数据
+        result = _.uniq(result, false, 'id');
+
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1161,16 +1184,18 @@ export async function queryProcessLogDoneAll(username, realname) {
 
     //返回结果
     var result = [];
+    //遍历计数器
+    var i = 0;
 
     try {
 
         result = storage.getStore(`system_process_log_done_all_user@${username}`);
 
         if (tools.isNull(result) || result.length == 0) {
-            debugger;
+
             result = [];
 
-            for (let i = 0; i < 1000000; i++) {
+            for (i = 0; i < 1000000; i++) {
                 const list = await queryProcessLogDone(username, realname, i, 50);
                 console.log(` 第${i}次 查询数据 ：${JSON.stringify(list)}`);
                 if (typeof list == 'undefined' || list == null || list.length == 0) {
@@ -1193,23 +1218,22 @@ export async function queryProcessLogDoneAll(username, realname) {
             }
 
             //根据ID编号去掉重复的数据
-            result = _.uniq(result, false, 'pid');
+            result = _.uniq(result, false, 'id');
 
             //将数据缓存到localstorage中
             storage.setStore(`system_process_log_done_all_user@${username}`, JSON.stringify(result), 3600 * 24);
 
         } else {
-            debugger;
 
             //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
             var first = _.max(result, function(item) {
-                let time = tools.isNull(item.time) ? tools.formatDate(item.time, 'yyyyMMddhhmmss') : item.time;
+                let time = tools.isNull(item.timestamp) ? tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') : item.timestamp;
                 return time;
             });
-            var curtime = tools.formatDate(first['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            var curtime = tools.isNull(first.createtime) ? tools.formatDate(first['create_time'], 'yyyy-MM-dd hh:mm:ss') : first.createtime;
             var nlist = [];
 
-            for (let i = 0; i < 1000000; i++) {
+            for (i = 0; i < 1000000; i++) {
                 const list = await queryProcessLogDoneByTime(username, realname, i, 50, curtime);
                 console.log(` 第${i}次 查询数据 ：${JSON.stringify(list)}`);
                 if (typeof list == 'undefined' || list == null || list.length == 0) {
@@ -1235,7 +1259,12 @@ export async function queryProcessLogDoneAll(username, realname) {
             result = result.concat(nlist);
 
             //根据ID编号去掉重复的数据
-            result = _.uniq(result, false, 'pid');
+            result = _.uniq(result, false, 'id');
+
+            //根据时间戳排序
+            result = _.sortBy(result, (item) => {
+                return item['timestamp'] * -1;
+            });
 
             //将数据缓存到localstorage中
             storage.setStore(`system_process_log_done_all_user@${username}`, JSON.stringify(result), 3600 * 24);
@@ -1324,6 +1353,14 @@ export async function queryProcessLogDoneByParamAll(username, param) {
                 console.log(error);
             }
         }
+
+        //根据ID编号去掉重复的数据
+        result = _.uniq(result, false, 'id');
+
+        //根据时间戳排序
+        result = _.sortBy(result, (item) => {
+            return item['timestamp'] * -1;
+        });
 
         return result;
 
@@ -1437,8 +1474,11 @@ export async function queryProcessLogDoneByParam(username, param, page = 0, size
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
@@ -1452,7 +1492,7 @@ export async function queryProcessLogDoneByParam(username, param, page = 0, size
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1482,7 +1522,7 @@ export async function queryProcessLogInfApproved(username, realname, params) {
             count.body[0].no_of_rows;
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1500,7 +1540,7 @@ export async function queryProcessLogInfByID(tableName, id) {
         console.log(res);
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1518,7 +1558,7 @@ export async function queryProcessLogInformed(tableName, business_data_id) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1537,7 +1577,7 @@ export async function queryProcessLog(tableName, businessID) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1555,7 +1595,7 @@ export async function queryProcessLogByID(tableName, id) {
         console.log(res);
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1583,13 +1623,13 @@ export async function deleteTableItem(tableName, node) {
         //去掉开头的逗号
         ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
         deleteURL = `${api.restapi}/api/${tableName}/bulk?_ids=${ids}`;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
@@ -1598,7 +1638,7 @@ export async function deleteTableItem(tableName, node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1626,13 +1666,13 @@ export async function deleteProcessLog(tableName, node) {
         //去掉开头的逗号
         ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
         deleteURL = `${api.restapi}/api/pr_log/bulk?_ids=${ids}`;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
@@ -1641,7 +1681,7 @@ export async function deleteProcessLog(tableName, node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1669,13 +1709,13 @@ export async function deleteProcessLogInf(tableName, node) {
         //去掉开头的逗号
         ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
         deleteURL = `${api.restapi}/api/pr_log_informed/bulk?_ids=${ids}`;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     try {
@@ -1684,7 +1724,7 @@ export async function deleteProcessLogInf(tableName, node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1725,7 +1765,7 @@ export async function postTableItem(tableName, node) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1745,7 +1785,7 @@ export async function postProcessLog(node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1765,7 +1805,7 @@ export async function postProcessFreeNode(node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1804,7 +1844,7 @@ export async function postProcessLogHistory(node) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1824,14 +1864,14 @@ export async function postProcessLogInformed(node) {
             node = node[0];
         }
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     //构建知会表提交数据的URL
     try {
         postURL = `${api.restapi}/api/pr_log_informed${bflag}`;
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 
     //发送post请求，保存数据
@@ -1844,7 +1884,7 @@ export async function postProcessLogInformed(node) {
 
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1860,7 +1900,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1887,7 +1927,7 @@ export async function queryAnnounceList() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1914,7 +1954,7 @@ export async function queryHeadList() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1941,7 +1981,7 @@ export async function queryNewsList() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1967,7 +2007,7 @@ export async function queryNoticeList() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -1993,7 +2033,7 @@ export async function queryViewsList() {
 
         return result;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -2009,7 +2049,7 @@ export async function queryPRLogByDataID(business_data_id) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -2025,7 +2065,7 @@ export async function queryPRLogInfByDataID(business_data_id) {
         console.log(res);
         return res.body;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -2061,7 +2101,7 @@ export async function queryPRLogInfTotal(business_data_id) {
         console.log(result);
         return result;
     } catch (err) {
-        console.error('获取某业务记录对应的审批日志信息', err);
+        console.log('获取某业务记录对应的审批日志信息', err);
     }
 }
 
@@ -2077,7 +2117,7 @@ export async function queryLoginUser() {
 
         return res.body;
     } catch (err) {
-        console.error('获取登录用户', err);
+        console.log('获取登录用户', err);
     }
 }
 
@@ -2502,7 +2542,7 @@ export async function queryHisFreeWorkflow(id) {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     return wflist;
@@ -2530,7 +2570,7 @@ export async function queryCurFreeWorkflow(id) {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     return wflow;
@@ -2563,7 +2603,7 @@ export async function queryCurReplayList(id) {
         }
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
     return wflow;
@@ -2755,7 +2795,7 @@ export async function queryDepartNameByCode(code) {
         console.log(res);
         return res.body[0];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -3736,7 +3776,7 @@ export async function queryUrlValid(url) {
         console.log(' url :' + url + " result :" + JSON.stringify(res));
         return res.body.success;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3754,7 +3794,7 @@ export async function queryUserCount() {
         console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
         return res.body[0]['no_of_rows'];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3772,7 +3812,7 @@ export async function queryWflowCount() {
         console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
         return res.body[0]['no_of_rows'];
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3798,7 +3838,7 @@ export async function queryWflowMonthCount() {
         return ratio;
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 
@@ -3818,7 +3858,7 @@ export async function queryWflowDayCount() {
         console.log(' url :' + queryURL + " result :" + JSON.stringify(res));
         return res.body.length;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3843,7 +3883,7 @@ export async function queryWflowDailyRatio() {
         //返回流程日同比率
         return ratio;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3868,7 +3908,7 @@ export async function queryWflowMonthlyRatio() {
         //返回流程日同比率
         return ratio;
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3897,7 +3937,7 @@ export async function queryNewUserTotal() {
         return ratio;
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 }
@@ -3923,7 +3963,7 @@ export async function queryBusinessTotal() {
         return ratio;
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 }
 

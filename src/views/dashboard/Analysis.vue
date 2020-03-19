@@ -655,12 +655,14 @@ export default {
           username,
           realname
         );
+        this.dataWaitList = this.dataWaitList.slice(0, 10);
       } else if (this.activeKey == 2 || key == 2) {
         //获取我的已办数据
         this.dataDoneList = await manageAPI.queryProcessLogDone(
           username,
           realname
         );
+        this.dataDoneList = this.dataDoneList.slice(0, 10);
       } else if (this.activeKey == 3 || key == 3) {
         //获取我的消息数据
         this.dataDoneList = await manageAPI.queryProcessLogDone(
@@ -679,21 +681,26 @@ export default {
           username,
           realname
         );
+        this.dataAnnounceList = this.dataAnnounceList.slice(0, 10);
       } else if (this.activeKey == 6 || key == 6) {
         //获取红头文件数据
         this.dataHeadList = await manageAPI.queryHeadList(username, realname);
+        this.dataHeadList = this.dataHeadList.slice(0, 10);
       } else if (this.activeKey == 7 || key == 7) {
         //获取新闻资讯数据
         this.dataNewsList = await manageAPI.queryNewsList(username, realname);
+        this.dataNewsList = this.dataNewsList.slice(0, 10);
       } else if (this.activeKey == 8 || key == 8) {
         //获取奖罚通报数据
         this.dataNoticeList = await manageAPI.queryNoticeList(
           username,
           realname
         );
+        this.dataNoticeList = this.dataNoticeList.slice(0, 10);
       } else if (this.activeKey == 9 || key == 9) {
         //获取市场观察数据
         this.dataViewsList = await manageAPI.queryViewsList(username, realname);
+        this.dataViewsList = this.dataViewsList.slice(0, 10);
       }
 
       //获取日访问量/总访问量
@@ -720,12 +727,14 @@ export default {
           username,
           realname
         );
+        this.dataWaitList = this.dataWaitList.slice(0, 10);
       } else if (this.activeKey == 2) {
         //获取我的已办数据
         this.dataDoneList = await manageAPI.queryProcessLogDone(
           username,
           realname
         );
+        this.dataDoneList = this.dataDoneList.slice(0, 10);
       } else if (this.activeKey == 3) {
         //获取我的消息数据
         this.dataDoneList = await manageAPI.queryProcessLogDone(
@@ -744,21 +753,26 @@ export default {
           username,
           realname
         );
+        this.dataAnnounceList = this.dataAnnounceList.slice(0, 10);
       } else if (this.activeKey == 6) {
         //获取红头文件数据
         this.dataHeadList = await manageAPI.queryHeadList(username, realname);
+        this.dataHeadList = this.dataHeadList.slice(0, 10);
       } else if (this.activeKey == 7) {
         //获取新闻资讯数据
         this.dataNewsList = await manageAPI.queryNewsList(username, realname);
+        this.dataNewsList = this.dataNewsList.slice(0, 10);
       } else if (this.activeKey == 8) {
         //获取奖罚通报数据
         this.dataNoticeList = await manageAPI.queryNoticeList(
           username,
           realname
         );
+        this.dataNoticeList = this.dataNoticeList.slice(0, 10);
       } else if (this.activeKey == 9) {
         //获取市场观察数据
         this.dataViewsList = await manageAPI.queryViewsList(username, realname);
+        this.dataViewsList = this.dataViewsList.slice(0, 10);
       }
       this.spinning = false;
     },
