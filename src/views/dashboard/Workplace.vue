@@ -29,7 +29,7 @@
                   @click="handleWait()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/huibao.png" />
+                    <a-avatar size="large" src="/images/time_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的待办</a>
@@ -47,7 +47,7 @@
                   @click="handleDone()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/flag.png" />
+                    <a-avatar size="large" src="/images/home_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的已办</a>
@@ -60,7 +60,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/announce.png" />
+                    <a-avatar size="large" src="/images/tongzhi_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的公告</a>
@@ -473,7 +473,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/wenjuanwang.png" />
+                    <a-avatar size="large" src="/images/icon-manage-04.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">客户管理</a>
@@ -551,7 +551,7 @@
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/行政服务.png" />
+                    <a-avatar size="large" src="/images/icon-manage-19.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">车辆管理</a>
@@ -722,7 +722,7 @@
                   @click="handleTravelSubsidy()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/cheliang_2.png" />
+                    <a-avatar size="large" src="/images/icon-manage-21.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">车辆补贴申请</a>
