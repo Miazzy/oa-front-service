@@ -1,6 +1,6 @@
 <template>
   <page-layout :avatar="avatar">
-    <div slot="headerContent">
+    <div slot="headerContent" style="height:60px;position:relative;">
       <div class="title" style="font-size:14px;">
         <span class="welcome-text" :style="welcomeStyle">{{ welcome }}</span>
       </div>
@@ -1097,6 +1097,9 @@ export default {
       postStyle: {
         "margin-top": "-5px",
         "margin-left": "-113px",
+        flex: "auto",
+        position: "absolute",
+        left: "92px",
         transform: "scale(0.8)"
       },
       projects: [],
