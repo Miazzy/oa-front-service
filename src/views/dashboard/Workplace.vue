@@ -69,6 +69,19 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/icon-chat-ok.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的云聊</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工沟通、高效、安全、快捷</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
           </a-card>
           <a-card
             :loading="loading"
