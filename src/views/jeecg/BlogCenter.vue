@@ -185,12 +185,10 @@ import * as tools from "@/utils/util";
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
-const DataSet = require("@antv/data-set");
-
 Vue.use(mavonEditor);
 
 export default {
-  name: "Workplace",
+  name: "BlogCenter",
   components: {
     PageLayout,
     HeadInfo,
@@ -493,6 +491,30 @@ export default {
         //获取博文信息
         var article = {};
 
+        //如果博文标题为空，则提示输入博文标题
+        if (tools.isNull(this.pageTitle)) {
+          //保存草稿草稿
+          this.$message.error("请输入博文标题！");
+          //设置返回结果
+          return "";
+        }
+
+        //如果博文内容为空，则提示输入博文内容
+        if (tools.isNull(this.article.mdContent)) {
+          //保存草稿草稿
+          this.$message.error("请输入博文内容！");
+          //设置返回结果
+          return "";
+        }
+
+        //如果博文标签为空，则提示输入博文标签
+        if (tools.isNull(this.tags.toString())) {
+          //保存草稿草稿
+          this.$message.error("请输入文章标签！");
+          //设置返回结果
+          return "";
+        }
+
         //获取时间戳
         var timestamp = new Date().getTime();
 
@@ -539,6 +561,30 @@ export default {
       try {
         //获取博文信息
         var article = {};
+
+        //如果博文标题为空，则提示输入博文标题
+        if (tools.isNull(this.pageTitle)) {
+          //保存草稿草稿
+          this.$message.error("请输入博文标题！");
+          //设置返回结果
+          return "";
+        }
+
+        //如果博文内容为空，则提示输入博文内容
+        if (tools.isNull(this.article.mdContent)) {
+          //保存草稿草稿
+          this.$message.error("请输入博文内容！");
+          //设置返回结果
+          return "";
+        }
+
+        //如果博文标签为空，则提示输入博文标签
+        if (tools.isNull(this.tags.toString())) {
+          //保存草稿草稿
+          this.$message.error("请输入文章标签！");
+          //设置返回结果
+          return "";
+        }
 
         //获取时间戳
         var timestamp = new Date().getTime();

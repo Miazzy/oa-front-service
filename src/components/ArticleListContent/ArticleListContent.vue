@@ -1,13 +1,12 @@
 <template>
   <div class="antd-pro-components-article-list-content-index-listContent">
     <div class="description">
-      <slot>
-        {{ description }}
-      </slot>
+      <slot>{{ description }}</slot>
     </div>
     <div class="extra">
       <a-avatar :src="avatar" size="small" />
-      <a :href="href">{{ owner }}</a> 发布在 <a :href="href">{{ href }}</a>
+      <a :href="href">{{ owner }}</a> 发布于
+      <a :href="href">{{ href }}</a>
       <em>{{ updateAt | moment }}</em>
     </div>
   </div>
@@ -15,15 +14,15 @@
 
 <script>
 export default {
-  name: 'ArticleListContent',
+  name: "ArticleListContent",
   props: {
     prefixCls: {
       type: String,
-      default: 'antd-pro-components-article-list-content-index-listContent'
+      default: "antd-pro-components-article-list-content-index-listContent"
     },
     description: {
       type: String,
-      default: ''
+      default: ""
     },
     owner: {
       type: String,
@@ -42,11 +41,11 @@ export default {
       required: true
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-@import '../index.less';
+@import "../index.less";
 
 .antd-pro-components-article-list-content-index-listContent {
   .description {

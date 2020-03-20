@@ -673,13 +673,13 @@ export function delHtmlTag(str) {
  * @function 字符串缩略函数
  * @param {*} str 
  */
-export function abbreviation(str) {
+export function abbreviation(str, length = 75) {
     try {
 
-        if (deNull(str).length < 75) {
+        if (deNull(str).length < length) {
             return deNull(str).trim();
         } else {
-            return deNull(str).trim().substring(0, 75) + '...';
+            return deNull(str).trim().substring(0, length) + '...';
         }
     } catch (error) {
         console.log(error);
@@ -689,7 +689,7 @@ export function abbreviation(str) {
 /**
  * @function 合成唯一编码
  */
-export function queryUniqueID() {
+export function queryUniqueID(length = 32) {
     //日期格式化
     var timestamp = new Date().getTime();
     //定义动态编码
@@ -701,7 +701,7 @@ export function queryUniqueID() {
     //打印随机编码
     console.log('随机编号 :' + random);
     //合成动态编码
-    id = (id + random).replace(/\./g, '').substring(0, 32);
+    id = (id + random).replace(/\./g, '').substring(0, length);
     //返回唯一编码
     return id;
 }

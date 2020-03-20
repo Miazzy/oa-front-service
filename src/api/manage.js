@@ -825,7 +825,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
 /**
  * 查询我的待办数据
  */
-export async function queryProcessLogWait(username, realname, page = 0, size = 30) {
+export async function queryProcessLogWait(username, realname, page = 0, size = 50) {
     //查询URL
     var queryURL = `${api.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
@@ -1092,7 +1092,7 @@ export async function queryProcessLogWaitByParam(username, param, page = 0, size
 /**
  * 查询我的已办数据
  */
-export async function queryProcessLogDoneByTime(username, realname, page = 0, size = 100, time) {
+export async function queryProcessLogDoneByTime(username, realname, page = 0, size = 50, time) {
 
     //查询URL
     var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~and(create_time,gte,${time})&_p=${page}&_size=${size}&_sort=-create_time`;
@@ -1133,10 +1133,89 @@ export async function queryProcessLogDoneByTime(username, realname, page = 0, si
     }
 }
 
+
+/**
+ * 查询我的博文数据
+ */
+export async function queryBlogInfoByUser(username, page = 0, size = 50) {
+
+    debugger;
+
+    //查询URL
+    var queryURL = `${api.restapi}/api/bs_blog?_where=(create_by,eq,${username})&_p=${page}&_size=${size}&_sort=-create_time`;
+    var result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        result = _.filter(result, function(item) {
+
+            //格式化日期
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            item['create_time'] = ctime;
+            item['timestamp'] = time;
+            item['description'] = tools.abbreviation(tools.delHtmlTag(item['content']), 300);
+            item['title'] = tools.abbreviation(tools.delHtmlTag(item['blog_title']), 100);
+
+            //返回结果
+            return true;
+        });
+
+        //根据ID编号去掉重复的数据
+        result = _.uniq(result, false, 'id');
+
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询所有博文数据
+ */
+export async function queryBlogInfo(page = 0, size = 50, username, nousername, starttime, endtime) {
+
+    //查询URL
+    var queryURL = `${api.restapi}/api/bs_blog?_p=${page}&_size=${size}&_sort=-create_time`;
+    var result = {};
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        result = res.body;
+
+        //遍历并格式化日期
+        result = _.filter(result, function(item) {
+
+            //格式化日期
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            item['create_time'] = ctime;
+            item['timestamp'] = time;
+            item['description'] = tools.abbreviation(tools.delHtmlTag(item['content']), 300);
+            item['title'] = tools.abbreviation(tools.delHtmlTag(item['blog_title']), 100);
+
+            //返回结果
+            return true;
+        });
+
+        //根据ID编号去掉重复的数据
+        result = _.uniq(result, false, 'id');
+
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 /**
  * 查询我的已办数据
  */
-export async function queryProcessLogDone(username, realname, page = 0, size = 100) {
+export async function queryProcessLogDone(username, realname, page = 0, size = 50) {
 
     //查询URL
     var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
