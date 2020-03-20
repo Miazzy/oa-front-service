@@ -394,6 +394,8 @@ export async function queryPoet() {
         poetarray = poetarray.body;
         //将数据存入缓存
         storage.setStore(poetaddr, JSON.stringify(poetarray), 3600 * 24 * 365 * 10);
+        //将诗词数组放入常用诗词中
+        storage.setStore(`system_poet_array`, JSON.stringify(poetarray), 3600 * 24 * 365 * 10);
     }
 
     //随机获取一首诗词
@@ -427,7 +429,7 @@ export async function queryPoet() {
 export function welcome() {
     debugger;
     //查询诗词
-    const poet = queryPoet().then((poet) => {
+    queryPoet().then((poet) => {
         //打印诗词
         console.log(poet);
     });
@@ -1719,17 +1721,32 @@ export function welcome() {
         '『 浪花总是着扬帆者的路开放的。』',
         '『 大江东去，浪淘尽、千古风流人物。故垒西边，人道是、三国周郎赤壁。乱石穿空，惊涛拍岸，卷起千堆雪。江山如画，一时多少豪杰。 遥想公瑾当年，小乔初嫁了，雄姿英发。羽扇纶巾，谈笑间，樯橹灰飞烟灭。故国神游，多情应笑我，早生华发。人生如梦，一尊还酹江月。 』- 苏轼《念奴娇·赤壁怀古》 ',
     ];
-    let index = Math.floor(Math.random() * arr.length);
+    //获取诗词数组
+    var poetarry = storage.getStore(`system_poet_array`);
+
+    //诗词随机指针
+    var index = Math.floor(Math.random() * arr.length);
     index = index < arr.length ? index : arr.length - 1;
 
     //获取缓存的诗文内容
-    const content = storage.getStore("system_poet_content");
+    var content = storage.getStore("system_poet_content");
+
+    //如果诗词数组不为空，且诗词内容为空，则获取随机诗词
+    if (!tools.isNull(poetarry) && tools.isNull(content)) {
+
+        //诗词随机指针
+        var pindex = Math.floor(Math.random() * poetarry.length);
+        pindex = pindex < poetarry.length ? pindex : poetarry.length - 1;
+
+        //获取随机诗词
+        content = poetarry[pindex];
+
+    }
 
     //如果存在诗文内容，则使用诗文内容，否则，诗文默认配置
     if (tools.isNull(content) || (new Date().getTime() % 100 == 0)) {
         return arr[index];
     } else {
-        debugger
         return content;
     }
 
