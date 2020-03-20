@@ -116,6 +116,15 @@ export function welcome() {
         //获取随机诗词
         content = poetarry[pindex];
 
+        //定义诗词标题
+        let title = tools.isNull(content.title) ? '' : `《${content.title}》`;
+
+        //诗词作者
+        let author = tools.isNull(content.author) ? '' : ` — ${content.author}`;
+
+        //定义返回结果
+        content = `『 ${content.paragraphs} 』${author} ${title}`;
+
     }
 
     //如果存在诗文内容，则使用诗文内容，否则，诗文默认配置
@@ -429,7 +438,7 @@ export function randomUUID() {
  * @returns {*}
  */
 export function underLine2CamelCase(string) {
-    return string.replace(/_([a-z])/g, function(all, letter) {
+    return string.replace(/_([a-z])/g, function (all, letter) {
         return letter.toUpperCase();
     });
 }
