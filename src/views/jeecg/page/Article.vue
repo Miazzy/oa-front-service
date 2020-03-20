@@ -33,6 +33,7 @@ import IconText from "@/views/list/search/components/IconText";
 
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
+import * as storage from "@/utils/storage";
 
 export default {
   name: "Article",
@@ -42,7 +43,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       loadingMore: false,
       data: [],
       page: 0,
@@ -60,8 +61,14 @@ export default {
      * @function 获取博文数据函数
      */
     async getList() {
+      //获取当前登录用户
+      var userInfo = storage.getStore("cur_user");
       //博文数据
-      var blist = await manageAPI.queryBlogInfo(this.page, this.size);
+      var blist = await manageAPI.queryBlogInfoByUser(
+        userInfo.username,
+        this.page,
+        this.size
+      );
       //显示加载图标
       //this.loading = true;
       //添加最新数据
@@ -77,10 +84,16 @@ export default {
      * @function 加载更多数据函数
      */
     async loadMore() {
+      //获取当前登录用户
+      var userInfo = storage.getStore("cur_user");
       //显示加载图标
       this.loadingMore = true;
       //获取返回数据结果
-      var blist = await manageAPI.queryBlogInfo(this.page, this.size);
+      var blist = await manageAPI.queryBlogInfoByUser(
+        userInfo.username,
+        this.page,
+        this.size
+      );
       //数据合并
       this.data = this.data.concat(blist);
       //新增查询页面

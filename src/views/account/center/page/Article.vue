@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       loadingMore: false,
       data: [],
       page: 0,
