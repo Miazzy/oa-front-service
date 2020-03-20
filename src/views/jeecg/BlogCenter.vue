@@ -73,7 +73,13 @@
             ></a-input>
 
             <div id="editor">
-              <mavon-editor style="height: 720px;width: 100%;" ref="md" v-model="article.mdContent"></mavon-editor>
+              <mavon-editor
+                style="height: 720px;width: 100%;"
+                ref="md"
+                @imgAdd="$imgAdd"
+                @imgDel="$imgDel"
+                v-model="article.mdContent"
+              ></mavon-editor>
             </div>
 
             <a-form-item :required="false" style="margin-top:20px;">
@@ -176,12 +182,14 @@ import Vue from "vue";
 
 import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 import PageLayout from "@/components/page/PageLayout";
 import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
+import axios from "axios";
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
@@ -407,7 +415,6 @@ export default {
     this.getProjects();
     this.getActivity();
     this.getTeams();
-    this.initRadar();
     this.handlePostStyle();
   },
   methods: {
@@ -426,6 +433,27 @@ export default {
     getTeams() {
       this.$http.get("/api/workplace/teams").then(res => {
         this.teams = res.result;
+      });
+    },
+    $imgAdd(pos, $file) {
+      const token = Vue.ls.get(ACCESS_TOKEN);
+      //将图片上传到服务器.
+      var formdata = new FormData();
+      //设置图片上传属性名称
+      formdata.append("file", $file);
+      axios({
+        url: `${window._CONFIG["domain"]}/jeecg-boot/sys/common/upload`,
+        method: "post",
+        data: formdata,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-Access-Token": token
+        }
+      }).then(url => {
+        //计算图片服务器地址
+        url = `${window._CONFIG["domain"]}/jeecg-boot/sys/common/view/${url.data.message}`;
+        //将返回的url替换到文本原位置![...](0) -> ![...](url) $vm.$img2Url 详情见本页末尾
+        this.$refs.md.$img2Url(pos, url);
       });
     },
     /**
@@ -530,6 +558,7 @@ export default {
         article.page_column = this.pageColumn;
         article.page_type = this.pageType;
         article.page_scope = this.pageScope;
+        article.avatar = this.avatar;
         article.bpm_status = 1;
         article.flag = "N";
 
@@ -602,6 +631,7 @@ export default {
         article.page_type = this.pageType;
         article.page_scope = this.pageScope;
         article.bpm_status = 1;
+        article.avatar = this.avatar;
         article.flag = "Y";
 
         //提交博文
