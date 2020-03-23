@@ -705,3 +705,32 @@ export function queryUniqueID(length = 32) {
     //返回唯一编码
     return id;
 }
+
+/**
+ * @function 设置缓存信息
+ */
+export function setStore(name, content, maxAge = null) {
+    return storage.setStore(name, content, maxAge);
+}
+
+/**
+ * @function 获取缓存信息
+ */
+export function getStore(name) {
+    return storage.getStore(name);
+}
+
+/**
+ * @function 清空缓存信息
+ * @param {*} name 
+ */
+export function clearStore(name) {
+    return storage.clearStore(name);
+}
+
+/**
+ * @function 清空缓存信息
+ */
+export const clearAll = () => {
+    return storage.clearAll();
+}

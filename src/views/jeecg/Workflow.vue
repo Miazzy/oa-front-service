@@ -1544,7 +1544,7 @@ export default {
       //加密后的URL
       var encode = window.btoa(url);
 
-      var originNode = tools.getStore(encode);
+      var originNode = storage.getStore(encode);
 
       if (tools.deNull(originNode) != "") {
         //获取短随机码
@@ -1597,7 +1597,7 @@ export default {
       };
 
       //保存到缓存中
-      tools.setStore(encode, JSON.stringify(node));
+      storage.setStore(encode, JSON.stringify(node));
 
       //将短随机码和真实链接对应关系写入数据库中，有效时间30+-2天
       manageAPI.postTableData("bs_short_link", node);
