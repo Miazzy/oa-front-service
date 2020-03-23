@@ -195,7 +195,7 @@
         rowKey="id"
         :columns="table.columns"
         :dataSource="table.dataSource"
-        :pagination="table.pagination"
+        :pagination="pagination"
         :loading="table.loading"
         :rowSelection="{selectedRowKeys:table.selectedRowKeys, onChange: handleChangeInTableSelect}"
         @change="handleTableChange"
@@ -361,6 +361,14 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        current: 1,
+        pageSize: 10,
+        pageSizeOptions: ["10", "20", "30", "50", "100"],
+        showQuickJumper: true,
+        showSizeChanger: false,
+        total: 0
+      },
       code: "",
       fixedWFlow: "",
       modelModal: false,
@@ -411,8 +419,8 @@ export default {
         // 分页参数
         pagination: {
           current: 1,
-          pageSize: 30,
-          pageSizeOptions: ["30"],
+          pageSize: 10000,
+          pageSizeOptions: ["10000"],
           showTotal: (total, range) => {
             return range[0] + "-" + range[1] + " 共" + total + "条";
           },
@@ -720,6 +728,9 @@ export default {
                   }
                 });
 
+                //分页条件
+                this.pagination.total = res.result.records.total;
+
                 //对返回数据进行过滤,只展示创建人为自己的数据
                 this.table.dataSource = res.result.records;
 
@@ -766,13 +777,13 @@ export default {
     },
 
     handleTableChange(pagination, filters, sorter) {
-      //TODO 筛选
-      if (Object.keys(sorter).length > 0) {
-        this.isorter.column = sorter.field;
-        this.isorter.order = "ascend" == sorter.order ? "asc" : "desc";
-      }
-      this.table.pagination = pagination;
-      this.loadData();
+      // //TODO 筛选
+      // if (Object.keys(sorter).length > 0) {
+      //   this.isorter.column = sorter.field;
+      //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc";
+      // }
+      this.pagination = pagination;
+      //this.loadData();
     },
 
     handleAdd() {

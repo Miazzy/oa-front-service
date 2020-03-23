@@ -429,6 +429,14 @@ export async function queryTableData(tableName, id) {
 }
 
 /**
+ * @function 分页查询表单数据
+ */
+export async function queryTableDataByParam(tableName, username, realname, page, size, param) {
+
+
+}
+
+/**
  * 查询数据(all)
  * @param {*} tableName
  */
