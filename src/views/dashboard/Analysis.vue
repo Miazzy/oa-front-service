@@ -472,6 +472,7 @@ import Trend from "@/components/Trend";
 import { getLoginfo, getVisitInfo } from "@/api/api";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
+import * as tools from "@/utils/util";
 
 const rankList = [];
 for (let i = 0; i < 7; i++) {
@@ -649,6 +650,7 @@ export default {
       var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];
       let realname = userInfo["realname"];
+
       if (this.activeKey == 1 || key == 1) {
         //获取我的待办数据
         this.dataWaitList = await manageAPI.queryProcessLogWait(
@@ -703,6 +705,10 @@ export default {
         this.dataViewsList = this.dataViewsList.slice(0, 10);
       }
 
+      //用户姓名从英文转为中文
+      this.transUsername(this.dataWaitList);
+      this.transUsername(this.dataDoneList);
+
       //获取日访问量/总访问量
       try {
         var total = await manageAPI.queryTableDataAll("v_visit_total");
@@ -711,6 +717,24 @@ export default {
         this.vtotal = total["vtotal"];
       } catch (error) {
         console.log("error :" + error);
+      }
+    },
+
+    async transUsername(list) {
+      //遍历数据，将英文名转为中文名
+      for (let item of list) {
+        try {
+          item["username"] = await manageAPI.patchEnameCname(
+            item["username"].toString()
+          );
+          item["proponents"] = await manageAPI.patchEnameCname(
+            item["proponents"]
+          );
+
+          item["username"] = tools.deNull(item["username"]).split(",");
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     /**
@@ -774,6 +798,9 @@ export default {
         this.dataViewsList = await manageAPI.queryViewsList(username, realname);
         this.dataViewsList = this.dataViewsList.slice(0, 10);
       }
+      //用户姓名从英文转为中文
+      this.transUsername(this.dataWaitList);
+      this.transUsername(this.dataDoneList);
       this.spinning = false;
     },
     /**
