@@ -438,7 +438,7 @@ export function randomUUID() {
  * @returns {*}
  */
 export function underLine2CamelCase(string) {
-    return string.replace(/_([a-z])/g, function (all, letter) {
+    return string.replace(/_([a-z])/g, function(all, letter) {
         return letter.toUpperCase();
     });
 }

@@ -1571,7 +1571,7 @@ export default {
       }
 
       //计算一个短随机码值
-      let random = manageAPI.queryRandomStr(4);
+      let random = manageAPI.queryRandom(4);
 
       //获取时间戳
       var timestamp = new Date().getTime();

@@ -1994,9 +1994,9 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
 /**
  * 获取行政公告数据
  */
-export async function queryAnnounceList() {
+export async function queryAnnounceList(page = 0, size = 50) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -2021,9 +2021,9 @@ export async function queryAnnounceList() {
 /**
  * 获取红头文件数据
  */
-export async function queryHeadList() {
+export async function queryHeadList(page = 0, size = 50) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_redhead?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_redhead?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -2048,9 +2048,9 @@ export async function queryHeadList() {
 /**
  * 获取新闻资讯数据
  */
-export async function queryNewsList() {
+export async function queryNewsList(page = 0, size = 50) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_news?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_news?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -2075,9 +2075,9 @@ export async function queryNewsList() {
 /**
  * 获取奖罚通报数据
  */
-export async function queryNoticeList() {
+export async function queryNoticeList(page = 0, size = 50) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_notice?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_notice?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -2101,9 +2101,9 @@ export async function queryNoticeList() {
 /**
  * 获取市场观察数据
  */
-export async function queryViewsList() {
+export async function queryViewsList(page = 0, size = 50) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_market_info?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=0&_size=99`;
+    var queryURL = `${api.restapi}/api/bs_market_info?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
@@ -2122,6 +2122,73 @@ export async function queryViewsList() {
     } catch (err) {
         console.log(err);
     }
+}
+
+/**
+ * @function 获取所有公告信息
+ */
+export async function queryNotifyAll(type = 'all', size = 50, content = '', starttime, endtime) {
+
+    debugger;
+
+    //定义内容
+    var result = [];
+
+    //获取行政公告
+    var temp = [];
+
+    //查询结果统计数
+    var length = 0;
+
+    //遍历查询所有公告信息
+    for (var i = 0; i <= 1000; i++) {
+
+        //查询前结果
+        length = result.length;
+
+        //如果为行政公告，则合并数据
+        if (type == 'all' || type == '行政公告') {
+            temp = await queryAnnounceList(i, size, starttime, endtime);
+            result = result.concat(temp);
+        }
+
+        //如果为红头文件，则合并数据
+        if (type == 'all' || type == '红头文件') {
+            temp = await queryHeadList(i, size, starttime, endtime);
+            result = result.concat(temp);
+        }
+
+        //如果为新闻资讯，则合并数据
+        if (type == 'all' || type == '新闻资讯') {
+            temp = await queryNewsList(i, size, starttime, endtime);
+            result = result.concat(temp);
+        }
+
+        //如果为奖罚通报，则合并数据
+        if (type == 'all' || type == '奖罚通报') {
+            temp = await queryNoticeList(i, size, starttime, endtime);
+            result = result.concat(temp);
+        }
+
+        //如果为市场观察，则合并数据
+        if (type == 'all' || type == '市场观察') {
+            temp = await queryViewsList(i, size, starttime, endtime);
+            result = result.concat(temp);
+        }
+
+        //本次查询结果数
+        length = result.length - length;
+
+        //如果最新查询结果小于等于0，则停止查询
+        if (length == 0) {
+            break;
+        }
+    }
+
+    debugger;
+
+    //返回查询结果
+    return result;
 }
 
 /**
@@ -2239,17 +2306,17 @@ export function queryRandomStr(n) {
  * 获取n位随机数,随机来源chars
  */
 export function queryRandom(n) {
-    //var temp = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z';
+    var temp = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z';
     var res = '';
 
     try {
-        // var chars = temp.split(',');
-        // for (var i = 0; i < n; i++) {
-        //     var id = Math.ceil(Math.random() * 62);
-        //     res += chars[id];
-        // }
+        var chars = temp.split(',');
+        for (var i = 0; i < n; i++) {
+            var id = Math.ceil(Math.random() * (temp.length - 1));
+            res += chars[id];
+        }
         //使用新算法，获取唯一字符串
-        res = tools.queryUniqueID();
+        //res = tools.queryUniqueID();
     } catch (error) {
         console.log('获取n位随机数异常：' + error);
     }

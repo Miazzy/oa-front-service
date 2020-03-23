@@ -58,7 +58,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleAnnounce()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/tongzhi_00.png" />
                   </div>
@@ -1352,6 +1357,13 @@ export default {
     handleDone() {
       //跳转到我的已办
       this.$router.push(`/workflow/done`);
+    },
+    /**
+     * @function 跳转到我的公告
+     */
+    handleAnnounce() {
+      //跳转到我的公告
+      this.$router.push(`/workflow/announce`);
     },
     /**
      * @function 跳转到我的收藏

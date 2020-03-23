@@ -4,24 +4,22 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="24">
-          <a-col :md="4" :sm="4">
-            <a-form-item label="事项">
-              <a-select style="width: 120px" v-model="queryParam.type">
-                <a-select-option value="审批">审批</a-select-option>
-                <a-select-option value="知会">知会</a-select-option>
+          <a-col :md="5" :sm="5">
+            <a-form-item label="公告类型">
+              <a-select style="width: 180px;" v-model="queryParam.type">
+                <a-select-option value="all" selected>所有类型</a-select-option>
+                <a-select-option value="行政公告">行政公告</a-select-option>
+                <a-select-option value="红头文件">红头文件</a-select-option>
+                <a-select-option value="新闻资讯">新闻资讯</a-select-option>
+                <a-select-option value="奖罚通报">奖罚通报</a-select-option>
+                <a-select-option value="市场观察">市场观察</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
+
           <a-col :md="5" :sm="5">
-            <a-form-item label="业务">
-              <a-select style="width: 180px" v-model="queryParam.name">
-                <a-select-option v-for="item in tableNameList" :key="item.id">{{item.name}}</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="5" :sm="5">
-            <a-form-item label="主题">
-              <a-input placeholder="请输入主题信息" v-model="queryParam.topic"></a-input>
+            <a-form-item label="内容">
+              <a-input placeholder="请输入搜索信息" v-model="queryParam.topic"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="6">
@@ -60,49 +58,29 @@
         </div>
         <a-table
           :columns="columns"
-          :dataSource="dataDoneList"
+          :dataSource="dataNotifyList"
           :pagination="true"
           style="padding-top:-10px;margin-top:-10px"
         >
-          <a slot="type" slot-scope="text, record">
-            <a-menu-item>
-              <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
-                <span v-html="record.type"></span>
-              </a>
-            </a-menu-item>
-          </a>
-
-          <a slot="topic" slot-scope="text, record">
-            <a-menu-item>
-              <a
-                :data-info="JSON.stringify(record)"
-                @click="handleDetailWF(record)"
-                style="color:#303030;"
-              >
-                <span style="color:#303030;" v-html="record.topic"></span>
-              </a>
-            </a-menu-item>
-          </a>
-
-          <span slot="name" slot-scope="text , record">
+          <span slot="announce_type" slot-scope="text, record">
             <a-tag
-              :color=" (record.name.length > 5 ? 'geekblue' : 'green')"
-              :key="record.name"
-              @click="handleDetailWF(record)"
-            >{{record.name}}</a-tag>
+              color="cyan"
+              :key="record.announce_type"
+              @click="handleAnnounceInfo(record)"
+            >{{ record.announce_type }}</a-tag>
           </span>
-
-          <span slot="username" slot-scope="username">
+          <span slot="announce_title" slot-scope="text, record">
             <a-tag
-              v-for="tag in username"
-              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
-              :key="tag"
-              style="margin-top:5px;"
-            >{{tag}}</a-tag>
+              color="blue"
+              :key="record.announce_title"
+              @click="handleAnnounceInfo(record)"
+            >{{ record.announce_title}}</a-tag>
           </span>
-
-          <span slot="create_time" slot-scope="text , record">
-            <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
+          <span slot="create_by" slot-scope="text, record">
+            <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
+          </span>
+          <span slot="create_time" slot-scope="text, record">
+            <a-tag color="pink" :key="record.create_time">{{ record.create_time }}</a-tag>
           </span>
         </a-table>
       </template>
@@ -122,48 +100,32 @@ import * as moment from "moment";
 
 const columns = [
   {
-    title: "办理事项",
-    dataIndex: "type",
-    key: "type",
-    slots: { title: "type" },
+    title: "类型",
+    dataIndex: "announce_type",
+    key: "announce_type",
+    slots: { title: "announce_type" },
     width: 100,
     align: "center",
-    scopedSlots: { customRender: "type" }
+    scopedSlots: { customRender: "announce_type" }
   },
   {
-    title: "业务",
+    title: "标题",
+    width: 500,
+    align: "left",
+    key: "announce_title",
+    dataIndex: "announce_title",
+    scopedSlots: { customRender: "announce_title" }
+  },
+  {
+    title: "创建人",
     width: 100,
     align: "center",
-    key: "name",
-    dataIndex: "name",
-    scopedSlots: { customRender: "name" }
+    key: "create_by",
+    dataIndex: "create_by",
+    scopedSlots: { customRender: "create_by" }
   },
   {
-    title: "主题",
-    width: 400,
-    align: "left",
-    key: "topic",
-    dataIndex: "topic",
-    scopedSlots: { customRender: "topic" }
-  },
-  {
-    title: "操作人员",
-    key: "username",
-    width: 150,
-    align: "left",
-    dataIndex: "username",
-    scopedSlots: { customRender: "username" }
-  },
-  {
-    title: "流程发起人",
-    key: "proponents",
-    width: 150,
-    align: "left",
-    dataIndex: "proponents",
-    scopedSlots: { customRender: "proponents" }
-  },
-  {
-    title: "创建时间",
+    title: "时间",
     width: 100,
     align: "center",
     key: "create_time",
@@ -204,35 +166,20 @@ export default {
         loadRegisterFiles: "/sps/register/getRegisterFilesConfig"
       },
       activeKey: 2,
-      dataWaitList: [],
-      dataDoneList: [],
-      tableNameList: [],
-      queryParam: {},
+      dataNotifyList: [],
+      queryParam: {
+        type: "all"
+      },
       spinning: false
     };
   },
   async created() {
-    this.loadData();
+    await this.loadData();
   },
   methods: {
     async loadData() {
-      //获取用户信息
-      var userInfo = storage.getStore("cur_user");
-
-      //查询表单信息
-      var tableNameList = await manageAPI.queryTableAll("v_table_name");
-
-      //设置表单信息
-      this.tableNameList = tableNameList;
-
-      setTimeout(() => {
-        //$(".ant-tag").css("margin-top", "5px");
-      }, 100);
-
       //设置高级查询条件
-      this.queryParam = storage.getStore(
-        `system_done_list_user@${userInfo.username}`
-      );
+      this.queryParam = storage.getStore(`system_notify_list_all`);
 
       //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
       if (
@@ -240,8 +187,8 @@ export default {
         this.queryParam == null ||
         JSON.stringify(this.queryParam) == "{}"
       ) {
-        this.queryParam = {};
-        await this.getDate();
+        this.queryParam = { type: "all" };
+        await this.getDate("all", 50, "", "", "");
       } else {
         //设置时间
         if (this.queryParam.time.length > 0) {
@@ -259,33 +206,21 @@ export default {
             moment(this.queryParam.time[1], "YYYY-MM-DD")
           ];
         }
-
         await this.searchQuery();
       }
-
-      console.log("table name list :" + JSON.stringify(tableNameList));
     },
-    async getDate() {
-      //查询我的已办，我的待办
-      if (this.activeKey == 1 || this.activeKey == 2) {
-        //获取用户信息
-        var userInfo = storage.getStore("cur_user");
-        let username = userInfo["username"];
-        let realname = userInfo["realname"];
-        if (this.activeKey == 1) {
-          //获取我的待办数据
-          this.dataWaitList = await manageAPI.queryProcessLogWaitAll(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 2) {
-          //获取我的已办数据
-          this.dataDoneList = await manageAPI.queryProcessLogDoneAll(
-            username,
-            realname
-          );
-        }
-      }
+    /**
+     * @function 查询我的公告信息
+     */
+    async getDate(type, size, content, starttime, endtime) {
+      //查询我的公告
+      this.dataNotifyList = await manageAPI.queryNotifyAll(
+        type,
+        size,
+        content,
+        starttime,
+        endtime
+      );
     },
     async handleCancel() {
       this.previewVisible = false;
@@ -300,21 +235,15 @@ export default {
     /**
      * @function 查看详情页面
      */
-    async handleDetailWF(record) {
+    async handleAnnounceInfo(record, tableName = "bs_announce") {
       //获取当前操作对象
       var curRow = JSON.parse(JSON.stringify(record));
 
       //获取当前用户
       var userInfo = storage.getStore("cur_user");
 
-      //获取选中记录的所属表单名称
-      var tableName = curRow["tname"];
-
-      //获取操作类型
-      var type = curRow["type"] == "知会" ? "notify" : "workflow";
-
       //设置跳转URL
-      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&processLogID=${curRow.pid}&user=${userInfo.username}&type=${type}`;
+      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify`;
 
       //跳转到相应页面
       this.$router.push(detailURL);
@@ -323,31 +252,13 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
-      //获取用户信息
-      var userInfo = storage.getStore("cur_user");
-      let username = userInfo["username"];
-
-      //获取我的待办数据
-      this.dataDoneList = await manageAPI.queryProcessLogDoneByParamAll(
-        username,
-        this.queryParam
-      );
-
-      //缓存本次查询条件，下次打开此页面，可以还原查询条件
-      storage.setStore(
-        `system_done_list_user@${userInfo.username}`,
-        JSON.stringify(this.queryParam),
-        3600
-      );
-
-      //打印日志信息
-      console.log("dataDoneList :" + JSON.stringify(this.dataDoneList));
+      await this.getDate("all", 50, "", "", "");
     },
     /**
      * @function 重置函数
      */
     async searchReset() {
-      this.queryParam = {};
+      this.queryParam = { type: "all" };
     }
   }
 };
