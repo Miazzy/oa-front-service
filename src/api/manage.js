@@ -2158,6 +2158,10 @@ export async function queryNotifyAll(type = 'all', size = 50, content = '', star
     //查询结果统计数
     var length = 0;
 
+    //格式化起始时间
+    starttime = tools.isNull(starttime) ? '' : starttime.format('YYYY-MM-DD');
+    endtime = tools.isNull(endtime) ? '' : endtime.format('YYYY-MM-DD');
+
     //遍历查询所有公告信息
     for (var i = 0; i <= 1000; i++) {
 
