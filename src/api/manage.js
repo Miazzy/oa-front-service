@@ -2203,8 +2203,9 @@ export async function queryNotifyAll(type = 'all', size = 50, content = '', star
         }
     }
 
+    //遍历数据并排序
     result = _.sortBy(result, function(item) {
-        return item['']
+        return item['timestamp'] * -1.0;
     });
 
     //返回查询结果
