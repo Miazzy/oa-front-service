@@ -9,7 +9,7 @@
 
     <div>
       <a-row :gutter="24">
-        <a-col style="padding: 0 12px" :xl="4" :lg="24" :md="24" :sm="24" :xs="24">
+        <a-col style="padding: 0 12px" :xl="4" :lg="24" :md="24" :sm="24">
           <a-card :loading="loading" title="博客管理" :bordered="false" style="margin-top:0px;">
             <div class="members">
               <a-row>
@@ -368,24 +368,6 @@ export default {
   async created() {
     this.user = this.userInfo;
 
-    console.log("this.avatar :" + this.avatar);
-
-    try {
-      manageAPI.getRoleList().then(res => {
-        console.log("workplace -> call manageAPI.getRoleList()", res);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
-    try {
-      manageAPI.getServiceList().then(res => {
-        console.log("workplace -> call manageAPI.getServiceList()", res);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
     //设置岗位style
     this.handlePostStyle();
 
@@ -402,6 +384,7 @@ export default {
       //设置头像信息
       this.avatar =
         window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
+      console.log("this.avatar :" + this.avatar);
     } catch (error) {
       console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
@@ -416,35 +399,62 @@ export default {
     console.log("动态信息：" + JSON.stringify(this.nodelist));
   },
   mounted() {
-    this.getProjects();
-    this.getActivity();
-    this.getTeams();
     this.handlePostStyle();
+    this.handleBlog().then(() => null);
+    this.loading = false;
   },
   methods: {
     ...mapGetters(["nickname", "welcome"]),
-    getProjects() {
-      this.$http.get("/api/list/search/projects").then(res => {
-        this.projects = res.result && res.result.data;
-        this.loading = false;
-      });
+
+    /**
+     * @function 处理博文详情信息
+     */
+    async handleBlog() {
+      try {
+        //获取本篇博文编号信息
+        var id = tools.queryUrlString("id");
+
+        //如果编号不为空，则获取博文详情
+        if (!tools.isNull(id)) {
+          //获取本篇文章作者信息
+          this.author = tools.queryUrlString("author");
+
+          //获取本篇文章标签信息
+          this.tags = tools.queryUrlString("tags");
+
+          //获取博文内容信息
+          this.blogInfo = await manageAPI.queryTableData("bs_blog", id);
+
+          //设置博文内容信息
+          this.article.mdContent = this.blogInfo["content"];
+
+          //设置博文标题信息
+          this.pageTitle = this.blogInfo["blog_title"];
+
+          //设置标签信息
+          this.tags = tools.deNull(this.blogInfo["page_tags"]).split(",");
+
+          //设置分类专栏
+          this.pageColumn =
+            tools.deNull(this.blogInfo["page_column"]) || "社会聚焦";
+
+          //设置文章类型
+          this.pageType = tools.deNull(this.blogInfo["page_type"]);
+
+          //设置发布形式
+          this.pageScope = tools.deNull(this.blogInfo["page_scope"]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      //返回博文内容
+      return this.article.mdContent;
     },
-    getActivity() {
-      this.$http.get("/api/workplace/activity").then(res => {
-        this.activities = res.result;
-      });
-    },
-    getTeams() {
-      this.$http.get("/api/workplace/teams").then(res => {
-        this.teams = res.result;
-      });
-    },
+
     /**
      * @function markdown编辑器显示html内容
      */
     $htmlCode(status, content) {
-      debugger;
-
       //设置文章对应的html内容
       this.article.htmlContent = content;
     },
@@ -536,7 +546,14 @@ export default {
     /**
      * @function 提交博文函数
      */
-    async handleSubmitBlog() {
+    async handleSubmitBlog(result = "", id = "") {
+      try {
+        //获取本篇博文编号信息
+        id = tools.queryUrlString("id");
+      } catch (error) {
+        console.error("提交博文：" + error);
+      }
+
       try {
         //获取博文信息
         var article = {};
@@ -568,7 +585,7 @@ export default {
         //获取时间戳
         var timestamp = new Date().getTime();
 
-        article.id = tools.queryUniqueID();
+        article.id = tools.isNull(id) ? tools.queryUniqueID() : id;
         article.blog_title = this.pageTitle;
         article.content = this.article.mdContent;
         article.hontent = this.article.htmlContent;
@@ -585,15 +602,23 @@ export default {
         article.bpm_status = 1;
         article.flag = "N";
 
-        //提交博文
-        var result = await manageAPI.postTableData("bs_blog", article);
+        //提交博文，如果是新增数据，则发布新博文，如果是编辑博文，则保存更新
+        if (tools.isNull(id)) {
+          result = await manageAPI.postTableData("bs_blog", article);
+        } else {
+          result = await manageAPI.patchTableData("bs_blog", id, article);
+        }
 
         //保存草稿草稿
         this.$message.warning("提交博文成功！");
 
+        //清空博文参数
         this.pageTitle = "";
         this.article.mdContent = "";
         this.tags = [];
+
+        //跳转到相应页面
+        this.$router.push(`/blog/success?id=${article.id}`);
       } catch (error) {
         //打印异常日志
         console.log(error);
@@ -609,7 +634,14 @@ export default {
     /**
      * @function 提交博文草稿函数
      */
-    async handleSubmitDraft() {
+    async handleSubmitDraft(result = "", id = "") {
+      try {
+        //获取本篇博文编号信息
+        id = tools.queryUrlString("id");
+      } catch (error) {
+        console.error("提交博文：" + error);
+      }
+
       try {
         //获取博文信息
         var article = {};
@@ -641,7 +673,7 @@ export default {
         //获取时间戳
         var timestamp = new Date().getTime();
 
-        article.id = tools.queryUniqueID();
+        article.id = tools.isNull(id) ? tools.queryUniqueID() : id;
         article.blog_title = this.pageTitle;
         article.content = this.article.mdContent;
         article.hontent = this.article.htmlContent;
@@ -659,14 +691,18 @@ export default {
         article.flag = "Y";
 
         //提交博文
-        var result = await manageAPI.postTableData("bs_blog", article);
+        result = await manageAPI.postTableData("bs_blog", article);
 
         //保存草稿草稿
         this.$message.warning("保存草稿成功！");
 
+        //清空博文参数
         this.pageTitle = "";
         this.article.mdContent = "";
         this.tags = [];
+
+        //跳转到相应页面
+        this.$router.push(`/blog/success?id=${article.id}`);
       } catch (error) {
         //打印异常日志
         console.log(error);

@@ -2,16 +2,24 @@
   <a-list size="large" rowKey="id" :loading="loading" itemLayout="vertical" :dataSource="data">
     <a-list-item :key="item.id" slot="renderItem" slot-scope="item">
       <template slot="actions">
-        <icon-text type="star-o" :text="item.star" />
-        <icon-text type="like-o" :text="item.likes" />
-        <icon-text type="message" :text="item.messages" />
+        <a style="color:#303030;">
+          <icon-text type="star-o" :text="item.star" />
+        </a>
+        <a style="color:#303030;">
+          <icon-text type="like-o" :text="item.likes" />
+        </a>
+        <a style="color:#303030;">
+          <icon-text type="message" :text="item.messages" />
+        </a>
+        <a style="color:#303030;" @click="handleBlogEdit(item)">
+          <icon-text type="profile" text="编辑"></icon-text>
+        </a>
+        <a style="color:#303030;" @click="handleBlogDelete(item)">
+          <icon-text type="delete" text="删除"></icon-text>
+        </a>
       </template>
       <a-list-item-meta>
-        <a
-          slot="title"
-          :href="`/blog/view?id=${item.id}`"
-          @click="handleBlogView(item)"
-        >{{ item.title }}</a>
+        <a slot="title" @click="handleBlogView(item)">{{ item.title }}</a>
         <template slot="description">
           <span>
             <a-tag v-for="(tag, index) in item.page_tags.split(',')" :key="index">{{tag}}</a-tag>
@@ -39,6 +47,7 @@ import IconText from "@/views/list/search/components/IconText";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
+import * as _ from "underscore";
 
 export default {
   name: "Article",
@@ -118,11 +127,55 @@ export default {
         var tags = tools.deNull(item.tags);
         //跳转到博文详情页面
         this.$router.push(
-          `/blog/view?id${item.id}&author=${item.create_by}&tags=${tags}`
+          `/blog/view?id=${item.id}&author=${item.create_by}&tags=${tags}`
         );
       } catch (error) {
         console.log("$router go to error :" + error);
       }
+    },
+    /**
+     * @function 处理博文预览功能
+     */
+    async handleBlogEdit(item) {
+      try {
+        //标签
+        var tags = tools.deNull(item.tags);
+        //跳转到博文详情页面
+        this.$router.push(
+          `/blog/center?id=${item.id}&author=${item.create_by}&tags=${tags}`
+        );
+      } catch (error) {
+        console.log("$router go to error :" + error);
+      }
+    },
+    /**
+     * @function 删除本篇博文
+     */
+    async handleBlogDelete(item) {
+      //确认是否删除博文
+      this.$confirm_({
+        title: "确认操作",
+        content: "是否确认删除本篇博文（删除后不可恢复）?",
+        onOk: async () => {
+          try {
+            //关闭加载图标
+            this.loading = true;
+
+            //删除本篇博文
+            await manageAPI.deleteTableData("bs_blog", item.id);
+
+            //初始化数据
+            this.data = _.reject(this.data, blog => {
+              return blog.id == item.id;
+            });
+
+            //关闭加载图标
+            this.loading = false;
+          } catch (error) {
+            console.log("$router go to error :" + error);
+          }
+        }
+      });
     }
   }
 };

@@ -37,6 +37,7 @@ import _ from "underscore";
 const indexKey = `/dashboard/analysis`;
 const workplaceKey = `/dashboard/workplace`;
 const centerKey = `/account/center`;
+const blogKey = `/blog/center`;
 
 //Tab标题
 const titleKV = {
@@ -137,15 +138,32 @@ export default {
         fullPath: workplaceKey,
         meta: {
           icon: "dashboard",
-          title: "工作台"
+          title: "应用中心"
         }
       });
       this.linkList.push(workplaceKey);
     }
+    //是否存在路径标识,检查pageList中是否含有blogKey
+    flag = _.find(this.pageList, item => {
+      return item.path == blogKey;
+    });
+    if (flag == null || typeof flag == "undefined") {
+      this.pageList.push({
+        name: "blog-center",
+        path: blogKey,
+        fullPath: blogKey,
+        meta: {
+          icon: "blog",
+          title: "博客中心"
+        }
+      });
+      this.linkList.push(blogKey);
+    }
     if (
       this.$route.fullPath != indexKey &&
       this.$route.fullPath != workplaceKey &&
-      this.$route.fullPath != centerKey
+      this.$route.fullPath != centerKey &&
+      this.$route.fullPath != blogKey
     ) {
       this.pageList.push(this.$route);
       this.linkList.push(this.$route.fullPath);
@@ -228,11 +246,15 @@ export default {
         return;
       }
       if (key == workplaceKey) {
-        this.$message.warning("工作台不能关闭!");
+        this.$message.warning("应用中心不能关闭!");
         return;
       }
       if (key == centerKey) {
         this.$message.warning("个人中心不能关闭!");
+        return;
+      }
+      if (key == blogKey) {
+        this.$message.warning("博客中心不能关闭!");
         return;
       }
       if (this.pageList.length === 1) {
@@ -343,7 +365,7 @@ export default {
         return;
       }
       if (key == workplaceKey) {
-        this.$message.warning("工作台不能关闭!");
+        this.$message.warning("应用中心不能关闭!");
         return;
       }
       if (key == centerKey) {

@@ -488,10 +488,15 @@ export function existChinese(val) {
  * @param {*} val
  */
 export function queryUrlString(name) {
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
-    if (r != null) return unescape(r[2]);
-    return null;
+    try {
+
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+        var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+        if (r != null) return unescape(r[2]);
+    } catch (error) {
+        console.error(error);
+    }
+    return '';
 }
 
 /**
@@ -499,10 +504,16 @@ export function queryUrlString(name) {
  * @param {*} val
  */
 export function queryUrl(name) {
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
-    if (r != null) return unescape(r[2]);
-    return null;
+    try {
+
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+        var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+        if (r != null) return unescape(r[2]);
+
+    } catch (error) {
+        console.error(error);
+    }
+    return '';
 }
 
 /**
