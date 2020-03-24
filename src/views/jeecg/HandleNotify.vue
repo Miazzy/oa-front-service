@@ -69,7 +69,13 @@
               @click="handleAnnounceInfo(record , record.table_name)"
             >{{ record.announce_type }}</a-tag>
           </span>
-
+          <span slot="ctitle" slot-scope="text, record">
+            <a
+              :key="record.title"
+              @click="handleAnnounceInfo(record,record.table_name)"
+              style="color:#303030;"
+            >{{ record.title }}</a>
+          </span>
           <span slot="create_by" slot-scope="text, record">
             <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
           </span>
@@ -104,11 +110,12 @@ const columns = [
   },
   {
     title: "主题",
+    dataIndex: "title",
+    key: "title",
+    slots: { title: "ctitle" },
     width: 800,
     align: "left",
-    key: "title",
-    dataIndex: "title",
-    scopedSlots: { customRender: "title" }
+    scopedSlots: { customRender: "ctitle" }
   },
   {
     title: "时间",
