@@ -33,15 +33,19 @@
                 <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
                   <a-tag
                     :key="tag"
-                    :closable="index !== 0"
+                    :index="index"
+                    :closable="true"
                     :afterClose="() => handleTagClose(tag)"
+                    @close="() => handleClose(tag)"
                   >{{ `${tag.slice(0, 20)}...` }}</a-tag>
                 </a-tooltip>
                 <a-tag
                   v-else
                   :key="tag"
-                  :closable="index == 1000"
+                  :index="index"
+                  :closable="true"
                   :afterClose="() => handleTagClose(tag)"
+                  @close="() => handleClose(tag)"
                 >{{ tag }}</a-tag>
               </template>
               <a-input
@@ -178,23 +182,52 @@ export default {
       });
     },
 
-    handleTabChange(key, type) {
+    async handleTabChange(key, type) {
       this[type] = key;
     },
 
-    handleTagClose(removeTag) {
+    async handleTagClose(removeTag) {
       const tags = this.tags.filter(tag => tag != removeTag);
       this.tags = tags;
+
+      try {
+        //待保存数据
+        this.fdata = { tags: tags.toString() };
+
+        //获取用户信息
+        this.v_user = await manageAPI.queryUserInfoByView(
+          this.userInfo.username
+        );
+
+        //此次设置用户岗位
+        await manageAPI.patchTableData(
+          "sys_user",
+          this.v_user[0].id,
+          this.fdata
+        );
+
+        //属性合并
+        this.v_user[0] = Object.assign({}, this.v_user[0], this.fdata);
+
+        //用户信息修改，修改缓存信息
+        storage.setStore(
+          `system_v_user_info@username$${this.userInfo.username}`,
+          this.v_user,
+          3600 * 24
+        );
+      } catch (error) {
+        console.log(error);
+      }
     },
 
-    showTagInput() {
+    async showTagInput() {
       this.tagInputVisible = true;
       this.$nextTick(() => {
         this.$refs.tagInput.focus();
       });
     },
 
-    handleInputChange(e) {
+    async handleInputChange(e) {
       this.tagInputValue = e.target.value;
     },
 
