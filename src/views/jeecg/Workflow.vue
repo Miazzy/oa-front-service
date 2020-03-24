@@ -1539,12 +1539,19 @@ export default {
      * @function 生成短链接操作
      */
     async handleShort() {
+      debugger;
       //生成分享链接
       var url = window.location.href.replace("workflow", "basewflow");
       //加密后的URL
       var encode = window.btoa(url);
 
       var originNode = storage.getStore(encode);
+
+      //如果获取的短链随机码有误，则清空缓存
+      if (!tools.isNull(originNode) && originNode.code.includes("undefined")) {
+        originNode = "";
+        storage.clearStore(encode);
+      }
 
       if (tools.deNull(originNode) != "") {
         //获取短随机码
@@ -2650,7 +2657,7 @@ export default {
               approve_user: userInfo["username"],
               action: "发起",
               action_opinion: "发起自由流程",
-              content: this.curRow["content"],
+              content: this.curRow["content"] || this.curRow["title"],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(freeWFNode)
@@ -2677,7 +2684,7 @@ export default {
               process_station: "自由流程审批",
               process_audit: "000000000",
               proponents: userInfo["username"],
-              content: this.curRow["content"],
+              content: this.curRow["content"] || this.curRow["title"],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(node)
@@ -2806,7 +2813,7 @@ export default {
               operate_time: ctime,
               create_time: ctime,
               proponents: userInfo["username"],
-              content: this.curRow["content"],
+              content: this.curRow["content"] || this.curRow["title"],
               business_data: JSON.stringify(this.curRow)
             };
 
