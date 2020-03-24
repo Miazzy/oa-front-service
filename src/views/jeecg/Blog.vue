@@ -8,10 +8,7 @@
               <div class="avatar" style="position:absolute;">
                 <img :src="avatar" />
               </div>
-              <div
-                class="username"
-                style="position:absolute;left: 68.5px;top: 2px;"
-              >{{ nickname() }}</div>
+              <div class="username" style="position:absolute;left: 68.5px;top: 2px;">{{ username }}</div>
               <div
                 class="username"
                 style="position:absolute;left: 68.5px;top: 32px;font-size:12px;"
@@ -310,6 +307,7 @@ export default {
       author: "",
       blogInfo: {},
       content: "",
+      username: "",
       tagInputValue: ""
     };
   },
@@ -404,6 +402,10 @@ export default {
 
         //设置博文内容信息
         this.content = this.blogInfo["content"];
+        //获取本篇博文作者头像信息
+        this.avatar = this.blogInfo["avatar"];
+        //获取本篇博文作者名称
+        this.username = this.blogInfo["create_by"];
       } catch (error) {
         console.log(error);
       }
