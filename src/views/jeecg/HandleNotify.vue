@@ -223,13 +223,18 @@ export default {
      * @function 查询函数
      */
     async searchQuery(type = "all", content = "", starttime, endtime) {
+      debugger;
+
       //获取type类型
       type = this.queryParam.type || "all";
 
       //获取主题搜索信息
       content = this.queryParam.topic || "";
 
-      if (this.queryParam.time.length > 0) {
+      if (
+        !tools.isNull(this.queryParam.time) &&
+        this.queryParam.time.length > 0
+      ) {
         //获取开始时间
         starttime = this.queryParam.time[0] || "";
 

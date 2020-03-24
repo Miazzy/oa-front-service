@@ -2203,6 +2203,25 @@ export async function queryNotifyAll(type = 'all', size = 50, content = '', star
         }
     }
 
+    //遍历并筛选数据
+    result = _.filter(result, function(item) {
+
+        //设置数据
+        var flag = true;
+
+        //判断查询内容是否为空，不为空，则进行内容筛选
+        if (!tools.isNull(content)) {
+            flag = flag && tools.deNull(item['title'].includes(content)) || tools.deNull(item['content'].includes(content));
+        }
+
+        //判断查询时间
+        if (!tools.isNull(starttime) && !tools.isNull(endtime)) {
+            flag = flag && tools.deNull(item['create_time']) >= starttime && tools.deNull(item['create_time']) <= endtime;
+        }
+
+        return flag;
+    });
+
     //遍历数据并排序
     result = _.sortBy(result, function(item) {
         return item['timestamp'] * -1.0;
@@ -4196,4 +4215,4 @@ export async function patchEnameCname(origin) {
 
     //返回中文名称列表
     return chinese;
-};
+}
