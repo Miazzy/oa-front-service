@@ -7,7 +7,11 @@
         <icon-text type="message" :text="item.messages" />
       </template>
       <a-list-item-meta>
-        <a slot="title" :href="`/blog/view?id=${item.id}`">{{ item.title }}</a>
+        <a
+          slot="title"
+          :href="`/blog/view?id=${item.id}`"
+          @click="handleBlogView(item)"
+        >{{ item.title }}</a>
         <template slot="description">
           <span>
             <a-tag v-for="(tag, index) in item.page_tags.split(',')" :key="index">{{tag}}</a-tag>
@@ -34,6 +38,7 @@ import IconText from "@/views/list/search/components/IconText";
 
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
+import * as tools from "@/utils/util";
 
 export default {
   name: "Article",
@@ -109,9 +114,11 @@ export default {
      */
     async handleBlogView(item) {
       try {
+        //标签
+        var tags = tools.deNull(item.tags);
         //跳转到博文详情页面
         this.$router.push(
-          `/blog/view?id${item.id}&author=${item.create_by}&tags=${item.tags}`
+          `/blog/view?id${item.id}&author=${item.create_by}&tags=${tags}`
         );
       } catch (error) {
         console.log("$router go to error :" + error);

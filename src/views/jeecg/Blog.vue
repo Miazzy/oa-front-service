@@ -1,85 +1,141 @@
 <template>
-  <page-layout :avatar="avatar">
-    <div slot="headerContent" style="height:60px;position:relative;">
-      <div class="title" style="font-size:14px;">
-        <span class="welcome-text" :style="welcomeStyle">{{ welcome }}</span>
-      </div>
-      <div :style="postStyle">初级博主 | 总博文数 0 | 博文排名 10 | 访问总数 2000</div>
-    </div>
-
-    <div>
-      <a-row :gutter="24">
-        <a-col style="padding: 0 12px" :xl="4" :lg="24" :md="24" :sm="24">
-          <a-card :loading="loading" title="博客管理" :bordered="false" style="margin-top:0px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in manage" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member" @click="item.click">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
+  <div>
+    <a-row :gutter="24">
+      <a-col style="padding: 0 12px" :xl="6" :lg="24" :md="24" :sm="24">
+        <a-card :bordered="false" style="margin-bottom:10px;">
+          <div class="account-center-avatarHolder">
+            <div style="position:relative;">
+              <div class="avatar" style="position:absolute;">
+                <img :src="avatar" />
+              </div>
+              <div
+                class="username"
+                style="position:absolute;left: 68.5px;top: 2px;"
+              >{{ nickname() }}</div>
+              <div
+                class="username"
+                style="position:absolute;left: 68.5px;top: 32px;font-size:12px;"
+              >
+                <a>TA的个人主页 ></a>
+              </div>
             </div>
-          </a-card>
+          </div>
 
-          <a-card :loading="loading" title="统计管理" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in count" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
+          <div class="bio" style="margin-top:80px;margin-bottom:10px;">
+            <div style="float:left;margin-left:0px;text-align:center;">
+              <div>原创</div>
+              <div>0</div>
+              <div>&nbsp;</div>
             </div>
-          </a-card>
-
-          <a-card :loading="loading" title="博客" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in blog" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
+            <div style="float:left;margin-left:35px;text-align:center;">
+              <div>粉丝</div>
+              <div>0</div>
+              <div>&nbsp;</div>
             </div>
-          </a-card>
-
-          <a-card :loading="loading" title="最新博文" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in news" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
+            <div style="float:left;margin-left:35px;text-align:center;">
+              <div>获赞</div>
+              <div>0</div>
+              <div>&nbsp;</div>
             </div>
-          </a-card>
-        </a-col>
+            <div style="float:left;margin-left:35px;text-align:center;">
+              <div>评论</div>
+              <div>0</div>
+              <div>&nbsp;</div>
+            </div>
+            <div style="float:left;margin-left:35px;text-align:center;">
+              <div>访问</div>
+              <div>0</div>
+              <div>&nbsp;</div>
+            </div>
+          </div>
 
-        <a-col :xl="20" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card :loading="loading" title :bordered="false">
-            <mavon-editor
-              class="md"
-              :value="content"
-              :subfield="false"
-              :defaultOpen="'preview'"
-              :toolbarsFlag="false"
-              :editable="false"
-              :scrollStyle="true"
-              :ishljs="true"
-            ></mavon-editor>
-          </a-card>
-        </a-col>
-      </a-row>
-    </div>
-  </page-layout>
+          <a-divider style="margin-top:10px;margin-bottom:15px;" />
+          <div class="bio" style="margin-top:20px;">{{bio}}</div>
+          <a-divider style="margin-top:10px;margin-bottom:15px;" />
+          <div style="float:right;margin-top:10px;">
+            <a-button
+              type="primary"
+              style="margin-left:-10px;font-size:12px;width:130px;margin-right:15px;"
+              size="small"
+            >关注</a-button>
+            <a-button
+              color="gray"
+              type="primary"
+              style="margin-left:10px;background:pink;border: 1px solid pink;font-size:12px;width:130px;"
+              size="small"
+            >私信</a-button>
+          </div>
+        </a-card>
+
+        <a-card :loading="loading" title="博客管理" :bordered="false" style="margin-top:20px;">
+          <div class="members">
+            <a-row>
+              <a-col :span="24" v-for="(item, index) in manage" :key="index">
+                <a :href="item.href">
+                  <a-avatar size="small" :src="item.avatar" />
+                  <span class="member" @click="item.click">{{ item.name }}</span>
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-card>
+
+        <a-card :loading="loading" title="统计管理" :bordered="false" style="margin-top:20px;">
+          <div class="members">
+            <a-row>
+              <a-col :span="24" v-for="(item, index) in count" :key="index">
+                <a :href="item.href">
+                  <a-avatar size="small" :src="item.avatar" />
+                  <span class="member">{{ item.name }}</span>
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-card>
+
+        <a-card :loading="loading" title="博客" :bordered="false" style="margin-top:20px;">
+          <div class="members">
+            <a-row>
+              <a-col :span="24" v-for="(item, index) in blog" :key="index">
+                <a :href="item.href">
+                  <a-avatar size="small" :src="item.avatar" />
+                  <span class="member">{{ item.name }}</span>
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-card>
+
+        <a-card :loading="loading" title="最新博文" :bordered="false" style="margin-top:20px;">
+          <div class="members">
+            <a-row>
+              <a-col :span="24" v-for="(item, index) in news" :key="index">
+                <a :href="item.href">
+                  <a-avatar size="small" :src="item.avatar" />
+                  <span class="member">{{ item.name }}</span>
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-card>
+      </a-col>
+
+      <a-col :xl="18" :lg="24" :md="24" :sm="24" :xs="24">
+        <a-card :loading="loading" title :bordered="false">
+          <mavon-editor
+            class="md"
+            :value="content"
+            :subfield="false"
+            :defaultOpen="'preview'"
+            :toolbarsFlag="false"
+            :editable="false"
+            :scrollStyle="true"
+            :ishljs="true"
+          ></mavon-editor>
+        </a-card>
+      </a-col>
+    </a-row>
+  </div>
 </template>
 
 <script>
@@ -99,7 +155,7 @@ import * as tools from "@/utils/util";
 Vue.use(mavonEditor);
 
 export default {
-  name: "BlogManage",
+  name: "BlogInfo",
   components: {
     PageLayout,
     HeadInfo,
@@ -128,6 +184,7 @@ export default {
       activities: [],
       nodelist: [],
       teams: [],
+      bio: "",
       article: {
         id: "-1",
         dynamicTags: [],
@@ -363,6 +420,32 @@ export default {
       font-size: 20px;
       margin-bottom: 10px;
     }
+  }
+}
+
+.account-center-avatarHolder {
+  text-align: center;
+  margin-bottom: 24px;
+
+  .avatar {
+    margin: 0 auto;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .username {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    line-height: 28px;
+    font-weight: 500;
+    margin-bottom: 4px;
   }
 }
 </style>
