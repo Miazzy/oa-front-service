@@ -70,11 +70,14 @@
             >{{ record.announce_type }}</a-tag>
           </span>
           <span slot="announce_title" slot-scope="text, record">
-            <a-tag
+            <a
               color="blue"
               :key="record.announce_title"
               @click="handleAnnounceInfo(record)"
-            >{{ record.announce_title}}</a-tag>
+              style="color:#303030;"
+            >
+              <span style="color:#303030;" v-html="record.announce_title"></span>
+            </a>
           </span>
           <span slot="create_by" slot-scope="text, record">
             <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
@@ -109,20 +112,12 @@ const columns = [
     scopedSlots: { customRender: "announce_type" }
   },
   {
-    title: "标题",
-    width: 500,
+    title: "主题",
+    width: 800,
     align: "left",
     key: "announce_title",
     dataIndex: "announce_title",
     scopedSlots: { customRender: "announce_title" }
-  },
-  {
-    title: "创建人",
-    width: 100,
-    align: "center",
-    key: "create_by",
-    dataIndex: "create_by",
-    scopedSlots: { customRender: "create_by" }
   },
   {
     title: "时间",
