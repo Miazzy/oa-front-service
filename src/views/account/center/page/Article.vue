@@ -7,7 +7,7 @@
         <icon-text type="message" :text="item.messages" />
       </template>
       <a-list-item-meta>
-        <a slot="title" href="https://vue.ant.design/">{{ item.title }}</a>
+        <a slot="title" :href="`/blog/view?id=${item.id}`">{{ item.title }}</a>
         <template slot="description">
           <span>
             <a-tag v-for="(tag, index) in item.page_tags.split(',')" :key="index">{{tag}}</a-tag>
@@ -19,6 +19,7 @@
         :owner="item.create_by"
         :avatar="item.avatar"
         :updateAt="item.createtime"
+        @click="handleBlogView(item)"
       />
     </a-list-item>
     <div slot="footer" v-if="data.length > 0" style="text-align: center; margin-top: 16px;">
@@ -32,7 +33,6 @@ import ArticleListContent from "./ArticleListContent";
 import IconText from "@/views/list/search/components/IconText";
 
 import * as manageAPI from "@/api/manage";
-import * as tools from "@/utils/util";
 
 export default {
   name: "Article",
@@ -90,6 +90,19 @@ export default {
         //关闭加载图标
         this.loadingMore = false;
       }, 1000);
+    },
+    /**
+     * @function 处理博文预览功能
+     */
+    async handleBlogView(item) {
+      try {
+        //跳转到博文详情页面
+        this.$router.push(
+          `/blog/view?id${item.id}&author=${item.create_by}&tags=${item.tags}`
+        );
+      } catch (error) {
+        console.log("$router go to error :" + error);
+      }
     }
   }
 };
