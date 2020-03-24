@@ -69,20 +69,7 @@
               @click="handleAnnounceInfo(record , record.table_name)"
             >{{ record.announce_type }}</a-tag>
           </span>
-          <span slot="announce_title" slot-scope="text, record">
-            <a
-              color="blue"
-              :key="record.announce_title"
-              @click="handleAnnounceInfo(record , record.table_name)"
-              style="color:#303030;"
-            >
-              <span
-                style="color:#303030;"
-                @click="handleAnnounceInfo(record , record.table_name)"
-                v-html="record.announce_title"
-              ></span>
-            </a>
-          </span>
+
           <span slot="create_by" slot-scope="text, record">
             <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
           </span>

@@ -239,15 +239,8 @@
                   <a-tag
                     color="cyan"
                     :key="record.announce_type"
-                    @click="handleAnnounceInfo(record,'BS_ANNOUNCE')"
+                    @click="handleAnnounceInfo(record,record.table_name)"
                   >{{ record.announce_type }}</a-tag>
-                </span>
-                <span slot="announce_title" slot-scope="text, record">
-                  <a-tag
-                    color="blue"
-                    :key="record.announce_title"
-                    @click="handleAnnounceInfo(record,'BS_ANNOUNCE')"
-                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
                   <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
@@ -275,15 +268,8 @@
                   <a-tag
                     color="cyan"
                     :key="record.announce_type"
-                    @click="handleAnnounceInfo(record,'BS_REDHEAD')"
+                    @click="handleAnnounceInfo(record,record.table_name)"
                   >{{ record.announce_type }}</a-tag>
-                </span>
-                <span slot="announce_title" slot-scope="text, record">
-                  <a-tag
-                    color="blue"
-                    :key="record.announce_title"
-                    @click="handleAnnounceInfo(record,'BS_REDHEAD')"
-                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
                   <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
@@ -311,15 +297,8 @@
                   <a-tag
                     color="cyan"
                     :key="record.announce_type"
-                    @click="handleAnnounceInfo(record,'BS_NEWS')"
+                    @click="handleAnnounceInfo(record,record.table_name)"
                   >{{ record.announce_type }}</a-tag>
-                </span>
-                <span slot="announce_title" slot-scope="text, record">
-                  <a-tag
-                    color="blue"
-                    :key="record.announce_title"
-                    @click="handleAnnounceInfo(record,'BS_NEWS')"
-                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
                   <a-tag color="geekblue" :key="record.create_by">{{ record.create_by}}</a-tag>
@@ -347,15 +326,8 @@
                   <a-tag
                     color="cyan"
                     :key="record.announce_type"
-                    @click="handleAnnounceInfo(record,'BS_NOTICE')"
+                    @click="handleAnnounceInfo(record,record.table_name)"
                   >{{ record.announce_type}}</a-tag>
-                </span>
-                <span slot="announce_title" slot-scope="text, record">
-                  <a-tag
-                    color="blue"
-                    :key="record.announce_title"
-                    @click="handleAnnounceInfo(record,'BS_NOTICE')"
-                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
                   <a-tag color="geekblue" :key="record.create_by">{{ record.create_by}}</a-tag>
@@ -383,15 +355,8 @@
                   <a-tag
                     color="cyan"
                     :key="record.announce_type"
-                    @click="handleAnnounceInfo(record,'BS_MARKET_INFO')"
+                    @click="handleAnnounceInfo(record,record.table_name)"
                   >{{ record.announce_type }}</a-tag>
-                </span>
-                <span slot="announce_title" slot-scope="text, record">
-                  <a-tag
-                    color="blue"
-                    :key="record.announce_title"
-                    @click="handleAnnounceInfo(record,'BS_MARKET_INFO')"
-                  >{{ record.announce_title}}</a-tag>
                 </span>
                 <span slot="create_by" slot-scope="text, record">
                   <a-tag color="geekblue" :key="record.create_by">{{ record.create_by }}</a-tag>
@@ -475,20 +440,7 @@ import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
 
 const rankList = [];
-for (let i = 0; i < 7; i++) {
-  rankList.push({
-    name: "白鹭岛 " + (i + 1) + " 号店",
-    total: 1234.56 - i * 100
-  });
-}
 const barData = [];
-for (let i = 0; i < 12; i += 1) {
-  barData.push({
-    x: `${i + 1}月`,
-    y: Math.floor(Math.random() * 1000) + 200
-  });
-}
-
 const columns = [
   {
     title: "办理事项",
@@ -553,19 +505,11 @@ const announce_columns = [
   },
   {
     title: "标题",
-    width: 500,
+    width: 800,
     align: "left",
-    key: "announce_title",
-    dataIndex: "announce_title",
-    scopedSlots: { customRender: "announce_title" }
-  },
-  {
-    title: "创建人",
-    width: 100,
-    align: "center",
-    key: "create_by",
-    dataIndex: "create_by",
-    scopedSlots: { customRender: "create_by" }
+    key: "title",
+    dataIndex: "title",
+    scopedSlots: { customRender: "title" }
   },
   {
     title: "时间",
