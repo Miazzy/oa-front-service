@@ -21,7 +21,9 @@
             </div>
           </div>
 
-          <div class="bio" style="margin-top:80px;margin-bottom:10px;">
+          <div class="bio" style="margin-top:80px;">{{bio}}</div>
+          <a-divider style="margin-top:10px;margin-bottom:15px;" />
+          <div class="bio" style="margin-top:20px;margin-bottom:10px;">
             <div style="float:left;margin-left:0px;text-align:center;">
               <div>原创</div>
               <div>0</div>
@@ -48,14 +50,37 @@
               <div>&nbsp;</div>
             </div>
           </div>
+          <a-divider style="margin-top:10px;margin-bottom:15px;" />
+          <div style="display:block;width:100%;margin-top:5px;height:0px;">
+            <a-descriptions title="博主信息">
+              <div style="float:left;width:135px;">
+                <span>等级：</span>
+                <span>
+                  <a-tag color="orange">博客6级</a-tag>
+                </span>
+              </div>
+              <div style="float:left;margin-left:20px">
+                <span>排名：</span>
+                <span>10万+</span>
+              </div>
+            </a-descriptions>
+          </div>
+          <div style="height:10px;margin-top:0px;padding-top:5px;">&nbsp;</div>
+          <div style="display:block;width:100%;margin-top:25px;height:2px">
+            <a-descriptions title="博主信息">
+              <div style="width:135px;margin-top:25px;">
+                <span>积分：</span>
+                <span>200</span>
+              </div>
+            </a-descriptions>
+          </div>
 
-          <a-divider style="margin-top:10px;margin-bottom:15px;" />
-          <div class="bio" style="margin-top:20px;">{{bio}}</div>
-          <a-divider style="margin-top:10px;margin-bottom:15px;" />
+          <a-divider style="margin-top:50px;margin-bottom:15px;" />
+
           <div style="float:right;margin-top:10px;">
             <a-button
               type="primary"
-              style="margin-left:-10px;font-size:12px;width:130px;margin-right:15px;"
+              style="margin-left:-12px;font-size:12px;width:130px;margin-right:15px;"
               size="small"
             >关注</a-button>
             <a-button
