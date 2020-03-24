@@ -18,7 +18,7 @@
           </a-col>
 
           <a-col :md="5" :sm="5">
-            <a-form-item label="内容">
+            <a-form-item label="主题">
               <a-input placeholder="请输入搜索信息" v-model="queryParam.topic"></a-input>
             </a-form-item>
           </a-col>
@@ -66,14 +66,14 @@
             <a-tag
               color="cyan"
               :key="record.announce_type"
-              @click="handleAnnounceInfo(record)"
+              @click="handleAnnounceInfo(record , record.table_name)"
             >{{ record.announce_type }}</a-tag>
           </span>
           <span slot="announce_title" slot-scope="text, record">
             <a
               color="blue"
               :key="record.announce_title"
-              @click="handleAnnounceInfo(record)"
+              @click="handleAnnounceInfo(record , record.table_name)"
               style="color:#303030;"
             >
               <span style="color:#303030;" v-html="record.announce_title"></span>
@@ -135,31 +135,13 @@ export default {
     ARow,
     ACol
   },
-  name: "Printgzsld",
-  props: {
-    reBizCode: {
-      type: String,
-      default: ""
-    }
-  },
+  props: {},
   data() {
     return {
       columns: columns,
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 2 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
       previewVisible: false,
       previewImage: "",
       fileList: [],
-      url: {
-        loadApplicant: "/sps/register/loadApplicants",
-        loadRegisterFiles: "/sps/register/getRegisterFilesConfig"
-      },
       activeKey: 2,
       dataNotifyList: [],
       queryParam: {
@@ -217,16 +199,6 @@ export default {
         endtime
       );
     },
-    async handleCancel() {
-      this.previewVisible = false;
-    },
-    async handlePreview(file) {
-      this.previewImage = file.url || file.thumbUrl;
-      this.previewVisible = true;
-    },
-    async handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
     /**
      * @function 查看详情页面
      */
@@ -246,8 +218,23 @@ export default {
     /**
      * @function 查询函数
      */
-    async searchQuery() {
-      await this.getDate("all", 50, "", "", "");
+    async searchQuery(type = "all", content = "", starttime, endtime) {
+      //获取type类型
+      type = this.queryParam.type || "all";
+
+      //获取主题搜索信息
+      content = this.queryParam.topic || "";
+
+      if (this.queryParam.time.length > 0) {
+        //获取开始时间
+        starttime = this.queryParam.time[0] || "";
+
+        //获取结束时间
+        endtime = this.queryParam.time[1] || "";
+      }
+
+      //调用公告信息查询函数
+      await this.getDate(type, 50, content, starttime, endtime);
     },
     /**
      * @function 重置函数

@@ -2010,6 +2010,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_announce';
         });
 
         return result;
@@ -2037,6 +2038,7 @@ export async function queryHeadList(page = 0, size = 50) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_redhead';
         });
 
         return result;
@@ -2064,6 +2066,7 @@ export async function queryNewsList(page = 0, size = 50) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_news';
         });
 
         return result;
@@ -2090,6 +2093,7 @@ export async function queryNoticeList(page = 0, size = 50) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_notice';
         });
 
         return result;
@@ -2116,6 +2120,7 @@ export async function queryViewsList(page = 0, size = 50) {
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_market_info';
         });
 
         return result;
@@ -2128,8 +2133,6 @@ export async function queryViewsList(page = 0, size = 50) {
  * @function 获取所有公告信息
  */
 export async function queryNotifyAll(type = 'all', size = 50, content = '', starttime, endtime) {
-
-    debugger;
 
     //定义内容
     var result = [];
@@ -2184,8 +2187,6 @@ export async function queryNotifyAll(type = 'all', size = 50, content = '', star
             break;
         }
     }
-
-    debugger;
 
     //返回查询结果
     return result;
