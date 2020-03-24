@@ -76,7 +76,11 @@
               @click="handleAnnounceInfo(record , record.table_name)"
               style="color:#303030;"
             >
-              <span style="color:#303030;" v-html="record.announce_title"></span>
+              <span
+                style="color:#303030;"
+                @click="handleAnnounceInfo(record , record.table_name)"
+                v-html="record.announce_title"
+              ></span>
             </a>
           </span>
           <span slot="create_by" slot-scope="text, record">
@@ -115,9 +119,9 @@ const columns = [
     title: "主题",
     width: 800,
     align: "left",
-    key: "announce_title",
-    dataIndex: "announce_title",
-    scopedSlots: { customRender: "announce_title" }
+    key: "title",
+    dataIndex: "title",
+    scopedSlots: { customRender: "title" }
   },
   {
     title: "时间",

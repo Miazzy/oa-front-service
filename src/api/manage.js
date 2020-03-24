@@ -2007,10 +2007,13 @@ export async function queryAnnounceList(page = 0, size = 50) {
         _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['table_name'] = 'bs_announce';
+            item['content'] = item['content'] || item['title'];
         });
 
         return result;
@@ -2035,10 +2038,13 @@ export async function queryHeadList(page = 0, size = 50) {
         _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['table_name'] = 'bs_redhead';
+            item['content'] = item['content'] || item['title'];
         });
 
         return result;
@@ -2063,10 +2069,13 @@ export async function queryNewsList(page = 0, size = 50) {
         _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['table_name'] = 'bs_news';
+            item['content'] = item['content'] || item['title'];
         });
 
         return result;
@@ -2090,10 +2099,13 @@ export async function queryNoticeList(page = 0, size = 50) {
         _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['table_name'] = 'bs_notice';
+            item['content'] = item['content'] || item['title'];
         });
 
         return result;
@@ -2117,10 +2129,13 @@ export async function queryViewsList(page = 0, size = 50) {
         _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
             item['operate_time'] = optime;
             item['create_time'] = ctime;
+            item['timestamp'] = time;
             item['username'] = tools.deNull(item['username']).split(',');
             item['table_name'] = 'bs_market_info';
+            item['content'] = item['content'] || item['title'];
         });
 
         return result;
@@ -2187,6 +2202,10 @@ export async function queryNotifyAll(type = 'all', size = 50, content = '', star
             break;
         }
     }
+
+    result = _.sortBy(result, function(item) {
+        return item['']
+    });
 
     //返回查询结果
     return result;
@@ -4176,4 +4195,4 @@ export async function patchEnameCname(origin) {
 
     //返回中文名称列表
     return chinese;
-}
+};

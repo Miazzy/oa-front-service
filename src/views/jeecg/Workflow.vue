@@ -105,12 +105,12 @@
             :span="12"
             style="margin-bottom:10px;"
             v-if="
-              typeof curRow.announce_title != 'undefined' &&
-                curRow.announce_title != null
+              typeof curRow.title != 'undefined' &&
+                curRow.title != null
             "
           >
-            <span style="margin-left: 0%">{{ tableInfo.announce_title }}:</span>
-            <a-input style="width: 70%" readonly v-model="curRow.announce_title" />
+            <span style="margin-left: 0%">{{ tableInfo.title }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.title" />
           </a-col>
 
           <a-col
@@ -1539,7 +1539,6 @@ export default {
      * @function 生成短链接操作
      */
     async handleShort() {
-      debugger;
       //生成分享链接
       var url = window.location.href.replace("workflow", "basewflow");
       //加密后的URL
