@@ -76,6 +76,7 @@
               <mavon-editor
                 style="height: 720px;width: 100%;"
                 ref="md"
+                @htmlCode="$htmlCode"
                 @imgAdd="$imgAdd"
                 @imgDel="$imgDel"
                 v-model="article.mdContent"
@@ -218,6 +219,9 @@ export default {
         position: "absolute",
         left: "90px",
         transform: "scale(0.8)"
+      },
+      markdownOption: {
+        editable: true
       },
       projects: [],
       loading: true,
@@ -435,6 +439,18 @@ export default {
         this.teams = res.result;
       });
     },
+    /**
+     * @function markdown编辑器显示html内容
+     */
+    $htmlCode(status, content) {
+      debugger;
+
+      //设置文章对应的html内容
+      this.article.htmlContent = content;
+    },
+    /**
+     * @function markdown编辑器添加图片函数
+     */
     $imgAdd(pos, $file) {
       const token = Vue.ls.get(ACCESS_TOKEN);
       //将图片上传到服务器.
@@ -477,23 +493,29 @@ export default {
         this.welcome = this.welcome.substring(0, 270) + "...";
       }
     },
+    /**
+     * @function 关闭Tag函数
+     */
     handleTagClose() {
       const tags = this.tags; //this.tags.filter(tag => tag !== "");
       console.log(tags);
       this.tags = tags;
     },
-
+    /**
+     * @function 显示Tag对应输入框函数
+     */
     handleShowTagInput() {
       this.tagInputVisible = true;
       this.$nextTick(function() {
         this.$refs.input.focus();
       });
     },
-
+    /**
+     * @function 处理Tag对应Input的change事件
+     */
     handleTagInputChange(e) {
       this.tagInputValue = e.target.value;
     },
-
     /**
      * @function 提交Tag函数
      */
@@ -549,6 +571,7 @@ export default {
         article.id = tools.queryUniqueID();
         article.blog_title = this.pageTitle;
         article.content = this.article.mdContent;
+        article.hontent = this.article.htmlContent;
         article.create_by = this.userInfo.username;
         article.create_time = tools.formatDate(
           timestamp,
@@ -621,6 +644,7 @@ export default {
         article.id = tools.queryUniqueID();
         article.blog_title = this.pageTitle;
         article.content = this.article.mdContent;
+        article.hontent = this.article.htmlContent;
         article.create_by = this.userInfo.username;
         article.create_time = tools.formatDate(
           timestamp,
