@@ -78,7 +78,7 @@
         dataSource: [],
         loading: false,
         url: {
-          queryCompareUrl: `${window._CONFIG['domain']}/sys/dataLog/queryCompareList`,
+          queryCompareUrl: "/sys/dataLog/queryCompareList",
         },
       }
     },

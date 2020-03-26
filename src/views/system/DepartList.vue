@@ -17,8 +17,7 @@
         <div style="background: #fff;padding-left:16px;height: 100%; margin-top: 5px">
           <a-alert type="info" :showIcon="true">
             <div slot="message">
-              当前选择：
-              <a v-if="this.currSelected.title">{{ getCurrSelectedTitle() }}</a>
+              当前选择：<span v-if="this.currSelected.title">{{ getCurrSelectedTitle() }}</span>
               <a v-if="this.currSelected.title" style="margin-left: 10px" @click="onClearSelected">取消选择</a>
             </div>
           </a-alert>
@@ -37,7 +36,7 @@
               :selectedKeys="selectedKeys"
               :checkedKeys="checkedKeys"
               :treeData="departTree"
-              :checkStrictly="true"
+              :checkStrictly="checkStrictly"
               :expandedKeys="iExpandedKeys"
               :autoExpandParent="autoExpandParent"
               @expand="onExpand"/>
@@ -53,62 +52,109 @@
           </a-col>
         </div>
       </a-card>
+      <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
+      <div class="drawer-bootom-button">
+        <a-dropdown :trigger="['click']" placement="topCenter">
+          <a-menu slot="overlay">
+            <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
+            <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
+            <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
+            <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
+            <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
+            <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
+          </a-menu>
+          <a-button>
+            树操作 <a-icon type="up" />
+          </a-button>
+        </a-dropdown>
+      </div>
+      <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
     </a-col>
     <a-col :md="12" :sm="24">
-      <a-card :bordered="false">
-        <a-form :form="form">
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="机构名称">
-            <a-input placeholder="请输入机构/部门名称" v-decorator="['departName', validatorRules.departName ]"/>
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
-            <a-tree-select
-              style="width:100%"
-              :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-              :treeData="treeData"
-              :disabled="disable"
-              v-model="model.parentId"
-              placeholder="无">
-            </a-tree-select>
-          </a-form-item>
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="机构编码">
-            <a-input disabled placeholder="请输入机构编码" v-decorator="['orgCode', validatorRules.orgCode ]"/>
-          </a-form-item>
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="排序">
-            <a-input-number v-decorator="[ 'departOrder',{'initialValue':0}]"/>
-          </a-form-item>
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="手机号">
-            <a-input placeholder="请输入手机号" v-decorator="['mobile', {'initialValue':''}]"/>
-          </a-form-item>
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="地址">
-            <a-input placeholder="请输入地址" v-decorator="['address', {'initialValue':''}]"/>
-          </a-form-item>
-          <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            label="备注">
-            <a-textarea placeholder="请输入备注" v-decorator="['memo', {'initialValue':''}]"/>
-          </a-form-item>
-        </a-form>
-        <div class="anty-form-btn">
-          <a-button @click="emptyCurrForm" type="default" htmlType="button" icon="sync">重置</a-button>
-          <a-button @click="submitCurrForm" type="primary" htmlType="button" icon="form">修改并保存</a-button>
-        </div>
-      </a-card>
+      <a-tabs defaultActiveKey="1">
+        <a-tab-pane tab="基本信息" key="1" >
+          <a-card :bordered="false">
+            <a-form :form="form">
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="机构名称">
+                <a-input placeholder="请输入机构/部门名称" v-decorator="['departName', validatorRules.departName ]"/>
+              </a-form-item>
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
+                <a-tree-select
+                  style="width:100%"
+                  :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
+                  :treeData="treeData"
+                  :disabled="disable"
+                  v-model="model.parentId"
+                  placeholder="无">
+                </a-tree-select>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="机构编码">
+                <a-input disabled placeholder="请输入机构编码" v-decorator="['orgCode', validatorRules.orgCode ]"/>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="机构类型">
+                <template v-if="orgCategoryDisabled">
+                  <a-radio-group v-decorator="['orgCategory',validatorRules.orgCategory]" placeholder="请选择机构类型">
+                    <a-radio value="1">
+                      公司
+                    </a-radio>
+                  </a-radio-group>
+                </template>
+                <template v-else>
+                  <a-radio-group v-decorator="['orgCategory',validatorRules.orgCategory]" placeholder="请选择机构类型">
+                    <a-radio value="2">
+                      部门
+                    </a-radio>
+                    <a-radio value="3">
+                      岗位
+                    </a-radio>
+                  </a-radio-group>
+                </template>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="排序">
+                <a-input-number v-decorator="[ 'departOrder',{'initialValue':0}]"/>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="手机号">
+                <a-input placeholder="请输入手机号" v-decorator="['mobile', {'initialValue':''}]"/>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="地址">
+                <a-input placeholder="请输入地址" v-decorator="['address', {'initialValue':''}]"/>
+              </a-form-item>
+              <a-form-item
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                label="备注">
+                <a-textarea placeholder="请输入备注" v-decorator="['memo', {'initialValue':''}]"/>
+              </a-form-item>
+            </a-form>
+            <div class="anty-form-btn">
+              <a-button @click="emptyCurrForm" type="default" htmlType="button" icon="sync">重置</a-button>
+              <a-button @click="submitCurrForm" type="primary" htmlType="button" icon="form">修改并保存</a-button>
+            </div>
+          </a-card>
+        </a-tab-pane>
+        <a-tab-pane tab="部门权限" key="2" forceRender>
+          <depart-auth-modal ref="departAuth"/>
+        </a-tab-pane>
+      </a-tabs>
+
     </a-col>
     <depart-modal ref="departModal" @ok="loadTree"></depart-modal>
   </a-row>
@@ -119,6 +165,7 @@
   import {queryDepartTreeList, searchByKeywords, deleteByDepartId} from '@/api/api'
   import {httpAction, deleteAction} from '@/api/manage'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
+  import DepartAuthModal from './modules/DepartAuthModal'
   // 表头
   const columns = [
     {
@@ -162,6 +209,7 @@
     name: 'DepartList',
     mixins: [JeecgListMixin],
     components: {
+      DepartAuthModal,
       DepartModal
     },
     data() {
@@ -186,6 +234,10 @@
         selectedKeys: [],
         autoIncr: 1,
         currSelected: {},
+
+        allTreeKeys:[],
+        checkStrictly: true,
+
         form: this.$form.createForm(this),
         labelCol: {
           xs: {span: 24},
@@ -202,20 +254,22 @@
         validatorRules: {
           departName: {rules: [{required: true, message: '请输入机构/部门名称!'}]},
           orgCode: {rules: [{required: true, message: '请输入机构编码!'}]},
+          orgCategory: {rules: [{required: true, message: '请输入机构类型!'}]},
           mobile: {rules: [{validator: this.validateMobile}]}
         },
         url: {
-          delete: `${window._CONFIG['domain']}/sys/sysDepart/delete`,
-          edit: `${window._CONFIG['domain']}/sys/sysDepart/edit`,
-          deleteBatch: `${window._CONFIG['domain']}/sys/sysDepart/deleteBatch`,
-          exportXlsUrl: `${window._CONFIG['domain']}/sys/sysDepart/exportXls`,
-          importExcelUrl: `${window._CONFIG['domain']}/sys/sysDepart/importExcel`,
+          delete: '/sys/sysDepart/delete',
+          edit: '/sys/sysDepart/edit',
+          deleteBatch: '/sys/sysDepart/deleteBatch',
+          exportXlsUrl: "sys/sysDepart/exportXls",
+          importExcelUrl: "sys/sysDepart/importExcel",
         },
+        orgCategoryDisabled:false,
       }
     },
     computed: {
       importExcelUrl: function () {
-        return `${window._CONFIG['domainURL']}/${this.url.importExcelUrl}`;
+        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       }
     },
     methods: {
@@ -233,7 +287,8 @@
               that.treeData.push(temp)
               that.departTree.push(temp)
               that.setThisExpandedKeys(temp)
-              console.log(temp.id)
+              that.getAllKeys(temp);
+              // console.log(temp.id)
             }
             this.loading = false
           }
@@ -290,7 +345,7 @@
             ids += this.checkedKeys[a] + ','
           }
           var that = this
-          this.$confirm_({
+          this.$confirm({
             title: '确认删除',
             content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据，以及子节点数据吗?',
             onOk: function () {
@@ -338,7 +393,14 @@
       onCheck(checkedKeys, info) {
         console.log('onCheck', checkedKeys, info)
         this.hiding = false
-        this.checkedKeys = checkedKeys.checked
+        //this.checkedKeys = checkedKeys.checked
+        // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
+        if(this.checkStrictly){
+          this.checkedKeys = checkedKeys.checked;
+        }else{
+          this.checkedKeys = checkedKeys
+        }
+        // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
       },
       onSelect(selectedKeys, e) {
         console.log('selected', selectedKeys, e)
@@ -350,13 +412,18 @@
         this.selectedKeys = [record.key]
         this.model.parentId = record.parentId
         this.setValuesToForm(record)
-
+        this.$refs.departAuth.show(record.id);
 
       },
       // 触发onSelect事件时,为部门树右侧的form表单赋值
       setValuesToForm(record) {
+        if(record.orgCategory == '1'){
+          this.orgCategoryDisabled = true;
+        }else{
+          this.orgCategoryDisabled = false;
+        }
         this.form.getFieldDecorator('fax', {initialValue: ''})
-        this.form.setFieldsValue(pick(record, 'departName', 'orgCode', 'departOrder', 'mobile', 'fax', 'address', 'memo'))
+        this.form.setFieldsValue(pick(record, 'departName','orgCategory', 'orgCode', 'departOrder', 'mobile', 'fax', 'address', 'memo'))
       },
       getCurrSelectedTitle() {
         return !this.currSelected.title ? '' : this.currSelected.title
@@ -367,6 +434,7 @@
         this.currSelected = {}
         this.form.resetFields()
         this.selectedKeys = []
+        this.$refs.departAuth.departId = ''
       },
       handleNodeTypeChange(val) {
         this.currSelected.nodeType = val
@@ -459,6 +527,39 @@
           }
         }
       },
+     // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
+      expandAll () {
+        this.iExpandedKeys = this.allTreeKeys
+      },
+      closeAll () {
+        this.iExpandedKeys = []
+      },
+      checkALL () {
+        this.checkStriccheckStrictlytly = false
+        this.checkedKeys = this.allTreeKeys
+      },
+      cancelCheckALL () {
+        //this.checkedKeys = this.defaultCheckedKeys
+        this.checkedKeys = []
+      },
+      switchCheckStrictly (v) {
+        if(v==1){
+          this.checkStrictly = false
+        }else if(v==2){
+          this.checkStrictly = true
+        }
+      },
+      getAllKeys(node) {
+        // console.log('node',node);
+        this.allTreeKeys.push(node.key)
+        if (node.children && node.children.length > 0) {
+          for (let a = 0; a < node.children.length; a++) {
+            this.getAllKeys(node.children[a])
+          }
+        }
+      }
+      // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
+      
     },
     created() {
       this.currFlowId = this.$route.params.id
@@ -515,5 +616,17 @@
   /** Button按钮间距 */
   .ant-btn {
     margin-left: 3px
+  }
+
+  .drawer-bootom-button {
+    /*position: absolute;*/
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: left;
+    left: 0;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
   }
 </style>

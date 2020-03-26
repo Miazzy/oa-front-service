@@ -209,6 +209,23 @@ export async function downFile(url, parameter) {
     }
 }
 
+
+/**
+ * 获取文件访问路径
+ * @param avatar
+ * @param imgerver
+ * @param str
+ * @returns {*}
+ */
+export function getFileAccessHttpUrl(avatar, imgerver, subStr) {
+    if (avatar && avatar.indexOf(subStr) != -1) {
+        return avatar;
+    } else {
+        return imgerver + "/" + avatar;
+    }
+}
+
+
 /**
  * 查询URL地址TableID变量
  */
@@ -740,9 +757,10 @@ export async function queryUserList(params) {
 
     //用户名称
     var whereFlag =
-        tools.deNull(params.name) == '' ?
+        tools.deNull(params.username) == '' ?
         '' :
-        `_where=(username,like,~${params.name}~)~or(realname,like,~${params.name}~)&`;
+        `_where=(username,like,~${params.username}~)~or(realname,like,~${params.username}~)&`;
+    
     //获取排序标识，升序 ‘’ ， 降序 ‘-’
     var ascFlag = params.order == 'asc' ? '' : '-';
 
@@ -754,6 +772,25 @@ export async function queryUserList(params) {
         const res = await superagent.get(queryURL).set('accept', 'json');
         const count = await superagent.get(queryCountURL).set('accept', 'json');
         console.log(res);
+
+        //遍历并设置属性
+        _.each(res.body, (item) => {
+            item['status'] = '1';
+            item['orgCode'] = '';
+            item['updateBy'] = '';
+            item['createTime'] = tools.formatDate(item['create_time'],'yyyy-MM-dd');
+            item['createBy'] = 'admin';
+            item['workNo'] = '';
+            item['delFlag'] = '0';
+            item['status_dictText'] = '';
+            item['birthday'] = tools.formatDate(item['birthday'] , 'yyyy-MM-dd');
+            item['updateTime'] = item['createTime'];
+            item['telephone'] = item['phone'];
+            item['activitiSync'] = '';
+            item['sex'] = '1';
+            item['sex_dictText'] = '';
+        });
+
         result.records = res.body;
         result.total =
             count.body[0].no_of_rows <= params.pageSize ?
@@ -1037,6 +1074,9 @@ export async function queryProcessLogWaitByParam(username, param, page = 0, size
     }
     if (tools.deNull(param.topic) != "") {
         whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
+    }
+    if (tools.deNull(param.startman) != "") {
+        whereSQL = whereSQL + `~and(sponsor,like,~${param.startman}~)`;
     }
     if (tools.deNull(param.time) != "") {
         var starttime = '';
@@ -1515,6 +1555,9 @@ export async function queryProcessLogDoneByParam(username, param, page = 0, size
     if (tools.deNull(param.topic) != "") {
         whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
     }
+    if (tools.deNull(param.startman) != "") {
+        whereSQL = whereSQL + `~and(sponsor,like,~${param.startman}~)`;
+    }
     if (tools.deNull(param.time) != "") {
         var starttime = '';
         var endtime = '';
@@ -1548,7 +1591,7 @@ export async function queryProcessLogDoneByParam(username, param, page = 0, size
     }
 
     //查询URL
-    var queryURL = `${api.restapi}/api/v_handled_events?_where=(username,like,~${username}~)${whereSQL}&_p=${page}&_size=${size}&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)${whereSQL}&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');

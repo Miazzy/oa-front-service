@@ -196,7 +196,7 @@
       },
       // eslint-disable-next-line
       del (row) {
-        this.$confirm_({
+        this.$confirm({
           title: '警告',
           content: '真的要删除吗?',
           okText: '删除',
@@ -248,7 +248,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .search {
     margin-bottom: 54px;
   }

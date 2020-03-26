@@ -28,7 +28,9 @@
         :pagination="false"
         :dataSource="dataSource"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}">
+        :expandedRowKeys="expandedRowKeys"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        @expandedRowsChange="handleExpandedRowsChange">
 
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
@@ -152,10 +154,12 @@
         // 表头
         columns: columns,
         loading: false,
+        // 展开的行，受控属性
+        expandedRowKeys: [],
         url: {
-          list: `${window._CONFIG['domain']}/sys/permission/list`,
-          delete: `${window._CONFIG['domain']}/sys/permission/delete`,
-          deleteBatch: `${window._CONFIG['domain']}/sys/permission/deleteBatch`
+          list: '/sys/permission/list',
+          delete: '/sys/permission/delete',
+          deleteBatch: '/sys/permission/deleteBatch'
         }
       }
     },
@@ -178,10 +182,13 @@
         this.$refs.modalForm.localMenuType = 1;
         this.$refs.modalForm.disableSubmit = false;
         this.$refs.modalForm.edit({status:'1',permsType:'1',route:true,'parentId':record.id});
-      }
+      },
+      handleExpandedRowsChange(expandedRows) {
+        this.expandedRowKeys = expandedRows
+      },
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  @import '~@assets/less/common.less';
 </style>

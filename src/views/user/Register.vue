@@ -247,7 +247,7 @@
               phone: values.mobile,
               smscode: values.captcha
             };
-            postAction(`${window._CONFIG['domain']}/sys/user/register`, register).then((res) => {
+            postAction("/sys/user/register", register).then((res) => {
               if (!res.success) {
                 this.registerFailed(res.message)
               } else {
@@ -276,7 +276,7 @@
                 mobile: values.mobile,
                 smsmode: "1"
               };
-              postAction(`${window._CONFIG['domain']}/sys/sms`, params).then((res) => {
+              postAction("/sys/sms", params).then((res) => {
                 if (!res.success) {
                   this.registerFailed(res.message);
                   setTimeout(hide, 0);
@@ -318,7 +318,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="less">
   .user-register {
 
     &.error {
@@ -341,7 +341,7 @@
     }
   }
 </style>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .user-layout-register {
 
     & > h3 {

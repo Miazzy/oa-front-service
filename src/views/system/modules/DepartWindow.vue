@@ -65,7 +65,7 @@
         headers:{},
         form:this.$form.createForm(this),
         url: {
-          userId:`${window._CONFIG['domain']}/sys/user/generateUserId`, // 引入生成添加用户情况下的url
+          userId:"/sys/user/generateUserId", // 引入生成添加用户情况下的url
         },
       }
     },

@@ -4,44 +4,50 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="24">
-          <a-col :md="4" :sm="4">
+          <a-col :md="7" :sm="7">
             <a-form-item label="事项">
-              <a-select style="width: 120px" v-model="queryParam.type">
+              <a-select style="width: 100%;" v-model="queryParam.type">
                 <a-select-option value="审批">审批</a-select-option>
                 <a-select-option value="知会">知会</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :md="5" :sm="5">
+          <a-col :md="7" :sm="7">
             <a-form-item label="业务">
-              <a-select style="width: 180px" v-model="queryParam.name">
+              <a-select style="width: 100%;" v-model="queryParam.name">
                 <a-select-option v-for="item in tableNameList" :key="item.id">{{item.name}}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :md="5" :sm="5">
+          <a-col :md="7" :sm="7">
             <a-form-item label="主题">
               <a-input placeholder="请输入主题信息" v-model="queryParam.topic"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="6">
+          <a-col :md="7" :sm="7">
             <a-form-item label="时间">
               <a-range-picker v-model="queryParam.time" />
             </a-form-item>
           </a-col>
-          <a-col :md="3" :sm="3">
+          <a-col :md="7" :sm="7">
+            <a-form-item label="流程发起人">
+              <a-input placeholder="请输入流程发起人" v-model="queryParam.startman"></a-input>
+            </a-form-item>
+          </a-col>
+
+          <a-col :md="7" :sm="7">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button
                 type="primary"
                 @click="searchQuery"
                 icon="search"
-                style="margin-left: 0px"
+                style="margin-left: 0px;float:left;"
               >查询</a-button>
               <a-button
                 type="primary"
                 @click="searchReset"
                 icon="reload"
-                style="margin-left: 8px"
+                style="margin-left: 8px;float:left;"
               >重置</a-button>
             </span>
           </a-col>
@@ -216,6 +222,7 @@ export default {
   },
   methods: {
     async loadData() {
+      debugger;
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
@@ -238,7 +245,8 @@ export default {
       if (
         this.queryParam == "" ||
         this.queryParam == null ||
-        JSON.stringify(this.queryParam) == "{}"
+        JSON.stringify(this.queryParam) == "{}" ||
+        JSON.stringify(this.queryParam) == `{"startman":""}`
       ) {
         this.queryParam = {};
         await this.getDate();

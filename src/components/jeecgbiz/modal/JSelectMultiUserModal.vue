@@ -17,10 +17,7 @@
               <a-row :gutter="24">
                 <a-col :span="10">
                   <a-form-item label="姓名">
-                    <a-input
-                      placeholder="请输入姓名"
-                      v-model="queryParam.name"
-                    ></a-input>
+                    <a-input placeholder="请输入姓名" v-model="queryParam.name"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :span="8">
@@ -28,16 +25,13 @@
                     style="float: left;overflow: hidden;"
                     class="table-page-search-submitButtons"
                   >
-                    <a-button type="primary" @click="searchQuery" icon="search"
-                      >查询</a-button
-                    >
+                    <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
                     <a-button
                       type="primary"
                       @click="searchReset"
                       icon="reload"
                       style="margin-left: 8px"
-                      >重置</a-button
-                    >
+                    >重置</a-button>
                   </span>
                 </a-col>
               </a-row>
@@ -80,13 +74,7 @@
               :scroll="{y: 240}"
             >
               <span slot="action" slot-scope="text, record">
-                <a-button
-                  type="primary"
-                  size="small"
-                  @click="handleDelete(record)"
-                  icon="delete"
-                  >删除</a-button
-                >
+                <a-button type="primary" size="small" @click="handleDelete(record)" icon="delete">删除</a-button>
               </span>
             </a-table>
           </div>
@@ -98,55 +86,55 @@
 </template>
 
 <script>
-import {filterObj} from '@/utils/util';
-import {getAction, queryUserList} from '@/api/manage';
+import { filterObj } from "@/utils/util";
+import { getAction, queryUserList } from "@/api/manage";
 
 export default {
-  name: 'JSelectMultiUserModal',
+  name: "JSelectMultiUserModal",
   data() {
     return {
-      title: '用户列表',
+      title: "用户列表",
       names: [],
       visible: false,
-      placement: 'right',
-      description: '人员管理页面',
+      placement: "right",
+      description: "人员管理页面",
       // 查询条件
       queryParam: {},
       // 表头
       columns1: [
         {
-          title: '用户代码',
-          align: 'center',
+          title: "用户代码",
+          align: "center",
           width: 100,
-          dataIndex: 'username',
+          dataIndex: "username"
         },
         {
-          title: '用户名称',
-          align: 'center',
+          title: "用户名称",
+          align: "center",
           width: 100,
-          dataIndex: 'realname',
+          dataIndex: "realname"
         },
         {
-          title: '邮箱',
-          align: 'center',
+          title: "邮箱",
+          align: "center",
           width: 180,
-          dataIndex: 'email',
-        },
+          dataIndex: "email"
+        }
       ],
       columns2: [
         {
-          title: '用户账号',
-          align: 'center',
+          title: "用户账号",
+          align: "center",
           width: 100,
-          dataIndex: 'username',
+          dataIndex: "username"
         },
         {
-          title: '操作',
-          dataIndex: 'action',
-          align: 'center',
+          title: "操作",
+          dataIndex: "action",
+          align: "center",
           width: 100,
-          scopedSlots: {customRender: 'action'},
-        },
+          scopedSlots: { customRender: "action" }
+        }
       ],
       //数据集
       dataSource1: [],
@@ -155,21 +143,21 @@ export default {
       ipagination: {
         current: 1,
         pageSize: 30,
-        pageSizeOptions: ['30', '50', '80'],
+        pageSizeOptions: ["30", "50", "80"],
         showTotal: (total, range) => {
-          return range[0] + '-' + range[1] + ' 共' + total + '条';
+          return range[0] + "-" + range[1] + " 共" + total + "条";
         },
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 0,
+        total: 0
       },
       isorter: {
-        column: 'username',
-        order: 'desc',
+        column: "username",
+        order: "desc"
       },
       loading: false,
       selectedRowKeys: [],
-      selectedRows: [],
+      selectedRows: []
     };
   },
   created() {
@@ -177,6 +165,7 @@ export default {
   },
   methods: {
     searchQuery() {
+      debugger;
       this.loadData(1);
     },
     searchReset() {
@@ -187,7 +176,7 @@ export default {
       this.visible = false;
     },
     handleOk() {
-      this.$emit('selectFinished', this.dataSource2);
+      this.$emit("selectFinished", this.dataSource2);
       this.visible = false;
     },
     add() {
@@ -257,12 +246,12 @@ export default {
       //TODO 筛选
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
-        this.isorter.order = 'ascend' == sorter.order ? 'asc' : 'desc';
+        this.isorter.order = "ascend" == sorter.order ? "asc" : "desc";
       }
       this.ipagination = pagination;
       this.loadData();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less" scoped>

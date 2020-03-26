@@ -34,8 +34,8 @@
         model: {},
         confirmLoading: false,
         url: {
-          add: `${window._CONFIG['domain']}/act/model/create`,
-          list: `${window._CONFIG['domain']}/sys/user/list`
+          add: "/act/model/create",
+          list: "/sys/user/list"
         },
         columns: [
           {
@@ -46,7 +46,7 @@
             width: 200
           },
           {
-            title: '用户真实姓名',
+            title: '用户姓名',
             align: "center",
             dataIndex: 'realname',
           },

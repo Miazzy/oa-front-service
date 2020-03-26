@@ -86,12 +86,12 @@
           }
         ],
         url: {
-          list: `${window._CONFIG['domain']}/sys/category/rootList`,
-          childList: `${window._CONFIG['domain']}/sys/category/childList`,
-          delete: `${window._CONFIG['domain']}/sys/category/delete`,
-          deleteBatch: `${window._CONFIG['domain']}/sys/category/deleteBatch`,
-          exportXlsUrl: `${window._CONFIG['domain']}/sys/category/exportXls`,
-          importExcelUrl: `${window._CONFIG['domain']}/sys/category/importExcel`,
+          list: "/sys/category/rootList",
+          childList: "/sys/category/childList",
+          delete: "/sys/category/delete",
+          deleteBatch: "/sys/category/deleteBatch",
+          exportXlsUrl: "/sys/category/exportXls",
+          importExcelUrl: "sys/category/importExcel",
         },
         expandedRowKeys:[],
         hasChildrenField:"hasChild",
@@ -102,7 +102,7 @@
     },
     computed: {
       importExcelUrl(){
-        return `${window._CONFIG['domainURL']}/${this.url.importExcelUrl}`;
+        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       },
       tableProps() {
         let _this = this

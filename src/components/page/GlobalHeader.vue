@@ -10,16 +10,16 @@
         v-if="device==='mobile'"
         class="trigger"
         :type="collapsed ? 'menu-fold' : 'menu-unfold'"
-        @click.native="toggle"
+        @click="toggle"
       ></a-icon>
       <a-icon
         v-else
         class="trigger"
         :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-        @click.native="toggle"
+        @click="toggle"
       />
 
-      <span v-if="device === 'desktop'">欢迎进入OA办公系统</span>
+      <span v-if="device === 'desktop'"></span>
       <span v-else></span>
 
       <user-menu :theme="theme" />
@@ -40,7 +40,7 @@
             v-else
             class="trigger"
             :type="collapsed ? 'menu-fold' : 'menu-unfold'"
-            @click.native="toggle"
+            @click="toggle"
           ></a-icon>
         </div>
         <user-menu
@@ -54,14 +54,14 @@
 </template>
 
 <script>
-import UserMenu from '../tools/UserMenu'
-import SMenu from '../menu/'
-import Logo from '../tools/Logo'
+import UserMenu from "../tools/UserMenu";
+import SMenu from "../menu/";
+import Logo from "../tools/Logo";
 
-import { mixin } from '@/utils/mixin.js'
+import { mixin } from "@/utils/mixin.js";
 
 export default {
-  name: 'GlobalHeader',
+  name: "GlobalHeader",
   components: {
     UserMenu,
     SMenu,
@@ -72,7 +72,7 @@ export default {
     mode: {
       type: String,
       // sidemenu, topmenu
-      default: 'sidemenu'
+      default: "sidemenu"
     },
     menus: {
       type: Array,
@@ -81,7 +81,7 @@ export default {
     theme: {
       type: String,
       required: false,
-      default: 'dark'
+      default: "dark"
     },
     collapsed: {
       type: Boolean,
@@ -91,7 +91,7 @@ export default {
     device: {
       type: String,
       required: false,
-      default: 'desktop'
+      default: "desktop"
     }
   },
   data() {
@@ -104,74 +104,79 @@ export default {
         headerIndexRight: {},
         topSmenuStyle: {}
       }
-    }
+    };
   },
   watch: {
     /** 监听设备变化 */
     device() {
-      if (this.mode === 'topmenu') {
-        this.buildTopMenuStyle()
+      if (this.mode === "topmenu") {
+        this.buildTopMenuStyle();
       }
     },
     /** 监听导航栏模式变化 */
     mode(newVal) {
-      if (newVal === 'topmenu') {
-        this.buildTopMenuStyle()
+      if (newVal === "topmenu") {
+        this.buildTopMenuStyle();
       }
     }
   },
   //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
   mounted() {
-    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener("scroll", this.handleScroll);
     //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
-    if (this.mode === 'topmenu') {
-      this.buildTopMenuStyle()
+    if (this.mode === "topmenu") {
+      this.buildTopMenuStyle();
     }
     //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
   },
   methods: {
     handleScroll() {
       if (this.autoHideHeader) {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        let scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop;
         if (scrollTop > 100) {
-          this.headerBarFixed = true
+          this.headerBarFixed = true;
         } else {
-          this.headerBarFixed = false
+          this.headerBarFixed = false;
         }
       } else {
-        this.headerBarFixed = false
+        this.headerBarFixed = false;
       }
     },
     toggle() {
-      this.$emit('toggle')
+      this.$emit("toggle");
     },
     //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     buildTopMenuStyle() {
-      if (this.mode === 'topmenu') {
-        if (this.device === 'mobile') {
+      if (this.mode === "topmenu") {
+        if (this.device === "mobile") {
           // 手机端需要清空样式，否则显示会错乱
-          this.topMenuStyle.topNavHeader = {}
-          this.topMenuStyle.topSmenuStyle = {}
-          this.topMenuStyle.headerIndexRight = {}
-          this.topMenuStyle.headerIndexLeft = {}
+          this.topMenuStyle.topNavHeader = {};
+          this.topMenuStyle.topSmenuStyle = {};
+          this.topMenuStyle.headerIndexRight = {};
+          this.topMenuStyle.headerIndexLeft = {};
         } else {
-          let rightWidth = '360px'
-          this.topMenuStyle.topNavHeader = { 'min-width': '165px' }
-          this.topMenuStyle.topSmenuStyle = { width: 'calc(100% - 165px)' }
-          this.topMenuStyle.headerIndexRight = { 'min-width': rightWidth }
-          this.topMenuStyle.headerIndexLeft = { width: `calc(100% - ${rightWidth})` }
+          let rightWidth = "360px";
+          this.topMenuStyle.topNavHeader = { "min-width": "165px" };
+          this.topMenuStyle.topSmenuStyle = { width: "calc(100% - 165px)" };
+          this.topMenuStyle.headerIndexRight = { "min-width": rightWidth };
+          this.topMenuStyle.headerIndexLeft = {
+            width: `calc(100% - ${rightWidth})`
+          };
         }
       }
     }
     //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
   }
-}
+};
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 /* update_begin author:scott date:20190220 for: 缩小首页布局顶部的高度*/
-
-$height: 59px;
+@primary-color: #1890ff;
+@height: 59px;
 
 .layout {
   .top-nav-header-index {
@@ -179,8 +184,8 @@ $height: 59px;
       margin-left: 10px;
 
       .ant-menu.ant-menu-horizontal {
-        height: $height;
-        line-height: $height;
+        height: @height;
+        line-height: @height;
       }
     }
     .trigger {
@@ -194,8 +199,8 @@ $height: 59px;
   .header {
     z-index: 2;
     color: white;
-    height: $height;
-    background-color: #1890ff;
+    height: @height;
+    background-color: @primary-color;
     transition: background 300ms;
 
     /* dark 样式 */
@@ -215,8 +220,8 @@ $height: 59px;
 }
 
 .ant-layout-header {
-  height: $height;
-  line-height: $height;
+  height: @height;
+  line-height: @height;
 }
 
 /* update_end author:scott date:20190220 for: 缩小首页布局顶部的高度*/

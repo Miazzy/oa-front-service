@@ -12,17 +12,14 @@
         <a-row :gutter="24">
           <a-col :span="6">
             <a-form-item label="账号">
-              <a-input
-                placeholder="请输入账号查询"
-                v-model="queryParam.username"
-              ></a-input>
+              <a-input placeholder="请输入账号" v-model="queryParam.username"></a-input>
             </a-form-item>
           </a-col>
 
           <a-col :span="6">
             <a-form-item label="性别">
-              <a-select v-model="queryParam.sex" placeholder="请选择性别查询">
-                <a-select-option value="">请选择性别查询</a-select-option>
+              <a-select v-model="queryParam.sex" placeholder="请选择性别">
+                <a-select-option value>请选择性别查询</a-select-option>
                 <a-select-option value="1">男性</a-select-option>
                 <a-select-option value="2">女性</a-select-option>
               </a-select>
@@ -32,29 +29,20 @@
           <template v-if="toggleSearchStatus">
             <a-col :span="6">
               <a-form-item label="邮箱">
-                <a-input
-                  placeholder="请输入邮箱查询"
-                  v-model="queryParam.email"
-                ></a-input>
+                <a-input placeholder="请输入邮箱" v-model="queryParam.email"></a-input>
               </a-form-item>
             </a-col>
 
             <a-col :span="6">
               <a-form-item label="手机号码">
-                <a-input
-                  placeholder="请输入手机号码查询"
-                  v-model="queryParam.phone"
-                ></a-input>
+                <a-input placeholder="请输入手机号码" v-model="queryParam.phone"></a-input>
               </a-form-item>
             </a-col>
 
             <a-col :span="6">
               <a-form-item label="状态">
-                <a-select
-                  v-model="queryParam.status"
-                  placeholder="请选择用户状态查询"
-                >
-                  <a-select-option value="">请选择用户状态</a-select-option>
+                <a-select v-model="queryParam.status" placeholder="请选择状态">
+                  <a-select-option value>请选择状态</a-select-option>
                   <a-select-option value="1">正常</a-select-option>
                   <a-select-option value="2">解冻</a-select-option>
                 </a-select>
@@ -63,20 +51,14 @@
           </template>
 
           <a-col :span="6">
-            <span
-              style="float: left;overflow: hidden;"
-              class="table-page-search-submitButtons"
-            >
-              <a-button type="primary" @click="searchByquery" icon="search"
-                >查询</a-button
-              >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchByquery" icon="search">查询</a-button>
               <a-button
                 type="primary"
                 @click="searchReset"
                 icon="reload"
                 style="margin-left: 8px"
-                >重置</a-button
-              >
+              >重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
@@ -86,107 +68,101 @@
         </a-row>
       </a-form>
     </div>
-
     <a-table
       ref="table"
       rowKey="id"
       :columns="columns"
       :dataSource="dataSource"
       :pagination="ipagination"
-      :rowSelection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-      }"
+      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,onSelect:onSelect}"
       @change="handleTableChange"
-    >
-    </a-table>
+    ></a-table>
   </a-modal>
 </template>
 
 <script>
-import {filterObj} from '@/utils/util';
-
-import {getUserList} from '@/api/api';
+import { filterObj } from "@/utils/util";
+import { getUserList } from "@/api/api";
 
 export default {
-  name: 'SelectUserListModal',
+  name: "SelectUserListModal",
   components: {},
   data() {
     return {
-      title: '选择用户',
+      title: "选择用户",
       queryParam: {},
       columns: [
         {
-          title: '用户账号',
-          align: 'center',
-          dataIndex: 'username',
-          fixed: 'left',
-          width: 200,
+          title: "用户账号",
+          align: "center",
+          dataIndex: "username",
+          fixed: "left",
+          width: 200
         },
         {
-          title: '真实姓名',
-          align: 'center',
-          dataIndex: 'realname',
+          title: "用户名称",
+          align: "center",
+          dataIndex: "realname"
         },
         {
-          title: '性别',
-          align: 'center',
-          dataIndex: 'sex',
+          title: "性别",
+          align: "center",
+          dataIndex: "sex",
           customRender: function(text) {
             if (text == 1) {
-              return '男';
+              return "男";
             } else if (text == 2) {
-              return '女';
+              return "女";
             } else {
               return text;
             }
-          },
+          }
         },
         {
-          title: '手机号码',
-          align: 'center',
-          dataIndex: 'phone',
+          title: "手机号码",
+          align: "center",
+          dataIndex: "phone"
         },
         {
-          title: '邮箱',
-          align: 'center',
-          dataIndex: 'email',
+          title: "邮箱",
+          align: "center",
+          dataIndex: "email"
         },
         {
-          title: '状态',
-          align: 'center',
-          dataIndex: 'status',
+          title: "状态",
+          align: "center",
+          dataIndex: "status",
           customRender: function(text) {
             if (text == 1) {
-              return '正常';
+              return "正常";
             } else if (text == 2) {
-              return '冻结';
+              return "冻结";
             } else {
               return text;
             }
-          },
-        },
+          }
+        }
       ],
       dataSource: [],
       ipagination: {
         current: 1,
         pageSize: 5,
-        pageSizeOptions: ['5', '10', '20'],
+        pageSizeOptions: ["5", "10", "20"],
         showTotal: (total, range) => {
-          return range[0] + '-' + range[1] + ' 共' + total + '条';
+          return range[0] + "-" + range[1] + " 共" + total + "条";
         },
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 0,
+        total: 0
       },
       isorter: {
-        column: 'createTime',
-        order: 'desc',
+        column: "createTime",
+        order: "desc"
       },
       selectedRowKeys: [],
       selectionRows: [],
       visible: false,
-      toggleSearchStatus: false,
+      toggleSearchStatus: false
     };
   },
   created() {
@@ -201,12 +177,21 @@ export default {
       if (!userIds) {
         this.selectedRowKeys = [];
       } else {
-        this.selectedRowKeys = userIds.split(',');
+        this.selectedRowKeys = userIds.split(",");
       }
       if (!selectUser) {
         this.selectionRows = [];
       } else {
-        this.selectionRows = selectUser;
+        var that = this;
+        that.selectionRows = [];
+        selectUser.forEach(function(record, index) {
+          console.log(record);
+          that.selectionRows.push({
+            id: that.selectedRowKeys[index],
+            realname: record
+          });
+        });
+        // this.selectionRows = selectUser;
       }
     },
     loadData(arg) {
@@ -233,21 +218,33 @@ export default {
       return filterObj(param);
     },
     getQueryField() {
-      let str = 'id,';
+      let str = "id,";
       for (let a = 0; a < this.columns.length; a++) {
-        str += ',' + this.columns[a].dataIndex;
+        str += "," + this.columns[a].dataIndex;
       }
       return str;
     },
-    onSelectChange(selectedRowKeys, selectionRows) {
+    //--update-begin----author:kangxiaolin---date:20190921------for:系统发送通知 用户多选失败 #513----
+    onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
-      console.log(this.selectedRowKeys);
-      this.selectionRows = selectionRows;
     },
+    onSelect(record, selected) {
+      if (selected == true) {
+        this.selectionRows.push(record);
+      } else {
+        this.selectionRows.forEach(function(item, index, arr) {
+          if (item.id == record.id) {
+            arr.splice(index, 1);
+          }
+        });
+      }
+      //--update-end----author:kangxiaolin---date:20190921------for:系统发送通知 用户多选失败 #513----
+    },
+
     searchReset() {
       let that = this;
       Object.keys(that.queryParam).forEach(function(key) {
-        that.queryParam[key] = '';
+        that.queryParam[key] = "";
       });
       that.loadData(1);
     },
@@ -255,7 +252,7 @@ export default {
       //TODO 筛选
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
-        this.isorter.order = 'ascend' == sorter.order ? 'asc' : 'desc';
+        this.isorter.order = "ascend" == sorter.order ? "asc" : "desc";
       }
       this.ipagination = pagination;
       this.loadData();
@@ -266,7 +263,7 @@ export default {
       this.visible = false;
     },
     handleOk() {
-      this.$emit('choseUser', this.selectionRows);
+      this.$emit("choseUser", this.selectionRows);
       this.handleCancel();
     },
     searchByquery() {
@@ -274,8 +271,8 @@ export default {
     },
     handleToggleSearch() {
       this.toggleSearchStatus = !this.toggleSearchStatus;
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>

@@ -15,39 +15,37 @@
 
       <div class="footer">
         <div class="links">
-          <a href="#" target="_self">帮助</a>
-          <a href="#" target="_self">隐私</a>
-          <a href="#" target="_self">条款</a>
+          <a href target="_blank">帮助</a>
+          <a href target="_blank">隐私</a>
+          <a href target="_blank">条款</a>
         </div>
-        <div class="copyright">
-          copyright &copy; 2019 - 2020
-        </div>
+        <div class="copyright">Copyright &copy; 2019 - 2020</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import RouteView from '@/components/layouts/RouteView';
-import {mixinDevice} from '@/utils/mixin.js';
+import RouteView from "@/components/layouts/RouteView";
+import { mixinDevice } from "@/utils/mixin.js";
 
 export default {
-  name: 'UserLayout',
-  components: {RouteView},
+  name: "UserLayout",
+  components: { RouteView },
   mixins: [mixinDevice],
   data() {
     return {};
   },
   mounted() {
-    document.body.classList.add('userLayout');
+    document.body.classList.add("userLayout");
   },
   beforeDestroy() {
-    document.body.classList.remove('userLayout');
-  },
+    document.body.classList.remove("userLayout");
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 #userLayout.user-layout-wrapper {
   height: 100%;
 
@@ -99,10 +97,10 @@ export default {
         .title {
           font-size: 33px;
           color: rgba(0, 0, 0, 0.85);
-          font-family: 'Chinese Quote', -apple-system, BlinkMacSystemFont,
-            'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-            'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-            'Segoe UI Emoji', 'Segoe UI Symbol';
+          font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont,
+            "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+            "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+            "Segoe UI Emoji", "Segoe UI Symbol";
           font-weight: 600;
           position: relative;
           top: 2px;

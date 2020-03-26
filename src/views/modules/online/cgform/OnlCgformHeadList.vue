@@ -6,18 +6,22 @@
       <a-form layout="inline">
         <a-row :gutter="24">
 
-          <a-col :md="6" :sm="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="表名">
               <a-input placeholder="请输入表名" v-model="queryParam.tableName"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="表类型">
               <j-dict-select-tag dictCode="cgform_table_type" v-model="queryParam.tableType"/>
             </a-form-item>
           </a-col>
-
-          <a-col :md="6" :sm="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="表描述">
+              <a-input placeholder="请输入表描述" v-model="queryParam.tableTxt"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -31,12 +35,12 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button @click="doCgformButton" type="primary" icon="highlight" style="margin-left:8px">自定义按钮</a-button>
-      <a-button @click="doEnhanceJs" type="primary" icon="strikethrough" style="margin-left:8px">JS增强</a-button>
-      <a-button @click="doEnhanceSql" type="primary" icon="filter" v-has="'online:sql'" style="margin-left:8px">SQL增强</a-button>
-      <a-button @click="doEnhanceJava" type="primary" icon="tool" style="margin-left:8px">Java增强</a-button>
-      <a-button @click="importOnlineForm" type="primary" icon="database" style="margin-left:8px">从数据库导入表单</a-button>
-      <a-button @click="goGenerateCode" v-has="'online:goGenerateCode'" type="primary" icon="database" style="margin-left:8px">代码生成</a-button>
+      <a-button @click="doCgformButton" type="primary" icon="highlight">自定义按钮</a-button>
+      <a-button @click="doEnhanceJs" type="primary" icon="strikethrough">JS增强</a-button>
+      <a-button @click="doEnhanceSql" type="primary" icon="filter">SQL增强</a-button>
+      <a-button @click="doEnhanceJava" type="primary" icon="tool">Java增强</a-button>
+      <a-button @click="importOnlineForm" type="primary" icon="database">从数据库导入表单</a-button>
+      <a-button @click="goGenerateCode" type="primary" icon="database">代码生成</a-button>
 
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
@@ -45,7 +49,7 @@
             删除
           </a-menu-item>
         </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作
+        <a-button> 批量操作
           <a-icon type="down"/>
         </a-button>
       </a-dropdown>
@@ -96,11 +100,21 @@
               </template>
 
               <a-menu-item>
+                <a @click="copyConfig(record.id)">复制视图</a>
+              </a-menu-item>
+
+              <a-menu-item v-if="record.hascopy==1">
+                <a @click="showMyCopyInfo(record.id)">配置视图</a>
+              </a-menu-item>
+
+              <a-menu-item>
                 <a @click="handleRemoveRecord(record.id)">移除</a>
               </a-menu-item>
 
               <a-menu-item>
-                <a @click="handleDelete(record.id)">删除</a>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
               </a-menu-item>
 
             </a-menu>
@@ -167,6 +181,7 @@
   import JDictSelectTag from '../../../../components/dict/JDictSelectTag.vue'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import Clipboard from 'clipboard'
+  import { filterObj } from '@/utils/util';
 
   export default {
     name: 'OnlCgformHeadList',
@@ -193,8 +208,12 @@
             title: '表类型',
             align: 'center',
             dataIndex: 'tableType',
-            customRender: (text) => {
-              return filterDictText(this.tableTypeDictOptions, `${text}`)
+            customRender: (text, record) => {
+              let tbTypeText = filterDictText(this.tableTypeDictOptions, `${text}`)
+              if(record.isTree === 'Y'){
+                tbTypeText+='(树)'
+              }
+              return tbTypeText;
             }
           },
           {
@@ -231,7 +250,8 @@
           delete: '/online/cgform/head/delete',
           deleteBatch: '/online/cgform/head/deleteBatch',
           doDbSynch: '/online/cgform/api/doDbSynch/',
-          removeRecord: '/online/cgform/head/removeRecord'
+          removeRecord: '/online/cgform/head/removeRecord',
+          copyOnline: '/online/cgform/head/copyOnline'
         },
         tableTypeDictOptions: [],
         sexDictOptions: [],
@@ -253,7 +273,6 @@
           this.tableTypeDictOptions = res.result
         }
       })
-      this.loadData()
     },
     methods: {
       doDbSynch(id) {
@@ -265,6 +284,15 @@
             this.$message.warning(res.message)
           }
         })
+      },
+      getQueryParams() {
+        //获取查询条件
+        var param = Object.assign({}, this.queryParam, this.isorter ,this.filters);
+        param.field = this.getQueryField();
+        param.pageNo = this.ipagination.current;
+        param.pageSize = this.ipagination.pageSize;
+        param.copyType = 0;
+        return filterObj(param);
       },
       handleCancleDbSync() {
         this.syncModalVisible = false
@@ -281,16 +309,29 @@
             this.$message.warning(res.message)
           }
         })
+        setTimeout(()=>{
+          if(this.syncLoading){
+            this.syncModalVisible = false
+            this.syncLoading = false
+            this.$message.success("网络延迟,已自动刷新!")
+            this.loadData()
+          }
+        },10000)
       },
       openSyncModal(id) {
         this.syncModalVisible = true
+        this.syncLoading = false
         this.syncFormId = id
       },
       goPageOnline(rd) {
-        if(rd.isTree=='Y'){
-          this.$router.push({ path: '/online/cgformTreeList/' + rd.id })
+        if(rd.themeTemplate === 'erp'){
+          this.$router.push({ path: '/online/cgformErpList/' + rd.id })
         }else{
-          this.$router.push({ path: '/online/cgformList/' + rd.id })
+          if(rd.isTree=='Y'){
+            this.$router.push({ path: '/online/cgformTreeList/' + rd.id })
+          }else{
+            this.$router.push({ path: '/online/cgformList/' + rd.id })
+          }
         }
       },
       handleOnlineUrlClose() {
@@ -308,7 +349,7 @@
       },
       handleRemoveRecord(id) {
         let that = this
-        this.$confirm_({
+        this.$confirm({
           title: '确认要移除此记录?',
           onOk() {
             deleteAction(that.url.removeRecord, { id: id }).then((res) => {
@@ -391,10 +432,27 @@
           this.$message.error('该浏览器不支持自动复制')
           clipboard.destroy()
         })
+      },
+      showMyCopyInfo(id){
+        this.$router.push({ path: '/online/copyform/' + id })
+      },
+      copyConfig(id){
+        postAction(`${this.url.copyOnline}?code=${id}`).then(res=>{
+          if(res.success){
+            this.$message.success("复制成功")
+            this.loadData()
+          }else{
+            this.$message.error("复制失败>>"+res.message)
+          }
+        })
       }
+
     }
   }
 </script>
+<style scoped>
+  @import '~@assets/less/common.less';
+</style>
 <style lang="less">
   .ant-card-body .table-operator {
     margin-bottom: 18px;

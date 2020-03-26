@@ -1691,12 +1691,19 @@ export default {
         ? wflowSpecUser.substring(1)
         : wflowSpecUser;
 
+      //如果会签、加签用户以逗号结尾，则去掉结尾的逗号
+      wflowSpecUser = wflowSpecUser.endsWith(",")
+        ? wflowSpecUser.substring(0, wflowSpecUser.length - 1)
+        : wflowSpecUser;
+
       console.log("会签/加签用户 : " + wflowSpecUser);
+
+      debugger;
 
       //加签会签选中的用户，不能是流程中已经存在的用户
       var readyUser = tools.contain(
         wfreeNode.audit_node + "," + wfreeNode.approve_node,
-        wflowSpecUser
+        wflowSpecUser 
       );
 
       //如果用户流程中已经存在，则提示无法选择

@@ -22,10 +22,10 @@
     data(){
       return {
         treeData:[],
-        treeValue:"",
-        url_root:`${window._CONFIG['domain']}/sys/category/loadTreeRoot`,
-        url_children:`${window._CONFIG['domain']}/sys/category/loadTreeChildren`,
-        url_view:`${window._CONFIG['domain']}/sys/category/loadOne`,
+        treeValue: null,
+        url_root:"/sys/category/loadTreeRoot",
+        url_children:"/sys/category/loadTreeChildren",
+        url_view:'/sys/category/loadOne',
       }
     },
     props:{
@@ -97,7 +97,7 @@
     methods:{
       loadViewInfo(){
         if(!this.value || this.value=="0"){
-          this.treeValue = ""
+          this.treeValue = null
         }else{
           let param = {
             field:this.field,

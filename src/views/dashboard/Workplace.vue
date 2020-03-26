@@ -631,6 +631,42 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleAddressBook()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/commun.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">通讯录</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">查看员工通讯信息</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleUserManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/list_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">用户管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">用户添加、删除、修改等功能</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
           </a-card>
 
           <a-card
@@ -1556,6 +1592,30 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "月报管理" }
+      });
+    },
+    /**
+     * @function 跳转到通讯录页面
+     */
+    handleAddressBook() {
+      var path = "/address/book";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "通讯录" }
+      });
+    },
+    /**
+     * @function 跳转到用户管理页面
+     */
+    handleUserManage() {
+      var path = "/isystem/user";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "用户管理" }
       });
     },
     /**

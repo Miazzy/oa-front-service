@@ -78,7 +78,7 @@
           params.password=values.password;
           params.smscode=this.userList.smscode;
           params.phone= this.userList.phone;
-          getAction(`${window._CONFIG['domain']}/sys/user/passwordChange`, params).then((res) => {
+          getAction("/sys/user/passwordChange", params).then((res) => {
             if(res.success){
             var userList = {
               username: this.userList.username
@@ -119,7 +119,7 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .stepFormText {
     margin-bottom: 24px;
   }

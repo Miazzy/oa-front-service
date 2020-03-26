@@ -3,7 +3,7 @@
 
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
 
           <a-col :md="6" :sm="10">
@@ -68,7 +68,10 @@
 
         <!-- 字符串超长截取省略号显示-->
         <span slot="description" slot-scope="text">
-          <j-ellipsis :value="text" :length="25" />
+          <j-ellipsis :value="text" :length="20" />
+        </span>
+        <span slot="parameterRender" slot-scope="text">
+          <j-ellipsis :value="text" :length="20" />
         </span>
 
 
@@ -151,12 +154,14 @@
           {
             title: '参数',
             align:"center",
-            dataIndex: 'parameter'
+            width: 150,
+            dataIndex: 'parameter',
+            scopedSlots: {customRender: 'parameterRender'},
           },
           {
             title: '描述',
             align:"center",
-            width: 300,
+            width: 250,
             dataIndex: 'description',
             scopedSlots: {customRender: 'description'},
           },
@@ -180,19 +185,19 @@
           }
         ],
 		url: {
-          list: `${window._CONFIG['domain']}/sys/quartzJob/list`,
-          delete: `${window._CONFIG['domain']}/sys/quartzJob/delete`,
-          deleteBatch: `${window._CONFIG['domain']}/sys/quartzJob/deleteBatch`,
-          pause: `${window._CONFIG['domain']}/sys/quartzJob/pause`,
-          resume: `${window._CONFIG['domain']}/sys/quartzJob/resume`,
-          exportXlsUrl: `${window._CONFIG['domain']}/sys/quartzJob/exportXls`,
-          importExcelUrl: `${window._CONFIG['domain']}/sys/quartzJob/importExcel`,
+          list: "/sys/quartzJob/list",
+          delete: "/sys/quartzJob/delete",
+          deleteBatch: "/sys/quartzJob/deleteBatch",
+          pause: "/sys/quartzJob/pause",
+          resume: "/sys/quartzJob/resume",
+          exportXlsUrl: "sys/quartzJob/exportXls",
+          importExcelUrl: "sys/quartzJob/importExcel",
         },
       }
     },
     computed: {
       importExcelUrl: function () {
-        return `${window._CONFIG['domainURL']}/${this.url.importExcelUrl}`;
+        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       }
     },
 
@@ -214,7 +219,7 @@
       pauseJob: function(record){
         var that = this;
         //暂停定时任务
-        this.$confirm_({
+        this.$confirm({
           title:"确认暂停",
           content:"是否暂停选中任务?",
           onOk: function(){
@@ -234,7 +239,7 @@
       resumeJob: function(record){
         var that = this;
         //恢复定时任务
-        this.$confirm_({
+        this.$confirm({
           title:"确认启动",
           content:"是否启动选中任务?",
           onOk: function(){
