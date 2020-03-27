@@ -159,6 +159,11 @@
               </div>
             </a-form-item>
 
+            <a-form-item>
+              <div style="float:left;margin-right:10px;">附件上传：</div>
+              <j-upload v-model="pageFile"></j-upload>
+            </a-form-item>
+
             <div style="width:88%;margin-top:10px;">
               <a-button
                 type="primary"
@@ -191,6 +196,7 @@ import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import axios from "axios";
+import JUpload from "@/components/jeecg/JUpload";
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
@@ -200,6 +206,7 @@ export default {
   name: "BlogCenter",
   components: {
     PageLayout,
+    JUpload,
     HeadInfo,
     Radar
   },
@@ -354,6 +361,7 @@ export default {
       pageTitle: "",
       pageType: "Y",
       pageScope: 1,
+      pageFile: "",
       pageColumn: "社会聚焦",
       tags: [],
       tagInputVisible: false,
@@ -547,6 +555,7 @@ export default {
      * @function 提交博文函数
      */
     async handleSubmitBlog(result = "", id = "") {
+      debugger;
       try {
         //获取本篇博文编号信息
         id = tools.queryUrlString("id");
@@ -598,6 +607,7 @@ export default {
         article.page_column = this.pageColumn;
         article.page_type = this.pageType;
         article.page_scope = this.pageScope;
+        article.page_file = this.pageFile;
         article.avatar = this.avatar;
         article.bpm_status = 1;
         article.flag = "N";
@@ -686,6 +696,7 @@ export default {
         article.page_column = this.pageColumn;
         article.page_type = this.pageType;
         article.page_scope = this.pageScope;
+        article.page_file = this.pageFile;
         article.bpm_status = 1;
         article.avatar = this.avatar;
         article.flag = "Y";
@@ -825,5 +836,24 @@ export default {
   .headerContent .title .welcome-text {
     display: none;
   }
+}
+.v-note-wrapper {
+  position: relative;
+  min-width: 300px;
+  min-height: 300px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  z-index: 0;
+  text-align: left;
+  border: 1px solid #f2fbfc;
+  border-radius: 4px;
 }
 </style>

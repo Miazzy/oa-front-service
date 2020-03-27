@@ -5,8 +5,8 @@
         <a-card :bordered="false" style="margin-bottom:10px;">
           <div class="account-center-avatarHolder">
             <div style="position:relative;">
-              <div class="avatar" style="position:absolute;">
-                <img :src="avatar" />
+              <div class="avatar" style="position:absolute;top:5px;">
+                <a-avatar :size="54" :src="avatar" />
               </div>
               <div class="username" style="position:absolute;left: 68.5px;top: 2px;">{{ username }}</div>
               <div
@@ -26,22 +26,22 @@
               <div>0</div>
               <div>&nbsp;</div>
             </div>
-            <div style="float:left;margin-left:35px;text-align:center;">
+            <div style="float:left;margin-left:10%;text-align:center;">
               <div>粉丝</div>
               <div>0</div>
               <div>&nbsp;</div>
             </div>
-            <div style="float:left;margin-left:35px;text-align:center;">
+            <div style="float:left;margin-left:10%;text-align:center;">
               <div>获赞</div>
               <div>0</div>
               <div>&nbsp;</div>
             </div>
-            <div style="float:left;margin-left:35px;text-align:center;">
+            <div style="float:left;margin-left:10%;text-align:center;">
               <div>评论</div>
               <div>0</div>
               <div>&nbsp;</div>
             </div>
-            <div style="float:left;margin-left:35px;text-align:center;">
+            <div style="float:left;margin-left:10%;text-align:center;">
               <div>访问</div>
               <div>0</div>
               <div>&nbsp;</div>
@@ -74,16 +74,18 @@
 
           <a-divider style="margin-top:50px;margin-bottom:15px;" />
 
-          <div style="float:right;margin-top:10px;">
+          <div style="float:left;margin-top:10px;">
             <a-button
               type="primary"
-              style="margin-left:-12px;font-size:12px;width:130px;margin-right:15px;"
+              style="margin-left:0px;font-size:12px;width:110px;min-width:100px;max-width:150px;margin-right:10px;"
               size="small"
             >关注</a-button>
+          </div>
+          <div style="float:right;margin-top:10px;">
             <a-button
               color="gray"
               type="primary"
-              style="margin-left:10px;background:pink;border: 1px solid pink;font-size:12px;width:130px;"
+              style="margin-left:0px;background:pink;border: 1px solid pink;font-size:12px;width:110px;min-width:100px;max-width:150px;"
               size="small"
             >私信</a-button>
           </div>
@@ -155,6 +157,160 @@
             :ishljs="true"
           ></mavon-editor>
         </a-card>
+
+        <div class="office-container" style="margin-left:5px;margin-top:20px;">
+          <div class="ant-upload-list-item-info" v-for="(item, index) in officeList" :key="index">
+            <span style="hover{background: #efeffe;}">
+              <a
+                rel="noopener noreferrer"
+                class="ant-upload-list-item-name"
+                style="float:left;margin-left:-20px;margin-top:5px;border-bottom:1px solid #f0f0f0; hover{background: #efeffe;}"
+              >
+                <a-icon type="file" style="float:left;margin-top:4px;margin-right:5px;" />
+                <span
+                  type="file"
+                  target="_blank"
+                  :title="item.title"
+                  @click="handlePreview(item)"
+                  style="float:left;width:80%;margin-top:4px;margin-right:5px;hover{background: #efeffe; cursor:point;}"
+                >{{ item.name }}</span>
+                <a-icon
+                  type="download"
+                  @click="handleDownLoad(item)"
+                  style="float:right;margin-top:4px;width:10%;margin-right:5px;hover{background: #efeffe; cursor:point;}"
+                />
+              </a>
+            </span>
+          </div>
+        </div>
+
+        <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+          <a-divider style="width:98%;" dashed>·</a-divider>
+        </div>
+        <template>
+          <div v-for="(item, index) in replaylist" :key="index">
+            <a-comment>
+              <template slot="actions">
+                <span key="comment-basic-like">
+                  <a-tooltip title="Like">
+                    <a-icon
+                      type="like"
+                      :theme="action === 'liked' ? 'filled' : 'outlined'"
+                      @click="handleLikeComment(item.id)"
+                    />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">{{item.likes}}</span>
+                </span>
+                <span key="comment-basic-dislike">
+                  <a-tooltip title="Dislike">
+                    <a-icon
+                      type="dislike"
+                      :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                      @click="handleDislikeComment(item.id)"
+                    />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">{{item.dislikes}}</span>
+                </span>
+                <span
+                  key="comment-basic-reply-to"
+                  @click="handleReplayComments(item.id , item.create_by)"
+                >回复</span>
+                <span
+                  key="comment-basic-reply-to"
+                  @click="handleDeleteComments(item.id , item.create_by)"
+                  v-if="userInfo.username == item.create_by"
+                >删除</span>
+              </template>
+              <a slot="author">{{item.create_by}}</a>
+              <a-avatar :src="item.avatar" :alt="item.create_by" slot="avatar" />
+              <p slot="content">{{item.content}}</p>
+              <div v-for="(subitem, subindex) in item.replay" :key="subindex">
+                <a-comment>
+                  <template slot="actions">
+                    <span key="comment-basic-like">
+                      <a-tooltip title="Like">
+                        <a-icon
+                          type="like"
+                          :theme="action === 'liked' ? 'filled' : 'outlined'"
+                          @click="handleLikeSubComment(item.id , subitem.id)"
+                        />
+                      </a-tooltip>
+                      <span style="padding-left: '8px';cursor: 'auto'">{{subitem.likes}}</span>
+                    </span>
+                    <span key="comment-basic-dislike">
+                      <a-tooltip title="Dislike">
+                        <a-icon
+                          type="dislike"
+                          :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                          @click="handleDislikeSubComment(item.id , subitem.id )"
+                        />
+                      </a-tooltip>
+                      <span style="padding-left: '8px';cursor: 'auto'">{{subitem.dislikes}}</span>
+                    </span>
+                    <span
+                      key="comment-basic-reply-to"
+                      @click="handleDeleteSubComment(item.id , subitem.id , subitem.create_by)"
+                      v-if="userInfo.username == subitem.create_by"
+                    >删除</span>
+                  </template>
+                  <a slot="author">{{subitem.create_by}}</a>
+                  <a-avatar :src="subitem.avatar" :alt="subitem.create_by" slot="avatar" />
+                  <p slot="content">{{subitem.content}}</p>
+                  <a-tooltip slot="datetime" :title="subitem.create_time">
+                    <span>{{subitem.create_time}}</span>
+                  </a-tooltip>
+                </a-comment>
+              </div>
+              <a-tooltip slot="datetime" :title="item.create_time">
+                <span>{{item.create_time}}</span>
+              </a-tooltip>
+            </a-comment>
+          </div>
+        </template>
+
+        <div style="width:98%;margin-top:50px;margin-bottom:30px;">
+          <a-divider style="width:98%;" dashed>·</a-divider>
+        </div>
+
+        <div>
+          <a-col :span="24" v-if="commentFlag == 'yes'">
+            <div style="float:left;width:50px;">
+              <a-avatar
+                style="float:left;text-align:left;"
+                :src="avatar"
+                :alt="userInfo.realname"
+                slot="avatar"
+              />
+            </div>
+            <div style="float:left;width:92.5%;height:80px;">
+              <a-textarea
+                :span="22"
+                style="float:left;text-align:left;height:80px;"
+                v-model="replayvalue"
+                placeholder="写下你的评论..."
+                allowClear
+                :autoSize="{ minRows: 8, maxRows: 12 }"
+              />
+            </div>
+            <div style="width:92.5%;margin-left:50px;margin-top:10px;">
+              <div style="float:right;margin-top:10px;">
+                <a-button
+                  type="primary"
+                  @click="handleWriteComment()"
+                  style="margin-left:10px;font-size:12px;"
+                  size="small"
+                >发布</a-button>
+                <a-button
+                  color="gray"
+                  type="primary"
+                  @click="handleCancelComment()"
+                  style="margin-left:10px;background:pink;border: 1px solid pink;font-size:12px;"
+                  size="small"
+                >取消</a-button>
+              </div>
+            </div>
+          </a-col>
+        </div>
       </a-col>
     </a-row>
   </div>
@@ -308,7 +464,13 @@ export default {
       blogInfo: {},
       content: "",
       username: "",
-      tagInputValue: ""
+      tagInputValue: "",
+      tableName: "bs_blog",
+      replayvalue: "",
+      replaylist: [],
+      replayid: "",
+      officeList: [],
+      commentFlag: "yes"
     };
   },
   computed: {
@@ -384,6 +546,15 @@ export default {
       this.loading = false;
     },
     /**
+     * @function 加载页面数据函数
+     */
+    async loadData() {
+      //获取页面数据ID
+      var id = tools.queryUrlString("id");
+      //查询评论信息
+      this.replaylist = await manageAPI.queryCurReplayList(id);
+    },
+    /**
      * @function 处理博文详情信息
      */
     async handleBlog() {
@@ -400,17 +571,361 @@ export default {
         //获取博文内容信息
         this.blogInfo = await manageAPI.queryTableData("bs_blog", id);
 
+        //查询评论信息
+        this.replaylist = await manageAPI.queryCurReplayList(id);
+
         //设置博文内容信息
         this.content = this.blogInfo["content"];
+
         //获取本篇博文作者头像信息
         this.avatar = this.blogInfo["avatar"];
+
         //获取本篇博文作者名称
         this.username = this.blogInfo["create_by"];
+
+        //获取文档地址数组
+        this.officeList = await manageAPI.queryOfficeURL(
+          this.blogInfo["page_file"]
+        );
       } catch (error) {
         console.log(error);
       }
       //返回博文内容
       return this.content;
+    },
+
+    /**
+     * @function 发布评论
+     */
+    async handleWriteComment() {
+      //获取数据编号
+      var id = tools.queryUrlString("id");
+
+      if (tools.isNull(this.replayid)) {
+        //定义评论对象
+        let node = {
+          id: tools.queryUniqueID(),
+          create_by: this.userInfo.username,
+          create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+          content: `${this.replayvalue} `,
+          table_name: this.tableName,
+          main_key: id,
+          avatar: this.avatar
+        };
+
+        //清除评论内容
+        this.replayvalue = "";
+
+        //提示评论成功
+        this.$message.warning("评论成功！");
+
+        //提交评论信息
+        await manageAPI.postTableData(
+          "bs_comments",
+          JSON.parse(JSON.stringify(node))
+        );
+
+        //刷新页面数据
+        this.loadData();
+      } else {
+        //先查询出相应评论数据
+        let node = await manageAPI.queryTableData("bs_comments", this.replayid);
+
+        //定义回复评论
+        var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+        //将回复评论加入数组
+        replay.push({
+          id: tools.queryUniqueID(),
+          create_by: this.userInfo.username,
+          create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+          content: `${this.replayvalue} `,
+          table_name: this.tableName,
+          avatar: this.avatar
+        });
+
+        //新增回复评论
+        var replaynode = {
+          id: this.replayid,
+          replay: JSON.stringify(replay)
+        };
+
+        //清除评论内容
+        this.replayvalue = "";
+
+        //提交评论信息
+        await manageAPI.patchTableData(
+          "bs_comments",
+          this.replayid,
+          JSON.parse(JSON.stringify(replaynode))
+        );
+
+        //刷新页面数据
+        this.loadData();
+
+        //提示点赞成功
+        this.$message.warning("回复成功！");
+      }
+    },
+    /**
+     * @function 处理预览功能函数
+     */
+    async handlePreview(item) {
+      //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览
+      var existFlag = await manageAPI.queryUrlValid(item.fileURL);
+      //如果文件地址不存在，则使用kkfileview预览模式，否则使用自带预览服务
+      if (!existFlag) {
+        window.open(window._CONFIG["previewURL"] + item.msrc);
+      } else {
+        //window打开链接
+        window.open(item.src);
+      }
+    },
+    /**
+     * @function 处理下载功能函数
+     */
+    async handleDownLoad(item) {
+      //打印日志
+      console.log(JSON.stringify(item));
+      //window打开链接
+      window.open(item.msrc);
+    },
+
+    /**
+     * @function 评论上点击回复处理函数
+     */
+    async handleReplayComments(id, username) {
+      //清除评论内容
+      this.replayvalue = `@${username} `;
+      //设置回复id
+      this.replayid = id;
+      //设置文本框获取焦点
+      this.$nextTick(function() {
+        try {
+          this.$refs.input.focus();
+          this.$refs.textarea.focus();
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
+
+    /**
+     * @function 给评论点赞
+     */
+    async handleLikeComment(id) {
+      //先查询出相应评论数据
+      var node = await manageAPI.queryTableData("bs_comments", id);
+
+      //点赞数加1
+      var likesNode = {
+        id: id,
+        likes: node.likes + 1
+      };
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(likesNode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("点赞成功！");
+    },
+
+    /**
+     * @function 给评论取消点赞
+     */
+    async handleDislikeComment(id) {
+      //先查询出相应评论数据
+      var node = await manageAPI.queryTableData("bs_comments", id);
+
+      //点赞数加1
+      var dislikesNode = {
+        id: id,
+        dislikes: node.dislikes + 1
+      };
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(dislikesNode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("鄙视成功！");
+    },
+
+    /**
+     * @function 删除上级评论
+     */
+    async handleDeleteComments(id, username) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      if (
+        this.userInfo.username != username ||
+        this.userInfo.username != node.create_by
+      ) {
+        //提示点赞成功
+        this.$message.warning("无法删除他人评论！");
+      } else {
+        //清除评论内容
+        this.replayvalue = "";
+
+        //提交评论信息
+        await manageAPI.deleteTableData("bs_comments", id);
+
+        //刷新页面数据
+        this.loadData();
+
+        //提示点赞成功
+        this.$message.warning("删除回复成功！");
+      }
+    },
+
+    /**
+     * @function 删除二级评论
+     */
+    async handleDeleteSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      replay = _.reject(replay, item => {
+        return item.id == subId;
+      });
+
+      //新增回复评论
+      var replaynode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(replaynode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("回复成功！");
+    },
+
+    /**
+     * @function 二级评论点赞
+     */
+    async handleLikeSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      _.each(replay, item => {
+        //设置点赞数
+        if (item.id == subId) {
+          //定义回复评论
+          item.likes = tools.isNull(item.likes) ? 1 : item.likes + 1;
+        }
+      });
+
+      //重新设置回复谢谢
+      var likenode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(likenode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("点赞成功！");
+    },
+
+    /**
+     * @function 二级评论点鄙视
+     */
+    async handleDislikeSubComment(id, subId) {
+      //先查询出相应评论数据
+      let node = await manageAPI.queryTableData("bs_comments", id);
+
+      //定义回复评论
+      var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+
+      //将回复评论加入数组
+      _.each(replay, item => {
+        //设置点赞数
+        if (item.id == subId) {
+          //定义回复评论
+          item.dislikes = tools.isNull(item.dislikes) ? 1 : item.dislikes + 1;
+        }
+      });
+
+      //重新设置回复信息
+      var dislikenode = {
+        id: id,
+        replay: JSON.stringify(replay)
+      };
+
+      //清除评论内容
+      this.replayvalue = "";
+
+      //提交评论信息
+      await manageAPI.patchTableData(
+        "bs_comments",
+        id,
+        JSON.parse(JSON.stringify(dislikenode))
+      );
+
+      //刷新页面数据
+      this.loadData();
+
+      //提示点赞成功
+      this.$message.warning("鄙视成功！");
+    },
+
+    /**
+     * @function 取消发布评论信息
+     */
+    async handleCancelComment() {
+      //清除评论内容
+      this.replayvalue = "";
+
+      //隐藏评论输入框
+      this.commentFlag = "no";
+
+      //提示评论成功
+      this.$message.warning("取消评论！");
     }
   }
 };
@@ -474,5 +989,24 @@ export default {
     font-weight: 500;
     margin-bottom: 4px;
   }
+}
+.v-note-wrapper {
+  position: relative;
+  min-width: 300px;
+  min-height: 300px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  z-index: 0;
+  text-align: left;
+  border: 1px solid #f2f6fc;
+  border-radius: 4px;
 }
 </style>
