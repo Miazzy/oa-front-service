@@ -314,6 +314,14 @@
         </div>
 
         <div>
+          <a-affix :offsetTop="40" class="ant-read-top">
+            <a id="likeBlog" style="width:60px;height:60px;">
+              <a-button style="z-index:100;">
+                <a-icon size="large" type="read" theme="filled" class="ant-read-icon" />
+                <div>{{ `${blogVisitCount}阅` }}</div>
+              </a-button>
+            </a>
+          </a-affix>
           <a-affix :offsetTop="80" class="ant-favor-top">
             <a id="likeBlog" style="width:60px;height:60px;">
               <a-button style="z-index:100;" @click="handleLikeBlog()">
@@ -517,6 +525,7 @@ export default {
       starsCount: 0,
       commentsCount: 0,
       visitCount: 0,
+      blogVisitCount: 0,
       blogLevel: 1,
       commentFlag: "yes"
     };
@@ -628,6 +637,8 @@ export default {
      * @function 访问博文处理函数
      */
     async visitBlog(result = "") {
+      //获取博文编号
+      var id = tools.queryUrlString("id");
       //获取博主信息
       var author = tools.queryUrlString("author");
       //获取时间戳
@@ -666,8 +677,17 @@ export default {
         );
       }
 
+      //更新本篇博文访问量
+      result = await manageAPI.patchTableData("bs_blog", id, {
+        id,
+        visit_count: this.blogVisitCount + 1
+      });
+
       //更新博文访问数量
       this.visitCount = authorBlogger.visit_count;
+
+      //更新本篇博文访问量
+      this.blogVisitCount = this.blogVisitCount + 1;
 
       //返回函数处理结果
       return result;
@@ -706,6 +726,9 @@ export default {
 
         //获取点赞数量
         this.likes = this.blogInfo["likes"];
+
+        //获取本篇博文访问量
+        this.blogVisitCount = this.blogInfo["visit_count"];
 
         //获取文档地址数组
         this.officeList = await manageAPI.queryOfficeURL(
@@ -1549,8 +1572,8 @@ export default {
     color: white;
     position: absolute;
     top: 12px;
-    left: 13px;
-    font-size: 16px;
+    left: 11px;
+    font-size: 18px;
   }
 }
 .ant-like-top {
@@ -1581,14 +1604,14 @@ export default {
   .ant-like-icon {
     color: white;
     position: absolute;
-    top: 12px;
-    left: 13px;
-    font-size: 16px;
+    top: 11px;
+    left: 11px;
+    font-size: 22px;
   }
 }
 .ant-heart-top {
   position: absolute;
-  top: 120px;
+  top: 110px;
   right: 0px;
   z-index: 10;
   width: 45px;
@@ -1596,7 +1619,7 @@ export default {
   border-radius: 40px;
   button {
     position: absolute;
-    top: 120px;
+    top: 110px;
     right: 0px;
     z-index: 10;
     background: #3e3e3e;
@@ -1615,13 +1638,13 @@ export default {
     color: white;
     position: absolute;
     top: 13px;
-    left: 13px;
-    font-size: 16px;
+    left: 11px;
+    font-size: 18px;
   }
 }
 .ant-message-top {
   position: absolute;
-  top: 160px;
+  top: 150px;
   right: 0px;
   z-index: 10;
   width: 45px;
@@ -1629,7 +1652,7 @@ export default {
   border-radius: 40px;
   button {
     position: absolute;
-    top: 160px;
+    top: 150px;
     right: 0px;
     z-index: 10;
     background: #3e3e3e;
@@ -1650,6 +1673,40 @@ export default {
     top: 13px;
     left: 13px;
     font-size: 16px;
+  }
+}
+.ant-read-top {
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 50px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 8px;
+      font-size: 12px;
+      text-align: center;
+      color: #3e3e3e;
+    }
+  }
+  .ant-read-icon {
+    color: white;
+    position: absolute;
+    top: 13px;
+    left: 11px;
+    font-size: 18px;
   }
 }
 .ant-favor-top {
@@ -1680,9 +1737,9 @@ export default {
   .ant-favor-icon {
     color: white;
     position: absolute;
-    top: 13px;
-    left: 13px;
-    font-size: 16px;
+    top: 11px;
+    left: 11px;
+    font-size: 20px;
   }
 }
 </style>
