@@ -23,27 +23,27 @@
           <div class="bio" style="margin-top:20px;margin-bottom:10px;">
             <div style="float:left;margin-left:0px;text-align:center;">
               <div>原创</div>
-              <div>0</div>
+              <div>{{originsCount}}</div>
               <div>&nbsp;</div>
             </div>
             <div style="float:left;margin-left:10%;text-align:center;">
               <div>粉丝</div>
-              <div>0</div>
+              <div>{{fansCount}}</div>
               <div>&nbsp;</div>
             </div>
             <div style="float:left;margin-left:10%;text-align:center;">
               <div>获赞</div>
-              <div>0</div>
+              <div>{{starsCount}}</div>
               <div>&nbsp;</div>
             </div>
             <div style="float:left;margin-left:10%;text-align:center;">
               <div>评论</div>
-              <div>0</div>
+              <div>{{commentsCount}}</div>
               <div>&nbsp;</div>
             </div>
             <div style="float:left;margin-left:10%;text-align:center;">
               <div>访问</div>
-              <div>0</div>
+              <div>{{visitCount}}</div>
               <div>&nbsp;</div>
             </div>
           </div>
@@ -53,7 +53,7 @@
               <div style="float:left;width:135px;">
                 <span>等级：</span>
                 <span>
-                  <a-tag color="orange">博客6级</a-tag>
+                  <a-tag color="orange">博客{{blogLevel}}级</a-tag>
                 </span>
               </div>
               <div style="float:left;margin-left:20px">
@@ -79,6 +79,7 @@
               type="primary"
               style="margin-left:0px;font-size:12px;width:110px;min-width:100px;max-width:150px;margin-right:10px;"
               size="small"
+              @click="handleFollow()"
             >关注</a-button>
           </div>
           <div style="float:right;margin-top:10px;">
@@ -511,6 +512,12 @@ export default {
       officeList: [],
       likes: 0,
       star: 0,
+      fansCount: 0,
+      originsCount: 0,
+      starsCount: 0,
+      commentsCount: 0,
+      visitCount: 0,
+      blogLevel: 1,
       commentFlag: "yes"
     };
   },
@@ -551,6 +558,8 @@ export default {
       console.log(error);
     }
 
+    this.loadData();
+
     console.log("动态信息：" + JSON.stringify(this.nodelist));
   },
   mounted() {
@@ -590,10 +599,27 @@ export default {
      * @function 加载页面数据函数
      */
     async loadData() {
+      debugger;
       //获取页面数据ID
       var id = tools.queryUrlString("id");
+      //获取博主信息
+      var author = tools.queryUrlString("author");
       //查询评论信息
       this.replaylist = await manageAPI.queryCurReplayList(id);
+      //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
+      var blogger = await manageAPI.queryTableData("bs_blogger", author);
+      //获取原创博文数量
+      this.originsCount = blogger["origins"];
+      //获取博主获赞数量
+      this.starsCount = blogger["stars"];
+      //获取博主被评论数量
+      this.commentsCount = blogger["comments"];
+      //获取博主博文访问量
+      this.visitCount = blogger["visit_count"];
+      //获取博主粉丝数量
+      if (!tools.isNull(blogger["fans"])) {
+        this.fansCount = blogger["fans"].split(",").length;
+      }
     },
     /**
      * @function 处理博文详情信息
@@ -1144,6 +1170,116 @@ export default {
           return result;
         }
       }, Math.random() * 1000);
+    },
+    /**
+     * @function 关注博主处理函数
+     */
+    async handleFollow(result) {
+      //获取当前时间戳
+      var timestamp = new Date().getTime();
+
+      //获取当前用户
+      var curuser = this.userInfo.username;
+
+      //获取作者信息
+      var author = tools.queryUrlString("author");
+
+      //如果未获取到博主信息，则关注失败
+      if (tools.isNull(author)) {
+        //提示未获取到博主信息，关注失败
+        this.$message.warning("未获取到博主信息，关注失败！");
+        return false;
+      }
+
+      //不能关注自己
+      if (author == curuser) {
+        //提示未获取到博主信息，关注失败
+        this.$message.warning("不能关注博主自己！");
+        return false;
+      }
+
+      //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
+      var authorBlogger = await manageAPI.queryTableData("bs_blogger", author);
+
+      //未获取到博主信息，则初始化博主信息
+      if (tools.isNull(authorBlogger)) {
+        //博主初始化信息
+        authorBlogger = {
+          id: author,
+          origins: 0,
+          stars: 0,
+          comments: 0,
+          visit_cout: 0,
+          blog_level: 1,
+          blog_rank: 1000000,
+          blog_score: 0,
+          create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+          fans: `${curuser}`
+        };
+        //博主表中在博主的记录中，fans字段新增当前用户
+        result = await manageAPI.postTableData("bs_blogger", authorBlogger);
+      } else {
+        //如果已经关注，则不需在关注
+        if (!tools.deNull(authorBlogger.fans).includes(curuser)) {
+          //博主初始化信息
+          authorBlogger = {
+            id: author,
+            fans: `${authorBlogger.fans},${curuser}`
+          };
+          //博主表中在博主的记录中，fans字段新增当前用户
+          result = await manageAPI.patchTableData(
+            "bs_blogger",
+            author,
+            authorBlogger
+          );
+        }
+      }
+
+      //检查博主表中，当前用户是否初始化，如果未初始化，则初始化博主信息
+      var curUserBlogger = await manageAPI.queryTableData(
+        "bs_blogger",
+        curuser
+      );
+
+      //未获取到当前用户的博主信息，则初始化博主信息
+      if (tools.isNull(curUserBlogger)) {
+        //博主初始化信息
+        curUserBlogger = {
+          id: curuser,
+          origins: 0,
+          stars: 0,
+          comments: 0,
+          visit_cout: 0,
+          blog_level: 1,
+          blog_rank: 1000000,
+          blog_score: 0,
+          create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+          follows: `${author}`
+        };
+        //博主表中在博主的记录中，follows字段新增当前用户
+        result = await manageAPI.postTableData("bs_blogger", curUserBlogger);
+      } else {
+        //如果已经关注，则不需在关注
+        if (!curUserBlogger.follows.includes(author)) {
+          //博主初始化信息
+          curUserBlogger = {
+            id: curuser,
+            follows: `${curUserBlogger.follows},${author}`
+          };
+          //博主表中在当前用户的记录中，follows字段新增博主
+          result = await manageAPI.patchTableData(
+            "bs_blogger",
+            curuser,
+            curUserBlogger
+          );
+        }
+      }
+
+      //关注博主成功
+      this.$message.warning("关注博主成功！");
+
+      //定义返回信息
+      return result;
     }
   }
 };
