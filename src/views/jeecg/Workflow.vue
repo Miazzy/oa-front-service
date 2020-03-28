@@ -1703,7 +1703,7 @@ export default {
       //加签会签选中的用户，不能是流程中已经存在的用户
       var readyUser = tools.contain(
         wfreeNode.audit_node + "," + wfreeNode.approve_node,
-        wflowSpecUser 
+        wflowSpecUser
       );
 
       //如果用户流程中已经存在，则提示无法选择
@@ -2923,6 +2923,9 @@ export default {
 
         //提示点赞成功
         this.$message.warning("回复成功！");
+
+        //回复评论后，删除回复ID
+        this.replayid = "";
       }
     },
 
@@ -3059,7 +3062,10 @@ export default {
       this.loadData();
 
       //提示点赞成功
-      this.$message.warning("回复成功！");
+      this.$message.warning("删除评论成功！");
+
+      //回复评论后，删除回复ID
+      this.replayid = "";
     },
 
     /**

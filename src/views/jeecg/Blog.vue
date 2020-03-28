@@ -272,7 +272,7 @@
           <a-divider style="width:98%;" dashed>·</a-divider>
         </div>
 
-        <div>
+        <div id="replay">
           <a-col :span="24" v-if="commentFlag == 'yes'">
             <div style="float:left;width:50px;">
               <a-avatar
@@ -310,6 +310,45 @@
               </div>
             </div>
           </a-col>
+        </div>
+
+        <div>
+          <a-affix :offsetTop="80" class="ant-favor-top">
+            <a id="likeBlog" style="width:60px;height:60px;">
+              <a-button style="z-index:100;" @click="handleLikeBlog()">
+                <a-icon size="large" type="star" theme="filled" class="ant-favor-icon" />
+                <div @click="handleLikeBlog()">{{ `${likes}赞` }}</div>
+              </a-button>
+              <a-button
+                @click="handleLikeBlog()"
+                style="width:80px;height:80px;left:-16px;background:#fefefe;border:0px solid #fefefe;"
+              ></a-button>
+            </a>
+          </a-affix>
+          <a-affix :offsetTop="120" @click="handleCollectBlog()" class="ant-heart-top">
+            <a @click="handleCollectBlog()">
+              <a-button style="z-index:100;">
+                <a-icon size="large" type="heart" theme="filled" class="ant-heart-icon" />
+                <div>{{ `${star}收藏` }}</div>
+              </a-button>
+              <a-button
+                @click="handleCollectBlog()"
+                style="width:80px;height:80px;left:-16px;background:#fefefe;border:0px solid #fefefe;"
+              ></a-button>
+            </a>
+          </a-affix>
+          <a-affix :offsetTop="150" href="#replay" class="ant-message-top">
+            <a href="#replay">
+              <a-button>
+                <a-icon size="large" type="message" theme="filled" class="ant-message-icon" />
+                <div>回复</div>
+              </a-button>
+            </a>
+          </a-affix>
+        </div>
+
+        <div>
+          <a-back-top />
         </div>
       </a-col>
     </a-row>
@@ -470,6 +509,8 @@ export default {
       replaylist: [],
       replayid: "",
       officeList: [],
+      likes: 0,
+      star: 0,
       commentFlag: "yes"
     };
   },
@@ -583,6 +624,12 @@ export default {
         //获取本篇博文作者名称
         this.username = this.blogInfo["create_by"];
 
+        //获取收藏数量
+        this.star = this.blogInfo["star"];
+
+        //获取点赞数量
+        this.likes = this.blogInfo["likes"];
+
         //获取文档地址数组
         this.officeList = await manageAPI.queryOfficeURL(
           this.blogInfo["page_file"]
@@ -665,7 +712,47 @@ export default {
 
         //提示点赞成功
         this.$message.warning("回复成功！");
+
+        //回复评论后，删除回复ID
+        this.replayid = "";
       }
+
+      //评论成功后，本篇博文回复数+1
+      var that = this;
+      //延时执行函数
+      setTimeout(async () => {
+        //提交修改信息
+        var result = "";
+
+        //获取博文内容信息
+        if (tools.isNull(that.blogInfo)) {
+          that.blogInfo = await manageAPI.queryTableData("bs_blog", id);
+        }
+
+        //修改本篇博文，回复数+1，收藏用户+当前用户
+        that.messages = that.blogInfo["messages"] =
+          that.blogInfo["messages"] + 1;
+
+        //获取本篇本收藏用户列表
+        var messagesUserList = (that.blogInfo[
+          "messages_users"
+        ] = `${tools.deNull(that.blogInfo["messages_users"])},${
+          that.userInfo.username
+        }`);
+
+        //博文信息
+        var node = {
+          id,
+          messages: that.messages,
+          messages_users: messagesUserList
+        };
+
+        //提交修改信息
+        result = await manageAPI.patchTableData("bs_blog", id, node);
+
+        //返回结果
+        return result;
+      }, Math.random() * 1000);
     },
     /**
      * @function 处理预览功能函数
@@ -827,7 +914,7 @@ export default {
       this.loadData();
 
       //提示点赞成功
-      this.$message.warning("回复成功！");
+      this.$message.warning("删除评论成功！");
     },
 
     /**
@@ -926,6 +1013,137 @@ export default {
 
       //提示评论成功
       this.$message.warning("取消评论！");
+    },
+    /**
+     * @function 收藏本篇博文处理函数
+     */
+    async handleCollectBlog() {
+      var that = this;
+      //延时执行函数
+      setTimeout(async () => {
+        //获取本篇博文ID
+        var id = tools.queryUrlString("id");
+
+        //用户是否已经收藏本篇博文
+        var flag = false;
+
+        //提交修改信息
+        var result = "";
+
+        //获取博文内容信息
+        if (tools.isNull(that.blogInfo)) {
+          that.blogInfo = await manageAPI.queryTableData("bs_blog", id);
+        }
+
+        //如果点赞收藏用户不为空，则检查用户是否点赞/收藏过本博文
+        if (!tools.isNull(that.blogInfo["star_users"])) {
+          //获取已经点赞的用户信息
+          var userList = tools.deNull(that.blogInfo["star_users"]).split(",");
+          //检查用户是否已经点赞/收藏本篇博文
+          flag =
+            userList.length > 0 &&
+            userList.indexOf(that.userInfo.username) >= 0;
+        }
+
+        //用户已经操作过，无法再次操作
+        if (flag == true) {
+          //提示收藏成功
+          that.$message.warning("已经收藏成功，无须再次收藏！");
+
+          //返回结果
+          return result;
+        } else {
+          //修改本篇博文，收藏数+1，收藏用户+当前用户
+          that.star = that.blogInfo["star"] = that.blogInfo["star"] + 1;
+
+          //获取本篇本收藏用户列表
+          var starUserList = (that.blogInfo["star_users"] = `${tools.deNull(
+            that.blogInfo["star_users"]
+          )},${that.userInfo.username}`);
+
+          //博文信息
+          var node = {
+            id,
+            star: that.star,
+            star_users: starUserList
+          };
+
+          //提交修改信息
+          result = await manageAPI.patchTableData("bs_blog", id, node);
+
+          //提示收藏成功
+          that.$message.warning("收藏成功！");
+
+          //返回结果
+          return result;
+        }
+      }, Math.random() * 1000);
+    },
+    /**
+     * @function 点赞本篇博文处理函数
+     */
+    async handleLikeBlog() {
+      var that = this;
+      //延时执行函数
+      setTimeout(async () => {
+        //获取本篇博文ID
+        var id = tools.queryUrlString("id");
+
+        //用户是否已经收藏本篇博文
+        var flag = false;
+
+        //提交修改信息
+        var result = "";
+
+        //获取博文内容信息
+        if (tools.isNull(that.blogInfo)) {
+          that.blogInfo = await manageAPI.queryTableData("bs_blog", id);
+        }
+
+        //如果点赞收藏用户不为空，则检查用户是否点赞/收藏过本博文
+        if (!tools.isNull(that.blogInfo["like_users"])) {
+          //获取已经点赞的用户信息
+          var userList = tools.deNull(that.blogInfo["like_users"]).split(",");
+          //检查用户是否已经点赞/收藏本篇博文
+          flag =
+            userList.length > 0 &&
+            userList.indexOf(that.userInfo.username) >= 0;
+        }
+
+        //用户已经操作过，无法再次操作
+        if (flag == true) {
+          //提示点赞成功
+          that.$message.warning("已经点赞成功，无须再次收藏！");
+
+          //返回结果
+          return result;
+        } else {
+          //修改本篇博文，收藏数+1，收藏用户+当前用户 修改本篇博文，点赞数+1，点赞用户+当前用户
+          that.likes = that.blogInfo["likes"] = that.blogInfo["likes"] + 1;
+
+          //获取本篇本收藏用户列表
+          var likeUserList = (that.blogInfo["like_users"] =
+            tools.deNull(that.blogInfo["like_users"]) +
+            "," +
+            that.userInfo.username);
+
+          //博文信息
+          var node = {
+            id,
+            likes: that.likes,
+            like_users: likeUserList
+          };
+
+          //提交修改信息
+          result = await manageAPI.patchTableData("bs_blog", id, node);
+
+          //提示点赞成功
+          that.$message.warning("点赞成功！");
+
+          //返回结果
+          return result;
+        }
+      }, Math.random() * 1000);
     }
   }
 };
@@ -1008,5 +1226,188 @@ export default {
   text-align: left;
   border: 1px solid #f2f6fc;
   border-radius: 4px;
+}
+.ant-back-top {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  list-style: none;
+  font-feature-settings: "tnum";
+  position: fixed;
+  right: 5px;
+  bottom: 50px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.ant-first-top {
+  position: absolute;
+  top: 20px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 10px;
+      font-size: 12px;
+      color: #3e3e3e;
+    }
+  }
+  .ant-first-icon {
+    color: white;
+    position: absolute;
+    top: 12px;
+    left: 13px;
+    font-size: 16px;
+  }
+}
+.ant-like-top {
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 60px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 10px;
+      font-size: 12px;
+      color: #3e3e3e;
+    }
+  }
+  .ant-like-icon {
+    color: white;
+    position: absolute;
+    top: 12px;
+    left: 13px;
+    font-size: 16px;
+  }
+}
+.ant-heart-top {
+  position: absolute;
+  top: 120px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 120px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 5px;
+      font-size: 12px;
+      color: #3e3e3e;
+    }
+  }
+  .ant-heart-icon {
+    color: white;
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    font-size: 16px;
+  }
+}
+.ant-message-top {
+  position: absolute;
+  top: 160px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 160px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 8px;
+      font-size: 12px;
+      color: #3e3e3e;
+    }
+  }
+  .ant-message-icon {
+    color: white;
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    font-size: 16px;
+  }
+}
+.ant-favor-top {
+  position: absolute;
+  top: 80px;
+  right: 0px;
+  z-index: 10;
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  button {
+    position: absolute;
+    top: 80px;
+    right: 0px;
+    z-index: 10;
+    background: #3e3e3e;
+    width: 42px;
+    height: 42px;
+    border-radius: 40px;
+    div {
+      position: absolute;
+      top: 43px;
+      left: 8px;
+      font-size: 12px;
+      color: #3e3e3e;
+    }
+  }
+  .ant-favor-icon {
+    color: white;
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    font-size: 16px;
+  }
 }
 </style>
