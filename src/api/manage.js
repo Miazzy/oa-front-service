@@ -3630,6 +3630,34 @@ export function queryVideoURL(text) {
 }
 
 /**
+ * @function 获取博文信息
+ */
+export async function queryBloggerInfo(username, result) {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_blog/groupby?_fields=create_by,page_type`;
+
+    try {
+        //发送HTTP请求，获取博文数量
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        //查找作者的原创博文数量
+        result = _.find(res.body, function(item) {
+            return item.create_by == username && item.page_type == 'Y';
+        })
+
+        return result._count || 0;
+
+    } catch (err) {
+        console.log(err);
+
+        return 0;
+    }
+
+}
+
+/**
  * @function 查询附件中的文档地址
  */
 export async function queryOfficeURL(text) {

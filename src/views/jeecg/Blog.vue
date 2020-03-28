@@ -558,6 +558,10 @@ export default {
       console.log(error);
     }
 
+    //执行访问博文
+    this.visitBlog();
+
+    //执行加载博文信息
     this.loadData();
 
     console.log("动态信息：" + JSON.stringify(this.nodelist));
@@ -599,7 +603,6 @@ export default {
      * @function 加载页面数据函数
      */
     async loadData() {
-      debugger;
       //获取页面数据ID
       var id = tools.queryUrlString("id");
       //获取博主信息
@@ -609,7 +612,7 @@ export default {
       //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
       var blogger = await manageAPI.queryTableData("bs_blogger", author);
       //获取原创博文数量
-      this.originsCount = blogger["origins"];
+      this.originsCount = await manageAPI.queryBloggerInfo(author);
       //获取博主获赞数量
       this.starsCount = blogger["stars"];
       //获取博主被评论数量
@@ -620,6 +623,54 @@ export default {
       if (!tools.isNull(blogger["fans"])) {
         this.fansCount = blogger["fans"].split(",").length;
       }
+    },
+    /**
+     * @function 访问博文处理函数
+     */
+    async visitBlog(result = "") {
+      //获取博主信息
+      var author = tools.queryUrlString("author");
+      //获取时间戳
+      var timestamp = new Date().getTime();
+
+      //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
+      var authorBlogger = await manageAPI.queryTableData("bs_blogger", author);
+
+      //未获取到博主信息，则初始化博主信息
+      if (tools.isNull(authorBlogger)) {
+        //博主初始化信息
+        authorBlogger = {
+          id: author,
+          origins: 0,
+          stars: 0,
+          comments: 0,
+          visit_count: 1,
+          blog_level: 1,
+          blog_rank: 1000000,
+          blog_score: 0,
+          create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss")
+        };
+        //博主表中在博主的记录中，fans字段新增当前用户
+        result = await manageAPI.postTableData("bs_blogger", authorBlogger);
+      } else {
+        //博主初始化信息
+        authorBlogger = {
+          id: author,
+          visit_count: authorBlogger.visit_count + 1
+        };
+        //博主表中在博主的记录中，fans字段新增当前用户
+        result = await manageAPI.patchTableData(
+          "bs_blogger",
+          author,
+          authorBlogger
+        );
+      }
+
+      //更新博文访问数量
+      this.visitCount = authorBlogger.visit_count;
+
+      //返回函数处理结果
+      return result;
     },
     /**
      * @function 处理博文详情信息
@@ -673,6 +724,10 @@ export default {
     async handleWriteComment() {
       //获取数据编号
       var id = tools.queryUrlString("id");
+      //获取博主信息
+      var author = tools.queryUrlString("author");
+      //获取时间戳
+      var timestamp = new Date().getTime();
 
       if (tools.isNull(this.replayid)) {
         //定义评论对象
@@ -775,6 +830,45 @@ export default {
 
         //提交修改信息
         result = await manageAPI.patchTableData("bs_blog", id, node);
+
+        //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
+        var authorBlogger = await manageAPI.queryTableData(
+          "bs_blogger",
+          author
+        );
+
+        //未获取到博主信息，则初始化博主信息
+        if (tools.isNull(authorBlogger)) {
+          //博主初始化信息
+          authorBlogger = {
+            id: author,
+            origins: 0,
+            stars: 0,
+            comments: 1,
+            visit_count: 0,
+            blog_level: 1,
+            blog_rank: 1000000,
+            blog_score: 0,
+            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss")
+          };
+          //博主表中在博主的记录中，fans字段新增当前用户
+          result = await manageAPI.postTableData("bs_blogger", authorBlogger);
+        } else {
+          //博主初始化信息
+          authorBlogger = {
+            id: author,
+            comments: authorBlogger.comments + 1
+          };
+          //博主表中在博主的记录中，fans字段新增当前用户
+          result = await manageAPI.patchTableData(
+            "bs_blogger",
+            author,
+            authorBlogger
+          );
+        }
+
+        //实时跟新回复数量
+        this.commentsCount = authorBlogger.comments;
 
         //返回结果
         return result;
@@ -1115,6 +1209,12 @@ export default {
         //获取本篇博文ID
         var id = tools.queryUrlString("id");
 
+        //获取博主信息
+        var author = tools.queryUrlString("author");
+
+        //获取时间戳信息
+        var timestamp = new Date().getTime();
+
         //用户是否已经收藏本篇博文
         var flag = false;
 
@@ -1139,7 +1239,7 @@ export default {
         //用户已经操作过，无法再次操作
         if (flag == true) {
           //提示点赞成功
-          that.$message.warning("已经点赞成功，无须再次收藏！");
+          that.$message.warning("已经点赞成功，无须再次操作！");
 
           //返回结果
           return result;
@@ -1165,6 +1265,45 @@ export default {
 
           //提示点赞成功
           that.$message.warning("点赞成功！");
+
+          //检查博主表中，博主是否初始化，如果未初始化，则初始化博主信息
+          var authorBlogger = await manageAPI.queryTableData(
+            "bs_blogger",
+            author
+          );
+
+          //未获取到博主信息，则初始化博主信息
+          if (tools.isNull(authorBlogger)) {
+            //博主初始化信息
+            authorBlogger = {
+              id: author,
+              origins: 0,
+              stars: 1,
+              comments: 0,
+              visit_count: 0,
+              blog_level: 1,
+              blog_rank: 1000000,
+              blog_score: 0,
+              create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss")
+            };
+            //博主表中在博主的记录中，fans字段新增当前用户
+            result = await manageAPI.postTableData("bs_blogger", authorBlogger);
+          } else {
+            //博主初始化信息
+            authorBlogger = {
+              id: author,
+              stars: authorBlogger.stars + 1
+            };
+            //博主表中在博主的记录中，fans字段新增当前用户
+            result = await manageAPI.patchTableData(
+              "bs_blogger",
+              author,
+              authorBlogger
+            );
+          }
+
+          //实时更新点赞数量
+          this.starsCount = authorBlogger.stars;
 
           //返回结果
           return result;
@@ -1209,7 +1348,7 @@ export default {
           origins: 0,
           stars: 0,
           comments: 0,
-          visit_cout: 0,
+          visit_count: 0,
           blog_level: 1,
           blog_rank: 1000000,
           blog_score: 0,
@@ -1249,7 +1388,7 @@ export default {
           origins: 0,
           stars: 0,
           comments: 0,
-          visit_cout: 0,
+          visit_count: 0,
           blog_level: 1,
           blog_rank: 1000000,
           blog_score: 0,
