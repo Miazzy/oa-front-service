@@ -4,38 +4,47 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="24">
-          <a-col :md="7" :sm="7">
-            <a-form-item label="事项">
-              <a-select style="width: 100%;" v-model="queryParam.type">
-                <a-select-option value="审批">审批</a-select-option>
-                <a-select-option value="知会">知会</a-select-option>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="员工姓名">
+              <a-input placeholder="请输入姓名信息" v-model="queryParam.name"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="员工性别">
+              <a-select style="width: 100%;" v-model="queryParam.sex">
+                <a-select-option value>全部</a-select-option>
+                <a-select-option value="男">男</a-select-option>
+                <a-select-option value="女">女</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="7">
-            <a-form-item label="业务">
-              <a-select style="width: 100%;" v-model="queryParam.name">
-                <a-select-option v-for="item in tableNameList" :key="item.id">{{item.name}}</a-select-option>
-              </a-select>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="开户银行">
+              <a-input placeholder="请输入开户行信息" v-model="queryParam.bankName"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="7">
-            <a-form-item label="主题">
-              <a-input placeholder="请输入主题信息" v-model="queryParam.topic"></a-input>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="银行卡号">
+              <a-input placeholder="请输入银行卡信息" v-model="queryParam.bankName"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="7">
-            <a-form-item label="时间">
+          <a-col :md="6" :sm="6">
+            <a-form-item label="入职时间">
               <a-range-picker v-model="queryParam.time" />
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="7">
-            <a-form-item label="流程发起人">
-              <a-input placeholder="请输入流程发起人" v-model="queryParam.startman"></a-input>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="证件号码">
+              <a-input placeholder="请输入证件号码" v-model="queryParam.idcard"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="6">
+            <a-form-item label="手机号码">
+              <a-input placeholder="请输入手机号码" v-model="queryParam.phone"></a-input>
             </a-form-item>
           </a-col>
 
-          <a-col :md="7" :sm="7">
+          <a-col :md="6" :sm="6">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button
                 type="primary"
@@ -66,7 +75,7 @@
         </div>
         <a-table
           :columns="columns"
-          :dataSource="dataDoneList"
+          :dataSource="userList"
           :pagination="true"
           :scroll="{ x: 4000, y: 800 }"
           style="padding-top:-10px;margin-top:-10px"
@@ -82,7 +91,6 @@ import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
-import * as $ from "jquery";
 import * as tools from "@/utils/util";
 import * as moment from "moment";
 
@@ -333,12 +341,12 @@ const columns = [
 ];
 
 export default {
+  name: "RegisterQuery",
   components: {
     ATextarea,
     ARow,
     ACol
   },
-  name: "Printgzsld",
   props: {
     reBizCode: {
       type: String,
@@ -348,25 +356,10 @@ export default {
   data() {
     return {
       columns: columns,
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 2 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
       previewVisible: false,
       previewImage: "",
       fileList: [],
-      url: {
-        loadApplicant: "/sps/register/loadApplicants",
-        loadRegisterFiles: "/sps/register/getRegisterFilesConfig"
-      },
-      activeKey: 2,
-      dataWaitList: [],
-      dataDoneList: [],
-      tableNameList: [],
+      userList: [],
       queryParam: {},
       spinning: false
     };
@@ -376,31 +369,19 @@ export default {
   },
   methods: {
     async loadData() {
-      debugger;
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
-      //查询表单信息
-      var tableNameList = await manageAPI.queryTableAll("v_table_name");
-
-      //设置表单信息
-      this.tableNameList = tableNameList;
-
-      setTimeout(() => {
-        //$(".ant-tag").css("margin-top", "5px");
-      }, 100);
-
       //设置高级查询条件
       this.queryParam = storage.getStore(
-        `system_done_list_user@${userInfo.username}`
+        `system_register_list_user@${userInfo.username}`
       );
 
       //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
       if (
         this.queryParam == "" ||
         this.queryParam == null ||
-        JSON.stringify(this.queryParam) == "{}" ||
-        JSON.stringify(this.queryParam) == `{"startman":""}`
+        JSON.stringify(this.queryParam) == "{}"
       ) {
         this.queryParam = {};
         await this.getDate();
@@ -424,41 +405,12 @@ export default {
 
         await this.searchQuery();
       }
-
-      console.log("table name list :" + JSON.stringify(tableNameList));
     },
     async getDate() {
-      //查询我的已办，我的待办
-      if (this.activeKey == 1 || this.activeKey == 2) {
-        //获取用户信息
-        var userInfo = storage.getStore("cur_user");
-        let username = userInfo["username"];
-        let realname = userInfo["realname"];
-        if (this.activeKey == 1) {
-          //获取我的待办数据
-          this.dataWaitList = await manageAPI.queryProcessLogWaitAll(
-            username,
-            realname
-          );
-        } else if (this.activeKey == 2) {
-          //获取我的已办数据
-          this.dataDoneList = await manageAPI.queryProcessLogDoneAll(
-            username,
-            realname
-          );
-        }
-      }
+      //查询花名册记录
+      await this.searchQuery();
     },
-    async handleCancel() {
-      this.previewVisible = false;
-    },
-    async handlePreview(file) {
-      this.previewImage = file.url || file.thumbUrl;
-      this.previewVisible = true;
-    },
-    async handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
+
     /**
      * @function 查看详情页面
      */
@@ -490,20 +442,17 @@ export default {
       let username = userInfo["username"];
 
       //获取我的待办数据
-      this.dataDoneList = await manageAPI.queryProcessLogDoneByParamAll(
+      this.dataDoneList = await manageAPI.queryRegisterByParam(
         username,
         this.queryParam
       );
 
       //缓存本次查询条件，下次打开此页面，可以还原查询条件
       storage.setStore(
-        `system_done_list_user@${userInfo.username}`,
+        `system_register_list_user@${userInfo.username}`,
         JSON.stringify(this.queryParam),
         3600
       );
-
-      //打印日志信息
-      console.log("dataDoneList :" + JSON.stringify(this.dataDoneList));
     },
     /**
      * @function 重置函数
