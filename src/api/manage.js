@@ -3705,7 +3705,7 @@ export async function queryWageByParam(username = '', params = '', page = 0, siz
     }
 
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_salary?_where=(id,ne,'')${whereSQL}&_p=${page}&_size=${size}&_sort=-create_time`;
+    var queryURL = `${api.restapi}/api/bs_salary?_where=(id,ne,'')${whereSQL}&_p=${page}&_size=${size}&_sort=-wages_date`;
 
     try {
         //发送HTTP请求，获取博文数量
@@ -3715,7 +3715,7 @@ export async function queryWageByParam(username = '', params = '', page = 0, siz
         //遍历所有数据，设置日期格式
         result = _.each(res.body, (item) => {
             //日期格式化操作
-            item['pay_wages_date'] = tools.formatDate(item['pay_wages_date'], 'yyyy-MM-dd');
+            item['pay_wages_date'] = tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
             //遍历对象属性

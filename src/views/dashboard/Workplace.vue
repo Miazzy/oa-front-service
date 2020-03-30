@@ -426,32 +426,6 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
-            <a-card-grid style="width:25%;textAlign:'center'">
-              <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
-                  <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/location_00.png" />
-                  </div>
-                  <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">花名册</a>
-                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工花名册信息查看</div>
-                  </div>
-                </div>
-              </a-card-meta>
-            </a-card-grid>
-            <a-card-grid style="width:25%;textAlign:'center'">
-              <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
-                  <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/zichan_00.png" />
-                  </div>
-                  <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">薪资管理</a>
-                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工薪资信息统计、分析、管理</div>
-                  </div>
-                </div>
-              </a-card-meta>
-            </a-card-grid>
           </a-card>
 
           <a-card
@@ -693,6 +667,42 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRoleManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/sweet_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">角色管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">角色授权、添加、删除等功能</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handlePostManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/tag_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">职务管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">职务添加、删除、修改等功能</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
           </a-card>
 
           <a-card
@@ -702,6 +712,78 @@
             style="margin-bottom: 24px;"
             :body-style="{padding: 0}"
           >
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRegister()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/xiuxian_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">花名册查询</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工花名册信息查看</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRegisterManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/gift_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">花名册管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工花名册信息编辑</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleWageQuery()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/绩效管理.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">薪资查询</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工薪资信息统计、分析、管理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleWageManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/zichan_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">薪资管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">员工薪资信息统计、分析、管理</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
                 <div slot="title" class="card-title" style="width:90%;height:90%;">
@@ -1247,45 +1329,6 @@ export default {
           }
         }
       ],
-
-      // data
-      axis1Opts: {
-        dataKey: "item",
-        line: null,
-        tickLine: null,
-        grid: {
-          lineStyle: {
-            lineDash: null
-          },
-          hideFirstLine: false
-        }
-      },
-      axis2Opts: {
-        dataKey: "score",
-        line: null,
-        tickLine: null,
-        grid: {
-          type: "polygon",
-          lineStyle: {
-            lineDash: null
-          }
-        }
-      },
-      scale: [
-        {
-          dataKey: "score",
-          min: 0,
-          max: 80
-        }
-      ],
-      axisData: [
-        { item: "引用", a: 70, b: 30, c: 40 },
-        { item: "口碑", a: 60, b: 70, c: 40 },
-        { item: "产量", a: 50, b: 60, c: 40 },
-        { item: "贡献", a: 40, b: 50, c: 40 },
-        { item: "热度", a: 60, b: 70, c: 40 },
-        { item: "引用", a: 70, b: 50, c: 40 }
-      ],
       radarData: []
     };
   },
@@ -1645,6 +1688,30 @@ export default {
       });
     },
     /**
+     * @function 跳转到角色管理页面
+     */
+    handleRoleManage() {
+      var path = "/isystem/role";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "角色管理" }
+      });
+    },
+    /**
+     * @function 跳转到角色管理页面
+     */
+    handlePostManage() {
+      var path = "/isystem/position";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "职务管理" }
+      });
+    },
+    /**
      * @function 跳转到年报填写列表中
      */
     handleYearFeedback() {
@@ -1656,6 +1723,57 @@ export default {
         meta: { title: "年度汇报" }
       });
     },
+    /**
+     * @function 跳转到花名册界面中
+     */
+    handleRegister() {
+      var path = "/finance/register";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "花名册查询" }
+      });
+    },
+    /**
+     * @function 跳转到花名册界面中
+     */
+    handleRegisterManage() {
+      var path = "/online/cgformList/02c2e82c486542df992c3860ad6cd25a";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "花名册管理" }
+      });
+    },
+    /**
+     * @function 跳转到薪资查询界面中
+     */
+    handleWageQuery() {
+      var path = "/finance/salary";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "工资查看" }
+      });
+    },
+    /**
+     * @function 跳转到薪资管理界面中
+     */
+    handleWageManage() {
+      var path = "/online/cgformList/237fa97d3c974bdbb36090d0dd2f3a39";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "工资管理" }
+      });
+    },
+    /**
+     * @function 初始化雷达图
+     */
     initRadar() {
       this.radarLoading = true;
       this.$http.get("/api/workplace/radar").then(res => {

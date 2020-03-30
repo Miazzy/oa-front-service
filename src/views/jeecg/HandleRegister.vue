@@ -68,49 +68,9 @@
           :columns="columns"
           :dataSource="dataDoneList"
           :pagination="true"
+          :scroll="{ x: 4000, y: 800 }"
           style="padding-top:-10px;margin-top:-10px"
-        >
-          <a slot="type" slot-scope="text, record">
-            <a-menu-item>
-              <a :data-info="JSON.stringify(record)" @click="handleDetailWF(record)">
-                <span v-html="record.type"></span>
-              </a>
-            </a-menu-item>
-          </a>
-
-          <a slot="topic" slot-scope="text, record">
-            <a-menu-item>
-              <a
-                :data-info="JSON.stringify(record)"
-                @click="handleDetailWF(record)"
-                style="color:#303030;"
-              >
-                <span style="color:#303030;" v-html="record.topic"></span>
-              </a>
-            </a-menu-item>
-          </a>
-
-          <span slot="name" slot-scope="text , record">
-            <a-tag
-              :color=" (record.name.length > 5 ? 'geekblue' : 'green')"
-              :key="record.name"
-              @click="handleDetailWF(record)"
-            >{{record.name}}</a-tag>
-          </span>
-
-          <span slot="username" slot-scope="username">
-            <a-tag
-              v-for="tag in username"
-              :color="tag==='admin' ? 'volcano' : (tag.length > 5 ? 'geekblue' : 'green')"
-              :key="tag"
-              style="margin-top:5px;"
-            >{{tag}}</a-tag>
-          </span>
-
-          <span slot="create_time" slot-scope="text , record">
-            <a-tag color="blue" :key="record.create_time">{{record.create_time}}</a-tag>
-          </span>
-        </a-table>
+        ></a-table>
       </template>
     </a-col>
   </a-card>
@@ -128,53 +88,247 @@ import * as moment from "moment";
 
 const columns = [
   {
-    title: "办理事项",
-    dataIndex: "type",
-    key: "type",
-    slots: { title: "type" },
-    width: 100,
-    align: "center",
-    scopedSlots: { customRender: "type" }
-  },
-  {
-    title: "业务",
+    title: "姓名",
     width: 100,
     align: "center",
     key: "name",
     dataIndex: "name",
+    slots: { title: "name" },
     scopedSlots: { customRender: "name" }
   },
   {
-    title: "主题",
-    width: 400,
-    align: "left",
-    key: "topic",
-    dataIndex: "topic",
-    scopedSlots: { customRender: "topic" }
-  },
-  {
-    title: "操作人员",
-    key: "username",
-    width: 150,
-    align: "left",
-    dataIndex: "username",
-    scopedSlots: { customRender: "username" }
-  },
-  {
-    title: "流程发起人",
-    key: "proponents",
-    width: 150,
-    align: "left",
-    dataIndex: "proponents",
-    scopedSlots: { customRender: "proponents" }
-  },
-  {
-    title: "创建时间",
+    title: "性别",
     width: 100,
     align: "center",
-    key: "create_time",
-    dataIndex: "create_time",
-    scopedSlots: { customRender: "create_time" }
+    key: "sex",
+    dataIndex: "sex",
+    slots: { title: "sex" },
+    scopedSlots: { customRender: "sex" }
+  },
+  {
+    title: "人员性质",
+    width: 100,
+    align: "center",
+    key: "employee_feature",
+    dataIndex: "employee_feature",
+    slots: { title: "employee_feature" },
+    scopedSlots: { customRender: "employee_feature" }
+  },
+  {
+    title: "单位名称",
+    width: 100,
+    align: "center",
+    key: "company_name",
+    dataIndex: "company_name",
+    slots: { title: "company_name" },
+    scopedSlots: { customRender: "company_name" }
+  },
+  {
+    title: "所属中心",
+    width: 100,
+    align: "center",
+    key: "center_name",
+    dataIndex: "center_name",
+    slots: { title: "center_name" },
+    scopedSlots: { customRender: "center_name" }
+  },
+  {
+    title: "部门名称",
+    width: 100,
+    align: "center",
+    key: "depart_name",
+    dataIndex: "depart_name",
+    slots: { title: "depart_name" },
+    scopedSlots: { customRender: "depart_name" }
+  },
+  {
+    title: "岗位名称",
+    width: 100,
+    align: "center",
+    key: "job_name",
+    dataIndex: "job_name",
+    slots: { title: "job_name" },
+    scopedSlots: { customRender: "job_name" }
+  },
+  {
+    title: "职级",
+    width: 100,
+    align: "center",
+    key: "job_level",
+    dataIndex: "job_level",
+    slots: { title: "job_level" },
+    scopedSlots: { customRender: "job_level" }
+  },
+  {
+    title: "入职时间",
+    width: 100,
+    align: "center",
+    key: "join_time",
+    dataIndex: "join_time",
+    slots: { title: "join_time" },
+    scopedSlots: { customRender: "join_time" }
+  },
+  {
+    title: "劳动合同期限",
+    width: 100,
+    align: "center",
+    key: "contract_time",
+    dataIndex: "contract_time",
+    slots: { title: "contract_time" },
+    scopedSlots: { customRender: "contract_time" }
+  },
+  {
+    title: "公司司龄",
+    width: 100,
+    align: "center",
+    key: "work_year",
+    dataIndex: "work_year",
+    slots: { title: "work_year" },
+    scopedSlots: { customRender: "work_year" }
+  },
+  {
+    title: "银行账号",
+    width: 100,
+    align: "center",
+    key: "bank_no",
+    dataIndex: "bank_no",
+    slots: { title: "bank_no" },
+    scopedSlots: { customRender: "bank_no" }
+  },
+  {
+    title: "开户行",
+    width: 100,
+    align: "center",
+    key: "bank_name",
+    dataIndex: "bank_name",
+    slots: { title: "bank_name" },
+    scopedSlots: { customRender: "bank_name" }
+  },
+  {
+    title: "试用期",
+    width: 100,
+    align: "center",
+    key: "probation_status",
+    dataIndex: "probation_status",
+    slots: { title: "probation_status" },
+    scopedSlots: { customRender: "probation_status" }
+  },
+  {
+    title: "转正日期",
+    width: 100,
+    align: "center",
+    key: "confirm_date",
+    dataIndex: "confirm_date",
+    slots: { title: "confirm_date" },
+    scopedSlots: { customRender: "confirm_date" }
+  },
+  {
+    title: "在职状态",
+    width: 100,
+    align: "center",
+    key: "work_status",
+    dataIndex: "work_status",
+    slots: { title: "work_status" },
+    scopedSlots: { customRender: "work_status" }
+  },
+  {
+    title: "离职时间",
+    width: 100,
+    align: "center",
+    key: "off_time",
+    dataIndex: "off_time",
+    slots: { title: "off_time" },
+    scopedSlots: { customRender: "off_time" }
+  },
+  {
+    title: "病产孕",
+    width: 100,
+    align: "center",
+    key: "pregnancy",
+    dataIndex: "pregnancy",
+    slots: { title: "pregnancy" },
+    scopedSlots: { customRender: "pregnancy" }
+  },
+  {
+    title: "病产孕时间",
+    width: 100,
+    align: "center",
+    key: "pregnancy_time",
+    dataIndex: "pregnancy_time",
+    slots: { title: "pregnancy_time" },
+    scopedSlots: { customRender: "pregnancy_time" }
+  },
+  {
+    title: "证件号",
+    width: 100,
+    align: "center",
+    key: "id_card",
+    dataIndex: "id_card",
+    slots: { title: "id_card" },
+    scopedSlots: { customRender: "id_card" }
+  },
+  {
+    title: "通讯号码",
+    width: 100,
+    align: "center",
+    key: "phone",
+    dataIndex: "phone",
+    slots: { title: "phone" },
+    scopedSlots: { customRender: "phone" }
+  },
+  {
+    title: "工资卡开户行",
+    width: 100,
+    align: "center",
+    key: "salary_bank_name",
+    dataIndex: "salary_bank_name",
+    slots: { title: "salary_bank_name" },
+    scopedSlots: { customRender: "salary_bank_name" }
+  },
+  {
+    title: "工资卡卡号",
+    width: 100,
+    align: "center",
+    key: "salary_bank_no",
+    dataIndex: "salary_bank_no",
+    slots: { title: "salary_bank_no" },
+    scopedSlots: { customRender: "salary_bank_no" }
+  },
+  {
+    title: "离职办理状态",
+    width: 100,
+    align: "center",
+    key: "off_work_status",
+    dataIndex: "off_work_status",
+    slots: { title: "off_work_status" },
+    scopedSlots: { customRender: "off_work_status" }
+  },
+  {
+    title: "工资归属单位",
+    width: 100,
+    align: "center",
+    key: "wages_team",
+    dataIndex: "wages_team",
+    slots: { title: "wages_team" },
+    scopedSlots: { customRender: "wages_team" }
+  },
+  {
+    title: "工资主体单位",
+    width: 100,
+    align: "center",
+    key: "wages_main_unit",
+    dataIndex: "wages_main_unit",
+    slots: { title: "wages_main_unit" },
+    scopedSlots: { customRender: "wages_main_unit" }
+  },
+  {
+    title: "编制状态",
+    width: 100,
+    align: "center",
+    key: "compilation_status",
+    dataIndex: "compilation_status",
+    slots: { title: "compilation_status" },
+    scopedSlots: { customRender: "compilation_status" }
   }
 ];
 
