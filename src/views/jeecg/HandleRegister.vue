@@ -77,7 +77,7 @@
           :columns="columns"
           :dataSource="userList"
           :pagination="true"
-          :scroll="{ x: 4000, y: 800 }"
+          :scroll="{ x: 6000, y: 800 }"
           style="padding-top:-10px;margin-top:-10px"
         ></a-table>
       </template>
@@ -97,7 +97,7 @@ import * as moment from "moment";
 const columns = [
   {
     title: "姓名",
-    width: 100,
+    width: 200,
     align: "center",
     key: "name",
     dataIndex: "name",
@@ -115,7 +115,7 @@ const columns = [
   },
   {
     title: "人员性质",
-    width: 100,
+    width: 200,
     align: "center",
     key: "employee_feature",
     dataIndex: "employee_feature",
@@ -124,7 +124,7 @@ const columns = [
   },
   {
     title: "单位名称",
-    width: 100,
+    width: 200,
     align: "center",
     key: "company_name",
     dataIndex: "company_name",
@@ -133,7 +133,7 @@ const columns = [
   },
   {
     title: "所属中心",
-    width: 100,
+    width: 200,
     align: "center",
     key: "center_name",
     dataIndex: "center_name",
@@ -141,17 +141,8 @@ const columns = [
     scopedSlots: { customRender: "center_name" }
   },
   {
-    title: "部门名称",
-    width: 100,
-    align: "center",
-    key: "depart_name",
-    dataIndex: "depart_name",
-    slots: { title: "depart_name" },
-    scopedSlots: { customRender: "depart_name" }
-  },
-  {
     title: "岗位名称",
-    width: 100,
+    width: 200,
     align: "center",
     key: "job_name",
     dataIndex: "job_name",
@@ -160,7 +151,7 @@ const columns = [
   },
   {
     title: "职级",
-    width: 100,
+    width: 300,
     align: "center",
     key: "job_level",
     dataIndex: "job_level",
@@ -169,7 +160,7 @@ const columns = [
   },
   {
     title: "入职时间",
-    width: 100,
+    width: 200,
     align: "center",
     key: "join_time",
     dataIndex: "join_time",
@@ -178,7 +169,7 @@ const columns = [
   },
   {
     title: "劳动合同期限",
-    width: 100,
+    width: 300,
     align: "center",
     key: "contract_time",
     dataIndex: "contract_time",
@@ -196,7 +187,7 @@ const columns = [
   },
   {
     title: "银行账号",
-    width: 100,
+    width: 300,
     align: "center",
     key: "bank_no",
     dataIndex: "bank_no",
@@ -205,7 +196,7 @@ const columns = [
   },
   {
     title: "开户行",
-    width: 100,
+    width: 500,
     align: "center",
     key: "bank_name",
     dataIndex: "bank_name",
@@ -214,7 +205,7 @@ const columns = [
   },
   {
     title: "试用期",
-    width: 100,
+    width: 200,
     align: "center",
     key: "probation_status",
     dataIndex: "probation_status",
@@ -223,7 +214,7 @@ const columns = [
   },
   {
     title: "转正日期",
-    width: 100,
+    width: 200,
     align: "center",
     key: "confirm_date",
     dataIndex: "confirm_date",
@@ -241,7 +232,7 @@ const columns = [
   },
   {
     title: "离职时间",
-    width: 100,
+    width: 200,
     align: "center",
     key: "off_time",
     dataIndex: "off_time",
@@ -259,7 +250,7 @@ const columns = [
   },
   {
     title: "病产孕时间",
-    width: 100,
+    width: 300,
     align: "center",
     key: "pregnancy_time",
     dataIndex: "pregnancy_time",
@@ -268,7 +259,7 @@ const columns = [
   },
   {
     title: "证件号",
-    width: 100,
+    width: 300,
     align: "center",
     key: "id_card",
     dataIndex: "id_card",
@@ -277,7 +268,7 @@ const columns = [
   },
   {
     title: "通讯号码",
-    width: 100,
+    width: 200,
     align: "center",
     key: "phone",
     dataIndex: "phone",
@@ -286,7 +277,7 @@ const columns = [
   },
   {
     title: "工资卡开户行",
-    width: 100,
+    width: 500,
     align: "center",
     key: "salary_bank_name",
     dataIndex: "salary_bank_name",
@@ -295,7 +286,7 @@ const columns = [
   },
   {
     title: "工资卡卡号",
-    width: 100,
+    width: 300,
     align: "center",
     key: "salary_bank_no",
     dataIndex: "salary_bank_no",
@@ -304,7 +295,7 @@ const columns = [
   },
   {
     title: "离职办理状态",
-    width: 100,
+    width: 300,
     align: "center",
     key: "off_work_status",
     dataIndex: "off_work_status",
@@ -313,7 +304,7 @@ const columns = [
   },
   {
     title: "工资归属单位",
-    width: 100,
+    width: 500,
     align: "center",
     key: "wages_team",
     dataIndex: "wages_team",
@@ -322,7 +313,7 @@ const columns = [
   },
   {
     title: "工资主体单位",
-    width: 100,
+    width: 200,
     align: "center",
     key: "wages_main_unit",
     dataIndex: "wages_main_unit",
@@ -442,7 +433,7 @@ export default {
       let username = userInfo["username"];
 
       //获取我的待办数据
-      this.dataDoneList = await manageAPI.queryRegisterByParam(
+      this.userList = await manageAPI.queryRegisterByParam(
         username,
         this.queryParam
       );

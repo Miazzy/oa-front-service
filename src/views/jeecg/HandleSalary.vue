@@ -49,7 +49,7 @@
             :columns="columns"
             :dataSource="wageList"
             :pagination="true"
-            :scroll="{ x: 11000, y: 800 }"
+            :scroll="{ x: 16000, y: 800 }"
           >
             <a slot="type" slot-scope="text, record">
               <a-menu-item>
@@ -101,7 +101,7 @@ const columns = [
   },
   {
     title: "身份证号",
-    width: 500,
+    width: 300,
     align: "center",
     key: "id_card",
     dataIndex: "id_card",
