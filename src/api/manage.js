@@ -3715,7 +3715,88 @@ export async function queryWageByParam(username = '', params = '', page = 0, siz
         //遍历所有数据，设置日期格式
         result = _.each(res.body, (item) => {
             //日期格式化操作
-            item['pay_wages_date'] = tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
+            item['wages_date'] = tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
+            item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+
+            //遍历对象属性
+            for (let key of Object.keys(item)) {
+                //获取属性的值
+                var value = item[key];
+                //如果是数字类型，则保留两位小数
+                if (typeof value == 'number') {
+                    item[key] = value.toFixed(2);
+                }
+            }
+        })
+
+        return res.body;
+
+    } catch (err) {
+        console.log(err);
+
+        return 0;
+    }
+
+}
+/**
+ * @function 查询工资表单信息
+ */
+export async function queryRegisterByParam(username = '', params = '', page = 0, size = 50, result = '') {
+
+    debugger;
+
+    //条件SQL
+    var whereSQL = "";
+
+    //根据条件构造参数
+    if (tools.deNull(params.name) != "") {
+        whereSQL = whereSQL + `~and(name,eq,${params.name})`;
+    }
+    //检查查询条件中是否含有时间
+    if (tools.deNull(params.time) != "") {
+        var starttime = '';
+        var endtime = '';
+
+        //设置时间
+        if (params.time.length == 0) {
+            starttime = new Date();
+            endtime = new Date();
+        } else if (params.time.length == 1) {
+            try {
+                starttime = params.time[0].format('YYYY-MM-DD');
+                endtime = new Date();
+            } catch (error) {
+                starttime = params.time[0];
+                endtime = new Date();
+            }
+        } else if (params.time.length >= 2) {
+            try {
+                starttime = params.time[0].format('YYYY-MM-DD');
+                endtime = params.time[1].format('YYYY-MM-DD');
+            } catch (error) {
+                starttime = params.time[0];
+                endtime = params.time[1];
+            }
+        }
+
+        starttime = tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+        endtime = tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+
+        whereSQL = whereSQL + `~and(join_time,bw,${starttime},${endtime})`;
+    }
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_register?_where=(id,ne,'')${whereSQL}&_p=${page}&_size=${size}&_sort=-join_time`;
+
+    try {
+        //发送HTTP请求，获取博文数量
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        //遍历所有数据，设置日期格式
+        result = _.each(res.body, (item) => {
+            //日期格式化操作
+            item['create_time'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
             //遍历对象属性

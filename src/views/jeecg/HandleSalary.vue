@@ -87,9 +87,9 @@ const columns = [
     title: "发放期间",
     width: 200,
     align: "center",
-    key: "pay_wages_date",
-    dataIndex: "pay_wages_date",
-    slots: { title: "pay_wages_date" }
+    key: "wages_date",
+    dataIndex: "wages_date",
+    slots: { title: "wages_date" }
   },
   {
     title: "入职时间",
