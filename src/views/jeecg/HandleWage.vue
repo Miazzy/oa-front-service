@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="7" :sm="7">
             <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名信息" v-model="queryParam.topic"></a-input>
+              <a-input placeholder="请输入姓名信息" v-model="queryParam.name" readonly></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="7" :sm="7">
@@ -63,7 +63,6 @@
       </template>
     </a-col>
   </a-card>
-  <!--</page-layout>-->
 </template>
 <script>
 import ACol from "ant-design-vue/es/grid/Col";
@@ -706,7 +705,6 @@ export default {
   },
   methods: {
     async loadData() {
-      debugger;
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
@@ -714,6 +712,11 @@ export default {
       this.queryParam = storage.getStore(
         `system_wage_manage_user@${userInfo.username}`
       );
+
+      //加载用户数据
+      if (tools.isNull(this.queryParam.name)) {
+        this.queryParam.name = userInfo.realname;
+      }
 
       //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
       if (
@@ -777,13 +780,13 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
-      debugger;
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];
+      this.queryParam.name = userInfo["realname"];
 
       //获取我的待办数据
-      this.wageList = await manageAPI.queryWageByParam(
+      this.wageList = await manageAPI.queryWageBillByParam(
         username,
         this.queryParam
       );

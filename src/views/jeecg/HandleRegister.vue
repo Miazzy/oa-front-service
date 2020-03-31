@@ -378,7 +378,10 @@ export default {
         await this.getDate();
       } else {
         //设置时间
-        if (this.queryParam.time.length > 0) {
+        if (
+          !tools.isNull(this.queryParam.time) &&
+          this.queryParam.time.length > 0
+        ) {
           this.queryParam.time[0] = tools.formatDate(
             this.queryParam.time[0],
             "yyyy-MM-dd"

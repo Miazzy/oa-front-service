@@ -786,7 +786,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleWageBill()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/gongzidan.png" />
                   </div>
@@ -1769,6 +1774,18 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "工资管理" }
+      });
+    },
+    /**
+     * @function 跳转到工资单界面中
+     */
+    handleWageBill() {
+      var path = "/finance/wages";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "工资单" }
       });
     },
     /**
