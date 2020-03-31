@@ -1,4 +1,6 @@
-import { axios } from '@/utils/request';
+import {
+    axios
+} from '@/utils/request';
 import axios_ from 'axios';
 import superagent from 'superagent';
 import * as _ from 'underscore';
@@ -3002,8 +3004,7 @@ export async function queryWorkflows(business_data_id) {
                 //获取下一节点
                 var next =
                     index < processLogs.length - 1 ?
-                    processLogs[index + 1] :
-                    {
+                    processLogs[index + 1] : {
                         action: '',
                     };
                 //获取标识
@@ -3988,6 +3989,54 @@ export async function queryWageBillByParam(
         return 0;
     }
 }
+
+
+/**
+ * @function 查询工资信息
+ */
+export async function queryWageByUserName(
+    realname = '',
+    username = '',
+    page = 0,
+    size = 50,
+    result = ''
+) {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_salary?_where=(name,eq,${realname})~or(username,eq,${username})&_p=${page}&_size=${size}`;
+
+    try {
+        //发送HTTP请求，获取博文数量
+        const res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+
+        //遍历所有数据，设置日期格式
+        result = _.filter(res.body, item => {
+            //日期格式化操作
+            //item['create_time'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+
+            //遍历对象属性
+            for (let key of Object.keys(item)) {
+                //获取属性的值
+                var value = item[key];
+                //如果是数字类型，则保留两位小数
+                if (typeof value == 'number') {
+                    item[key] = value.toFixed(2);
+                }
+            }
+
+            return true;
+        });
+
+        return result[0];
+    } catch (err) {
+        console.log(err);
+
+        return 0;
+    }
+}
+
 
 /**
  * @function 查询花名册信息

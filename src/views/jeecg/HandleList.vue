@@ -542,21 +542,41 @@ export default {
     };
   },
   async created() {
-    //获取页面代码
-    this.code = window.location.pathname.split('/')[3]
-    
-    //创建页面后，设置选中数据为空
-    this.initAutoList();
-    this.table.selectionRows = [];
-    this.table.selectedRowKeys = [];
-      
 
-    //查询用户数据，将数据缓存到浏览器缓存
-    await manageAPI.queryUserName();
+    debugger;
+    try{
+      //获取页面代码
+      this.code = window.location.pathname.split('/')[3]
+    } catch(e) {
+      console.error(e);
+    }
+    
+    try{
+      //创建页面后，设置选中数据为空
+      this.initAutoList();
+    }catch(e){
+      console.error(e);
+    }
+
+    try {
+      this.table.selectionRows = [];
+      this.table.selectedRowKeys = [];
+    } catch(e) {
+      console.error(e);
+    }
+
+    try{
+      //查询用户数据，将数据缓存到浏览器缓存
+      await manageAPI.queryUserName();
+    } catch (e){
+      console.error(e);
+    }
+
   },
   async mounted() {
     //创建页面后，设置选中数据为空
     this.initAutoList();
+
     this.table.selectionRows = [];
     this.table.selectedRowKeys = [];
 
@@ -630,12 +650,8 @@ export default {
       });
     },
     initAutoList() {
-      if (!this.$route.params.code) {
-        return false;
-      }
       this.table.loading = true;
-      debugger;
-      this.code = this.$route.params.code;
+      //this.code = this.$route.params.code;
       manageAPI.getAction(`${this.url.getColumns}${this.code}`).then(res => {
         console.log('--onlineList-加载动态列>>', res);
         if (res.success) {
@@ -1105,17 +1121,11 @@ export default {
       );
 
       //设置跳转URL
-      var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}`;
+      var detailURL = `/finance/registerinfo?username=${curRow.username}`;
 
-      //如果在审批管理菜单下，跳转到详情页面，则应该设置同意驳回确认等按钮
-      if (this.code == '0b511f234f3847baa50106a14fff6215') {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=workflow`;
-      } else if (this.code == 'd11901bc44f24a66b25b37a7a04c611e') {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=notify`;
-      } else if (this.code == 'dae6cc0e7a7f4b7e9dc0fc36757fdc96') {
-        detailURL = `/workflow/view?table_name=${curRow.table_name}&id=${curRow.business_data_id}&processLogID=${curRow.id}&user=${userInfo.username}&type=history`;
-      } else {
-        detailURL = `${detailURL}&type=view`;
+      //如果是工资管理界面，则跳转到工资详情
+      if(this.code == '237fa97d3c974bdbb36090d0dd2f3a39'){
+         detailURL = `/finance/wageinfo?username=${curRow.username}`;
       }
 
       //跳转到相应页面

@@ -2,7 +2,7 @@
   <a-card :bordered="false" :class="{abcdefg: true}">
     <!--我的花名册信息-->
     <a-col :md="24" :sm="24">
-      <a-descriptions title="用户信息" bordered>
+      <a-descriptions title="工资信息" bordered>
         <template v-for="(item, index) in registerInfo">
           <a-descriptions-item :label="item.key" :span="2">{{
             item.value
@@ -19,66 +19,76 @@ import * as storage from '@/utils/storage';
 import * as tools from '@/utils/util';
 
 const propsName = {
-  username: '账户',
-  name: '员工姓名',
-  sex: '员工性别',
-  employee_feature: '人员性质',
-  company_name: '单位名称',
-  center_name: '所属中心',
-  depart_name: '部门名称',
-  job_name: '岗位名称',
-  job_level: '职级',
-  join_time: '入职时间',
-  contract_time: '劳动合同期限',
-  work_year: '公司年龄',
-  bank_no: '银行账号',
-  bank_name: '开户行',
-  probation_status: '试用期',
-  confirm_date: '转正日期',
-  work_status: '在职状态',
-  off_time: '离职时间',
-  pregnancy: '病产孕',
-  pregnancy_time: '病产孕时间（区间）',
-  id_card: '证件号',
-  phone: '通讯号码',
-  salary_bank_name: '工资卡开户行',
-  salary_bank_no: '工资卡卡号',
-  off_work_status: '离职办理状态',
-  wages_team: '工资归属单位',
-  wages_main_unit: '工资主体单位',
-  compilation_status: '编制状态',
-};
-
-const salaryPropsName = {
+  id: '主键',
+  create_by: '创建人',
+  wages_date: '发放日期',
   username: '账户',
   name: '姓名',
-  salary_date: '计薪天数',
-  create_by: '创建人',
-  secret_salary: '保密费',
-  provident_fund_remark: '公积金备注',
-  total_paid_tax: '1月至上月已缴个人所得税累计',
-  departure_deduction: '离职还扣',
-  total_tax_threshold: '1月至当月个税起点累计',
-  quar_mon_perform_salary: '季度绩效',
-  after_tax_charge: '税后服务费',
-  taxable_wages: '计税工资',
-  wage_standard: '工资标准',
-  attendance_deduction: '考勤扣款',
-  overtime_allowance: '加班补贴',
-  social_security_remarks: '社保备注',
-  total_taxable_wages: '1月至当月计税工资累计',
-  union_funds: '工会经费',
-  special_deductions_remarks: '专项扣除备注',
-  bank_no: '银行卡号',
-  total_deductions: '扣款合计',
-  social_security_provident_fund: '社保公积金合计',
-  provident_fund: '住房公积金',
-  children_education: '子女教育累计(专项扣除)',
-  commun_subsidy: '通讯补贴',
+  join_time: '入职时间',
+  id_card: '身份证号',
   work_date: '应出勤天数',
+  salary_date: '计薪天数',
   job_level: '岗位层级',
-  id: '主键',
+  salary_type: '工资类别',
+  wage_standard: '工资标准',
+  basic_salary: '基本工资',
+  secret_salary: '保密费',
+  perform_salary: '绩效工资',
+  quar_mon_perform_salary: '季度绩效',
+  meal_subsidy: '餐费补贴',
+  commun_subsidy: '通讯补贴',
   transport_subsidy: '交通补',
+  festival_fee: '节日费',
+  one_child_allowance: '独生补贴',
+  service_year_allowance: '工龄补贴',
+  off_site_allowance: '异地津贴',
+  overtime_allowance: '加班补贴',
+  other_allowance: '其他补贴',
+  post_allowance: '岗位津贴',
+  reward: '奖励',
+  total_subsidy: '补贴合计',
+  reissue_wage: '补发工资',
+  fines: '罚款',
+  attendance_deduction: '考勤扣款',
+  other_deductions: '其它扣款',
+  total_deductions: '扣款合计',
+  payable_salary: '应发工资',
+  old_age_insurance: '养老保险',
+  unemploy_insurance: '失业保险',
+  medicare: '医疗保险',
+  total_social_security: '社保合计',
+  provident_fund: '住房公积金',
+  social_security_provident_fund: '社保公积金合计',
+  taxable_income_in_advance: '提前发放应计税收入',
+  taxable_wages: '计税工资',
+  tax_threshold: '个税起征点',
+  tax: '个人所得税',
+  after_tax_charge: '税后服务费',
+  medicare_fee: '体检费',
+  union_funds: '工会经费',
+  after_tax_deduction: '税后补扣',
+  total_tax_deduction: '扣款合计',
+  after_tax_reissue: '税后补发',
+  paid_wages: '月实付工资',
+  children_education: '子女教育累计(专项扣除)',
+  continuing_education: '继续教育累计(专项扣除)',
+  house_loans: '住房贷款利息累计(专项扣除)',
+  house_rent: '住房租金累计(专项扣除)',
+  elderly_support: '赡养老人累计(专项扣除)',
+  total_special_deductions: '1月至当月专项扣除累计',
+  total_tax_threshold: '1月至当月个税起点累计',
+  total_taxable_wages: '1月至当月计税工资累计',
+  total_personal_tax: '1月至当月应缴个人所得税累计',
+  total_paid_tax: '1月至上月已缴个人所得税累计',
+  bank_no: '银行卡号',
+  phone: '电话号码',
+  comment: '备注',
+  social_security_description: '社保说明',
+  provident_fund_description: '公积金说明',
+  social_security_remarks: '社保备注',
+  provident_fund_remark: '公积金备注',
+  special_deductions_remarks: '专项扣除备注',
+  departure_deduction: '离职还扣',
 };
 
 export default {
@@ -122,6 +132,7 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
+      debugger;
       //获取用户信息
       var username = tools.queryUrlString('username');
 
@@ -141,8 +152,8 @@ export default {
       }
 
       try {
-        //获取我的花名册数据
-        var item = await manageAPI.queryRegisterByUserName(realname, username);
+        //获取我的工资数据
+        var item = await manageAPI.queryWageByUserName(realname, username);
 
         //删除属性
         delete item.id;
@@ -156,7 +167,7 @@ export default {
         //遍历对象，设置属性
         for (let key in item) {
           item[key] = {
-            key: propsName[key] || salaryPropsName[key],
+            key: propsName[key],
             value: item[key],
           };
         }
