@@ -127,7 +127,7 @@ export default {
 
       //缓存本次查询条件，下次打开此页面，可以还原查询条件
       storage.setStore(
-        `system_register_info_user@${userInfo.username}`,
+        `system_register_info_user@${username.username}`,
         JSON.stringify(this.registerInfo),
         3600
       );
