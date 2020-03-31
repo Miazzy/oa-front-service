@@ -713,9 +713,13 @@ export default {
         `system_wage_manage_user@${userInfo.username}`
       );
 
-      //加载用户数据
-      if (tools.isNull(this.queryParam.name)) {
-        this.queryParam.name = userInfo.realname;
+      try {
+        //加载用户数据
+        if (tools.isNull(this.queryParam.name)) {
+          this.queryParam.name = userInfo.realname;
+        }
+      } catch (error) {
+        console.error(error);
       }
 
       //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
@@ -724,8 +728,10 @@ export default {
         this.queryParam == null ||
         JSON.stringify(this.queryParam) == "{}"
       ) {
+        //初始化查询条件
         this.queryParam = {};
-        await this.getDate();
+        //查询薪资信息
+        await this.searchQuery();
       } else {
         //设置时间
         if (
@@ -746,7 +752,7 @@ export default {
             moment(this.queryParam.time[1], "YYYY-MM-DD")
           ];
         }
-
+        //查询薪资信息
         await this.searchQuery();
       }
     },
@@ -785,11 +791,15 @@ export default {
       let username = userInfo["username"];
       this.queryParam.name = userInfo["realname"];
 
-      //获取我的待办数据
-      this.wageList = await manageAPI.queryWageBillByParam(
-        username,
-        this.queryParam
-      );
+      try {
+        //获取我的待办数据
+        this.wageList = await manageAPI.queryWageBillByParam(
+          username,
+          this.queryParam
+        );
+      } catch (error) {
+        console.error(error);
+      }
 
       //缓存本次查询条件，下次打开此页面，可以还原查询条件
       storage.setStore(

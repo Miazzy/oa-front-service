@@ -703,50 +703,68 @@ export default {
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
-      //设置高级查询条件
-      this.queryParam = storage.getStore(
-        `system_wage_manage_user@${userInfo.username}`
-      );
-
-      //加载用户数据
-      if (tools.isNull(this.queryParam.name)) {
-        this.queryParam.name = userInfo.realname;
+      try {
+        //设置高级查询条件
+        this.queryParam = storage.getStore(
+          `system_wage_manage_user@${userInfo.username}`
+        );
+      } catch (error) {
+        console.error(error);
       }
 
-      //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
-      if (
-        this.queryParam == "" ||
-        this.queryParam == null ||
-        JSON.stringify(this.queryParam) == "{}"
-      ) {
-        this.queryParam = {};
-        await this.getDate();
-      } else {
-        //设置时间
-        if (
-          !tools.isNull(this.queryParam.time) &&
-          this.queryParam.time.length > 0
-        ) {
-          this.queryParam.time[0] = tools.formatDate(
-            this.queryParam.time[0],
-            "yyyy-MM-dd"
-          );
-          this.queryParam.time[1] = tools.formatDate(
-            this.queryParam.time[1],
-            "yyyy-MM-dd"
-          );
-
-          this.queryParam.time = [
-            moment(this.queryParam.time[0], "YYYY-MM-DD"),
-            moment(this.queryParam.time[1], "YYYY-MM-DD")
-          ];
+      try {
+        //加载用户数据
+        if (tools.isNull(this.queryParam.name)) {
+          this.queryParam.name = userInfo.realname;
         }
+      } catch (error) {
+        console.error(error);
+      }
 
+      try {
+        //如果没有获取到查询条件，则查询所有数据，如果获取到查询条件，则查询筛选数据
+        if (
+          this.queryParam == "" ||
+          this.queryParam == null ||
+          JSON.stringify(this.queryParam) == "{}"
+        ) {
+          //初始化查询条件
+          this.queryParam = {};
+          //查询薪资信息
+          await this.searchQuery();
+        } else {
+          //设置时间
+          if (
+            !tools.isNull(this.queryParam.time) &&
+            this.queryParam.time.length > 0
+          ) {
+            this.queryParam.time[0] = tools.formatDate(
+              this.queryParam.time[0],
+              "yyyy-MM-dd"
+            );
+            this.queryParam.time[1] = tools.formatDate(
+              this.queryParam.time[1],
+              "yyyy-MM-dd"
+            );
+
+            this.queryParam.time = [
+              moment(this.queryParam.time[0], "YYYY-MM-DD"),
+              moment(this.queryParam.time[1], "YYYY-MM-DD")
+            ];
+          }
+
+          //查询薪资信息
+          await this.searchQuery();
+        }
+      } catch (error) {
+        console.error(error);
+
+        //查询薪资信息
         await this.searchQuery();
       }
     },
     /**
-     * @function 查询工作表信息
+     * @function 查询薪资表信息
      */
     async getDate() {
       //获取工资表信息
@@ -777,14 +795,18 @@ export default {
     async searchQuery() {
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
-      let username = userInfo["username"];
+      var username = userInfo["username"];
       this.queryParam.name = userInfo["realname"];
 
-      //获取我的待办数据
-      this.wageList = await manageAPI.queryWageBillByParam(
-        username,
-        this.queryParam
-      );
+      try {
+        //获取我的待办数据
+        this.wageList = await manageAPI.queryWageBillByParam(
+          username,
+          this.queryParam
+        );
+      } catch (error) {
+        console.error(error);
+      }
 
       //缓存本次查询条件，下次打开此页面，可以还原查询条件
       storage.setStore(
