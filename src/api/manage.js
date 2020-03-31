@@ -3993,13 +3993,14 @@ export async function queryWageBillByParam(
  * @function 查询花名册信息
  */
 export async function queryRegisterByUserName(
+    realname = '',
     username = '',
     page = 0,
     size = 50,
     result = ''
 ) {
     //提交URL
-    var queryURL = `${api.restapi}/api/bs_user_info?_where=(name,eq,${username})&_p=${page}&_size=${size}&_sort=-join_time`;
+    var queryURL = `${api.restapi}/api/bs_user_info?_where=(name,eq,${realname})~or(username,eq,${username})&_p=${page}&_size=${size}&_sort=-join_time`;
 
     try {
         //发送HTTP请求，获取博文数量

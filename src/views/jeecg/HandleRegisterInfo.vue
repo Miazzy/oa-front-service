@@ -93,14 +93,23 @@ export default {
       var username = tools.queryUrlString('username');
 
       //查询用户真实姓名
-      username = await manageAPI.queryUserInfoByView(username);
+      var userinfo = await manageAPI.queryUserInfoByView(username);
 
-      //获取用户姓名
-      username = username[0];
+      //真实姓名
+      var realname = '';
+
+      try {
+        //获取用户姓名
+        userinfo = userinfo[0];
+        //真实姓名
+        realname = userinfo.realname;
+      } catch (error) {
+        console.error(error);
+      }
 
       try {
         //获取我的花名册数据
-        var item = await manageAPI.queryRegisterByUserName(username.realname);
+        var item = await manageAPI.queryRegisterByUserName(realname, username);
 
         //删除属性
         delete item.id;
