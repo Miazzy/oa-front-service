@@ -696,7 +696,7 @@ export default {
       previewVisible: false,
       previewImage: "",
       wageList: [],
-      queryParam: {},
+      queryParam: { name: "", time: [] },
       spinning: false
     };
   },
