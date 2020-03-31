@@ -5,11 +5,6 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :md="7" :sm="7">
-            <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名信息" v-model="queryParam.name" readonly></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="7" :sm="7">
             <a-form-item label="发放期间">
               <a-range-picker v-model="queryParam.time" />
             </a-form-item>
