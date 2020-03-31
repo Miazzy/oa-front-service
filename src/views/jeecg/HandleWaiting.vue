@@ -213,8 +213,6 @@ export default {
   },
   methods: {
     async loadData() {
-      debugger;
-
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
@@ -223,10 +221,6 @@ export default {
 
       //设置表单信息
       this.tableNameList = tableNameList;
-
-      setTimeout(() => {
-        //$(".ant-tag").css("margin-bottom", "5px");
-      }, 100);
 
       //设置高级查询条件
       this.queryParam = storage.getStore(
@@ -240,8 +234,9 @@ export default {
         JSON.stringify(this.queryParam) == "{}" ||
         JSON.stringify(this.queryParam) == `{"startman":""}`
       ) {
-        debugger;
+        //初始化查询条件
         this.queryParam = {};
+        //获取搜索数据
         await this.getDate();
       } else {
         //设置时间
@@ -261,20 +256,14 @@ export default {
           ];
         }
 
-        debugger;
-
         //查询条件不为空，则用搜索条件，进行高级查询
         await this.searchQuery();
       }
-
-      //打印表单信息
-      console.log("table name list :" + JSON.stringify(tableNameList));
     },
     /**
      * @function 查询当前状态所有待办数据
      */
     async getDate() {
-      debugger;
       //查询我的已办，我的待办
       if (this.activeKey == 1 || this.activeKey == 2) {
         //获取用户信息
