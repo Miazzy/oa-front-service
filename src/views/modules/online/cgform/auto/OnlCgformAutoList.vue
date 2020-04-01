@@ -1931,10 +1931,20 @@ export default {
     },
 
     handleExportXls2() {
+      //获取导出参数
       let param = this.queryParam;
+
+      //检查导出数据
+      if (this.table.selectionRows.length <= 0) {
+        this.$message.warning('请选择需要导出的记录！');
+        return false;
+      }
+
+      //设置导出数据
       if (this.table.selectedRowKeys && this.table.selectedRowKeys.length > 0) {
         param['selections'] = this.table.selectedRowKeys.join(',');
       }
+
       let paramsStr = encodeURI(JSON.stringify(param));
       console.log('paramsStr: ' + paramsStr);
       let url =
@@ -1946,12 +1956,27 @@ export default {
       window.location.href = url;
     },
     handleExportXls() {
+      //定义导出参数
       let param = this.queryParam;
+
+      //获取当前用户
+      var userInfo = storage.getStore('cur_user');
+
+      //检查导出数据
+      if (this.table.selectionRows.length <= 0) {
+        this.$message.warning('请选择需要导出的记录！');
+        return false;
+      }
+
+      //设置导出数据
       if (this.table.selectedRowKeys && this.table.selectedRowKeys.length > 0) {
         param['selections'] = this.table.selectedRowKeys.join(',');
       }
+
       console.log('导出参数', param);
+
       let paramsStr = JSON.stringify(tools.filterObj(param));
+
       manageAPI
         .downFile(this.url.exportXls + this.code, {paramsStr: paramsStr})
         .then(data => {
@@ -1962,14 +1987,17 @@ export default {
           if (typeof window.navigator.msSaveBlob !== 'undefined') {
             window.navigator.msSaveBlob(
               new Blob([data]),
-              this.description + '.xls'
+              `${this.description}_${userInfo.realname}.xls`
             );
           } else {
             let url = window.URL.createObjectURL(new Blob([data]));
             let link = document.createElement('a');
             link.style.display = 'none';
             link.href = url;
-            link.setAttribute('download', this.description + '.xls');
+            link.setAttribute(
+              'download',
+              `${this.description}_${userInfo.realname}.xls`
+            );
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link); //下载完成移除元素

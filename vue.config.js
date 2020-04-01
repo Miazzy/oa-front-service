@@ -113,7 +113,7 @@ const vueConfig = {
         port: 3000,
         proxy: {
             '/jeecg-boot': {
-                target: 'http://www.shengtai.club', //请求本地 需要jeecg-boot后台项目
+                target: 'http://127.0.0.1:8082', //请求本地 需要jeecg-boot后台项目
                 ws: true,
                 changeOrigin: true,
             },

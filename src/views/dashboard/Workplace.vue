@@ -1807,7 +1807,7 @@ export default {
      * @function 跳转到花名册界面中
      */
     handleRegisterManage() {
-      var path = "/finance/form/02c2e82c486542df992c3860ad6cd25a";
+      var path = "/finance/registerform/02c2e82c486542df992c3860ad6cd25a";
       //跳转到相应页面
       this.$router.push({
         path: path,
@@ -1831,7 +1831,7 @@ export default {
      * @function 跳转到薪资管理界面中
      */
     handleWageManage() {
-      var path = "/finance/form/237fa97d3c974bdbb36090d0dd2f3a39";
+      var path = "/finance/salaryform/237fa97d3c974bdbb36090d0dd2f3a39";
       //跳转到相应页面
       this.$router.push({
         path: path,
