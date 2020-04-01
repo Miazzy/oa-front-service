@@ -15,7 +15,7 @@
         "@form-create/element-ui": "^1.0.9",
         "@jeecg/antd-onine": "^1.0.1",
         "@tinymce/tinymce-vue": "^2.0.0",
-        "ant-design-vue": "^1.5.0",
+        "ant-design-vue": "^1.4.10",
         "apexcharts": "^3.17.1",
         "axios": "^0.18.0",
         "bpmn-js": "^6.4.0",
