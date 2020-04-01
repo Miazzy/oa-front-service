@@ -780,31 +780,33 @@ export default {
           console.log('--onlineList-列表数据', res);
           if (res.success) {
             var result = res.result;
-            var userInfo = storage.getStore('cur_user');
 
             if (Number(result.total) > 0) {
               this.table.pagination.total = Number(res.result.total);
 
               res.result.records = _.filter(res.result.records, function(item) {
-                if ('create_by' in item) {
-                  return (
-                    item['create_by'] == userInfo['username'] ||
-                    item['create_by'] == userInfo['realname']
-                  );
-                } else if ('employee' in item) {
-                  return (
-                    item['employee'] == userInfo['username'] ||
-                    item['employee'] == userInfo['realname']
-                  );
-                } else if ('proposer' in item) {
-                  //外出页面使用
-                  return (
-                    item['proposer'] == userInfo['username'] ||
-                    item['proposer'] == userInfo['realname']
-                  );
-                } else {
-                  return true;
+                //遍历对象属性
+                for (let key of Object.keys(item)) {
+                  //获取属性的值
+                  var value = item[key];
+                  //如果是数字类型，则保留两位小数
+                  try {
+                    if (typeof value == 'number') {
+                      item[key] = value.toFixed(2);
+                    } else if (key == 'wages_date') {
+                      //格式化日期
+                      value = tools.formatDate(value, 'yyyy-MM-dd');
+                      item[key] = value;
+                    } else if (typeof value == 'string') {
+                      var nvalue = Number.parseFloat(value).toFixed(2);
+                      item[key] = nvalue == 'NaN' ? value : nvalue;
+                    }
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }
+
+                return true;
               });
 
               //分页条件
