@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       qsItem: [],
-      qsList: {},
+      qsList: '',
       isError: false,
       showDialog: false,
       info: '',
@@ -106,13 +106,14 @@ export default {
       storage.get(storage.STORAGE_KEY + userInfo.username) ||
       (await manageAPI.queryQuestionList(userInfo.username));
     //获取数据
-    this.fetchData();
+    await this.fetchData();
   },
   mounted() {
     this.getRequiredItem();
   },
   methods: {
-    fetchData() {
+    async fetchData() {
+      debugger;
       let i = 0;
       for (let length = this.qsList.length; i < length; i++) {
         if (this.qsList[i].id == this.$route.params.num) {
@@ -125,7 +126,21 @@ export default {
           break;
         }
       }
-      if (i === this.qsList.length) this.isError = true;
+
+      if (tools.isNull(this.qsItem)) {
+        try {
+          this.qsItem = await manageAPI.queryQuestionById(
+            this.$route.params.num
+          );
+          this.qsItem.question = JSON.parse(this.qsItem.question);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      if (tools.isNull(this.qsItem) && i === this.qsList.length) {
+        this.isError = true;
+      }
     },
     getMsg(item) {
       let msg = '';
@@ -147,13 +162,23 @@ export default {
       var userInfo = storage.getStore('cur_user');
 
       //获取当前日期
-      var ctime = tools.formatDate(new Date().getTime, 'yyyy-MM-dd');
+      var ctime = tools.formatDate(new Date().getTime(), 'yyyy-MM-dd');
 
       //获取原数据库调查数据
       var item = await manageAPI.queryQuestionById(this.qsItem.id);
 
       //解析填写的调查问卷名单
-      var qalist = JSON.parse(item.answers);
+      var qalist = [];
+
+      //设置
+      try {
+        qalist =
+          !tools.isNull(item.answers) && Array.isArray(JSON.parse(item.answers))
+            ? JSON.parse(item.answers)
+            : [];
+      } catch (error) {
+        console.error(error);
+      }
 
       //查询用户的填写记录
       var flag = _.find(qalist, obj => {
@@ -183,7 +208,7 @@ export default {
           };
 
           //将新调查数据保存至数据列表中
-          qalist = qalist.push(node);
+          qalist.push(node);
 
           //设置答案
           item.answers = JSON.stringify(qalist);
