@@ -43,14 +43,22 @@
               此题是否必填
             </label>
             <p>
-              <span v-if="index !== 0" @click="goUp(index)">上移</span>
+              <span
+                v-if="index !== 0"
+                @click="goUp(index)"
+                style="margin-right:5px;"
+                >上移</span
+              >
               <span
                 v-if="index !== qsItem.question.length - 1"
                 @click="goDown(index)"
+                style="margin-right:5px;"
                 >下移</span
               >
-              <span @click="copy(index, qs)">复用</span>
-              <span @click="del(index)">删除</span>
+              <span @click="copy(index, qs)" style="margin-right:5px;"
+                >复用</span
+              >
+              <span @click="del(index)" style="margin-right:5px;">删除</span>
             </p>
           </div>
         </div>
@@ -177,266 +185,347 @@ export default {
     };
   },
   beforeRouteEnter(to, from, next) {
-    var userInfo = storage.getStore('cur_user');
-    let num = to.params.num;
-    let theItem = {};
-    if (num != 0) {
-      let length = storage.get(storage.STORAGE_KEY + userInfo.username).length;
+    //跳转前执行代码
+    try {
+      var userInfo = storage.getStore('cur_user');
+      var num = to.params.num;
+      var theItem = {};
+      if (num != 0) {
+        let length = storage.get(storage.STORAGE_KEY + userInfo.username)
+          .length;
 
-      for (let i = 0; i < length; i++) {
-        let flag =
-          storage.get(storage.STORAGE_KEY + userInfo.username)[i].id == num;
-        if (flag) {
-          theItem = storage.get(storage.STORAGE_KEY + userInfo.username)[i];
-          break;
-        }
-      }
-      if (theItem.state === 'noissue') {
-        next();
-      }
-    } else {
-      next();
-    }
-  },
-  async created() {
-    //获取用户信息
-    var userInfo = (this.userInfo = storage.getStore('cur_user'));
-
-    //从数据库中获取
-    var list =
-      storage.get(storage.STORAGE_KEY + userInfo.username) ||
-      (await manageAPI.queryQuestionList(userInfo.username));
-
-    //设置问卷题目
-    this.qsList = list || [];
-
-    //获取数据
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      //获取时间戳
-      var timestamp = new Date().getTime();
-
-      //设置限制日期
-      this.limit = {
-        minYear: new Date().getFullYear(),
-        minMonth: new Date().getMonth() + 1,
-        minDay: new Date().getDate(),
-        maxYear: 2099,
-        maxMonth: 12,
-        maxDay: 31,
-      };
-
-      debugger;
-
-      //设置问卷初始化信息
-      if (this.$route.params.num == 0) {
-        let item = {};
-        item.id = tools.queryUniqueID();
-        item.create_by = this.userInfo.username;
-        item.create_time = tools.formatDate(timestamp, 'yyyy-MM-dd');
-        item.num = this.qsList.length + 1;
-        item.title = item.name = '这里是标题';
-        item.time = tools.formatDate(timestamp, 'yyyy-MM-dd');
-        item.state = 'noissue';
-        item.question = [];
-        item.stateTitle = '未发布';
-        item.checked = 'false';
-        this.qsItem = item;
-        try {
-          this.qsList.push(this.qsItem);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        let i = 0;
-        for (let length = this.qsList.length; i < length; i++) {
-          if (this.qsList[i].id == this.$route.params.num) {
-            try {
-              this.qsItem = this.qsList[i];
-              this.qsItem.question = JSON.parse(this.qsItem.question);
-            } catch (error) {
-              console.error(error);
-            }
+        for (let i = 0; i < length; i++) {
+          let flag =
+            storage.get(storage.STORAGE_KEY + userInfo.username)[i].id == num;
+          if (flag) {
+            theItem = storage.get(storage.STORAGE_KEY + userInfo.username)[i];
             break;
           }
         }
-        if (i === this.qsList.length) this.isError = true;
+
+        this.qsItem = theItem;
+
+        console.log(`item : ${theItem}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    //执行跳转
+    next();
+  },
+  async created() {
+    try {
+      //获取用户信息
+      var userInfo = (this.userInfo = storage.getStore('cur_user'));
+
+      //从数据库中获取
+      var list =
+        storage.get(storage.STORAGE_KEY + userInfo.username) ||
+        (await manageAPI.queryQuestionList(userInfo.username));
+
+      //设置问卷题目
+      this.qsList = list || [];
+
+      //获取数据
+      this.fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  methods: {
+    async fetchData() {
+      try {
+        //获取时间戳
+        var timestamp = new Date().getTime();
+
+        //设置限制日期
+        this.limit = {
+          minYear: new Date().getFullYear(),
+          minMonth: new Date().getMonth() + 1,
+          minDay: new Date().getDate(),
+          maxYear: 2099,
+          maxMonth: 12,
+          maxDay: 31,
+        };
+
+        //设置问卷初始化信息
+        if (this.$route.params.num == 0) {
+          let item = {};
+          item.id = tools.queryUniqueID();
+          item.create_by = this.userInfo.username;
+          item.create_time = tools.formatDate(timestamp, 'yyyy-MM-dd');
+          item.num = this.qsList.length + 1;
+          item.title = item.name = '这里是标题';
+          item.time = tools.formatDate(timestamp, 'yyyy-MM-dd');
+          item.state = 'noissue';
+          item.question = [];
+          item.stateTitle = '未发布';
+          item.checked = 'false';
+          this.qsItem = item;
+          try {
+            this.qsList.push(this.qsItem);
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          let i = 0;
+          for (let length = this.qsList.length; i < length; i++) {
+            if (this.qsList[i].id == this.$route.params.num) {
+              try {
+                this.qsItem = this.qsList[i];
+                this.qsItem.question = JSON.parse(this.qsItem.question);
+              } catch (error) {
+                console.error(error);
+              }
+              break;
+            }
+          }
+          if (i === this.qsList.length) this.isError = true;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     getMsg(item) {
-      let msg = '';
-      if (item.type === 'radio') {
-        msg = '(单选题)';
-      } else if (item.type === 'checkbox') {
-        msg = '(多选题)';
-      } else {
-        msg = '(文本题)';
+      try {
+        let msg = '';
+        if (item.type === 'radio') {
+          msg = '(单选题)';
+        } else if (item.type === 'checkbox') {
+          msg = '(多选题)';
+        } else {
+          msg = '(文本题)';
+        }
+        return item.isNeed ? `${msg} *` : msg;
+      } catch (error) {
+        console.error(error);
       }
-      return item.isNeed ? `${msg} *` : msg;
     },
     onblur() {
-      this.titleValue = this.titleValue.trim();
-      this.qsItem.title =
-        this.titleValue === '' ? this.qsItem.title : this.titleValue;
-      this.titleChange = false;
+      try {
+        this.titleValue = this.titleValue.trim();
+        this.qsItem.title =
+          this.titleValue === '' ? this.qsItem.title : this.titleValue;
+        this.titleChange = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
     onsubmit() {
-      this.titleValue = this.titleValue.trim();
-      this.qsItem.title =
-        this.titleValue === '' ? this.qsItem.title : this.titleValue;
-      this.titleChange = false;
+      try {
+        this.titleValue = this.titleValue.trim();
+        this.qsItem.title =
+          this.titleValue === '' ? this.qsItem.title : this.titleValue;
+        this.titleChange = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
     titleClick() {
-      this.titleChange = !this.titleChange;
-      setTimeout(() => {
-        this.$refs.titleInput.focus();
-      }, 150);
+      try {
+        this.titleChange = !this.titleChange;
+        setTimeout(() => {
+          this.$refs.titleInput.focus();
+        }, 150);
+      } catch (error) {
+        console.error(error);
+      }
     },
     swapItems(oldIndex, newIndex) {
-      let [newVal] = this.qsItem.question.splice(
-        newIndex,
-        1,
-        this.qsItem.question[oldIndex]
-      );
-      this.qsItem.question.splice(oldIndex, 1, newVal);
+      try {
+        let [newVal] = this.qsItem.question.splice(
+          newIndex,
+          1,
+          this.qsItem.question[oldIndex]
+        );
+        this.qsItem.question.splice(oldIndex, 1, newVal);
+      } catch (error) {
+        console.error(error);
+      }
     },
     goUp(index) {
-      this.swapItems(index, index - 1);
+      try {
+        this.swapItems(index, index - 1);
+      } catch (error) {
+        console.error(error);
+      }
     },
     goDown(index) {
-      this.swapItems(index, index + 1);
+      try {
+        this.swapItems(index, index + 1);
+      } catch (error) {
+        console.error(error);
+      }
     },
     copy(index, qs) {
-      if (this.questionLength === 10) return alert('问卷已满！');
-      qs = Object.assign({}, qs);
-      this.qsItem.question.splice(index, 0, qs);
+      try {
+        if (this.questionLength === 10) return alert('问卷已满！');
+        qs = Object.assign({}, qs);
+        this.qsItem.question.splice(index, 0, qs);
+      } catch (error) {
+        console.error(error);
+      }
     },
     del(index) {
-      this.qsItem.question.splice(index, 1);
+      try {
+        this.qsItem.question.splice(index, 1);
+      } catch (error) {
+        console.error(error);
+      }
     },
     addItemClick() {
-      if (this.showBtn === false) {
-        this.questionLength === 10
-          ? alert('问卷已满！')
-          : (this.showBtn = !this.showBtn);
-      } else {
-        this.showBtn = !this.showBtn;
+      try {
+        if (this.showBtn === false) {
+          this.questionLength === 10
+            ? alert('问卷已满！')
+            : (this.showBtn = !this.showBtn);
+        } else {
+          this.showBtn = !this.showBtn;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     async showAddDialog(msg, showOption) {
-      this.showAddQsDialog = true;
-      this.showAddOptionInput = showOption;
-      this.info = msg;
-      this.qsInputTitle = '';
-      this.qsInputOptions = '';
+      try {
+        this.showAddQsDialog = true;
+        this.showAddOptionInput = showOption;
+        this.info = msg;
+        this.qsInputTitle = '';
+        this.qsInputOptions = '';
+      } catch (error) {
+        console.error(error);
+      }
     },
     addRadio() {
-      if (this.questionLength === 10) return alert('问卷已满！');
-      this.showAddDialog(
-        '分别在下面的输入框中输入问题的名称以及选项, 选项用半角逗号","分隔开',
-        true
-      );
-      this.addOptionType = 'radio';
+      try {
+        if (this.questionLength === 10) return alert('问卷已满！');
+        this.showAddDialog(
+          '分别在下面的输入框中输入问题的名称以及选项, 选项用半角逗号","分隔开',
+          true
+        );
+        this.addOptionType = 'radio';
+      } catch (error) {
+        console.error(error);
+      }
     },
     addCheckbox() {
-      if (this.questionLength === 10) return alert('问卷已满！');
-      this.showAddDialog(
-        '分别在下面的输入框中输入问题的名称以及选项, 选项用半角逗号","分隔开',
-        true
-      );
-      this.addOptionType = 'checkbox';
+      try {
+        if (this.questionLength === 10) return alert('问卷已满！');
+        this.showAddDialog(
+          '分别在下面的输入框中输入问题的名称以及选项, 选项用半角逗号","分隔开',
+          true
+        );
+        this.addOptionType = 'checkbox';
+      } catch (error) {
+        console.error(error);
+      }
     },
     addTextarea() {
-      if (this.questionLength === 10) return alert('问卷已满！');
-      this.showAddDialog('在输入框中输入问题名称', false);
-      this.addOptionType = 'textarea';
+      try {
+        if (this.questionLength === 10) return alert('问卷已满！');
+        this.showAddDialog('在输入框中输入问题名称', false);
+        this.addOptionType = 'textarea';
+      } catch (error) {
+        console.error(error);
+      }
     },
     validateAddQs() {
-      let qsTitle = this.qsInputTitle.trim();
-      if (qsTitle === '') return alert('题目不能为空');
-      if (this.showAddOptionInput) {
-        let qsOptions = this.qsInputOptions.trim();
-        if (qsOptions === '') return alert('选项不能为空！');
-        qsOptions = qsOptions.split(',');
-        for (let i = 0, length = qsOptions.length; i < length; i++) {
-          if (qsOptions[i].trim() === '') {
-            return alert('存在某个选项内容为空');
+      try {
+        let qsTitle = this.qsInputTitle.trim();
+        if (qsTitle === '') return alert('题目不能为空');
+        if (this.showAddOptionInput) {
+          let qsOptions = this.qsInputOptions.trim();
+          if (qsOptions === '') return alert('选项不能为空！');
+          qsOptions = qsOptions.split(',');
+          for (let i = 0, length = qsOptions.length; i < length; i++) {
+            if (qsOptions[i].trim() === '') {
+              return alert('存在某个选项内容为空');
+            }
           }
+          this.qsItem.question.push({
+            num: this.qsItem.question.length - 1,
+            title: qsTitle,
+            type: this.addOptionType,
+            isNeed: true,
+            options: qsOptions,
+          });
+          this.showAddQsDialog = false;
+        } else {
+          this.qsItem.question.push({
+            num: this.qsItem.question.length - 1,
+            title: qsTitle,
+            type: 'textarea',
+            isNeed: true,
+          });
+          this.showAddQsDialog = false;
         }
-        this.qsItem.question.push({
-          num: this.qsItem.question.length - 1,
-          title: qsTitle,
-          type: this.addOptionType,
-          isNeed: true,
-          options: qsOptions,
-        });
-        this.showAddQsDialog = false;
-      } else {
-        this.qsItem.question.push({
-          num: this.qsItem.question.length - 1,
-          title: qsTitle,
-          type: 'textarea',
-          isNeed: true,
-        });
-        this.showAddQsDialog = false;
+      } catch (error) {
+        console.error(error);
       }
     },
     getValue(selectTime) {
-      this.selectTime = selectTime;
-      this.qsItem.time = this.selectTime;
+      try {
+        this.selectTime = selectTime;
+        this.qsItem.time = this.selectTime;
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async *save() {
-      //获取用户信息
-      var userInfo = storage.getStore('cur_user');
+      try {
+        //获取用户信息
+        var userInfo = storage.getStore('cur_user');
 
-      this.showDialog = true;
-      this.info = '确认保存?';
+        this.showDialog = true;
+        this.info = '确认保存?';
 
-      yield;
+        yield;
 
-      //检查问题列表长度
-      if (this.qsItem.question.length === 0) {
-        this.showDialog = false;
-        alert('问卷为空无法保存');
-      } else {
+        //检查问题列表长度
+        if (this.qsItem.question.length === 0) {
+          this.showDialog = false;
+          alert('问卷为空无法保存');
+        } else {
+          //将问卷数据保存到缓存中
+          storage.save(this.qsList, storage.STORAGE_KEY + userInfo.username);
+
+          //字符串序列化问题列表
+          this.qsItem.content = this.qsItem.question = JSON.stringify(
+            this.qsItem.question
+          );
+
+          //同时将问卷数据保存到数据库中
+          await manageAPI.postTableData('bs_questions', this.qsItem);
+
+          this.info = '是否发布?';
+          this.isGoIndex = true;
+        }
+
+        yield;
+
+        //修改问卷状态
+        var node = {
+          id: this.qsItem.id,
+          state: 'inissue',
+          stateTitle: '发布中',
+        };
+
+        //提交参数
+        var params = ['bs_questions', this.qsItem.id, node];
+
         //将问卷数据保存到缓存中
         storage.save(this.qsList, storage.STORAGE_KEY + userInfo.username);
 
-        //字符串序列化问题列表
-        this.qsItem.content = this.qsItem.question = JSON.stringify(
-          this.qsItem.question
-        );
-
         //同时将问卷数据保存到数据库中
-        await manageAPI.postTableData('bs_questions', this.qsItem);
+        await manageAPI.patchTableData(...params);
 
-        this.info = '是否发布?';
-        this.isGoIndex = true;
+        this.showDialog = false;
+        this.$router.push({path: '/qslist'});
+      } catch (error) {
+        console.error(error);
       }
-
-      yield;
-
-      //修改问卷状态
-      var node = {
-        id: this.qsItem.id,
-        state: 'inissue',
-        stateTitle: '发布中',
-      };
-
-      //提交参数
-      var params = ['bs_questions', this.qsItem.id, node];
-
-      //将问卷数据保存到缓存中
-      storage.save(this.qsList, storage.STORAGE_KEY + userInfo.username);
-
-      //同时将问卷数据保存到数据库中
-      await manageAPI.patchTableData(...params);
-
-      this.showDialog = false;
-      this.$router.push({path: '/qslist'});
     },
 
     async *issueQs() {

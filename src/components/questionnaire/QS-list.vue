@@ -11,7 +11,7 @@
         <li>状态</li>
         <li>
           操作
-          <span @click="$router.push({name: 'qsEdit', params: {num: 0}})"
+          <span @click="$router.push({name: 'QsEdit', params: {num: 0}})"
             >+新建问卷</span
           >
         </li>
@@ -68,7 +68,7 @@
       <div class="add-qs" v-if="qsList.length === 0">
         <button
           class="add-btn"
-          @click="$router.push({name: 'qsEdit', params: {num: 0}})"
+          @click="$router.push({name: 'QsEdit', params: {num: 0}})"
         >
           +&nbsp;&nbsp;新建问卷
         </button>

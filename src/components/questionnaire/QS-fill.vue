@@ -74,6 +74,8 @@
 import vHeader from '@/components/questionnaire/public/header';
 import * as storage from '@/utils/storage';
 import * as manageAPI from '@/api/manage';
+import * as tools from '@/utils/util';
+import * as _ from 'underscore';
 
 const STORAGE_KEY = 'questionnaire';
 
@@ -103,6 +105,7 @@ export default {
     this.qsList =
       storage.get(storage.STORAGE_KEY + userInfo.username) ||
       (await manageAPI.queryQuestionList(userInfo.username));
+    //获取数据
     this.fetchData();
   },
   mounted() {
@@ -136,16 +139,79 @@ export default {
 
       return item.isNeed ? `${msg} *` : msg;
     },
-    submit() {
+    /**
+     * @function 提交函数
+     */
+    async submit() {
+      //获取当前用户信息
+      var userInfo = storage.getStore('cur_user');
+
+      //获取当前日期
+      var ctime = tools.formatDate(new Date().getTime, 'yyyy-MM-dd');
+
+      //获取原数据库调查数据
+      var item = await manageAPI.queryQuestionById(this.qsItem.id);
+
+      //解析填写的调查问卷名单
+      var qalist = JSON.parse(item.answers);
+
+      //查询用户的填写记录
+      var flag = _.find(qalist, obj => {
+        return obj.username == userInfo.username;
+      });
+
+      //用户已经提交过调查问卷
+      if (!tools.isNull(flag)) {
+        this.showDialog = true;
+        this.submitError = true;
+        this.info = '提交失败，您已经提交过调查问卷了！';
+        return 'false';
+      }
+
+      //发布中的调研问卷才可以进行提交
       if (this.qsItem.state === 'inissue') {
+        //校验表单是否正常
         let result = this.validate();
+
+        //表单验证成功，则保存调研结果
         if (result) {
+          //定义用户信息
+          var node = {
+            username: userInfo.username,
+            replay: this.requiredItem,
+            create_time: ctime,
+          };
+
+          //将新调查数据保存至数据列表中
+          qalist = qalist.push(node);
+
+          //设置答案
+          item.answers = JSON.stringify(qalist);
+
+          //提交参数
+          var params = [
+            'bs_questions',
+            item.id,
+            {
+              id: item.id,
+              answers: item.answers,
+            },
+          ];
+
+          //将用户调查数据保存至数据库中
+          await manageAPI.patchTableData(...params);
+
+          //显示弹出框
           this.showDialog = true;
           this.submitError = false;
           this.info = '提交成功！';
+
+          //关闭对话框
           setTimeout(() => {
             this.showDialog = false;
           }, 500);
+
+          //跳转到
           setTimeout(() => {
             this.$router.push({path: '/'});
           }, 1500);
@@ -160,6 +226,9 @@ export default {
         this.info = '提交失败！ 只有发布中的问卷才能提交';
       }
     },
+    /**
+     * @function 获取必选项信息
+     */
     getRequiredItem() {
       this.qsItem.question.forEach(item => {
         if (item.isNeed) {
@@ -173,6 +242,9 @@ export default {
         }
       });
     },
+    /**
+     * @function 校验必须项是否填写
+     */
     validate() {
       for (let i in this.requiredItem) {
         if (this.requiredItem[i].length === 0) return false;
