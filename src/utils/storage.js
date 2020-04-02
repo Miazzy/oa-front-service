@@ -1,6 +1,7 @@
+export const STORAGE_KEY = 'questionnaire';
+
 /**
- * Set storage
- *
+ * @function Set storage
  * @param name
  * @param content
  * @param maxAge
@@ -24,8 +25,7 @@ export const setStore = (name, content, maxAge = null) => {
 };
 
 /**
- * Get storage
- *
+ * @function Get storage
  * @param name
  * @returns {*}
  */
@@ -52,8 +52,7 @@ export const getStore = name => {
 };
 
 /**
- * Clear storage
- *
+ * @function Clear storage
  * @param name
  */
 export const clearStore = name => {
@@ -66,7 +65,7 @@ export const clearStore = name => {
 };
 
 /**
- * Clear all storage
+ * @function Clear all storage
  */
 export const clearAll = () => {
     if (!global.window || !name) {
@@ -74,4 +73,22 @@ export const clearAll = () => {
     }
 
     window.localStorage.clear();
+};
+
+
+/**
+ * @function 获取缓存信息
+ * @param {*} key 
+ */
+export const get = (key = STORAGE_KEY) => {
+    return JSON.parse(window.localStorage.getItem(key));
+};
+
+/**
+ * @function 设置缓存信息
+ * @param {*} items 
+ * @param {*} key 
+ */
+export const save = (items, key = STORAGE_KEY) => {
+    window.localStorage.setItem(key, JSON.stringify(items));
 };

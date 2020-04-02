@@ -7,6 +7,13 @@ import {
     PageView,
 } from '@/components/layouts';
 
+
+import qsList from '@/components/questionnaire/QS-list'
+import qsData from '@/components/questionnaire/QS-data'
+import qsFill from '@/components/questionnaire/QS-fill'
+import qsEdit from '@/components/questionnaire/QS-edit'
+
+
 /**
  * 走菜单，走权限控制
  * @type {[null,null]}
@@ -43,31 +50,31 @@ export const constantRouterMap = [{
                 path: 'login',
                 name: 'login',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/user/Login'),
+                    import ('@/views/user/Login'),
             },
             {
                 path: 'register',
                 name: 'register',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/user/Register'),
+                    import ('@/views/user/Register'),
             },
             {
                 path: 'register-result',
                 name: 'registerResult',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/user/RegisterResult'),
+                    import ('@/views/user/RegisterResult'),
             },
             {
                 path: 'alteration',
                 name: 'alteration',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/user/Alteration'),
+                    import ('@/views/user/Alteration'),
             },
             {
                 path: 'workflow',
                 name: 'workflow',
                 component: () =>
-                    import ( /* webpackChunkName: "user" */ '@/views/jeecg/Workflow'),
+                    import ('@/views/jeecg/Workflow'),
             },
         ],
     },
@@ -90,8 +97,28 @@ export const constantRouterMap = [{
         ],
     },
     {
+        path: '/qslist',
+        name: 'QsList',
+        component: qsList
+    },
+    {
+        path: '/qsdata/:num',
+        name: 'QsData',
+        component: qsData
+    },
+    {
+        path: '/qsfill/:num',
+        name: 'QsFill',
+        component: qsFill
+    },
+    {
+        path: '/qsedit/:num',
+        name: 'QsEdit',
+        component: qsEdit
+    },
+    {
         path: '/404',
         component: () =>
-            import ( /* webpackChunkName: "fail" */ '@/views/exception/404'),
+            import ('@/views/exception/404'),
     },
 ];

@@ -321,6 +321,7 @@ export async function insertTableData(tableName, node) {
 }
 
 export async function postTableData(tableName, node) {
+    debugger;
     //大写转小写
     tableName = tableName.toLowerCase();
     //Post数据的URL地址
@@ -4763,6 +4764,29 @@ export async function queryBusinessTotal() {
     } catch (err) {
         console.log(err);
     }
+}
+
+/**
+ * @function 获取问卷信息列表
+ */
+export async function queryQuestionList(username, page = 0, size = 99) {
+
+    //提交URL
+    var queryURL = `${api.restapi}/api/bs_questions?_where=(create_by,eq,${username})&_p=${page}&_size=${size}`;
+
+    try {
+        //发送请求
+        const res = await superagent.get(queryURL);
+
+        //业务数据
+        const list = res.body;
+
+        //返回业务数据
+        return list;
+    } catch (err) {
+        console.log(err);
+    }
+
 }
 
 /**

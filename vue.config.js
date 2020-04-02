@@ -1,9 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-//const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const productionGzipExtensions = ['js', 'css', 'html', 'svg', 'png', 'less', 'jpg', 'jpeg', 'woff', 'ttf', 'woff2', 'ico'];
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
 
 function resolve(dir) {
@@ -31,9 +31,7 @@ const assetsCDN = {
 // vue.config.js
 const vueConfig = {
     configureWebpack: {
-        // webpack plugins
         plugins: [
-            // Ignore all locale files of moment.js
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new CompressionWebpackPlugin({
                 algorithm: 'gzip',
@@ -41,19 +39,7 @@ const vueConfig = {
                 threshold: 0,
                 minRatio: 0.8,
             }),
-            // new UglifyJsPlugin({
-            //     uglifyOptions: {
-            //         compress: {
-            //             drop_console: true,
-            //             drop_debugger: true,
-            //             pure_funcs: ['console.log'], //移除console
-            //         },
-            //     },
-            //     sourceMap: false,
-            //     parallel: true,
-            // }),
         ],
-        // if prod, add externals
         externals: assetsCDN.externals,
     },
 
@@ -89,21 +75,17 @@ const vueConfig = {
             .options({
                 name: 'assets/[name].[hash:8].[ext]',
             });
-        // if prod is on
-        // assets require on cdn
-        if (isProd) {}
+
+        //判断是否为生产环境
+        if (isProd) {
+            console.log('当前环境为生产环境');
+        }
     },
 
     css: {
         loaderOptions: {
             less: {
-                modifyVars: {
-                    // less vars，customize ant design theme
-                    // 'primary-color': '#F5222D',
-                    // 'link-color': '#F5222D',
-                    // 'border-radius-base': '4px'
-                },
-                // DO NOT REMOVE THIS LINE
+                modifyVars: {},
                 javascriptEnabled: true,
             },
         },
@@ -113,7 +95,8 @@ const vueConfig = {
         port: 3000,
         proxy: {
             '/jeecg-boot': {
-                target: 'http://127.0.0.1:8082', //请求本地 需要jeecg-boot后台项目
+                //请求本地 需要jeecg-boot后台项目
+                target: 'http://127.0.0.1:8082',
                 ws: true,
                 changeOrigin: true,
             },
@@ -131,8 +114,6 @@ const vueConfig = {
 // preview.pro.loacg.com only do not use in your production;
 if (process.env.VUE_APP_PREVIEW === 'true') {
     console.log('VUE_APP_PREVIEW', true);
-    // add `ThemeColorReplacer` plugin to webpack plugins
-    //vueConfig.configureWebpack.plugins.push(createThemeColorReplacerPlugin());
 }
 
 // vue.config.js
