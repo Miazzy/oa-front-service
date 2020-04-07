@@ -1,18 +1,29 @@
 <template>
-  <global-layout @dynamicRouterShow="dynamicRouterShow" @closeTabPage="closeTabPage">
-    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
+  <global-layout
+    @dynamicRouterShow="dynamicRouterShow"
+    @closeTabPage="closeTabPage"
+  >
+    <contextmenu
+      :itemList="menuItemList"
+      :visible.sync="menuVisible"
+      @select="onMenuSelect"
+    />
     <a-tabs
-      @contextmenu.native="e => onContextmenu(e)"
+      @contextmenu.native="(e) => onContextmenu(e)"
       v-if="multipage"
       :active-key="activePage"
       class="tab-layout-tabs"
-      style="height:52px"
+      style="height: 52px;"
       :hide-add="true"
       type="editable-card"
       @change="changePage"
       @edit="editPage"
     >
-      <a-tab-pane :id="page.fullPath" :key="page.fullPath" v-for="page in pageList">
+      <a-tab-pane
+        :id="page.fullPath"
+        :key="page.fullPath"
+        v-for="page in pageList"
+      >
         <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
       </a-tab-pane>
     </a-tabs>
@@ -28,62 +39,63 @@
 </template>
 
 <script>
-import GlobalLayout from "@/components/page/GlobalLayout";
-import Contextmenu from "@/components/menu/Contextmenu";
-import { mixin, mixinDevice } from "@/utils/mixin.js";
-import { deNull } from "@/utils/util";
-import _ from "underscore";
+import GlobalLayout from '@/components/page/GlobalLayout';
+import Contextmenu from '@/components/menu/Contextmenu';
+import {mixin, mixinDevice} from '@/utils/mixin.js';
+import {deNull} from '@/utils/util';
+import _ from 'underscore';
 
 const indexKey = `/dashboard/analysis`;
 const workplaceKey = `/dashboard/workplace`;
 const centerKey = `/account/center`;
 const blogKey = `/blog/center`;
+const taskKey = `/task/center`;
 
 //Tab标题
 const titleKV = {
-  "0b511f234f3847baa50106a14fff6215": "审批处理",
-  b0ceb7cfb2b0487a96e03f50c413d762: "请假申请",
-  "933e21cf445440abb8cfdae366082a62": "外出申请",
-  "9ed5bc42eb934bbe8dac16ed1a3b103f": "加班申请",
-  b0fee76c2ee84baeb9494b196b779e3e: "考勤异常",
-  "3da23c7955d84465a759d0f1830a0d00": "档案及证照借阅",
-  cfd4ee2d60fa48f585c157d524b0a108: "用印申请(非合同)",
-  dd78c4c8a59e4ee3bd93ec011a3f6b4c: "用印申请(合同)",
-  e412b58db17b4cbf8cb9833c118c2d3b: "印章借用",
-  "62f7122c73c244119e5d4ec8aa170a3d": "出差申请",
-  "3972c2cb5a824aaab8ef0aad3ea56e7f": "行政公告",
-  c9c7e537dbb54691b4f0eff23854fdbb: "红头文件",
-  ebe9412bb4f34b5c8ea3fb7c0908d315: "新闻资讯",
-  "6650f6e79479489192fe469d1e3f98f3": "奖罚通报",
-  "6bfb3ee6257a4066b1d26f195da83fe0": "车辆补贴",
-  "688a9ea8187d461e9e921fd5a5829201": "日报管理",
-  "9c4bf0f4951b44648659a34ead5d31cc": "周报管理",
-  "6bf6537008514d319a95330459464f3e": "月报管理",
-  "878dd1f28f0b4dfdaa74534eec902c0c": "年度汇报",
-  "02c2e82c486542df992c3860ad6cd25a": "花名册管理",
-  "237fa97d3c974bdbb36090d0dd2f3a39": "工资管理"
+  '0b511f234f3847baa50106a14fff6215': '审批处理',
+  b0ceb7cfb2b0487a96e03f50c413d762: '请假申请',
+  '933e21cf445440abb8cfdae366082a62': '外出申请',
+  '9ed5bc42eb934bbe8dac16ed1a3b103f': '加班申请',
+  b0fee76c2ee84baeb9494b196b779e3e: '考勤异常',
+  '3da23c7955d84465a759d0f1830a0d00': '档案及证照借阅',
+  cfd4ee2d60fa48f585c157d524b0a108: '用印申请(非合同)',
+  dd78c4c8a59e4ee3bd93ec011a3f6b4c: '用印申请(合同)',
+  e412b58db17b4cbf8cb9833c118c2d3b: '印章借用',
+  '62f7122c73c244119e5d4ec8aa170a3d': '出差申请',
+  '3972c2cb5a824aaab8ef0aad3ea56e7f': '行政公告',
+  c9c7e537dbb54691b4f0eff23854fdbb: '红头文件',
+  ebe9412bb4f34b5c8ea3fb7c0908d315: '新闻资讯',
+  '6650f6e79479489192fe469d1e3f98f3': '奖罚通报',
+  '6bfb3ee6257a4066b1d26f195da83fe0': '车辆补贴',
+  '688a9ea8187d461e9e921fd5a5829201': '日报管理',
+  '9c4bf0f4951b44648659a34ead5d31cc': '周报管理',
+  '6bf6537008514d319a95330459464f3e': '月报管理',
+  '878dd1f28f0b4dfdaa74534eec902c0c': '年度汇报',
+  '02c2e82c486542df992c3860ad6cd25a': '花名册管理',
+  '237fa97d3c974bdbb36090d0dd2f3a39': '工资管理',
 };
 
 //
 
 export default {
-  name: "TabLayout",
+  name: 'TabLayout',
   components: {
     GlobalLayout,
-    Contextmenu
+    Contextmenu,
   },
   mixins: [mixin, mixinDevice],
   data() {
     return {
       pageList: [],
       linkList: [],
-      activePage: "",
+      activePage: '',
       menuVisible: false,
       menuItemList: [
-        { key: "1", icon: "arrow-left", text: "关闭左侧" },
-        { key: "2", icon: "arrow-right", text: "关闭右侧" },
-        { key: "3", icon: "close", text: "关闭其它" }
-      ]
+        {key: '1', icon: 'arrow-left', text: '关闭左侧'},
+        {key: '2', icon: 'arrow-right', text: '关闭右侧'},
+        {key: '3', icon: 'close', text: '关闭其它'},
+      ],
     };
   },
   computed: {
@@ -94,78 +106,95 @@ export default {
       } else {
         return this.$store.state.app.multipage;
       }
-    }
+    },
   },
   created() {
     //是否存在路径标识,检查pageList中是否含有indexKey
-    let flag = _.find(this.pageList, item => {
+    let flag = _.find(this.pageList, (item) => {
       return item.path == indexKey;
     });
-    if (flag == null || typeof flag == "undefined") {
+    if (flag == null || typeof flag == 'undefined') {
       this.pageList.push({
-        name: "dashboard-analysis",
+        name: 'dashboard-analysis',
         path: indexKey,
         fullPath: indexKey,
         meta: {
-          icon: "dashboard",
-          title: "首页"
-        }
+          icon: 'dashboard',
+          title: '首页',
+        },
       });
       this.linkList.push(indexKey);
     }
-    //是否存在路径标识,检查pageList中是否含有workplaceKey
-    flag = _.find(this.pageList, item => {
+    //是否存在路径标识,检查pageList中是否含有centerKey
+    flag = _.find(this.pageList, (item) => {
       return item.path == centerKey;
     });
-    if (flag == null || typeof flag == "undefined") {
+    if (flag == null || typeof flag == 'undefined') {
       this.pageList.push({
-        name: "account-center",
+        name: 'account-center',
         path: centerKey,
         fullPath: centerKey,
         meta: {
-          icon: "account",
-          title: "个人中心"
-        }
+          icon: 'account',
+          title: '个人中心',
+        },
       });
       this.linkList.push(centerKey);
     }
     //是否存在路径标识,检查pageList中是否含有workplaceKey
-    flag = _.find(this.pageList, item => {
+    flag = _.find(this.pageList, (item) => {
       return item.path == workplaceKey;
     });
-    if (flag == null || typeof flag == "undefined") {
+    if (flag == null || typeof flag == 'undefined') {
       this.pageList.push({
-        name: "dashboard-workplace",
+        name: 'dashboard-workplace',
         path: workplaceKey,
         fullPath: workplaceKey,
         meta: {
-          icon: "dashboard",
-          title: "应用中心"
-        }
+          icon: 'dashboard',
+          title: '应用中心',
+        },
       });
       this.linkList.push(workplaceKey);
     }
     //是否存在路径标识,检查pageList中是否含有blogKey
-    flag = _.find(this.pageList, item => {
+    flag = _.find(this.pageList, (item) => {
       return item.path == blogKey;
     });
-    if (flag == null || typeof flag == "undefined") {
+    if (flag == null || typeof flag == 'undefined') {
       this.pageList.push({
-        name: "blog-center",
+        name: 'blog-center',
         path: blogKey,
         fullPath: blogKey,
         meta: {
-          icon: "blog",
-          title: "博客中心"
-        }
+          icon: 'blog',
+          title: '博客中心',
+        },
       });
       this.linkList.push(blogKey);
+    }
+    //是否存在路径标识,检查pageList中是否含有taskKey
+    flag = _.find(this.pageList, (item) => {
+      return item.path == taskKey;
+    });
+    if (flag == null || typeof flag == 'undefined') {
+      this.pageList.push({
+        name: 'task-center',
+        path: taskKey,
+        fullPath: taskKey,
+        meta: {
+          icon: 'task',
+          title: '任务中心',
+        },
+      });
+      this.linkList.push(taskKey);
     }
     if (
       this.$route.fullPath != indexKey &&
       this.$route.fullPath != workplaceKey &&
       this.$route.fullPath != centerKey &&
-      this.$route.fullPath != blogKey
+      this.$route.fullPath != blogKey &&
+      this.$route.fullPath != taskKey
     ) {
       this.pageList.push(this.$route);
       this.linkList.push(this.$route.fullPath);
@@ -179,11 +208,11 @@ export default {
   },
 
   watch: {
-    $route: function(newRoute) {
+    $route: function (newRoute) {
       //设置Tab栏标题
       if (
-        typeof titleKV[newRoute.params.code] != "undefined" &&
-        titleKV[newRoute.params.code] != "" &&
+        typeof titleKV[newRoute.params.code] != 'undefined' &&
+        titleKV[newRoute.params.code] != '' &&
         titleKV[newRoute.params.code] != null
       ) {
         newRoute.meta.title = titleKV[newRoute.params.code];
@@ -201,11 +230,11 @@ export default {
         this.pageList.splice(
           oldIndex,
           1,
-          Object.assign({}, newRoute, { meta: oldPositionRoute.meta })
+          Object.assign({}, newRoute, {meta: oldPositionRoute.meta})
         );
       }
     },
-    activePage: function(key) {
+    activePage: function (key) {
       //获取激活Index
       var index = this.linkList.lastIndexOf(key);
       //获取激活对象
@@ -214,7 +243,7 @@ export default {
       var obj = Object.assign({}, waitRouter);
       //设置动态路由
       try {
-        if (deNull(titleKV[obj.params.code]) != "") {
+        if (deNull(titleKV[obj.params.code]) != '') {
           this.dynamicRouterShow(key, titleKV[obj.params.code]);
         }
       } catch (error) {
@@ -227,13 +256,13 @@ export default {
         console.log(error);
       }
     },
-    multipage: function(newVal) {
+    multipage: function (newVal) {
       if (!newVal) {
         this.linkList = [this.$route.fullPath];
         this.pageList = [this.$route];
       }
     },
-    $root: () => {}
+    $root: () => {},
   },
   methods: {
     changePage(key) {
@@ -244,28 +273,32 @@ export default {
     },
     remove(key) {
       if (key == indexKey) {
-        this.$message.warning("首页不能关闭!");
+        this.$message.warning('首页不能关闭!');
         return;
       }
       if (key == workplaceKey) {
-        this.$message.warning("应用中心不能关闭!");
+        this.$message.warning('应用中心不能关闭!');
         return;
       }
       if (key == centerKey) {
-        this.$message.warning("个人中心不能关闭!");
+        this.$message.warning('个人中心不能关闭!');
         return;
       }
       if (key == blogKey) {
-        this.$message.warning("博客中心不能关闭!");
+        this.$message.warning('博客中心不能关闭!');
+        return;
+      }
+      if (key == taskKey) {
+        this.$message.warning('任务中心不能关闭!');
         return;
       }
       if (this.pageList.length === 1) {
-        this.$message.warning("这是最后一页，不能再关闭了啦");
+        this.$message.warning('这是最后一页，不能再关闭了啦');
         return;
       }
-      this.pageList = this.pageList.filter(item => item.fullPath !== key);
+      this.pageList = this.pageList.filter((item) => item.fullPath !== key);
       let index = this.linkList.indexOf(key);
-      this.linkList = this.linkList.filter(item => item !== key);
+      this.linkList = this.linkList.filter((item) => item !== key);
       index = index >= this.linkList.length ? this.linkList.length - 1 : index;
       this.activePage = this.linkList[index];
     },
@@ -281,11 +314,11 @@ export default {
       if (depth > 2) {
         return null;
       }
-      let pageKey = target.getAttribute("pagekey");
+      let pageKey = target.getAttribute('pagekey');
       pageKey =
         pageKey ||
         (target.previousElementSibling
-          ? target.previousElementSibling.getAttribute("pagekey")
+          ? target.previousElementSibling.getAttribute('pagekey')
           : null);
       return (
         pageKey ||
@@ -297,13 +330,13 @@ export default {
     onMenuSelect(key, target) {
       let pageKey = this.getPageKey(target);
       switch (key) {
-        case "1":
+        case '1':
           this.closeLeft(pageKey);
           break;
-        case "2":
+        case '2':
           this.closeRight(pageKey);
           break;
-        case "3":
+        case '3':
           this.closeOthers(pageKey);
           break;
         default:
@@ -353,45 +386,53 @@ export default {
       let keyIndex = this.linkList.indexOf(key);
       if (keyIndex >= 0) {
         let currRouter = this.pageList[keyIndex];
-        let meta = Object.assign({}, currRouter.meta, { title: title });
+        let meta = Object.assign({}, currRouter.meta, {title: title});
         this.pageList.splice(
           keyIndex,
           1,
-          Object.assign({}, currRouter, { meta: meta })
+          Object.assign({}, currRouter, {meta: meta})
         );
       }
     },
     closeTabPage(key) {
       if (key == indexKey) {
-        this.$message.warning("首页不能关闭!");
+        this.$message.warning('首页不能关闭!');
         return;
       }
       if (key == workplaceKey) {
-        this.$message.warning("应用中心不能关闭!");
+        this.$message.warning('应用中心不能关闭!');
         return;
       }
       if (key == centerKey) {
-        this.$message.warning("个人中心不能关闭!");
+        this.$message.warning('个人中心不能关闭!');
+        return;
+      }
+      if (key == blogKey) {
+        this.$message.warning('博客中心不能关闭!');
+        return;
+      }
+      if (key == taskKey) {
+        this.$message.warning('任务中心不能关闭!');
         return;
       }
       if (this.$root.$tabs.pageList.length === 1) {
-        this.$message.warning("这是最后一页，不能再关闭了啦");
+        this.$message.warning('这是最后一页，不能再关闭了啦');
         return;
       }
       this.$root.$tabs.pageList = this.$root.$tabs.pageList.filter(
-        item => item.fullPath !== key
+        (item) => item.fullPath !== key
       );
       let index = this.$root.$tabs.linkList.indexOf(key);
       this.$root.$tabs.linkList = this.$root.$tabs.linkList.filter(
-        item => item !== key
+        (item) => item !== key
       );
       index =
         index >= this.$root.$tabs.linkList.length
           ? this.$root.$tabs.linkList.length - 1
           : index;
       this.$root.$tabs.activePage = this.$root.$tabs.linkList[index];
-    }
-  }
+    },
+  },
 };
 </script>
 
