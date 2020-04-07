@@ -1,34 +1,50 @@
-import {setStore, removeStore} from '@/assets/js/storage'
-import {_checkLogin, _currentMember} from "../api/user";
+import {
+    setStore,
+    removeStore
+} from '@/assets/js/storage'
+import {
+    _checkLogin,
+    _currentMember
+} from "@/pearapi/user";
 
 export default {
-    SET_LOGGED({commit}, data) {
+    SET_LOGGED({
+        commit
+    }, data) {
         setStore('tokenList', data.tokenList);
         setStore('userInfo', data.userInfo);
         commit('SET_LOGGED', data);
     },
-    SET_USER({commit}, data) {
+    SET_USER({
+        commit
+    }, data) {
         setStore('userInfo', data);
         commit('SET_USER', data);
     },
-    SET_LOGOUT({commit}) {
+    SET_LOGOUT({
+        commit
+    }) {
         removeStore('tokenList');
         removeStore('userInfo');
         commit('SET_LOGOUT');
     },
-    getUser({commit}) {
+    getUser({
+        commit
+    }) {
         _currentMember().then(res => {
             if (!res.data) {
                 removeStore('tokenList');
                 removeStore('userInfo');
                 commit('SET_LOGOUT');
-            }else{
+            } else {
                 setStore('userInfo', res.data);
                 commit('SET_USER', res.data);
             }
         });
     },
-    checkLogin({commit}) {
+    checkLogin({
+        commit
+    }) {
         _checkLogin().then(res => {
             if (res.data) {
                 const obj = {
@@ -45,29 +61,43 @@ export default {
             }
         });
     },
-    setTheme({commit}, theme) {
+    setTheme({
+        commit
+    }, theme) {
         setStore('theme', theme);
         commit('setTheme', theme);
     },
-    pageLoading({commit}, status) {
+    pageLoading({
+        commit
+    }, status) {
         commit('pageLoading', status);
     },
-    windowLoading({commit}, status) {
+    windowLoading({
+        commit
+    }, status) {
         commit('windowLoading', status);
     },
-    setOrganizationList({commit}, data) {
+    setOrganizationList({
+        commit
+    }, data) {
         setStore('organizationList', data);
         commit('setOrganizationList', data);
     },
-    setCurrentOrganization({commit}, data) {
+    setCurrentOrganization({
+        commit
+    }, data) {
         setStore('currentOrganization', data);
         commit('setCurrentOrganization', data);
     },
-    setSystem({commit}, data) {
+    setSystem({
+        commit
+    }, data) {
         setStore('system', data);
         commit('setSystem', data);
     },
-    setBoundClient({commit}, data) {
+    setBoundClient({
+        commit
+    }, data) {
         commit('setBoundClient', data);
     },
 }

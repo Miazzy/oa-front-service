@@ -226,9 +226,9 @@
 <script>
 import _ from "lodash";
 import moment from "moment";
-import { list as getProjectMember } from "../../api/projectMember";
-import { _getAll as getTaskStage } from "../../api/taskStages";
-import { notice } from "../../assets/js/notice";
+import { list as getProjectMember } from "@/pearapi/projectMember";
+import { _getAll as getTaskStage } from "@/pearapi/taskStages";
+import { notice } from "@/assets/js/notice";
 
 export default {
   name: "taskSearch",

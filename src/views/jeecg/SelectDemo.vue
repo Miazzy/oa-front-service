@@ -301,7 +301,7 @@
 
 <script>
 
-  import JDictSelectTag from '../../components/dict/JDictSelectTag.vue'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import JSelectDepart from '@/components/jeecgbiz/JSelectDepart'
   import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
   import JSelectMultiUser from '@/components/jeecgbiz/JSelectMultiUser'
@@ -314,7 +314,7 @@
   import JGraphicCode from '@/components/jeecg/JGraphicCode'
   import JSlider from '@/components/jeecg/JSlider'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
-  import JTreeDict from "../../components/jeecg/JTreeDict.vue";
+  import JTreeDict from "@/components/jeecg/JTreeDict.vue";
   import JCron from "@/components/jeecg/JCron.vue";
   import JTreeSelect from '@/components/jeecg/JTreeSelect'
   import JSuperQuery from '@/components/jeecg/JSuperQuery'

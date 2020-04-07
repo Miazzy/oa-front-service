@@ -1,11 +1,17 @@
-import {message,} from 'ant-design-vue'
+import {
+    message,
+} from 'ant-design-vue'
 import Axios from "axios"
 import * as utils from './utils'
-import {getStore} from './storage'
-import $store from '../../store/index';
-import $router from '../../router/index';
-import {notice} from './notice';
-import config from "../../config/config";
+import {
+    getStore
+} from './storage'
+import $store from '@/store/index';
+import $router from '@/router/index';
+import {
+    notice
+} from './notice';
+import config from "@/config/config";
 
 let HOME_PAGE = config.HOME_PAGE;
 const currentOrganization = getStore('currentOrganization', true);
@@ -157,11 +163,10 @@ $http.interceptors.response.use(
         response.code = Number(response.code);
         message.destroy();
         switch (response.code) {
-            default:
-                response.msg !== '' && notice({
-                    title: response.msg,
-                }, 'notice', 'error', 5);
-                return Promise.reject(error);
+            default: response.msg !== '' && notice({
+                title: response.msg,
+            }, 'notice', 'error', 5);
+            return Promise.reject(error);
         }
     }
 );

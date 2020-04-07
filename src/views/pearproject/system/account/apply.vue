@@ -22,7 +22,7 @@
 </template>
 <script>
     import {Button, Tree} from 'ant-design-vue';
-    import {getAuthList, apply} from '@/api/auth';
+    import {getAuthList, apply} from '@/pearapi/auth';
     import {createRoute, checkResponse} from '@/assets/js/utils';
     import {getStore} from '@/assets/js/storage';
 

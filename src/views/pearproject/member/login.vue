@@ -138,11 +138,11 @@ import { info } from "@/api/system";
 import config from "@/config/config";
 import { checkResponse, createRoute, timeFix } from "@/assets/js/utils";
 import { getStore } from "@/assets/js/storage";
-import { checkInstall } from "../../api/common/common";
-import { setStore } from "../../assets/js/storage";
-import { _checkLogin } from "../../api/user";
-import { dingTalkLoginByCode, dingTalkOauth } from "../../api/oauth";
-import { notice } from "../../assets/js/notice";
+import { checkInstall } from "@/pearapi/common/common";
+import { setStore } from "@/assets/js/storage";
+import { _checkLogin } from "@/pearapi/user";
+import { dingTalkLoginByCode, dingTalkOauth } from "@/pearapi/oauth";
+import { notice } from "@/assets/js/notice";
 
 export default {
   components: {},

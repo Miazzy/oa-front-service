@@ -32,27 +32,27 @@
 </template>
 
 <script>
-import Result from '../../result/Result'
+import Result from "@/views/result/Result";
 
 export default {
-  name: 'Step3',
+  name: "Step3",
   components: {
     Result
   },
   data() {
     return {
       loading: false
-    }
+    };
   },
   methods: {
     finish() {
-      this.$emit('finish')
+      this.$emit("finish");
     },
     toOrderList() {
-      this.$router.push('/list/query-list')
+      this.$router.push("/list/query-list");
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .information {
@@ -63,7 +63,7 @@ export default {
   }
 }
 .money {
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-weight: 500;
   font-size: 20px;
   line-height: 14px;

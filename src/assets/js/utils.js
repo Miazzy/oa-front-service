@@ -1,6 +1,10 @@
-import {notice} from './notice';
-import config from '../../config/config'
-import {getStore} from "./storage";
+import {
+    notice
+} from './notice';
+import config from '@/config/config'
+import {
+    getStore
+} from "./storage";
 
 const PROD_URL = config.PROD_URL;
 const crossDomain = config.crossDomain;
@@ -41,7 +45,10 @@ export const createRoute = (data) => {
         name: data.id,
         path: path,
         component: resolve => require(['@/views/' + filePath], resolve),
-        meta: {model: data.pid, info: data},
+        meta: {
+            model: data.pid,
+            info: data
+        },
     };
 };
 
@@ -56,8 +63,7 @@ export const getBase64 = (img, callback) => {
  * @param options
  * @param callback
  */
-export const showWarConfirm = (options = {}, callback = function () {
-}) => {
+export const showWarConfirm = (options = {}, callback = function() {}) => {
     Modal.confirm({
         title: options.title || '操作提示',
         content: '<p>' + options.content + '</p>',
@@ -155,8 +161,8 @@ export const prettyTime2Chinese = (time) => {
     var minute = 60 * 1000, //1分钟
         hour = 60 * minute, //1小时
         day = 24 * hour, //1天
-        month = 12 * day,//月
-        year = 12 * month;//年
+        month = 12 * day, //月
+        year = 12 * month; //年
 
     var diff = new Date().getTime() - time;
     var r = 0;
@@ -212,7 +218,9 @@ export function getAuthorization() {
     if (tokenList) {
         let accessToken = tokenList.accessToken;
         let tokenType = tokenList.tokenType;
-        return {Authorization: `${tokenType} ${accessToken}`};
+        return {
+            Authorization: `${tokenType} ${accessToken}`
+        };
     }
     return {};
 }
@@ -236,7 +244,7 @@ export const getPushData = (data) => {
 // }
 export const snail = (arr) => {
     for (var a in obj) {
-        if (typeof (obj[a]) == "object") {
+        if (typeof(obj[a]) == "object") {
             return snail(obj[a], value); //递归遍历
         } else {
             if (a === 'path') {
@@ -313,12 +321,12 @@ export const isTokenExpired = (timeStamp) => {
 //实现一个能遍历多维数组的方法 那么就在原型里面添加方法
 // 原型的一个作用就是留给我们扩展对象的属性和方法的
 //我们为数组添加一个each方法能遍历多维数组 传入一个回掉函数
-Array.prototype.each = function (fn) {
-    try {  //核心业务逻辑
+Array.prototype.each = function(fn) {
+    try { //核心业务逻辑
         this.i || (this.i = 0); //定义一个计数器，如果存在就是原来 如果不存在初始化成0
         //当数组有长度并且传过来的是一个函数的时候我们就对数组执行回调
         if (this.length > 0 && fn.constructor === Function) {
-            while (this.i < this.length) {    //进行遍历
+            while (this.i < this.length) { //进行遍历
                 var e = this[this.i]; //取到当前元素
                 //如果取到的e元素是个数组，那就递归 一直到是一个元素的时候再执行回调
                 if (e && e.constructor === Array) {
@@ -332,7 +340,7 @@ Array.prototype.each = function (fn) {
                 this.i++;
             }
         }
-        this.i = null;    //进行垃圾回收 删除引用标记
+        this.i = null; //进行垃圾回收 删除引用标记
     } catch (ex) {
         console.log(ex);
         //do something

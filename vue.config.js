@@ -1,7 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const productionGzipExtensions = ['js', 'css', 'html', 'svg', 'png', 'less', 'jpg', 'jpeg', 'woff', 'ttf', 'woff2', 'ico'];
+const productionGzipExtensions = [
+    'js',
+    'css',
+    'html',
+    'svg',
+    'png',
+    'less',
+    'jpg',
+    'jpeg',
+    'woff',
+    'ttf',
+    'woff2',
+    'ico',
+];
 //const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 //const createThemeColorReplacerPlugin = require('./config/plugin.config');
@@ -58,6 +71,8 @@ const vueConfig = {
             .set('@comp', resolve('src/components'))
             .set('@views', resolve('src/views'))
             .set('@layout', resolve('src/layout'))
+            .set('@config', resolve('src/config'))
+            .set('@mixins', resolve('src/mixins'))
             .set('@static', resolve('src/static'));
 
         const svgRule = config.module.rule('svg');
