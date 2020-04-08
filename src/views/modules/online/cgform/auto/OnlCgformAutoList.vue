@@ -713,8 +713,6 @@ export default {
         }
         this.table.loading = false;
       } else {
-
-
         manageAPI
           .getAction(`${this.url.getData}${this.code}`, params)
           .then(async res => {
@@ -821,16 +819,17 @@ export default {
       //查询用户信息
       var userInfo = storage.getStore("cur_user");
 
-  
+      //需要判断操作时间的页面
+      var array = [
+        "0b511f234f3847baa50106a14fff6215",
+        "dae6cc0e7a7f4b7e9dc0fc36757fdc96"
+      ];
 
-      if (
-        this.code == "dae6cc0e7a7f4b7e9dc0fc36757fdc96" ||
-        this.code == 
-      ) {
+      if (array.includes(this.code)) {
         param.column = "operate_time";
       }
 
-      if(tools.isNull(param.create_by)){
+      if (tools.isNull(param.create_by)) {
         param.create_by = userInfo.realname;
       }
 
