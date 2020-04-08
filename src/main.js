@@ -15,7 +15,6 @@ import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 import '@/permission'; // permission control
 import '@/utils/filter'; // base filter
 import Print from 'vue-print-nb-jeecg';
-/*import '@babel/polyfill'*/
 import VueApexCharts from 'vue-apexcharts';
 
 import preview from 'vue-photo-preview';

@@ -145,7 +145,7 @@ export default {
         total: 0
       },
       isorter: {
-        column: "createTime",
+        column: "create_time",
         order: "desc"
       },
       loading: false,
@@ -161,7 +161,6 @@ export default {
   },
   methods: {
     searchQuery() {
-      debugger;
       this.loadData(1);
     },
     searchReset() {

@@ -187,11 +187,11 @@
 
 <script>
 //import md5 from "md5"
+import Vue from "vue";
 import api from "@/api";
 import TwoStepCaptcha from "@/components/tools/TwoStepCaptcha";
 import { mapActions } from "vuex";
 import { timeFix, deNull } from "@/utils/util";
-import Vue from "vue";
 import { ACCESS_TOKEN, ENCRYPTED_STRING } from "@/store/mutation-types";
 import JGraphicCode from "@/components/jeecg/JGraphicCode";
 import { putAction } from "@/api/manage";
@@ -339,7 +339,6 @@ export default {
     },
     handleTabClick(key) {
       this.customActiveKey = key;
-      // this.form.resetFields()
     },
     handleSubmit() {
       let that = this;
@@ -473,9 +472,6 @@ export default {
       });
     },
     loginSuccess() {
-      // update-begin- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
-      // this.loginBtn = false
-      // update-end- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
       this.$router.push({ name: "dashboard" });
       this.$notification.success({
         message: "欢迎",
