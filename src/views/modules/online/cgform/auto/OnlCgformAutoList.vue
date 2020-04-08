@@ -512,6 +512,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @function 弹框点击OK事件
+     */
     tipHandleOk(e) {
       this.tipConfirmLoading = true;
       setTimeout(() => {
@@ -520,10 +523,16 @@ export default {
         this.tipConfirmLoading = false;
       }, 300);
     },
+    /**
+     * @function 弹框点击取消事件
+     */
     tipHandleCancel() {
       this.loadData(1);
       this.tipVisible = false;
     },
+    /**
+     * @function 过滤流程状态函数
+     */
     hasBpmStatusFilter() {
       var columnObjs = this.table.columns;
       let columns = [];
@@ -536,6 +545,9 @@ export default {
         this.hasBpmStatus = false;
       }
     },
+    /**
+     * @function 弹框处理函数
+     */
     modalOk() {
       //获取下拉框选择的值
       let value = this.modelWFlowSelection;
@@ -549,6 +561,10 @@ export default {
 
       console.log(` 获取流程权责配置 ${value} , fixedWFlow : ${wflow}`);
     },
+
+    /**
+     * @function deNull函数（去掉空字符串）
+     */
     deStringNull(data) {
       if (typeof data == "undefined" || data == null || data == "") {
         return "";
@@ -556,6 +572,10 @@ export default {
         return data;
       }
     },
+
+    /**
+     * @function 初始化查询信息
+     */
     initQueryInfo() {
       manageAPI.getAction(`${this.url.getQueryInfo}${this.code}`).then(res => {
         console.log("--onlineList-获取查询条件配置", res);
@@ -566,6 +586,10 @@ export default {
         }
       });
     },
+
+    /**
+     * @function 初始化表单函数
+     */
     initAutoList() {
       if (!this.$route.params.code) {
         return false;
@@ -606,6 +630,9 @@ export default {
       });
     },
 
+    /**
+     * @function 获取流程日志函数
+     */
     async processLog(business_data_id, record) {
       //this对象设置别名
       let that = this;
@@ -648,6 +675,9 @@ export default {
       return htmlInfo;
     },
 
+    /**
+     * @function 加载数据函数
+     */
     async loadData(arg) {
       var that = this;
       if (arg == 1) {
@@ -735,7 +765,6 @@ export default {
                     "leader" in item &&
                     that.code == "079c6dd6140c4b269e9bf8601deef901"
                   ) {
-                    debugger;
                     var members = tools.deNull(item["members"]).split(",");
 
                     var flag =
@@ -812,6 +841,9 @@ export default {
       }
     },
 
+    /**
+     * @function 获取查询条件函数
+     */
     getQueryParams() {
       //获取查询条件
       let param = Object.assign({}, this.queryParam, this.isorter);
@@ -839,20 +871,32 @@ export default {
       return tools.filterObj(param);
     },
 
+    /**
+     * @function 处理列表选择改变事件
+     */
     handleChangeInTableSelect(selectedRowKeys, selectionRows) {
       this.table.selectedRowKeys = selectedRowKeys;
       this.table.selectionRows = selectionRows;
     },
 
+    /**
+     * @function 处理列表页面变化事件
+     */
     handleTableChange(pagination, filters, sorter) {
       this.pagination = pagination;
     },
 
+    /**
+     * @function 处理新增记录事件
+     */
     handleAdd() {
       this.cgButtonJsHandler("beforeAdd");
       this.$refs.modal.add(this.formTemplate);
     },
 
+    /**
+     * @function 处理导入数据事件
+     */
     handleImportXls() {
       this.$refs.importModal.show();
     },
