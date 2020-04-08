@@ -63,7 +63,9 @@ const titleKV = {
   "878dd1f28f0b4dfdaa74534eec902c0c": "年度汇报",
   "02c2e82c486542df992c3860ad6cd25a": "名册管理",
   "237fa97d3c974bdbb36090d0dd2f3a39": "工资管理",
-  "079c6dd6140c4b269e9bf8601deef901": "团队管理"
+  "079c6dd6140c4b269e9bf8601deef901": "团队管理",
+  "89237955a75f4d8c8cb15d30592628fd": "季度汇报",
+  "5480de4b82db4b40be8af021caeb6d30": "汇报管理"
 };
 
 //

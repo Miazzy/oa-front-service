@@ -1085,21 +1085,8 @@
                   slot="title"
                   class="card-title"
                   style="width:90%;height:90%;"
-                  @click="handleYearFeedback()"
+                  @click="handleBaseFeedback()"
                 >
-                  <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/flag.png" />
-                  </div>
-                  <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">年报</a>
-                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写年度工作汇报</div>
-                  </div>
-                </div>
-              </a-card-meta>
-            </a-card-grid>
-            <a-card-grid style="width:25%;textAlign:'center'">
-              <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/huibao.png" />
                   </div>
@@ -1112,7 +1099,48 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleQuarterFeedback()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/report_quarter.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">季度汇报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写季度工作汇报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleYearFeedback()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/flag.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">年度汇报</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">填写年度工作汇报</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleAnnounce()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/announce.png" />
                   </div>
@@ -1731,6 +1759,18 @@ export default {
       });
     },
     /**
+     * @function 跳转到汇报管理填写列表中
+     */
+    handleBaseFeedback() {
+      var path = "/online/cgformList/5480de4b82db4b40be8af021caeb6d30";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "汇报管理" }
+      });
+    },
+    /**
      * @function 跳转到周报填写列表中
      */
     handleWeekFeedback() {
@@ -1807,6 +1847,18 @@ export default {
      */
     handleYearFeedback() {
       var path = "/online/cgformList/878dd1f28f0b4dfdaa74534eec902c0c";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "年度汇报" }
+      });
+    },
+    /**
+     * @function 跳转到季度汇报填写列表中
+     */
+    handleQuarterFeedback() {
+      var path = "/online/cgformList/89237955a75f4d8c8cb15d30592628fd";
       //跳转到相应页面
       this.$router.push({
         path: path,
