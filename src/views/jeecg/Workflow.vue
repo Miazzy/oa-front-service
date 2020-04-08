@@ -1165,6 +1165,9 @@ export default {
     //查询用户数据，将数据缓存到浏览器缓存
     await manageAPI.queryUserName();
 
+    //获取用户信息
+    this.userInfo = storage.getStore("cur_user");
+
     //设置员工岗位信息/部门信息
     try {
       this.v_user = await manageAPI.queryUserInfoByView(this.userInfo.username);
@@ -1364,21 +1367,36 @@ export default {
       var node = await manageAPI.queryWorkflowNode(this.curRow.id);
 
       //如果本表单没有获取当历史自由流程记录，则从本业务类别中获取曾经的历史自由流程
+      try {
+        if (
+          typeof node == "undefined" ||
+          node == null ||
+          node == "" ||
+          Object.keys(node).length == 0
+        ) {
+          //获取表单名称
+          var tableName = tools.queryUrlString("table_name");
+          //获取当前用户
+          var userInfo = storage.getStore("cur_user");
+
+          //获取历史自由流程节点
+          node = await manageAPI.queryWorkflowNodeByUser(
+            tableName,
+            userInfo["username"]
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      //如果任然没有流程信息，则直接退出
       if (
         typeof node == "undefined" ||
         node == null ||
         node == "" ||
         Object.keys(node).length == 0
       ) {
-        //获取表单名称
-        var tableName = tools.queryUrlString("table_name");
-        //获取当前用户
-        var userInfo = storage.getStore("cur_user");
-        //获取历史自由流程节点
-        node = await manageAPI.queryWorkflowNodeByUser(
-          tableName,
-          userInfo["username"]
-        );
+        return false;
       }
 
       var startInfo = _.find(userlist, user => {
@@ -1403,9 +1421,13 @@ export default {
         console.log(error);
       }
 
-      //如果当前处理节点为审批节点，则审批节点添加处理中标识
-      if (approveInfo.username == node.operate) {
-        approveInfo.realname = "🏁" + approveInfo.realname + "(处理中)";
+      try {
+        //如果当前处理节点为审批节点，则审批节点添加处理中标识
+        if (approveInfo.username == node.operate) {
+          approveInfo.realname = "🏁" + approveInfo.realname + "(处理中)";
+        }
+      } catch (error) {
+        console.error(error);
       }
 
       try {
@@ -1428,9 +1450,13 @@ export default {
           }
         });
 
-        //如果是逗号开头，则去掉第一个字符
-        if (auditInfo.realname.startsWith("->")) {
-          auditInfo.realname = auditInfo.realname.substring(2);
+        try {
+          //如果是逗号开头，则去掉第一个字符
+          if (auditInfo.realname.startsWith("->")) {
+            auditInfo.realname = auditInfo.realname.substring(2);
+          }
+        } catch (error) {
+          console.error(error);
         }
       } catch (error) {
         console.log(error);
@@ -1697,8 +1723,6 @@ export default {
         : wflowSpecUser;
 
       console.log("会签/加签用户 : " + wflowSpecUser);
-
-      debugger;
 
       //加签会签选中的用户，不能是流程中已经存在的用户
       var readyUser = tools.contain(

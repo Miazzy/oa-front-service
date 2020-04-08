@@ -53,9 +53,12 @@
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in news" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
+                  <a @click="handleBlogView(item)">
+                    <a-avatar size="small" :src="item.avatar" style="margin-left:-15px;" />
+                    <span
+                      class="member"
+                      style="font-size:13px;max-width:160px;width:140px;"
+                    >{{ item.name.slice(0,10) + '...' }}</span>
                   </a>
                 </a-col>
               </a-row>
@@ -303,28 +306,7 @@ export default {
           href: "/blog/center"
         }
       ],
-      news: [
-        {
-          name: "钉钉的日本扩...",
-          avatar: "/images/icon-blog-hot.svg"
-        },
-        {
-          name: "支付宝的日本...",
-          avatar: "/images/icon-blog-hot.svg"
-        },
-        {
-          name: "淘宝的美国征...",
-          avatar: "/images/icon-blog-hot.svg"
-        },
-        {
-          name: "微软的中国征...",
-          avatar: "/images/icon-blog-hot.svg"
-        },
-        {
-          name: "脸书的欧洲征...",
-          avatar: "/images/icon-blog-hot.svg"
-        }
-      ],
+      news: [],
 
       // data
       axis1Opts: {
@@ -402,6 +384,13 @@ export default {
       this.nodelist = await manageAPI.queryDynamic();
     } catch (error) {
       console.log(error);
+    }
+
+    //获取最新博文数据
+    try {
+      this.news = await manageAPI.queryBlogInfoNew(0, 5);
+    } catch (error) {
+      console.error(error);
     }
 
     console.log("动态信息：" + JSON.stringify(this.nodelist));
@@ -639,6 +628,22 @@ export default {
 
       //返回结果
       return result;
+    },
+
+    /**
+     * @function 处理博文预览功能
+     */
+    async handleBlogView(item) {
+      try {
+        //标签
+        var tags = tools.deNull(item.tags);
+        //跳转到博文详情页面
+        this.$router.push(
+          `/blog/view?id=${item.id}&author=${item.create_by}&tags=${tags}`
+        );
+      } catch (error) {
+        console.log("$router go to error :" + error);
+      }
     },
 
     /**

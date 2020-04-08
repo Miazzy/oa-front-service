@@ -810,7 +810,7 @@
                     <a-avatar size="large" src="/images/xiuxian_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">花名册查询</a>
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">名册查询</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">员工花名册信息查看</div>
                   </div>
                 </div>
@@ -828,7 +828,7 @@
                     <a-avatar size="large" src="/images/gift_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">花名册管理</a>
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">名册管理</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">员工花名册信息编辑</div>
                   </div>
                 </div>
