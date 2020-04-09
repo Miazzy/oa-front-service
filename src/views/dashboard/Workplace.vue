@@ -780,7 +780,7 @@
                   @click="handleOperateLogManage()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/operate_logo.png" />
+                    <a-avatar size="large" src="/images/email_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">操作记录</a>
@@ -890,7 +890,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handlePaymentApply()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/pay.png" />
                   </div>
@@ -903,7 +908,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleReserveApply()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/wallet.png" />
                   </div>
@@ -916,7 +926,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handlePurchaseApply()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/bought.png" />
                   </div>
@@ -929,7 +944,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleOfficialSeal()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/seal.png" />
                   </div>
@@ -942,7 +962,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleCostReim()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/finance.png" />
                   </div>
@@ -1106,7 +1131,7 @@
                   @click="handleQuarterFeedback()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/report_quarter.png" />
+                    <a-avatar size="large" src="/images/flag_03.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">季度汇报</a>
@@ -1124,7 +1149,7 @@
                   @click="handleYearFeedback()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/flag.png" />
+                    <a-avatar size="large" src="/images/flag_04.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">年度汇报</a>
@@ -1900,6 +1925,66 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "工资查看" }
+      });
+    },
+    /**
+     * @function 跳转到备用金申请界面中
+     */
+    handleReserveApply() {
+      var path = "/online/cgformList/c990e98e13124c91aabec84ae149e423";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "备用金申请" }
+      });
+    },
+    /**
+     * @function 跳转到采购申请界面中
+     */
+    handlePurchaseApply() {
+      var path = "/online/cgformList/c23f27d4e1b54b48bc88b4c532ab0dea";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "采购申请" }
+      });
+    },
+    /**
+     * @function 跳转到付款申请界面中
+     */
+    handlePaymentApply() {
+      var path = "/online/cgformList/f48cb4862fde439e9a43ca6c9a7102d3";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "付款申请" }
+      });
+    },
+    /**
+     * @function 跳转到用章申请界面中
+     */
+    handleOfficialSeal() {
+      var path = "/online/cgformList/0ed85356f7f04e048bc540b0047c7559";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "用章申请" }
+      });
+    },
+    /**
+     * @function 跳转到费用报销界面中
+     */
+    handleCostReim() {
+      var path = "/online/cgformList/7542962e9a31442eb9e4ddd887891f81";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "费用报销" }
       });
     },
     /**

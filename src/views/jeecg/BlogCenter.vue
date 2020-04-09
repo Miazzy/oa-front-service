@@ -544,7 +544,7 @@ export default {
      * @function 提交博文函数
      */
     async handleSubmitBlog(result = "", id = "") {
-      debugger;
+
       try {
         //获取本篇博文编号信息
         id = tools.queryUrlString("id");
