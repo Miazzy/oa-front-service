@@ -2622,6 +2622,47 @@ export default {
         this.$confirm_
       );
 
+      //获取当前表单表名
+      var curTableName = tools.queryUrlString("table_name");
+
+      //获取当前表单编号
+      var curItemID = tools.queryUrlString("id");
+
+      //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+      let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID);
+
+      if (vflag) {
+        //数据库中已经存在此记录，提示用户无法提交审批
+        this.$confirm_({
+          title: "温馨提示",
+          content: "待审记录中，已经存在此记录，无法再次提交审批！"
+        });
+
+        //刷新页面数据
+        this.loadData();
+
+        //操作完毕，返回结果
+        return true;
+      }
+
+      vflag = storage.getStore(
+        `start_free_process_@table_name#${curTableName}@id#${curItemID}`
+      );
+
+      if (vflag == "true") {
+        //数据库中已经存在此记录，提示用户无法提交审批
+        this.$confirm_({
+          title: "温馨提示",
+          content: "此表单才提交过申请，请稍后再提交申请！"
+        });
+
+        //刷新页面数据
+        this.loadData();
+
+        //操作完毕，返回结果
+        return true;
+      }
+
       //如果校验标识有误，则直接返回
       if (!checkFlag) {
         return checkFlag;
@@ -2762,6 +2803,13 @@ export default {
                   console.log("提交自由流程审批成功！");
                 }
               });
+
+              //记录当前流程已经提交，短时间内无法再次提交
+              storage.setStore(
+                `start_free_process_@table_name#${curTableName}@id#${curItemID}`,
+                "true",
+                60
+              );
 
               //设置为view预览模式
               this.pageType = "view";
