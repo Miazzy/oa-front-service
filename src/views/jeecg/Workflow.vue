@@ -1298,7 +1298,6 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.notifyData = [];
-      debugger;
       _.each(ulist, (item, index) => {
         //查询用户信息
         var user = _.find(userlist, user => {
@@ -1429,12 +1428,12 @@ export default {
         var auditInfo = { realname: "" };
 
         //去除‘undefined’数组对象
-        nlist = nlist.filter(item => {
+        ulist = ulist.filter(item => {
           return item != "undefined";
         });
 
         //去除‘undefined’字符串
-        node.audit = nlist.toString();
+        node.audit = ulist.toString();
 
         _.each(ulist, item => {
           try {
