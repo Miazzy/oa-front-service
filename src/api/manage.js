@@ -52,7 +52,7 @@ export async function httpAction(url, parameter, method) {
 
 //put
 export async function putAction(url, parameter) {
-    debugger;
+
     try {
         return axios({
             url: url,
@@ -274,6 +274,7 @@ export async function queryTableName(callback) {
  * @param {*} businessID
  */
 export async function queryApprovalExist(tableName, businessID) {
+
     //大写转小写
     tableName = tableName.toLowerCase();
     //查询URL GET	/api/tableName/:id/exists	True or false whether a row exists or not  /api/tableName/findOne
@@ -285,7 +286,7 @@ export async function queryApprovalExist(tableName, businessID) {
     try {
         const res = await superagent.get(queryURL).set('accept', 'json');
 
-        vflag = res.body.length > 1 ? true : false;
+        vflag = res.body.length > 0 ? true : false;
 
         return vflag;
     } catch (err) {
@@ -321,7 +322,7 @@ export async function insertTableData(tableName, node) {
 }
 
 export async function postTableData(tableName, node) {
-    debugger;
+
     //大写转小写
     tableName = tableName.toLowerCase();
     //Post数据的URL地址
@@ -369,7 +370,7 @@ export async function deleteTableData(tableName, id) {
  * @param {*} node
  */
 export async function patchTableData(tableName, id, node) {
-    debugger;
+
     //大写转小写
     tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
@@ -1306,7 +1307,7 @@ export async function queryBlogInfoNew(page = 0, size = 10) {
  * 查询我的博文数据
  */
 export async function queryBlogInfoByUser(username, page = 0, size = 50) {
-    debugger;
+
 
     //查询URL
     var queryURL = `${api.restapi}/api/bs_blog?_where=(create_by,eq,${username})&_p=${page}&_size=${size}&_sort=-create_time`;
@@ -2189,7 +2190,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
  * 获取行政公告数据
  */
 export async function queryAnnounceList(page = 0, size = 50) {
-    debugger;
+
     //提交URL
     var queryURL = `${api.restapi}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
@@ -3953,7 +3954,6 @@ export async function queryWageBillByParam(
     size = 50,
     result = ''
 ) {
-    debugger;
 
     //条件SQL
     var whereSQL = '';

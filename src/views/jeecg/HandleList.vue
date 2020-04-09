@@ -928,7 +928,7 @@ export default {
       window.location.href = url;
     },
     handleExportXls() {
-      debugger;
+
 
       //定义查询参数
       let param = this.queryParam;

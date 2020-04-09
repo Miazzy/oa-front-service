@@ -132,7 +132,7 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
-      debugger;
+
       //获取用户信息
       var username = tools.queryUrlString('username');
 

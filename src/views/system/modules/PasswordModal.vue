@@ -110,7 +110,7 @@ export default {
         if (!err) {
           this.confirmLoading = true;
           let formData = Object.assign(this.model, values);
-          debugger;
+
           baseAPI
             .changPassword(formData)
             .then(res => {

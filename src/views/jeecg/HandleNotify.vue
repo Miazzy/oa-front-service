@@ -217,7 +217,7 @@ export default {
      * @function 查询函数
      */
     async searchQuery(type = "all", content = "", starttime, endtime) {
-      debugger;
+
 
       //获取type类型
       type = this.queryParam.type || "all";

@@ -187,7 +187,7 @@ export default {
       deep: true,
       immediate: true,
       handler(val) {
-        debugger;
+
         this.innerValue = cloneObject(val);
         this.selectedRowKeys = [];
         this.valueWatchHandler(val);
@@ -197,7 +197,7 @@ export default {
     dataSource: {
       deep: true,
       handler(val) {
-        debugger;
+
         this.emitOptions(val);
         this.valueWatchHandler(this.innerValue);
       }
@@ -206,7 +206,7 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
-        debugger;
+
         this.selectedTable.dataSource = val.map(key => {
           for (let data of this.dataSource) {
             if (data[this.rowKey] === key) {
@@ -246,12 +246,12 @@ export default {
       if (arg === 1) {
         this.ipagination.current = 1;
       }
-      debugger;
+
       var params = this.getQueryParams(); //查询条件
-      debugger;
+
       //获取用户返回信息
       var result = await manageAPI.queryUserList(params);
-      debugger;
+
 
       //如果获取到返回信息，则设置用户数据
       if (!tools.isNull(result)) {
@@ -267,7 +267,7 @@ export default {
       return tools.filterObj(param);
     },
     valueWatchHandler(val) {
-      debugger;
+
       val.forEach(item => {
         this.dataSource.concat(this.selectedTable.dataSource).forEach(data => {
           if (data[this.valueKey] === item) {
@@ -278,7 +278,7 @@ export default {
     },
 
     queryOptionsByValue(value) {
-      debugger;
+
       if (!value || value.length === 0) {
         return;
       }
@@ -334,7 +334,7 @@ export default {
 
     /** 完成选择 */
     handleOk() {
-      debugger;
+
       let value = this.selectedTable.dataSource.map(
         data => data[this.valueKey]
       );
@@ -344,7 +344,7 @@ export default {
 
     /** 删除已选择的 */
     handleDeleteSelected(record, index) {
-      debugger;
+
       this.selectedRowKeys.splice(
         this.selectedRowKeys.indexOf(record[this.rowKey]),
         1
@@ -356,7 +356,7 @@ export default {
       return {
         on: {
           click: () => {
-            debugger;
+
             let key = record[this.rowKey];
             if (!this.multiple) {
               this.selectedRowKeys = [key];

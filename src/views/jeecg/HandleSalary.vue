@@ -706,7 +706,7 @@ export default {
   },
   methods: {
     async loadData() {
-      debugger;
+
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 
@@ -777,7 +777,7 @@ export default {
      * @function 查询函数
      */
     async searchQuery() {
-      debugger;
+
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
       let username = userInfo["username"];

@@ -1602,9 +1602,7 @@
 
         const nextThen = res => {
           let [passed, message] = res
-          if (passed == null) {
-            // debugger
-          }
+          
           if (passed == null && tooltips[inputId].visible != null) {
             return
           }

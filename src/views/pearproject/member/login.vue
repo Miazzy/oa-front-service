@@ -188,7 +188,7 @@ export default {
   methods: {
     ...mapActions(["Login", "Logout"]),
     checkInstall() {
-      debugger;
+
       checkInstall().then(res => {
         if (!checkResponse(res)) {
           this.$router.push({ name: "install" });
@@ -204,7 +204,7 @@ export default {
     },
     // handler
     handleUsernameOrEmail(rule, value, callback) {
-      debugger;
+
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
       if (regex.test(value)) {
         this.loginType = 0;
@@ -214,12 +214,12 @@ export default {
       callback();
     },
     handleTabClick(key) {
-      debugger;
+
       this.customActiveKey = key;
-      // this.form.resetFields()
+
     },
     handleSubmit() {
-      debugger;
+
 
       const app = this;
       let flag = false;
@@ -228,7 +228,6 @@ export default {
         remember_me: app.formLogin.rememberMe
       };
 
-      debugger;
 
       // 使用账户密码登录
       if (app.customActiveKey === "tab1") {
@@ -275,7 +274,7 @@ export default {
         });
     },
     getCaptcha(e) {
-      debugger;
+
       e.preventDefault();
       const app = this;
 
@@ -321,9 +320,9 @@ export default {
       });
     },
     loginSuccess(res, org) {
-      debugger;
+
       setTimeout(() => {
-        debugger;
+
         const menu = getStore("menu", true);
         if (menu) {
           let routes = this.$router.options.routes;
@@ -422,7 +421,7 @@ export default {
       }
     },
     requestFailed(err) {
-      debugger;
+
       this.$notification["error"]({
         message: "错误",
         description:

@@ -439,7 +439,7 @@ export function randomUUID() {
  * @returns {*}
  */
 export function underLine2CamelCase(string) {
-    return string.replace(/_([a-z])/g, function(all, letter) {
+    return string.replace(/_([a-z])/g, function (all, letter) {
         return letter.toUpperCase();
     });
 }
@@ -523,8 +523,6 @@ export function queryUrl(name) {
  * @param {*} arg 
  */
 export function contain(origin, arg) {
-
-    debugger;
 
     //设置前后缀信息
     origin = `,${origin},`;
@@ -830,10 +828,10 @@ export function pushIfNotExist(array, value, key) {
  * @type {symbol}
  */
 export const succeedSymbol = Symbol()
-    /**
-     * 可用于判断是否失败
-     * @type {symbol}
-     */
+/**
+ * 可用于判断是否失败
+ * @type {symbol}
+ */
 export const failedSymbol = Symbol()
 
 /**

@@ -222,7 +222,7 @@ export default {
   },
   methods: {
     async loadData() {
-      debugger;
+
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 

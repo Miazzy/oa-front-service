@@ -1109,14 +1109,7 @@ export default {
       columns: [],
       data: [],
       loading: false,
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 2 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
+      refreshInterval: [1000, 2000, 3000],
       formName: "流程申请单",
       curRow: {},
       depart: {},
@@ -1305,6 +1298,7 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.notifyData = [];
+      debugger;
       _.each(ulist, (item, index) => {
         //查询用户信息
         var user = _.find(userlist, user => {
@@ -1433,6 +1427,15 @@ export default {
       try {
         var ulist = node.audit.split(",");
         var auditInfo = { realname: "" };
+
+        //去除‘undefined’数组对象
+        nlist = nlist.filter(item => {
+          return item != "undefined";
+        });
+
+        //去除‘undefined’字符串
+        node.audit = nlist.toString();
+
         _.each(ulist, item => {
           try {
             //查询用户信息
@@ -1465,6 +1468,15 @@ export default {
       try {
         var nlist = node.notify.split(",");
         var notifyInfo = { realname: "" };
+
+        //去除‘undefined’数组对象
+        nlist = nlist.filter(item => {
+          return item != "undefined";
+        });
+
+        //去除‘undefined’字符串
+        node.notify = nlist.toString();
+
         _.each(nlist, item => {
           try {
             //查询用户信息
@@ -2639,7 +2651,9 @@ export default {
         });
 
         //刷新页面数据
-        this.loadData();
+        manageAPI.setTimeouts(() => {
+          this.loadData();
+        }, ...this.refreshInterval);
 
         //操作完毕，返回结果
         return true;
@@ -2657,7 +2671,9 @@ export default {
         });
 
         //刷新页面数据
-        this.loadData();
+        manageAPI.setTimeouts(() => {
+          this.loadData();
+        }, ...this.refreshInterval);
 
         //操作完毕，返回结果
         return true;
@@ -2778,7 +2794,9 @@ export default {
               });
 
               //刷新页面数据
-              this.loadData();
+              manageAPI.setTimeouts(() => {
+                this.loadData();
+              }, ...this.refreshInterval);
 
               //操作完毕，返回结果
               return true;
@@ -2815,7 +2833,9 @@ export default {
               this.pageType = "view";
 
               //刷新页面数据
-              this.loadData();
+              manageAPI.setTimeouts(() => {
+                this.loadData();
+              }, ...this.refreshInterval);
 
               //操作完毕，返回结果
               return true;
@@ -2911,7 +2931,9 @@ export default {
             this.pageType = "view";
 
             //刷新页面数据
-            this.loadData();
+            manageAPI.setTimeouts(() => {
+              this.loadData();
+            }, ...this.refreshInterval);
 
             //返回操作结果
             return true;

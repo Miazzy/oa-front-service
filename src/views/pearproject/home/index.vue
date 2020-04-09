@@ -380,7 +380,7 @@ export default {
      * @function 获取项目信息
      */
     getProjectList(loading) {
-      debugger;
+
 
       //加载数据
       if (loading) {

@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      debugger;
+
       let i = 0;
       for (let length = this.qsList.length; i < length; i++) {
         if (this.qsList[i].id == this.$route.params.num) {

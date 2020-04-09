@@ -184,7 +184,7 @@ export default {
       if (arg === 1) {
         this.ipagination.current = 1;
       }
-      debugger;
+
       var params = this.getQueryParams(); //查询条件
 
       //获取用户返回信息

@@ -165,7 +165,7 @@ export default {
   },
   methods: {
     searchQuery() {
-      debugger;
+
       this.loadData(1);
     },
     searchReset() {

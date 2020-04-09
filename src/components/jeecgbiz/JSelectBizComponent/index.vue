@@ -112,7 +112,7 @@ export default {
     value: {
       immediate: true,
       handler(val) {
-        debugger;
+
         if (val) {
           this.selectValue = val.split(",");
         } else {
@@ -123,7 +123,7 @@ export default {
     selectValue: {
       deep: true,
       handler(val) {
-        debugger;
+
         let rows = val.map(key => this.dataSourceMap[key]);
         this.$emit("select", rows);
         let data = val.join(",");
@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     handleOptions(options, dataSourceMap) {
-      debugger;
+
       this.selectOptions = options;
       this.dataSourceMap = dataSourceMap;
     }
