@@ -381,7 +381,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleMireannaApply()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/material.png" />
                   </div>
@@ -394,7 +399,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleOfficialSeal()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/seal.png" />
                   </div>
@@ -1699,6 +1709,18 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "用印申请(合同)" }
+      });
+    },
+    /**
+     * @function 跳转到物品领用界面中
+     */
+    handleMireannaApply() {
+      var path = "/online/cgformList/e7ee0cd851454ed1a17454c31116b012";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "物品领用" }
       });
     },
     /**
