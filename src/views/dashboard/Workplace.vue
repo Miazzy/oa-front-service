@@ -664,6 +664,24 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handlePlanTask()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/phone_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">计划任务</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">安排工作计划，分配任务</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
           </a-card>
 
           <a-card
@@ -1338,6 +1356,23 @@
             </div>
           </a-card>
 
+           <a-card :loading="loading" title="文档" :bordered="false" style="margin-top:20px;">
+            <a-tag
+              color="blue"
+              style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
+            >发布文档</a-tag>
+            <div class="members">
+              <a-row>
+                <a-col :span="12" v-for="(item, index) in docs" :key="index">
+                  <a @click="item.click">
+                    <a-avatar size="small" :src="item.avatar" />
+                    <span class="member">{{ item.name }}</span>
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-card>
+
           <a-card :loading="loading" title="文库" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
@@ -1461,30 +1496,152 @@ export default {
       nodelist: [],
       teams: [],
       yundisk: [
-        { name: "全部", avatar: "/images/icon-all.svg" },
-        { name: "文档", avatar: "/images/icon-doc.svg" },
-        { name: "图片", avatar: "/images/icon-pic.svg" },
-        { name: "视频", avatar: "/images/icon-video.svg" },
-        { name: "音乐", avatar: "/images/icon-music.svg" }
+        { 
+          name: "全部", 
+          avatar: "/images/icon-all.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "文档", 
+          avatar: "/images/icon-doc.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "图片", 
+          avatar: "/images/icon-pic.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "视频", 
+          avatar: "/images/icon-video.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "音乐", 
+          avatar: "/images/icon-music.svg" ,
+          click: () => {}
+        }
       ],
       video: [
-        { name: "活动视频", avatar: "/images/icon-activiti.svg" },
-        { name: "短视频", avatar: "/images/icon-photo.svg" },
-        { name: "纪录片", avatar: "/images/icon-log.svg" },
-        { name: "电影", avatar: "/images/icon-movie.svg" }
+        { 
+          name: "活动视频", 
+          avatar: "/images/icon-activiti.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "短视频", 
+          avatar: "/images/icon-photo.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "纪录片", 
+          avatar: "/images/icon-log.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "电影", 
+          avatar: "/images/icon-movie.svg",
+          click: () => {} 
+        }
       ],
       courses: [
-        { name: "全部课程", avatar: "/images/icon-course-01.svg" },
-        { name: "最新课程", avatar: "/images/icon-course-02.svg" },
-        { name: "热门课程", avatar: "/images/icon-course-hot.svg" },
-        { name: "我的课程", avatar: "/images/icon-course-03.svg" }
+        { 
+          name: "全部课程", 
+          avatar: "/images/icon-course-01.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "最新课程", 
+          avatar: "/images/icon-course-02.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "热门课程", 
+          avatar: "/images/icon-course-hot.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "我的课程", 
+          avatar: "/images/icon-course-03.svg",
+          click: () => {} 
+        }
+      ],
+      docs:[
+        { 
+          name: "文档中心", 
+          avatar: "/images/内容_文档.png" ,
+          click: () => {
+            //跳转到相应页面
+            this.$router.push({
+              path: "/document/center",
+              fullPath: "/document/center",
+              meta: { title: "文档中心" }
+            });
+          }
+        },
+        { 
+          name: "我的文档", 
+          avatar: "/images/个人中心.png" , 
+          click: () => {
+            //跳转到相应页面
+            this.$router.push({
+              path: "/document/mine",
+              fullPath: "/document/mine",
+              meta: { title: "我的文档" }
+            });
+          }
+        },
+        { 
+          name: "热门文档", 
+          avatar: "/images/地球仪.png" ,
+          click: () => {
+            //跳转到相应页面
+            this.$router.push({
+              path: "/document/hot",
+              fullPath: "/document/hot",
+              meta: { title: "热门文档" }
+            });
+          }
+        },
+        { 
+          name: "规章制度", 
+          avatar: "/images/链接.png" ,
+          click: () => {
+            //跳转到相应页面
+            this.$router.push({
+              path: "/document/rule",
+              fullPath: "/document/rule",
+              meta: { title: "规章制度" }
+            });
+          }
+        },
       ],
       dochub: [
-        { name: "专业资料", avatar: "/images/icon-file-01.svg" },
-        { name: "实用文档", avatar: "/images/icon-file-02.svg" },
-        { name: "资格考试", avatar: "/images/icon-file-03.svg" },
-        { name: "精品文档", avatar: "/images/icon-file-04.svg" },
-        { name: "个人中心", avatar: "/images/icon-file-center.svg" }
+        { 
+          name: "专业资料", 
+          avatar: "/images/icon-file-01.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "实用文档", 
+          avatar: "/images/icon-file-02.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "资格考试", 
+          avatar: "/images/icon-file-03.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "精品文档", 
+          avatar: "/images/icon-file-04.svg" ,
+          click: () => {}
+        },
+        { 
+          name: "个人中心", 
+          avatar: "/images/icon-file-center.svg" ,
+          click: () => {}
+        }
       ],
       blog: [
         {
@@ -1899,6 +2056,18 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "月报管理" }
+      });
+    },
+    /**
+     * @function 跳转到计划任务界面中
+     */
+    handlePlanTask() {
+      var path = "/online/cgformList/c98940fae2404cacb6ed4bd0aeffbc6d";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "计划任务" }
       });
     },
     /**

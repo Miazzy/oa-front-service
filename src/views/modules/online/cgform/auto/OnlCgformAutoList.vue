@@ -485,6 +485,11 @@ export default {
   async created() {
     //创建页面后，设置选中数据为空
     this.initAutoList();
+
+    //检查页面code参数
+    this.queryCode();
+
+    //设置页面选中信息
     this.table.selectionRows = [];
     this.table.selectedRowKeys = [];
 
@@ -494,6 +499,11 @@ export default {
   async mounted() {
     //创建页面后，设置选中数据为空
     this.initAutoList();
+
+    //检查页面code参数
+    this.queryCode();
+
+    //设置页面选中信息
     this.table.selectionRows = [];
     this.table.selectedRowKeys = [];
 
@@ -504,6 +514,11 @@ export default {
     async $route() {
       // 刷新参数放到这里去触发，就可以刷新相同界面了
       this.initAutoList();
+
+      //检查页面code参数
+      this.queryCode();
+
+      //设置页面选中信息
       this.table.selectionRows = [];
       this.table.selectedRowKeys = [];
 
@@ -512,6 +527,17 @@ export default {
     }
   },
   methods: {
+    /**
+     * @function 检查页面code参数
+     */
+    queryCode() {
+      try {
+        //获取页面代码
+        this.code = window.location.pathname.split("/")[3];
+      } catch (e) {
+        console.error(e);
+      }
+    },
     /**
      * @function 弹框点击OK事件
      */
@@ -591,11 +617,13 @@ export default {
      * @function 初始化表单函数
      */
     initAutoList() {
+      debugger;
       if (!this.$route.params.code) {
-        return false;
+        this.queryCode();
+      } else if (tools.isNull(this.code)) {
+        this.code = this.$route.params.code;
       }
       this.table.loading = true;
-      this.code = this.$route.params.code;
       manageAPI.getAction(`${this.url.getColumns}${this.code}`).then(res => {
         console.log("--onlineList-加载动态列>>", res);
         if (res.success) {
