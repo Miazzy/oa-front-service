@@ -697,10 +697,46 @@
                   slot="title"
                   class="card-title"
                   style="width:90%;height:90%;"
-                  @click="handleRoleManage()"
+                  @click="handleDepartManage()"
                 >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/sweet_00.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">部门管理</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">部门添加、删除等功能</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRoleSetupManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/icon-role-01.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">角色维护</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">角色添加、删除等功能</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRoleManage()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/icon-role-00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">角色管理</a>
@@ -1672,6 +1708,30 @@ export default {
         path: path,
         fullPath: path,
         meta: { title: "加班申请" }
+      });
+    },
+    /**
+     * @function 跳转到部门管理界面
+     */
+    handleDepartManage() {
+      let path = `/isystem/depart`;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "部门管理" }
+      });
+    },
+    /**
+     * @function 跳转到角色维护界面中
+     */
+    handleRoleSetupManage() {
+      let path = `/isystem/roleUserList`;
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "角色维护" }
       });
     },
     /**
