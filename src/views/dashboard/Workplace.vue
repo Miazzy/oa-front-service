@@ -718,7 +718,7 @@
                   @click="handleRoleSetupManage()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/icon-role-01.png" />
+                    <a-avatar size="large" src="/images/xiuxi_09.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">角色维护</a>
@@ -736,7 +736,7 @@
                   @click="handleRoleManage()"
                 >
                   <div style="float:left;width:30%">
-                    <a-avatar size="large" src="/images/icon-role-00.png" />
+                    <a-avatar size="large" src="/images/xiuxi_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
                     <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">角色管理</a>
