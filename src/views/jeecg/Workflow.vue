@@ -67,7 +67,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof curRow.depart_name != 'undefined' &&
                 curRow.depart_name != null
@@ -79,7 +79,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof curRow.leave_type_name != 'undefined' &&
                 curRow.leave_type_name != null
@@ -91,7 +91,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof curRow.announce_type != 'undefined' &&
                 curRow.announce_type != null
@@ -103,7 +103,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof curRow.title != 'undefined' &&
                 curRow.title != null
@@ -115,7 +115,7 @@
 
           <a-col
             :span="24"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.employee_rank != 'undefined' &&
                 tableInfo.employee_rank != null
@@ -129,7 +129,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.starttime != 'undefined' &&
                 tableInfo.starttime != null
@@ -141,7 +141,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.endtime != 'undefined' &&
                 tableInfo.endtime != null
@@ -153,7 +153,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.total_days != 'undefined' &&
                 tableInfo.total_days != null
@@ -165,7 +165,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.seal_copies != 'undefined' &&
                 tableInfo.seal_copies != null
@@ -177,7 +177,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.declare_type != 'undefined' &&
                 tableInfo.declare_type != null
@@ -187,7 +187,7 @@
             <a-input style="width: 70%" readonly v-model="curRow.declare_type" />
           </a-col>
 
-          <a-col :span="12" style="margin-bottom:10px;">
+          <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
             <span style="margin-left: 0%">{{ tableInfo.bpm_status }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.bpm_status_name" />
           </a-col>
@@ -209,7 +209,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.employee_post != 'undefined' &&
                 tableInfo.employee_post != null &&
@@ -223,7 +223,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.traffic_models != 'undefined' &&
                 tableInfo.traffic_models != null &&
@@ -237,7 +237,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.licence_number != 'undefined' &&
                 tableInfo.licence_number != null &&
@@ -251,7 +251,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.traffic_amount != 'undefined' &&
                 tableInfo.traffic_amount != null &&
@@ -261,6 +261,78 @@
           >
             <span style="margin-left:28px;">{{ tableInfo.traffic_amount.padStart(4, ' ') }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.traffic_amount" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.purchase_type != 'undefined' &&
+                curRow.purchase_type != null
+            "
+          >
+            <span>{{ tableInfo.purchase_type }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.purchase_type" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.purchase_date != 'undefined' &&
+                curRow.purchase_date != null && curRow.purchase_date != '--'
+            "
+          >
+            <span>{{ tableInfo.purchase_date }}:</span>
+            <a-input style="width: 62%" readonly v-model="curRow.purchase_date" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.apply_date != 'undefined' &&
+                curRow.apply_date != null && curRow.apply_date != '--'
+            "
+          >
+            <span>{{ tableInfo.apply_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.apply_date" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.seal_type != 'undefined' &&
+                curRow.seal_type != null
+            "
+          >
+            <span>{{ tableInfo.seal_type }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.seal_type" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.file_name != 'undefined' &&
+                curRow.file_name != null
+            "
+          >
+            <span>{{ tableInfo.file_name }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.file_name" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.file_count != 'undefined' &&
+                curRow.file_count != null
+            "
+          >
+            <span>{{ tableInfo.file_count }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.file_count" />
           </a-col>
 
           <a-col
@@ -320,7 +392,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.drive_type != 'undefined' &&
                 tableInfo.drive_type != null
@@ -332,7 +404,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.predict_mileage != 'undefined' &&
                 tableInfo.predict_mileage != null
@@ -344,7 +416,7 @@
 
           <a-col
             :span="12"
-            style="margin-bottom:10px;"
+            style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof tableInfo.travel_transport != 'undefined' &&
                 tableInfo.travel_transport != null
@@ -352,6 +424,135 @@
           >
             <span>{{ tableInfo.travel_transport }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.travel_transport" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.reserve_money != 'undefined' &&
+                curRow.reserve_money != null
+            "
+          >
+            <span>{{ tableInfo.reserve_money }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.reserve_money" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.reserve_chinese != 'undefined' &&
+                curRow.reserve_chinese != null
+            "
+          >
+            <span>{{ tableInfo.pay_back_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.reserve_chinese" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.pay_back_date != 'undefined' &&
+                curRow.pay_back_date != null && curRow.pay_back_date != '--'
+            "
+          >
+            <span>{{ tableInfo.pay_back_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.pay_back_date" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.money != 'undefined' &&
+                curRow.money != null
+            "
+          >
+            <span>{{ tableInfo.money }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.money" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.pay_type != 'undefined' &&
+                curRow.pay_type != null
+            "
+          >
+            <span>{{ tableInfo.pay_type }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.pay_type" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.pay_date != 'undefined' &&
+                curRow.pay_date != null && curRow.pay_date != '--'
+            "
+          >
+            <span>{{ tableInfo.pay_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.pay_date" />
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top:20px;margin-bottom:10px;"
+            v-if="
+              typeof tableInfo.mireanna_type != 'undefined' &&
+                tableInfo.mireanna_type != null &&
+                typeof curRow.mireanna_type != 'undefined' &&
+                curRow.mireanna_type != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.mireanna_type }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.mireanna_type"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.receive_name != 'undefined' &&
+                curRow.receive_name != null
+            "
+          >
+            <span>{{ tableInfo.receive_name }}:</span>
+            <a-input
+              style="text-align:left;padding-left:2%;width:82%;"
+              readonly
+              v-model="curRow.receive_name"
+            />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.bank_name != 'undefined' &&
+                curRow.bank_name != null
+            "
+          >
+            <span>{{ tableInfo.bank_name }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.bank_name" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.bank_card != 'undefined' &&
+                curRow.bank_card != null
+            "
+          >
+            <span>{{ tableInfo.bank_card }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.bank_card" />
           </a-col>
 
           <a-col
@@ -429,6 +630,75 @@
             <div
               style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
               v-html="curRow.announce_content"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-bottom:10px;margin-top:20px;"
+            v-if="
+              typeof curRow.reserve_content != 'undefined' &&
+                curRow.reserve_content != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.reserve_content }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.reserve_content"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.reim_type != 'undefined' &&
+                curRow.reim_type != null
+            "
+          >
+            <span>{{ tableInfo.reim_type }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.reim_type" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.reim_total != 'undefined' &&
+                curRow.reim_total != null
+            "
+          >
+            <span>{{ tableInfo.reim_total }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.reim_total" />
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.reim_remark != 'undefined' &&
+                curRow.reim_remark != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.reim_remark }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.reim_remark"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.remark != 'undefined' &&
+                curRow.remark != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.remark }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.remark"
             ></div>
           </a-col>
 
@@ -2311,7 +2581,9 @@ export default {
           that.tipVisible = true;
 
           //刷新页面数据
-          this.loadData();
+          manageAPI.setTimeouts(() => {
+            this.loadData();
+          }, ...this.refreshInterval);
 
           //设置为view预览模式
           this.pageType = "view";
@@ -2430,7 +2702,9 @@ export default {
           this.pageType = "view";
 
           //刷新页面数据
-          this.loadData();
+          manageAPI.setTimeouts(() => {
+            this.loadData();
+          }, ...this.refreshInterval);
 
           //返回操作结果
           return result;
@@ -2602,7 +2876,9 @@ export default {
           this.pageType = "view";
 
           //刷新页面数据
-          this.loadData();
+          manageAPI.setTimeouts(() => {
+            this.loadData();
+          }, ...this.refreshInterval);
 
           //返回结果
           return result;
@@ -3011,7 +3287,9 @@ export default {
         );
 
         //刷新页面数据
-        this.loadData();
+        manageAPI.setTimeouts(() => {
+          this.loadData();
+        }, ...this.refreshInterval);
 
         //提示点赞成功
         this.$message.warning("回复成功！");

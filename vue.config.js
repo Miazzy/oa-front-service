@@ -111,12 +111,13 @@ const vueConfig = {
         proxy: {
             '/jeecg-boot': {
                 //请求本地 需要jeecg-boot后台项目
-                target: 'https://www.shengtai.club',
+                target: 'http://127.0.0.1:8082',
                 ws: true,
                 changeOrigin: true,
             },
         },
     },
+
 
     //可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: false,

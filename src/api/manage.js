@@ -501,7 +501,7 @@ export async function queryTableAll(tableName) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            _.each(result, function (item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -573,7 +573,7 @@ export async function queryDynamic() {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            _.each(result, function (item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -614,7 +614,7 @@ export async function queryDynamicByUser(username) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            _.each(result, function (item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -916,7 +916,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
         result.records = res.body;
 
         //遍历并格式化日期
-        _.each(result.records, function(item) {
+        _.each(result.records, function (item) {
             var optime = tools.formatDate(
                 item['operate_time'],
                 'yyyy-MM-dd hh:mm:ss'
@@ -952,7 +952,7 @@ export async function queryProcessLogWait(
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
         result = res.body;
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1200,7 +1200,7 @@ export async function queryProcessLogWaitByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1248,7 +1248,7 @@ export async function queryProcessLogDoneByTime(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1296,7 +1296,7 @@ export async function queryBlogInfoNew(page = 0, size = 10) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1344,7 +1344,7 @@ export async function queryBlogInfoByUser(username, page = 0, size = 50) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1396,7 +1396,7 @@ export async function queryBlogInfo(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1446,7 +1446,7 @@ export async function queryProcessLogDone(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1528,7 +1528,7 @@ export async function queryProcessLogDoneAll(username, realname) {
             );
         } else {
             //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
-            var first = _.max(result, function(item) {
+            var first = _.max(result, function (item) {
                 let time = tools.isNull(item.timestamp) ?
                     tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
                     item.timestamp;
@@ -1776,7 +1776,7 @@ export async function queryProcessLogDoneByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = _.filter(result, function (item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1924,7 +1924,7 @@ export async function deleteTableItem(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        _.each(node, function (item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -1967,7 +1967,7 @@ export async function deleteProcessLog(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        _.each(node, function (item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2010,7 +2010,7 @@ export async function deleteProcessLogInf(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        _.each(node, function (item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2226,7 +2226,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        _.each(result, function (item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2257,7 +2257,7 @@ export async function queryHeadList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        _.each(result, function (item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2288,7 +2288,7 @@ export async function queryNewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        _.each(result, function (item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2318,7 +2318,7 @@ export async function queryNoticeList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        _.each(result, function (item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2348,7 +2348,7 @@ export async function queryViewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        _.each(result, function (item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2434,7 +2434,7 @@ export async function queryNotifyAll(
     }
 
     //遍历并筛选数据
-    result = _.filter(result, function(item) {
+    result = _.filter(result, function (item) {
         //设置数据
         var flag = true;
 
@@ -2457,7 +2457,7 @@ export async function queryNotifyAll(
     });
 
     //遍历数据并排序
-    result = _.sortBy(result, function(item) {
+    result = _.sortBy(result, function (item) {
         return item['timestamp'] * -1.0;
     });
 
@@ -2667,6 +2667,53 @@ export function queryFormName(tableName) {
         BS_ISSUE: '问题反馈表',
         BS_TRAFFIC_ALLOWANCE: '车辆补贴申请表',
         BS_TRANSACTION: '流程事务处理表',
+        BS_REIM: '费用报销申请表',
+        BS_PURCHASE: '采购申请表',
+        BS_OFFICIAL_SEAL: '用章申请表',
+        BS_RESERVE: '备用金申请表',
+        BS_PURCHASE_ITEM: '采购申请明细表',
+        BS_MIREANNA: '物品领用表',
+        BS_MIREANNA_ITEM: '物品领用明细表',
+        BS_PLAN_TASK: '计划任务表',
+        BS_PLAN_TASK_ITEM: '计划任务明细表',
+        BS_DOCUMENT: '文档表',
+        BS_DOCUMENT_ITEM: '文档明细表',
+        BS_PAYMENT: '付款申请表',
+        BS_REIM_ITEM: '费用报销明细表',
+        BS_REPORT_JOB_LOGGING: '工作汇报表',
+        BS_QUARTER_JOB_LOGGING: '季报工作记录表',
+        PEAR_TEAM: '团队表',
+        BS_QUESTIONS_RS: '问卷结果表',
+        BS_QUESTIONS: '问卷表',
+        BS_USER_INFO: '用户名册',
+        BS_BLOGGER: '博主表',
+        BS_REGISTOR: '花名册表',
+        BS_SALARY: '工资表',
+        BS_BLOG: '博文表',
+        BS_COMMENTS: '评论表',
+        BS_TASK_ASSIGN: '任务分配表',
+        BS_DYNAMIC: '动态信息表',
+        BS_TEAM: '团队表',
+        BS_ABILITY_QUOTA: '综合素质指标表',
+        BS_YEAR_JOB_LOGGING: '年报工作记录表',
+        BS_MONTH_JOB_LOGGING: '月报工作记录表',
+        BS_WEEK_JOB_LOGGING: '周报工作记录表',
+        BS_FAVOR_INFO: '业务收藏表',
+        BS_FREE_PROCESS: '自由流程配置表',
+        PR_LOG_INFORMED: '流程审批知会表',
+        PR_LOG_HISTORY: '流程审批日志历史表',
+        BS_APPROVE_NODE: '流程权责审批节点表',
+        BS_TASK_LOGGING: '任务管理表',
+        BS_PROJECT_LOGGING: '项目管理表',
+        BS_PRODUCT_LOGGING: '产品管理表',
+        BS_BUG_LOGGING: 'BUG管理表',
+        BS_JOB_LOGGING: '日报工作记录表',
+        BS_REQUIREMENT: '需求管理表',
+        BS_ATTENDANCE_DETAILS: '考勤异常明细表',
+        PR_RIGHTS: '流程权限表',
+        PR_TEMPLATE: '流程模板表',
+        BS_APPROVE: '审批业务处理表',
+        PR_LOG: '流程审批日志表'
     };
 
     return config[tableName];
@@ -2689,6 +2736,61 @@ export function queryFormTypeName(tableName) {
         BS_SEAL_CONTRACT: '用印',
         BS_SEAL_DECLARE: '印章',
         BS_TRAVEL: '出差',
+        BS_MARKET_INFO: '公告',
+        BS_NOTICE: '公告',
+        BS_NEWS: '新闻',
+        BS_ANNOUNCE: '公告',
+        BS_REDHEAD: '红头',
+        BS_ISSUE: '反馈',
+        BS_TRAFFIC_ALLOWANCE: '车补',
+        BS_TRANSACTION: '流程',
+        BS_REIM: '报销',
+        BS_PURCHASE: '采购',
+        BS_OFFICIAL_SEAL: '用章',
+        BS_RESERVE: '备用金',
+        BS_PURCHASE_ITEM: '采购',
+        BS_MIREANNA: '领用',
+        BS_MIREANNA_ITEM: '领用',
+        BS_PLAN_TASK: '计划',
+        BS_PLAN_TASK_ITEM: '计划',
+        BS_DOCUMENT: '文档',
+        BS_DOCUMENT_ITEM: '文档',
+        BS_PAYMENT: '付款',
+        BS_REIM_ITEM: '报销',
+        BS_REPORT_JOB_LOGGING: '汇报',
+        BS_QUARTER_JOB_LOGGING: '季度汇报',
+        PEAR_TEAM: '团队',
+        BS_QUESTIONS_RS: '问卷结果',
+        BS_QUESTIONS: '问卷',
+        BS_USER_INFO: '名册',
+        BS_BLOGGER: '博主',
+        BS_REGISTOR: '名册',
+        BS_SALARY: '工资',
+        BS_BLOG: '博文',
+        BS_COMMENTS: '评论',
+        BS_TASK_ASSIGN: '任务',
+        BS_DYNAMIC: '动态',
+        BS_TEAM: '团队',
+        BS_ABILITY_QUOTA: '指标',
+        BS_YEAR_JOB_LOGGING: '年度汇报',
+        BS_MONTH_JOB_LOGGING: '月度汇报',
+        BS_WEEK_JOB_LOGGING: '周报',
+        BS_FAVOR_INFO: '业务收藏',
+        BS_FREE_PROCESS: '自由流程',
+        PR_LOG_INFORMED: '流程',
+        PR_LOG_HISTORY: '流程',
+        BS_APPROVE_NODE: '流程',
+        BS_TASK_LOGGING: '任务',
+        BS_PROJECT_LOGGING: '项目',
+        BS_PRODUCT_LOGGING: '产品',
+        BS_BUG_LOGGING: 'BUG',
+        BS_JOB_LOGGING: '日报',
+        BS_REQUIREMENT: '需求',
+        BS_ATTENDANCE_DETAILS: '考勤异常',
+        PR_RIGHTS: '流程',
+        PR_TEMPLATE: '流程模板',
+        BS_APPROVE: '审批',
+        PR_LOG: '流程'
     };
 
     return config[tableName];
@@ -2733,6 +2835,61 @@ export function queryFormMainTable(tableName) {
         BS_SEAL_CONTRACT: false,
         BS_SEAL_DECLARE: false,
         BS_TRAVEL: false,
+        BS_REIM: true,
+        BS_MARKET_INFO: false,
+        BS_NOTICE: false,
+        BS_NEWS: false,
+        BS_ANNOUNCE: false,
+        BS_REDHEAD: false,
+        BS_ISSUE: false,
+        BS_TRAFFIC_ALLOWANCE: false,
+        BS_TRANSACTION: false,
+        BS_PURCHASE: true,
+        BS_OFFICIAL_SEAL: false,
+        BS_RESERVE: false,
+        BS_PURCHASE_ITEM: false,
+        BS_MIREANNA: true,
+        BS_MIREANNA_ITEM: false,
+        BS_PLAN_TASK: true,
+        BS_PLAN_TASK_ITEM: false,
+        BS_DOCUMENT: true,
+        BS_DOCUMENT_ITEM: false,
+        BS_PAYMENT: false,
+        BS_REIM_ITEM: false,
+        BS_REPORT_JOB_LOGGING: false,
+        BS_QUARTER_JOB_LOGGING: false,
+        PEAR_TEAM: false,
+        BS_QUESTIONS_RS: false,
+        BS_QUESTIONS: true,
+        BS_USER_INFO: false,
+        BS_BLOGGER: false,
+        BS_REGISTOR: false,
+        BS_SALARY: false,
+        BS_BLOG: false,
+        BS_COMMENTS: false,
+        BS_TASK_ASSIGN: false,
+        BS_DYNAMIC: false,
+        BS_TEAM: false,
+        BS_ABILITY_QUOTA: false,
+        BS_YEAR_JOB_LOGGING: false,
+        BS_MONTH_JOB_LOGGING: false,
+        BS_WEEK_JOB_LOGGING: false,
+        BS_FAVOR_INFO: false,
+        BS_FREE_PROCESS: false,
+        PR_LOG_INFORMED: false,
+        PR_LOG_HISTORY: false,
+        BS_APPROVE_NODE: false,
+        BS_TASK_LOGGING: false,
+        BS_PROJECT_LOGGING: false,
+        BS_PRODUCT_LOGGING: false,
+        BS_BUG_LOGGING: false,
+        BS_JOB_LOGGING: false,
+        BS_REQUIREMENT: false,
+        BS_ATTENDANCE_DETAILS: false,
+        PR_RIGHTS: false,
+        PR_TEMPLATE: false,
+        BS_APPROVE: false,
+        PR_LOG: false
     };
 
     return config[tableName];
@@ -2812,9 +2969,7 @@ export function queryFormMTSubColumns(tableName) {
     tableName = tableName.toUpperCase();
     //配置说明
     var config = {
-        BS_LEAVE: [],
-        BS_EGRESS: [],
-        BS_OVERTIME: [],
+
         BS_ATTENDANCE: [{
                 title: '序号',
                 dataIndex: 'no',
@@ -2840,11 +2995,81 @@ export function queryFormMTSubColumns(tableName) {
                 align: 'left',
             },
         ],
-        BS_RECORD_BORROW: [],
-        BS_SEAL_NORMAL: [],
-        BS_SEAL_CONTRACT: [],
-        BS_SEAL_DECLARE: [],
-        BS_TRAVEL: [],
+        BS_REIM: [{
+                title: "序号",
+                dataIndex: "no",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: '内容',
+                dataIndex: 'content',
+                width: '50%',
+                align: 'center',
+            },
+            {
+                title: '日期',
+                dataIndex: 'date',
+                width: '20%',
+                align: 'center',
+            },
+            {
+                title: '金额',
+                dataIndex: 'money',
+                width: '20%',
+                align: 'center',
+            },
+        ],
+        BS_PURCHASE: [{
+                title: "序号",
+                dataIndex: "no",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "名称",
+                dataIndex: "name",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "规格",
+                dataIndex: "eritelmat",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "数量",
+                dataIndex: "amount",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "金额",
+                dataIndex: "money",
+                width: '10%',
+                align: 'center',
+            },
+        ],
+        BS_MIREANNA: [{
+                title: "序号",
+                dataIndex: "no",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "名称",
+                dataIndex: "name",
+                width: '30%',
+                align: 'center',
+            },
+            {
+                title: "金额",
+                dataIndex: "amount",
+                width: '30%',
+                align: 'center',
+            },
+        ],
     };
 
     return config[tableName];
@@ -2867,11 +3092,17 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
         BS_SEAL_CONTRACT: [],
         BS_SEAL_DECLARE: [],
         BS_TRAVEL: [],
+        BS_REIM: [],
+        BS_PURCHASE: [],
+        BS_MIREANNA: [],
+        BS_PLAN_TASK: [],
+        BS_DOCUMENT: []
     };
+
+    var data = [];
     //查询考勤异常表的子表信息
     if (tableName == 'BS_ATTENDANCE') {
         try {
-            var data = [];
             //查询考勤异常子表单数据
             try {
                 data = await queryTableDataByField(
@@ -2884,7 +3115,7 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
             }
             //遍历考勤异常子表单数据并设置序号
             try {
-                data.forEach(function(item, index) {
+                data.forEach(function (item, index) {
                     item.no = index + 1;
                 });
             } catch (error) {
@@ -2894,6 +3125,34 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
             config['BS_ATTENDANCE'] = data;
         } catch (error) {
             console.log('查询考勤异常表的子表信息异常：' + error);
+        }
+    }
+    //查询主表的子表信息
+    if (['BS_REIM', 'BS_PURCHASE', 'BS_MIREANNA', 'BS_PLAN_TASK', 'BS_DOCUMENT'].includes(tableName)) {
+        try {
+            //查询子表单数据
+            try {
+                data = await queryTableDataByField(
+                    tableName + '_ITEM',
+                    foreignKey,
+                    id
+                );
+            } catch (error) {
+                console.log('查询子表单数据异常：' + error);
+            }
+            //遍历子表单数据并设置序号
+            try {
+                data.forEach(function (item, index) {
+                    item.no = index + 1;
+                    item.date = tools.formatDate(item.date, 'yyyy-MM-dd');
+                });
+            } catch (error) {
+                console.log('子表单设置序号异常：' + error);
+            }
+            //设置子表单数据
+            config[tableName] = data;
+        } catch (error) {
+            console.log('查询子表信息异常：' + error);
         }
     }
     //返回考勤异常表的子表信息
@@ -3299,7 +3558,7 @@ export async function watchFormLeave(that) {
             that.$confirm_({
                 title: '提示',
                 content: message,
-                onOk: function() {
+                onOk: function () {
                     //关闭当前Tab页面
                     that.$root.$tabs.closeTab(path);
                 },
@@ -3373,13 +3632,31 @@ export async function watchFormLeave(that) {
             that.curRow.endtime,
             'yyyy-MM-dd hh:mm:ss'
         );
+    } catch (error) {
+        console.log('watch form leave error :' + error);
+    }
+
+    try {
         //查询申请创建日期
         that.curRow.create_time = tools.formatDate(
             that.curRow.create_time,
-            'yyyy-MM-dd hh:mm:ss'
+            'yyyy-MM-dd'
         );
+
+        //查询采购交付日期
+        that.curRow.purchase_date = tools.formatDate(that.curRow.purchase_date, 'yyyy-MM-dd');
+
+        //设置申请日期
+        that.curRow.apply_date = tools.formatDate(that.curRow.apply_date, 'yyyy-MM-dd');
+
+        //设置归还日期
+        that.curRow.pay_back_date = tools.formatDate(that.curRow.pay_back_date, 'yyyy-MM-dd');
+
+        //设置支付日期
+        that.curRow.pay_date = tools.formatDate(that.curRow.pay_date, 'yyyy-MM-dd');
+
     } catch (error) {
-        console.log('watch form leave error :' + error);
+        console.error(error);
     }
 
     try {
@@ -3576,7 +3853,7 @@ export async function queryFileViewURL(text) {
         }
 
         //获取第一个office文档
-        url = _.find(fileList, function(text) {
+        url = _.find(fileList, function (text) {
             //获取小写字符串
             text = tools.deNull(text).toLowerCase();
             return (
@@ -3727,7 +4004,7 @@ export function queryImageURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = _.filter(fileList, function (text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -3817,7 +4094,7 @@ export function queryVideoURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = _.filter(fileList, function (text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -3864,7 +4141,7 @@ export async function queryBloggerInfo(username, result) {
         console.log(res);
 
         //查找作者的原创博文数量
-        result = _.find(res.body, function(item) {
+        result = _.find(res.body, function (item) {
             return item.create_by == username && item.page_type == 'Y';
         });
 
@@ -4277,7 +4554,7 @@ export async function queryOfficeURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = _.filter(fileList, function (text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
             //定义下载地址
