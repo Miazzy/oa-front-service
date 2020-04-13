@@ -2235,8 +2235,7 @@ export default {
 
               if (vflag == 0) {
                 //数据库中已经存在此记录，提示用户无法提交审批
-                that.tipContent =
-                  "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
+                that.tipContent = `处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`;
               } else {
                 //执行事务处理
                 let operationData = {

@@ -1572,15 +1572,14 @@ export default {
           }
 
           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-          let vflag = await manageAPI.queryApprovalExist(
+          let vflag = await manageAPI.queryApprovalLength(
             tableName,
             curRow["business_data_id"]
           );
 
-          if (vflag) {
+          if (vflag == 0) {
             //数据库中已经存在此记录，提示用户无法提交审批
-            that.tipContent =
-              "处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！";
+            that.tipContent = `处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`;
           } else {
             //根据流程业务模块，获取流程审批节点，如果含有加签，弹出弹框，选择一个加选审批人，如果没有，则直接下一步
 
