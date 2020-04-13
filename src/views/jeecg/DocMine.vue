@@ -10,55 +10,13 @@
     <div>
       <a-row :gutter="24">
         <a-col style="padding: 0 12px" :xl="4" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card :loading="loading" title="博客管理" :bordered="false" style="margin-top:0px;">
+          <a-card :loading="loading" title="文档管理" :bordered="false" style="margin-top:0px;">
             <div class="members">
               <a-row>
                 <a-col :span="24" v-for="(item, index) in manage" :key="index">
                   <a :href="item.href">
                     <a-avatar size="small" :src="item.avatar" />
                     <span class="member" @click="item.click">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-card>
-
-          <a-card :loading="loading" title="统计管理" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in count" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-card>
-
-          <a-card :loading="loading" title="博客" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in blog" :key="index">
-                  <a :href="item.href">
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{ item.name }}</span>
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-card>
-
-          <a-card :loading="loading" title="最新博文" :bordered="false" style="margin-top:20px;">
-            <div class="members">
-              <a-row>
-                <a-col :span="24" v-for="(item, index) in news" :key="index">
-                  <a @click="handleBlogView(item)">
-                    <a-avatar size="small" :src="item.avatar" style="margin-left:-15px;" />
-                    <span
-                      class="member"
-                      style="font-size:13px;max-width:160px;width:140px;"
-                    >{{ item.name.slice(0,10) + '...' }}</span>
                   </a>
                 </a-col>
               </a-row>
@@ -81,7 +39,7 @@ import Vue from "vue";
 
 import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
-import { ArticlePage } from "./page";
+import { ArticlePage } from "./documentmine";
 
 import PageLayout from "@/components/page/PageLayout";
 import HeadInfo from "@/components/tools/HeadInfo";
@@ -94,7 +52,7 @@ import "mavon-editor/dist/css/index.css";
 Vue.use(mavonEditor);
 
 export default {
-  name: "BlogManage",
+  name: "DocMineManage",
   components: {
     PageLayout,
     ArticlePage,
@@ -131,80 +89,43 @@ export default {
         mdContent: "",
         cid: ""
       },
-      count: [
-        {
-          name: "博文统计",
-          avatar: "/images/icon-statistics-03.svg"
-        },
-        {
-          name: "热搜词条",
-          avatar: "/images/icon-blog-hot.svg"
-        }
-      ],
       manage: [
-        {
-          name: "发布博客",
-          avatar: "/images/icon-publish-01.svg",
-          click: async () => {
+         {
+          name: "文档中心",
+          avatar: "/images/内容_文档.png",
+          click: async ()=>{
             //跳转到博客中心
-            this.$router.push(`/blog/center`);
-          }
+            this.$router.push(`/document/center`);
+          },
         },
         {
-          name: "文章管理",
-          avatar: "/images/icon-manage-02.svg",
+          name: "我的文档",
+          avatar: "/images/个人中心.png",
           click: async () => {
             //跳转到博客中心 -> 文章列表
-            this.$router.push(`/blog/centerlist`);
+            this.$router.push(`/document/mine`);
           }
         },
         {
-          name: "评论管理",
-          avatar: "/images/icon-comment-03.svg",
-          click: async () => {}
+          name: "创建文档",
+          avatar: "/images/导航.png",
+          click: async () => {
+            //跳转到博客中心
+            this.$router.push(`/document/publish`);
+          }
         },
         {
-          name: "专栏管理",
-          avatar: "/images/icon-column-01.svg",
-          click: async () => {}
-        }
-      ],
-      blog: [
-        {
-          name: "热门博客",
-          avatar: "/images/icon-blog-hot.svg",
+          name: "热门文档",
+          avatar: "/images/等级.png",
           href: "/blog/hot"
         },
         {
-          name: "知名博主",
-          avatar: "/images/icon-blog-01.svg",
-          href: "/blog/writer"
-        },
-        {
-          name: "博文排行",
+          name: "文档排行",
           avatar: "/images/icon-rank-01.svg",
           href: "/blog/rank"
         },
-        {
-          name: "博客中心",
-          avatar: "/images/icon-center-01.svg",
-          href: "/blog/center"
-        }
       ],
-      news: [],
 
-      // data
-      axis1Opts: {
-        dataKey: "item",
-        line: null,
-        tickLine: null,
-        grid: {
-          lineStyle: {
-            lineDash: null
-          },
-          hideFirstLine: false
-        }
-      },
       axis2Opts: {
         dataKey: "score",
         line: null,

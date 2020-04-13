@@ -295,6 +295,32 @@ export async function queryApprovalExist(tableName, businessID) {
 }
 
 /**
+ * 检测审批是否存在 存在 false  不存在 true
+ * @param {*} tableName
+ * @param {*} businessID
+ */
+export async function queryApprovalLength(tableName, businessID) {
+
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //查询URL GET	/api/tableName/:id/exists	True or false whether a row exists or not  /api/tableName/findOne
+    var queryURL = `${api.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+
+    //查询标识
+    var vflag = false;
+
+    try {
+        const res = await superagent.get(queryURL).set('accept', 'json');
+
+        vflag = res.body.length;
+
+        return vflag;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * 添加数据
  * @param {*} tableName
  * @param {*} id

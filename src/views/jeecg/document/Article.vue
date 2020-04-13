@@ -12,12 +12,6 @@
           <a style="color:#303030;top:180px;">
             <icon-text type="message" :text="item.messages" />
           </a>
-          <a style="color:#303030;top:180px;" @click="handleBlogEdit(item)">
-            <icon-text type="profile" text="编辑"></icon-text>
-          </a>
-          <a style="color:#303030;top:180px;" @click="handleBlogDelete(item)">
-            <icon-text type="delete" text="删除"></icon-text>
-          </a>
       </template>
 
       <div style="position: relative; left:0px; top:-25px;margin-top: 0px;width: 138px;height: 157px;background-size: cover;background-position: center;background-repeat: no-repeat;box-sizing: border-box;transition: all .5s;-moz-transition: all .5s;-webkit-transition: all .5s;-o-transition: all .5s;float: left;background-image:url(//img4.sycdn.imooc.com/5e16e9730001c32802940333.jpg);">
