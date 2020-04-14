@@ -3253,6 +3253,29 @@ export default {
 
       }
 
+      //如果是计划任务完成表，则必须坚持完成状态的填写，完成情况的填写，完成日期的填写
+      if(curTableName == 'bs_plan_task_mission'){
+
+        //未填写完成状态，提示用户无法提交审批
+        if(this.curRow.status != '已完成'){
+          this.$confirm_({
+            title: "温馨提示",
+            content: `计划任务完成情况表，必须在完成状态为’已完成‘时，才可以提交审批！`
+          });
+          return false;
+        }
+
+        //未填写完成情况说明，提示用户无法提交审批
+        if(tools.isNull(this.curRow.remark)){
+          this.$confirm_({
+            title: "温馨提示",
+            content: `计划任务完成情况表，未填写’完成情况‘说明，无法提交审批！`
+          });
+          return false;
+        }
+
+      }
+
       //如果校验标识有误，则直接返回
       if (!checkFlag) {
         return checkFlag;
@@ -3318,7 +3341,7 @@ export default {
               approve_user: userInfo["username"],
               action: "发起",
               action_opinion: "发起自由流程",
-              content: this.curRow["content"] || this.curRow["title"],
+              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(freeWFNode)
@@ -3345,7 +3368,7 @@ export default {
               process_station: "自由流程审批",
               process_audit: "000000000",
               proponents: userInfo["username"],
-              content: this.curRow["content"] || this.curRow["title"],
+              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(node)
@@ -3485,7 +3508,7 @@ export default {
               operate_time: ctime,
               create_time: ctime,
               proponents: userInfo["username"],
-              content: this.curRow["content"] || this.curRow["title"],
+              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
               business_data: JSON.stringify(this.curRow)
             };
 
