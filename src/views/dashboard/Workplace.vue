@@ -664,7 +664,17 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
-            <a-card-grid style="width:25%;textAlign:'center'">
+           
+          </a-card>
+
+           <a-card
+            :loading="loading"
+            title="计划任务管理"
+            :bordered="false"
+            style="margin-bottom: 24px;"
+            :body-style="{padding: 0}"
+          >
+           <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
                 <div
                   slot="title"
@@ -676,8 +686,26 @@
                     <a-avatar size="large" src="/images/phone_00.png" />
                   </div>
                   <div style="float:left;width:65%;">
-                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">计划任务</a>
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的计划</a>
                     <div style="margin-left:10px;font-size:12px;font-weight:300;">安排工作计划，分配任务</div>
+                  </div>
+                </div>
+              </a-card-meta>
+            </a-card-grid>
+            <a-card-grid style="width:25%;textAlign:'center'">
+              <a-card-meta>
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handlePlanTaskItem()"
+                >
+                  <div style="float:left;width:30%">
+                    <a-avatar size="large" src="/images/phone_01.png" />
+                  </div>
+                  <div style="float:left;width:65%;">
+                    <a style="margin-left:10px;margin-top:-10px;color:black;font-size:14px;">我的任务</a>
+                    <div style="margin-left:10px;font-size:12px;font-weight:300;">查看工作计划，完成任务</div>
                   </div>
                 </div>
               </a-card-meta>
@@ -2067,7 +2095,19 @@ export default {
       this.$router.push({
         path: path,
         fullPath: path,
-        meta: { title: "计划任务" }
+        meta: { title: "我的计划" }
+      });
+    },
+    /**
+     * @function 跳转到
+     */
+    handlePlanTaskItem(){
+      var path = "/online/cgformList/a10f38d1c64343f39560061e4124ba44";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "我的任务" }
       });
     },
     /**

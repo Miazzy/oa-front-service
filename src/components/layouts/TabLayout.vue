@@ -72,7 +72,9 @@ const titleKV = {
   "0ed85356f7f04e048bc540b0047c7559": "用章申请",
   c990e98e13124c91aabec84ae149e423: "备用金申请",
   e7ee0cd851454ed1a17454c31116b012: "物品领用",
-  dae6cc0e7a7f4b7e9dc0fc36757fdc96: "审批历史"
+  dae6cc0e7a7f4b7e9dc0fc36757fdc96: "审批历史",
+  c98940fae2404cacb6ed4bd0aeffbc6d: '我的计划',
+  a10f38d1c64343f39560061e4124ba44: '我的任务'
 };
 
 //

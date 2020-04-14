@@ -501,7 +501,7 @@ export async function queryTableAll(tableName) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function (item) {
+            _.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -573,7 +573,7 @@ export async function queryDynamic() {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function (item) {
+            _.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -614,7 +614,7 @@ export async function queryDynamicByUser(username) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function (item) {
+            _.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -916,7 +916,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
         result.records = res.body;
 
         //遍历并格式化日期
-        _.each(result.records, function (item) {
+        _.each(result.records, function(item) {
             var optime = tools.formatDate(
                 item['operate_time'],
                 'yyyy-MM-dd hh:mm:ss'
@@ -952,7 +952,7 @@ export async function queryProcessLogWait(
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
         result = res.body;
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1200,7 +1200,7 @@ export async function queryProcessLogWaitByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1248,7 +1248,7 @@ export async function queryProcessLogDoneByTime(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1296,7 +1296,7 @@ export async function queryBlogInfoNew(page = 0, size = 10) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1344,7 +1344,7 @@ export async function queryBlogInfoByUser(username, page = 0, size = 50) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1396,7 +1396,7 @@ export async function queryBlogInfo(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1446,7 +1446,7 @@ export async function queryProcessLogDone(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1528,7 +1528,7 @@ export async function queryProcessLogDoneAll(username, realname) {
             );
         } else {
             //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
-            var first = _.max(result, function (item) {
+            var first = _.max(result, function(item) {
                 let time = tools.isNull(item.timestamp) ?
                     tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
                     item.timestamp;
@@ -1776,7 +1776,7 @@ export async function queryProcessLogDoneByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function (item) {
+        result = _.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1924,7 +1924,7 @@ export async function deleteTableItem(tableName, node) {
     }
 
     try {
-        _.each(node, function (item) {
+        _.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -1967,7 +1967,7 @@ export async function deleteProcessLog(tableName, node) {
     }
 
     try {
-        _.each(node, function (item) {
+        _.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2010,7 +2010,7 @@ export async function deleteProcessLogInf(tableName, node) {
     }
 
     try {
-        _.each(node, function (item) {
+        _.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2226,7 +2226,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function (item) {
+        _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2257,7 +2257,7 @@ export async function queryHeadList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function (item) {
+        _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2288,7 +2288,7 @@ export async function queryNewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function (item) {
+        _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2318,7 +2318,7 @@ export async function queryNoticeList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function (item) {
+        _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2348,7 +2348,7 @@ export async function queryViewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function (item) {
+        _.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2434,7 +2434,7 @@ export async function queryNotifyAll(
     }
 
     //遍历并筛选数据
-    result = _.filter(result, function (item) {
+    result = _.filter(result, function(item) {
         //设置数据
         var flag = true;
 
@@ -2457,7 +2457,7 @@ export async function queryNotifyAll(
     });
 
     //遍历数据并排序
-    result = _.sortBy(result, function (item) {
+    result = _.sortBy(result, function(item) {
         return item['timestamp'] * -1.0;
     });
 
@@ -2676,6 +2676,7 @@ export function queryFormName(tableName) {
         BS_MIREANNA_ITEM: '物品领用明细表',
         BS_PLAN_TASK: '计划任务表',
         BS_PLAN_TASK_ITEM: '计划任务明细表',
+        BS_PLAN_TASK_MISSION: '计划任务完成表',
         BS_DOCUMENT: '文档表',
         BS_DOCUMENT_ITEM: '文档明细表',
         BS_PAYMENT: '付款申请表',
@@ -2813,6 +2814,7 @@ export function queryFormTypeValue(tableName) {
         BS_SEAL_CONTRACT: '合同',
         BS_SEAL_DECLARE: '印章',
         BS_TRAVEL: '出差',
+        BS_PLAN_TASK: '计划',
     };
 
     return config[tableName];
@@ -2912,6 +2914,7 @@ export function queryFormMTStarttimeName(tableName) {
         BS_SEAL_CONTRACT: '开始',
         BS_SEAL_DECLARE: '开始',
         BS_TRAVEL: '开始',
+        BS_PLAN_TASK: '开始',
     };
 
     return config[tableName];
@@ -2934,6 +2937,7 @@ export function queryFormMTEndtimeName(tableName) {
         BS_SEAL_CONTRACT: '结束',
         BS_SEAL_DECLARE: '结束',
         BS_TRAVEL: '结束',
+        BS_PLAN_TASK: '结束',
     };
 
     return config[tableName];
@@ -2969,7 +2973,6 @@ export function queryFormMTSubColumns(tableName) {
     tableName = tableName.toUpperCase();
     //配置说明
     var config = {
-
         BS_ATTENDANCE: [{
                 title: '序号',
                 dataIndex: 'no',
@@ -3070,6 +3073,62 @@ export function queryFormMTSubColumns(tableName) {
                 align: 'center',
             },
         ],
+        BS_PLAN_TASK: [
+            {
+                title: "任务编号",
+                dataIndex: "pid",
+                width: '8%',
+                align: 'center',
+            },
+            {
+                title: "任务标题",
+                dataIndex: "task_title",
+                width: '25%',
+                align: 'center',
+            },
+            {
+                title: "开始时间",
+                dataIndex: "start_time",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "结束时间",
+                dataIndex: "end_time",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "实际开始",
+                dataIndex: "real_start_time",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "实际结束",
+                dataIndex: "real_end_time",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "分配对象",
+                dataIndex: "create_by",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "执行人员",
+                dataIndex: "task_exector",
+                width: '10%',
+                align: 'center',
+            },
+            {
+                title: "完成状态",
+                dataIndex: "status",
+                width: '10%',
+                align: 'center',
+            },
+        ],
     };
 
     return config[tableName];
@@ -3081,6 +3140,7 @@ export function queryFormMTSubColumns(tableName) {
 export async function queryFormMTSubData(tableName, foreignKey, id) {
     //大写转小写
     tableName = tableName.toUpperCase();
+
     //配置说明
     var config = {
         BS_LEAVE: [],
@@ -3099,41 +3159,37 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
         BS_DOCUMENT: []
     };
 
-    var data = [];
-    //查询考勤异常表的子表信息
-    if (tableName == 'BS_ATTENDANCE') {
-        try {
-            //查询考勤异常子表单数据
-            try {
-                data = await queryTableDataByField(
-                    tableName + '_DETAILS',
-                    foreignKey,
-                    id
-                );
-            } catch (error) {
-                console.log('查询考勤异常子表单数据异常：' + error);
-            }
-            //遍历考勤异常子表单数据并设置序号
-            try {
-                data.forEach(function (item, index) {
-                    item.no = index + 1;
-                });
-            } catch (error) {
-                console.log('考勤异常子表单，设置序号异常：' + error);
-            }
-            //设置考勤异常子表单数据
-            config['BS_ATTENDANCE'] = data;
-        } catch (error) {
-            console.log('查询考勤异常表的子表信息异常：' + error);
-        }
+    //表单配置
+    var tableConfig = {
+        'BS_ATTENDANCE': 'BS_ATTENDANCE_DETAILS' ,
+        'BS_REIM' : 'BS_REIM_ITEM' , 
+        'BS_PURCHASE' : 'BS_PURCHASE_ITEM' , 
+        'BS_MIREANNA' : 'BS_MIREANNA_ITEM' , 
+        'BS_PLAN_TASK' : 'BS_PLAN_TASK_ITEM' , 
+        'BS_DOCUMENT' : 'BS_DOCUMENT_ITEM'
     }
+
+    //设置返回数据
+    var data = [];
+
+    //定义执行标识
+    var cflag = false;
+
+    //检查是否存在表单
+    try {
+        cflag = ['BS_ATTENDANCE','BS_REIM', 'BS_PURCHASE', 'BS_MIREANNA', 'BS_PLAN_TASK', 'BS_DOCUMENT'].includes(tableName);
+    } catch (error) {
+        console.error(error);
+    }
+
     //查询主表的子表信息
-    if (['BS_REIM', 'BS_PURCHASE', 'BS_MIREANNA', 'BS_PLAN_TASK', 'BS_DOCUMENT'].includes(tableName)) {
+    if (cflag) {
         try {
+            debugger;
             //查询子表单数据
             try {
                 data = await queryTableDataByField(
-                    tableName + '_ITEM',
+                    tableConfig[tableName],
                     foreignKey,
                     id
                 );
@@ -3142,9 +3198,47 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
             }
             //遍历子表单数据并设置序号
             try {
-                data.forEach(function (item, index) {
-                    item.no = index + 1;
-                    item.date = tools.formatDate(item.date, 'yyyy-MM-dd');
+                data.forEach(function(item, index) {
+                    try {
+                        item.no = index + 1;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.date = tools.formatDate(item.date, 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.start_time = tools.formatDate(item.start_time, 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.end_time = tools.formatDate(item.end_time, 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.real_start_time = tools.formatDate(item.real_start_time, 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.real_end_time = tools.formatDate(item.real_end_time, 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.work_date = tools.formatDate(item.work_date , 'yyyy-MM-dd');
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    try {
+                        item.status = /^[0-9]*$/.test(item.status) ?  queryBpmStatus(item.status) : item.status;
+                    } catch (error) {
+                        console.error(error);
+                    }
                 });
             } catch (error) {
                 console.log('子表单设置序号异常：' + error);
@@ -3558,7 +3652,7 @@ export async function watchFormLeave(that) {
             that.$confirm_({
                 title: '提示',
                 content: message,
-                onOk: function () {
+                onOk: function() {
                     //关闭当前Tab页面
                     that.$root.$tabs.closeTab(path);
                 },
@@ -3654,6 +3748,24 @@ export async function watchFormLeave(that) {
 
         //设置支付日期
         that.curRow.pay_date = tools.formatDate(that.curRow.pay_date, 'yyyy-MM-dd');
+
+        //设置开始日期
+        that.curRow.start_time = tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
+
+        //设置结束日期
+        that.curRow.end_time = tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
+
+         //设置开始日期
+        that.curRow.real_start_time = tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
+
+        //设置结束日期
+        that.curRow.real_end_time = tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
+
+        //设置工作日期
+        that.curRow.work_date = tools.formatDate(that.curRow.work_date, 'yyyy-MM-dd');
+
+        //设置汇报日期
+        that.curRow.report_date = tools.formatDate(that.curRow.report_date, 'yyyy-MM-dd');
 
     } catch (error) {
         console.error(error);
@@ -3853,7 +3965,7 @@ export async function queryFileViewURL(text) {
         }
 
         //获取第一个office文档
-        url = _.find(fileList, function (text) {
+        url = _.find(fileList, function(text) {
             //获取小写字符串
             text = tools.deNull(text).toLowerCase();
             return (
@@ -4004,7 +4116,7 @@ export function queryImageURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function (text) {
+        fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -4094,7 +4206,7 @@ export function queryVideoURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function (text) {
+        fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -4141,7 +4253,7 @@ export async function queryBloggerInfo(username, result) {
         console.log(res);
 
         //查找作者的原创博文数量
-        result = _.find(res.body, function (item) {
+        result = _.find(res.body, function(item) {
             return item.create_by == username && item.page_type == 'Y';
         });
 
@@ -4554,7 +4666,7 @@ export async function queryOfficeURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function (text) {
+        fileList = _.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
             //定义下载地址
@@ -5199,7 +5311,52 @@ export async function patchEnameCname(origin) {
             return ename == item.username;
         });
 
-        chinese = `${chinese},${user.realname}`;
+        //如果找到用户信息，则设置用户信息
+        if(!tools.isNull(user)){
+            chinese = `${chinese},${user.realname}`;
+        }
+    }
+
+    //去掉字符串开头的逗号
+    if (chinese.startsWith(',')) {
+        chinese = chinese.substring(1);
+    }
+
+    //去掉字符串结尾的逗号
+    if (chinese.endsWith(',')) {
+        chinese = chinese.substring(0, chinese.length - 1);
+    }
+
+    //返回中文名称列表
+    return chinese;
+}
+
+/**
+ * @function 将英文名转化为中文名
+ */
+export async function patchCnameEname(origin) {
+    //中文名称
+    var chinese = '';
+
+    //原始英文名称列表
+    var originlist = tools.deNull(origin).split(',');
+
+    //查询用户信息
+    var userlist = await queryUserName();
+
+    //遍历用户获取中文名称列表
+    for (var ename of originlist) {
+
+        //获取流程发起人的中文信息
+        var user = _.find(userlist, item => {
+            return ename == item.realname;
+        });
+
+        //如果找到用户信息，则设置用户信息
+        if(!tools.isNull(user)){
+            chinese = `${chinese},${user.username}`;
+        }
+
     }
 
     //去掉字符串开头的逗号

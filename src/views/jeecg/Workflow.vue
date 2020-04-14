@@ -42,6 +42,34 @@
 
           <a-col
             :span="24"
+            style="margin-top: 10px;margin-bottom:10px;"
+            v-if="
+              typeof curRow.task_title != 'undefined' && curRow.task_title != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.task_title }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.task_title"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 10px;margin-bottom:10px;"
+            v-if="
+              typeof curRow.plan_title != 'undefined' && curRow.plan_title != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.plan_title }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.plan_title"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
             style="margin-top: 10px; margin-bottom:10px;"
             v-if="
               typeof curRow.sigillum_name != 'undefined' &&
@@ -75,6 +103,80 @@
           >
             <span>{{ tableInfo.depart_name }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.depart_name" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.pid != 'undefined' &&
+                curRow.pid != null
+            "
+          >
+            <span>{{ tableInfo.pid }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.pid" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.task_exector != 'undefined' &&
+                curRow.task_exector != null
+            "
+          >
+            <span>{{ tableInfo.task_exector }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.task_exector" />
+          </a-col>
+
+          
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.employee != 'undefined' &&
+                curRow.employee != null
+            "
+          >
+            <span>{{ tableInfo.employee }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.employee" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.work_date != 'undefined' &&
+                curRow.work_date != null && curRow.work_date != '--'
+            "
+          >
+            <span>{{ tableInfo.work_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.work_date" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.report_date != 'undefined' &&
+                curRow.report_date != null && curRow.report_date != '--'
+            "
+          >
+            <span>{{ tableInfo.report_date }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.report_date" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.report_leader != 'undefined' &&
+                curRow.report_leader != null
+            "
+          >
+            <span>{{ tableInfo.report_leader }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.report_leader" />
           </a-col>
 
           <a-col
@@ -185,6 +287,18 @@
           >
             <span>{{ tableInfo.declare_type }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.declare_type" />
+          </a-col>
+
+           <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof tableInfo.status != 'undefined' &&
+                tableInfo.status != null
+            "
+          >
+            <span>{{ tableInfo.status }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.status" />
           </a-col>
 
           <a-col :span="12" style="margin-top: 10px; margin-bottom:10px;">
@@ -333,6 +447,54 @@
           >
             <span>{{ tableInfo.file_count }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.file_count" />
+          </a-col>
+
+           <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.start_time != 'undefined' &&
+                curRow.start_time != null && curRow.start_time != '--'
+            "
+          >
+            <span>{{ tableInfo.start_time }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.start_time" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.end_time != 'undefined' &&
+                curRow.end_time != null && curRow.end_time != '--'
+            "
+          >
+            <span>{{ tableInfo.end_time }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.end_time" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.real_start_time != 'undefined' &&
+                curRow.real_start_time != null && curRow.real_start_time != '--'
+            "
+          >
+            <span>{{ tableInfo.real_start_time }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.real_start_time" />
+          </a-col>
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.real_end_time != 'undefined' &&
+                curRow.real_end_time != null && curRow.real_end_time != '--'
+            "
+          >
+            <span>{{ tableInfo.real_end_time }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.real_end_time" />
           </a-col>
 
           <a-col
@@ -498,6 +660,20 @@
             <a-input style="width: 70%" readonly v-model="curRow.pay_date" />
           </a-col>
 
+         
+
+          <a-col
+            :span="12"
+            style="margin-top: 10px; margin-bottom:10px;"
+            v-if="
+              typeof curRow.join_users != 'undefined' &&
+                curRow.join_users != null && curRow.join_users != '--'
+            "
+          >
+            <span>{{ tableInfo.join_users }}:</span>
+            <a-input style="width: 70%" readonly v-model="curRow.join_users" />
+          </a-col>
+
           <a-col
             :span="24"
             style="margin-top:20px;margin-bottom:10px;"
@@ -635,6 +811,21 @@
 
           <a-col
             :span="24"
+            style="margin-bottom:10px;margin-top:10px;"
+            v-if="
+              typeof curRow.plan_content != 'undefined' &&
+                curRow.plan_content != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.plan_content }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.plan_content"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
             style="margin-bottom:10px;margin-top:20px;"
             v-if="
               typeof curRow.reserve_content != 'undefined' &&
@@ -689,7 +880,21 @@
 
           <a-col
             :span="24"
-            style="margin-top: 10px; margin-bottom:10px;"
+            style="margin-top: 20px;margin-bottom:10px;"
+            v-if="
+              typeof curRow.task_content != 'undefined' && curRow.task_content != null
+            "
+          >
+            <span style="float:left;display:block;">{{ tableInfo.task_content }}:</span>
+            <div
+              style="float:left; width:88%; display:block; border-bottom: 1px solid #cecece;padding-left:20px;"
+              v-html="curRow.task_content"
+            ></div>
+          </a-col>
+
+          <a-col
+            :span="24"
+            style="margin-top: 20px; margin-bottom:10px;"
             v-if="
               typeof curRow.remark != 'undefined' &&
                 curRow.remark != null
@@ -2430,6 +2635,9 @@ export default {
                 curAuditor
               );
 
+              //如果是计划任务，则需要生成分配任务数据，并写入数据库中
+              await this.handleTaskItem();
+
               //当前已经是最后一个审批节点，流程已经处理完毕
               that.tipContent = "同意审批成功，审批流程处理完毕！";
 
@@ -2593,7 +2801,44 @@ export default {
         }
       });
     },
+    /**
+     * @function 生成任务记录数据
+     */
+    async handleTaskItem(result = ''){
 
+      //打印表单名称
+      var tableName = tools.queryUrlString("table_name");
+
+      //获取当前时间戳
+      var timestamp = new Date().getTime();
+
+      //如果是计划任务表，则生成任务数据
+      if(tableName == 'bs_plan_task'){
+
+        //遍历数据，执行持久化操作
+        for(var item of this.data){
+          //删除字段
+          delete item.no;
+          delete item.real_start_time;
+          delete item.real_end_time;
+          delete item.date;
+          delete item.work_date;
+          //设置创建日期
+          item.create_time = tools.formatDate(timestamp , 'yyyy-MM-dd');
+          //设置所属部门
+          item.depart_name = this.curRow.depart_name;
+          //设置任务状态
+          item.status = '待提交';
+          //生成数据，并持久化
+          result = await manageAPI.postTableData('bs_plan_task_mission' , item);
+        }
+
+      }
+
+      //返回执行结果
+      return result;
+
+    },
     /**
      * @function 驳回审批
      */
@@ -2951,6 +3196,61 @@ export default {
 
         //操作完毕，返回结果
         return true;
+      }
+
+      //如果是计划任务表，则检查任务分配人员是否存在，如果不存在，则提示错误
+      if(curTableName == 'bs_plan_task'){
+        
+        var realname = '';
+
+        //遍历任务数组，找出分配对象是否存在
+        for ( let item of this.data){
+
+          let username = await manageAPI.patchCnameEname(item.create_by);
+
+          if(tools.isNull(username)){
+            realname = item.create_by;
+            break;
+          }
+
+        }
+
+        if(!tools.isNull(realname)){
+          //数据库中已经存在此记录，提示用户无法提交审批
+          this.$confirm_({
+            title: "温馨提示",
+            content: `计划任务中，分配责任人: ${realname} 不存在系统中，请修改后在提交审批！`
+          });
+          return false;
+        }
+
+        realname = '';
+
+        //遍历任务数组，找出执行人员是否存在
+        for ( let item of this.data){
+
+          if(tools.isNull(item.task_exector)){
+            continue;
+          }
+
+          let username = await manageAPI.patchCnameEname(item.task_exector);
+
+          if(tools.isNull(username)){
+            realname = item.task_exector;
+            break;
+          }
+
+        }
+
+        if(!tools.isNull(realname)){
+          //数据库中已经存在此记录，提示用户无法提交审批
+          this.$confirm_({
+            title: "温馨提示",
+            content: `计划任务中，执行人员: ${realname} 不存在系统中，请修改后在提交审批！`
+          });
+          return false;
+        }
+
       }
 
       //如果校验标识有误，则直接返回
