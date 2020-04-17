@@ -1,6 +1,6 @@
 //import Vue from 'vue'
 import store from '@/store'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import Index from '@/views/index'
 import Home from './home';
 import {
@@ -23,7 +23,7 @@ if (currentOrganization) {
 }
 
 try {
-    Vue.use(Router);
+    Vue.use(VueRouter);
 } catch (error) {
     console.log(error);
 }
@@ -31,9 +31,7 @@ try {
 const routes = [].concat(
     Home
 );
-// const router = new Router({
-//     routes: routers
-// });
+
 const menu = getStore('menu', true);
 if (menu && menu != 'undefined') {
     menu.forEach(function(v) {
@@ -50,7 +48,7 @@ if (menu && menu != 'undefined') {
         }
     });
 }
-const router = new Router({
+const router = new VueRouter({
     routes: [{
             path: '/',
             name: 'index',

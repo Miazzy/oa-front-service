@@ -168,13 +168,13 @@ export default {
         onOk: async () => {
           this.Logout({})
             .then(() => {
-              this.$message_.info("注销登陆成功！");
+              this.$message.info("注销登陆成功！");
               setTimeout(() => {
                 window.location.href = "/";
               }, 300);
             })
             .catch(err => {
-              this.$message_.err("注销登陆异常！");
+              this.$message.error("注销登陆异常！");
               console.log(err);
             });
         }
