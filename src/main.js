@@ -1,6 +1,6 @@
 //import Vue from 'vue';
 import App from './App.vue';
-import storage from 'vue-ls';
+import Storage from 'vue-ls';
 import router from './router';
 import store from './store/';
 
@@ -88,7 +88,7 @@ try {
 
 try {
     //Vue注册组件
-    Vue.use(storage, config.storageOptions);
+    Vue.use(Storage, config.storageOptions);
 } catch (error) {
     console.log(error);
 }
