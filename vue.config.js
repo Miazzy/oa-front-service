@@ -41,6 +41,7 @@ const assetsCDN = {
         'vue-apexcharts': 'VueApexCharts',
         'element-ui': 'Element',
         'nprogress': 'NProgress',
+        'ant-design-vue': 'antd'
     },
     css: [],
     js: [],

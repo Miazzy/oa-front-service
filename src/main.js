@@ -8,7 +8,7 @@ import {
     VueAxios
 } from '@/utils/request';
 
-import antd from 'ant-design-vue';
+//import antd from 'ant-design-vue';
 //import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 
 import Viser from 'viser-vue';
@@ -18,8 +18,8 @@ import '@/utils/filter'; // base filter
 import Print from 'vue-print-nb-jeecg';
 //import VueApexCharts from 'vue-apexcharts';
 
-import preview from 'vue-photo-preview';
-import 'vue-photo-preview/dist/skin.css';
+//import preview from 'vue-photo-preview';
+//import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
