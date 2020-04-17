@@ -35,7 +35,7 @@ const assetsCDN = {
         'jquery': '$',
         'underscore': '_',
         'superagent': 'superagent',
-        'vue-ls': 'storage',
+        //'vue-ls': 'storage',
         'qs': 'qs',
         'moment': 'moment',
         'vue-apexcharts': 'VueApexCharts',
