@@ -28,10 +28,10 @@ const isProd = process.env.NODE_ENV === 'production';
 const assetsCDN = {
     // webpack build externals
     externals: {
-        vue: 'Vue',
+        'vue': 'Vue',
         'vue-router': 'VueRouter',
-        vuex: 'Vuex',
-        axios: 'axios',
+        'vuex': 'Vuex',
+        'axios': 'axios',
         'jquery': '$',
         'underscore': '_',
         'superagent': 'superagent',
@@ -41,9 +41,7 @@ const assetsCDN = {
         'dayjs': 'dayjs',
         'vue-apexcharts': 'VueApexCharts',
         'element-ui': 'Element',
-        //'ant-design-vue': 'antd',
         'nprogress': 'NProgress',
-        'view-design': 'ViewUI',
     },
     css: [],
     js: [],
