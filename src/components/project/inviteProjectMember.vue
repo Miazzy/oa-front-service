@@ -71,7 +71,7 @@
 
 <script>
 import _ from "lodash";
-import moment from "moment";
+//import moment from "moment";
 import {
   inviteMember,
   searchInviteMember,

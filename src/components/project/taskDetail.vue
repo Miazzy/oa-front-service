@@ -1129,7 +1129,7 @@
 
 <script>
 import { mapState } from "vuex";
-import moment from "moment";
+//import moment from "moment";
 import editor from "@/components/ptools/editor";
 //import * as $ from "jquery";
 import {

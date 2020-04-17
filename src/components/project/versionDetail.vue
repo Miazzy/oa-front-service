@@ -554,7 +554,7 @@
 
 <script>
 import { mapState } from "vuex";
-import moment from "moment";
+//import moment from "moment";
 import taskDetail from "@/components/project/taskDetail";
 //import * as $ from 'jquery';
 import {

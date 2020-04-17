@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import moment from "moment";
+//import moment from "moment";
 import _ from "lodash";
 import { inviteMember, searchInviteMember } from "@/api/departmentMember";
 import { checkResponse } from "@/assets/js/utils";

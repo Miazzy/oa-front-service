@@ -125,7 +125,7 @@
 
 <script>
 import { mapState } from "vuex";
-import moment from "moment";
+//import moment from "moment";
 import { _clearAll, noReads } from "@/pearapi/notify";
 import { notice } from "@/assets/js/notice";
 import { showMsgNotification } from "@/assets/js/notify";

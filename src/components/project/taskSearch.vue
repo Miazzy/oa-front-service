@@ -225,7 +225,7 @@
 </template>
 <script>
 import _ from "lodash";
-import moment from "moment";
+//import moment from "moment";
 import { list as getProjectMember } from "@/pearapi/projectMember";
 import { _getAll as getTaskStage } from "@/pearapi/taskStages";
 import { notice } from "@/assets/js/notice";

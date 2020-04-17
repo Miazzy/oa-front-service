@@ -88,7 +88,7 @@ import { list, del } from "@/pearapi/taskTag";
 import pagination from "@/mixins/pagination";
 import { formatTaskTime, relativelyTaskTime } from "@/assets/js/dateTime";
 import { getListByTaskTag } from "@/pearapi/task";
-import moment from "moment";
+//import moment from "moment";
 
 export default {
   name: "taskTag",
