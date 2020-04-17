@@ -1,5 +1,7 @@
-// import Vue from 'vue'
-import { mapState } from 'vuex';
+//import Vue from 'vue'
+import {
+    mapState
+} from 'vuex';
 
 // const mixinsComputed = Vue.config.optionMergeStrategies.computed
 // const mixinsMethods = Vue.config.optionMergeStrategies.methods
@@ -37,4 +39,7 @@ const mixinDevice = {
     },
 };
 
-export { mixin, mixinDevice };
+export {
+    mixin,
+    mixinDevice
+};

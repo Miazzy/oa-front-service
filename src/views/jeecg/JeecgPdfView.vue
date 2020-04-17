@@ -7,8 +7,7 @@
         :defaultExpandAll="defaultExpandAll"
         @select="this.onSelect"
         style="height: 500px; overflow-y: auto;"
-      >
-      </a-tree>
+      ></a-tree>
     </a-col>
     <!-- 中间面板 -->
     <a-col :span="2" />
@@ -17,11 +16,11 @@
       <a-spin tip="Loading..." :spinning="spinning">
         <div v-for="(file, key) in dataSource" :key="key">
           <a-row>
-            <a-col :span="24"
-              ><p>
+            <a-col :span="24">
+              <p>
                 <a-divider orientation="left">{{ file.fileName }}</a-divider>
-              </p></a-col
-            >
+              </p>
+            </a-col>
             <!-- 预览区域 -->
             <a-col :span="24">
               <template v-if="file.filePdfPath">
@@ -47,9 +46,7 @@
                   </div>
                 </div>
               </template>
-              <template v-else>
-                (暂无材料，点击右侧"选择文件"或"扫描上传"上传文件)
-              </template>
+              <template v-else>(暂无材料，点击右侧"选择文件"或"扫描上传"上传文件)</template>
             </a-col>
           </a-row>
         </div>
@@ -60,36 +57,36 @@
 </template>
 
 <script>
-import {getAction} from '@/api/manage';
-import {ACCESS_TOKEN} from '@/store/mutation-types';
-import Vue from 'vue';
-import PdfPreviewModal from './modules/PdfPreviewModal';
+//import Vue from 'vue';
+import { getAction } from "@/api/manage";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
+import PdfPreviewModal from "./modules/PdfPreviewModal";
 const mockdata = [
   {
-    id: '1',
-    key: '1',
-    title: '实例.pdf',
-    fileCode: 'shili',
-    fileName: '实例',
-    filePdfPath: '实例',
-  },
+    id: "1",
+    key: "1",
+    title: "实例.pdf",
+    fileCode: "shili",
+    fileName: "实例",
+    filePdfPath: "实例"
+  }
 ];
 
 export default {
-  name: 'JeecgPdfView',
+  name: "JeecgPdfView",
   components: {
-    PdfPreviewModal,
+    PdfPreviewModal
   },
   data() {
     return {
-      description: 'PDF预览页面',
+      description: "PDF预览页面",
       // 文件类型集
       treeData: [
         {
-          title: '所有PDF电子档',
-          key: '0-0',
-          children: mockdata,
-        },
+          title: "所有PDF电子档",
+          key: "0-0",
+          children: mockdata
+        }
       ],
       // 文件数据集
       dataSource: mockdata,
@@ -99,8 +96,8 @@ export default {
       // 加载中
       spinning: false,
       url: {
-        pdfList: '/api/pdfList',
-      },
+        pdfList: "/api/pdfList"
+      }
     };
   },
   created() {
@@ -109,7 +106,7 @@ export default {
   methods: {
     loadData() {
       this.spinning = false;
-      getAction(this.url.pdfList).then((res) => {
+      getAction(this.url.pdfList).then(res => {
         if (res.length > 0) {
           this.allData = res;
           this.dataSource = res;
@@ -118,26 +115,26 @@ export default {
         this.spinning = false;
       });
     },
-    pdfPreview: function (title) {
+    pdfPreview: function(title) {
       const token = Vue.ls.get(ACCESS_TOKEN);
-      this.headers = {'X-Access-Token': token};
+      this.headers = { "X-Access-Token": token };
       this.$refs.pdfmodal.previewFiles(title, token);
     },
     // 选择文件类型
     onSelect(selectedKeys, info) {
       this.dataSource = [];
-      if (selectedKeys[0] === undefined || selectedKeys[0] === '0-0') {
+      if (selectedKeys[0] === undefined || selectedKeys[0] === "0-0") {
         this.dataSource = this.allData;
       } else {
         this.dataSource.push(info.node._props.dataRef);
       }
-      console.log('SELECT-->dataSource', this.dataSource);
+      console.log("SELECT-->dataSource", this.dataSource);
     },
     // model回调
     modalFormOk() {
       this.loadData();
-    },
-  },
+    }
+  }
 };
 </script>
 

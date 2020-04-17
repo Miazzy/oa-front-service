@@ -187,7 +187,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
@@ -544,7 +544,6 @@ export default {
      * @function 提交博文函数
      */
     async handleSubmitBlog(result = "", id = "") {
-
       try {
         //获取本篇博文编号信息
         id = tools.queryUrlString("id");

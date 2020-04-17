@@ -1,4 +1,4 @@
-import Vue from 'vue';
+//import Vue from 'vue';
 import router from './router';
 import store from './store';
 import NProgress from 'nprogress'; // progress bar
@@ -468,142 +468,149 @@ const viewSubNode =
     '{"path":"/workflow/view","component":"jeecg/Workflow","route":"1","hidden":true,"meta":{"keepAlive":false,"title":"流程详情"},"name":"workflow-view","id":"423b32588d8a1a41a041ca41828c3335"}';
 
 router.beforeEach((to, from, next) => {
-    NProgress.start(); // start progress bar
 
-    if (Vue.ls.get(ACCESS_TOKEN)) {
-        /* has token */
-        if (to.path === '/user/login') {
-            next({
-                path: '/dashboard/workplace'
-            });
-            NProgress.done();
-        } else {
-            if (store.getters.permissionList.length === 0) {
-                store
-                    .dispatch('GetPermissionList')
-                    .then(res => {
-                        //检查是否含有表单开发模块
-                        let onlineFlag = false;
-                        let accountFlag = false;
-                        let workFlowFlag = false;
-                        let isystemFlag = false;
-                        let homeFlag = false;
-                        let adminFlag = false;
-                        res.result.menu.forEach(function(item) {
-                            if (item.path == '/online' && item.name == 'online') {
-                                onlineFlag = true;
-                            }
-                            if (item.path == '/account' && item.name == 'account') {
-                                accountFlag = true;
-                            }
-                            if (item.path == '/approval' && item.name == 'approval') {
-                                workFlowFlag = true;
-                                item.children.push(JSON.parse(viewSubNode));
-                            }
-                            if (item.path == '/isystem' && item.name == 'isystem') {
-                                isystemFlag = true;
-                            }
-                            if (item.path == '/dashboard/analysis') {
-                                homeFlag = true;
-                            }
-                            if (item.path == '/administration') {
-                                adminFlag = true;
-                            }
-                        });
+    // start progress bar
+    NProgress.start();
 
-                        //如果首页模块，则添加此模块
-                        if (!homeFlag) {
-                            res.result.menu.push(homeNode);
-                        }
-                        //如果没有个人管理模块，则添加此模块
-                        if (!accountFlag) {
-                            res.result.menu.push(accountNode);
-                        }
-                        //如果没有审批管理模块，则添加此模块
-                        if (!workFlowFlag) {
-                            res.result.menu.push(workFlowNode);
-                        }
-                        //如果没有行政管理模块，则添加此模块
-                        if (!adminFlag) {
-                            res.result.menu.push(adminNode);
-                        }
-                        //如果没有系统管理模块，则添加此模块
-                        if (!isystemFlag) {
-                            res.result.menu.push(isystemNode);
-                        }
-                        //如果没有在线表单开发模块，则添加此模块
-                        if (!onlineFlag) {
-                            res.result.menu.push(onlineNode);
-                        }
-
-                        //获取菜单数据
-                        const menuData = res.result.menu;
-
-                        console.log(res.result.menu);
-                        if (
-                            menuData === null ||
-                            menuData === '' ||
-                            menuData === undefined
-                        ) {
-                            return;
-                        }
-                        let constRoutes = [];
-                        constRoutes = generateIndexRouter(menuData);
-                        // 添加主界面路由
-                        store.dispatch('UpdateAppRouter', {
-                            constRoutes
-                        }).then(() => {
-                            // 根据roles权限生成可访问的路由表
-                            // 动态添加可访问路由表
-                            router.addRoutes(store.getters.addRouters);
-                            const redirect = decodeURIComponent(
-                                from.query.redirect || to.path
-                            );
-                            if (to.path === redirect) {
-                                // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-                                next({
-                                    ...to,
-                                    replace: true
-                                });
-                            } else {
-                                // 跳转到目的路由
-                                next({
-                                    path: redirect
-                                });
-                            }
-                        });
-                    })
-                    .catch(() => {
-                        store.dispatch('Logout').then(() => {
-                            next({
-                                path: '/user/login',
-                                query: {
-                                    redirect: to.fullPath
+    try {
+        if (Vue.ls.get(ACCESS_TOKEN)) {
+            /* has token */
+            if (to.path === '/user/login') {
+                next({
+                    path: '/dashboard/workplace'
+                });
+                NProgress.done();
+            } else {
+                if (store.getters.permissionList.length === 0) {
+                    store
+                        .dispatch('GetPermissionList')
+                        .then(res => {
+                            //检查是否含有表单开发模块
+                            let onlineFlag = false;
+                            let accountFlag = false;
+                            let workFlowFlag = false;
+                            let isystemFlag = false;
+                            let homeFlag = false;
+                            let adminFlag = false;
+                            res.result.menu.forEach(function(item) {
+                                if (item.path == '/online' && item.name == 'online') {
+                                    onlineFlag = true;
+                                }
+                                if (item.path == '/account' && item.name == 'account') {
+                                    accountFlag = true;
+                                }
+                                if (item.path == '/approval' && item.name == 'approval') {
+                                    workFlowFlag = true;
+                                    item.children.push(JSON.parse(viewSubNode));
+                                }
+                                if (item.path == '/isystem' && item.name == 'isystem') {
+                                    isystemFlag = true;
+                                }
+                                if (item.path == '/dashboard/analysis') {
+                                    homeFlag = true;
+                                }
+                                if (item.path == '/administration') {
+                                    adminFlag = true;
                                 }
                             });
+
+                            //如果首页模块，则添加此模块
+                            if (!homeFlag) {
+                                res.result.menu.push(homeNode);
+                            }
+                            //如果没有个人管理模块，则添加此模块
+                            if (!accountFlag) {
+                                res.result.menu.push(accountNode);
+                            }
+                            //如果没有审批管理模块，则添加此模块
+                            if (!workFlowFlag) {
+                                res.result.menu.push(workFlowNode);
+                            }
+                            //如果没有行政管理模块，则添加此模块
+                            if (!adminFlag) {
+                                res.result.menu.push(adminNode);
+                            }
+                            //如果没有系统管理模块，则添加此模块
+                            if (!isystemFlag) {
+                                res.result.menu.push(isystemNode);
+                            }
+                            //如果没有在线表单开发模块，则添加此模块
+                            if (!onlineFlag) {
+                                res.result.menu.push(onlineNode);
+                            }
+
+                            //获取菜单数据
+                            const menuData = res.result.menu;
+
+                            console.log(res.result.menu);
+                            if (
+                                menuData === null ||
+                                menuData === '' ||
+                                menuData === undefined
+                            ) {
+                                return;
+                            }
+                            let constRoutes = [];
+                            constRoutes = generateIndexRouter(menuData);
+                            // 添加主界面路由
+                            store.dispatch('UpdateAppRouter', {
+                                constRoutes
+                            }).then(() => {
+                                // 根据roles权限生成可访问的路由表
+                                // 动态添加可访问路由表
+                                router.addRoutes(store.getters.addRouters);
+                                const redirect = decodeURIComponent(
+                                    from.query.redirect || to.path
+                                );
+                                if (to.path === redirect) {
+                                    // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                                    next({
+                                        ...to,
+                                        replace: true
+                                    });
+                                } else {
+                                    // 跳转到目的路由
+                                    next({
+                                        path: redirect
+                                    });
+                                }
+                            });
+                        })
+                        .catch(() => {
+                            store.dispatch('Logout').then(() => {
+                                next({
+                                    path: '/user/login',
+                                    query: {
+                                        redirect: to.fullPath
+                                    }
+                                });
+                            });
                         });
-                    });
-            } else {
+                } else {
+                    next();
+                }
+            }
+        } else {
+            if (
+                whiteList.indexOf(to.path) !== -1 ||
+                to.path.includes('/online/cgformList/')
+            ) {
+                // 在免登录白名单，直接进入
                 next();
+            } else {
+                next({
+                    path: '/user/login',
+                    query: {
+                        redirect: to.fullPath
+                    }
+                });
+                NProgress.done(); // if current page is login will not trigger afterEach hook, so manually handle it
             }
         }
-    } else {
-        if (
-            whiteList.indexOf(to.path) !== -1 ||
-            to.path.includes('/online/cgformList/')
-        ) {
-            // 在免登录白名单，直接进入
-            next();
-        } else {
-            next({
-                path: '/user/login',
-                query: {
-                    redirect: to.fullPath
-                }
-            });
-            NProgress.done(); // if current page is login will not trigger afterEach hook, so manually handle it
-        }
+    } catch (error) {
+        console.log(error);
     }
+
 });
 
 router.afterEach(() => {

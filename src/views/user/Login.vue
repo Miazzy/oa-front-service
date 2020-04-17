@@ -187,7 +187,7 @@
 
 <script>
 //import md5 from "md5"
-import Vue from "vue";
+//import Vue from "vue";
 import api from "@/api";
 import TwoStepCaptcha from "@/components/tools/TwoStepCaptcha";
 import { mapActions } from "vuex";

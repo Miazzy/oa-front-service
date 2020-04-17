@@ -1,4 +1,4 @@
-import Vue from 'vue'
+//import Vue from 'vue'
 import store from '@/store'
 import Router from 'vue-router'
 import Index from '@/views/index'
@@ -22,7 +22,12 @@ if (currentOrganization) {
     HOME_PAGE = HOME_PAGE + '/' + currentOrganization.code;
 }
 
-Vue.use(Router);
+try {
+    Vue.use(Router);
+} catch (error) {
+    console.log(error);
+}
+
 const routes = [].concat(
     Home
 );

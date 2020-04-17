@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import { getStore, setStore } from "@/assets/js/storage";
 import { bindClientId } from "@/pearapi/common";
 import config from "@/config/config";
@@ -41,12 +41,16 @@ export default {
     },
     initWebSocket() {
       //初始化weosocket
-      //ws地址
-      const WS_URI = config.WS_URI;
-      this.websocket = new WebSocket(WS_URI);
-      this.websocket.onmessage = this.websocketOnMessage;
-      this.websocket.onclose = this.websocketClose;
-      Vue.prototype.$websocket = this.websocket;
+      try {
+        //ws地址
+        const WS_URI = config.WS_URI;
+        this.websocket = new WebSocket(WS_URI);
+        this.websocket.onmessage = this.websocketOnMessage;
+        this.websocket.onclose = this.websocketClose;
+        Vue.prototype.$websocket = this.websocket;
+      } catch (error) {
+        console.log(error);
+      }
     },
     websocketOnMessage(e) {
       //数据接收

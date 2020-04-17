@@ -664,10 +664,9 @@
                 </div>
               </a-card-meta>
             </a-card-grid>
-           
           </a-card>
 
-           <a-card
+          <a-card
             :loading="loading"
             title="计划任务管理"
             :bordered="false"

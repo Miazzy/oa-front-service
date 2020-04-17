@@ -129,8 +129,6 @@
             <a-input style="width: 70%" readonly v-model="curRow.task_exector" />
           </a-col>
 
-          
-
           <a-col
             :span="12"
             style="margin-top: 10px; margin-bottom:10px;"
@@ -289,7 +287,7 @@
             <a-input style="width: 70%" readonly v-model="curRow.declare_type" />
           </a-col>
 
-           <a-col
+          <a-col
             :span="12"
             style="margin-top: 10px; margin-bottom:10px;"
             v-if="
@@ -449,7 +447,7 @@
             <a-input style="width: 70%" readonly v-model="curRow.file_count" />
           </a-col>
 
-           <a-col
+          <a-col
             :span="12"
             style="margin-top: 10px; margin-bottom:10px;"
             v-if="
@@ -659,8 +657,6 @@
             <span>{{ tableInfo.pay_date }}:</span>
             <a-input style="width: 70%" readonly v-model="curRow.pay_date" />
           </a-col>
-
-         
 
           <a-col
             :span="12"
@@ -1542,6 +1538,7 @@
 </template>
 
 <script>
+//import Vue from "vue";
 import * as manageAPI from "@/api/manage";
 import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
@@ -1552,7 +1549,6 @@ import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
-import Vue from "vue";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 
 //Vue挂载QRCode组件
@@ -2804,8 +2800,7 @@ export default {
     /**
      * @function 生成任务记录数据
      */
-    async handleTaskItem(result = ''){
-
+    async handleTaskItem(result = "") {
       //打印表单名称
       var tableName = tools.queryUrlString("table_name");
 
@@ -2813,10 +2808,9 @@ export default {
       var timestamp = new Date().getTime();
 
       //如果是计划任务表，则生成任务数据
-      if(tableName == 'bs_plan_task'){
-
+      if (tableName == "bs_plan_task") {
         //遍历数据，执行持久化操作
-        for(var item of this.data){
+        for (var item of this.data) {
           //删除字段
           delete item.no;
           delete item.real_start_time;
@@ -2824,20 +2818,18 @@ export default {
           delete item.date;
           delete item.work_date;
           //设置创建日期
-          item.create_time = tools.formatDate(timestamp , 'yyyy-MM-dd');
+          item.create_time = tools.formatDate(timestamp, "yyyy-MM-dd");
           //设置所属部门
           item.depart_name = this.curRow.depart_name;
           //设置任务状态
-          item.status = '待提交';
+          item.status = "待提交";
           //生成数据，并持久化
-          result = await manageAPI.postTableData('bs_plan_task_mission' , item);
+          result = await manageAPI.postTableData("bs_plan_task_mission", item);
         }
-
       }
 
       //返回执行结果
       return result;
-
     },
     /**
      * @function 驳回审批
@@ -3199,23 +3191,20 @@ export default {
       }
 
       //如果是计划任务表，则检查任务分配人员是否存在，如果不存在，则提示错误
-      if(curTableName == 'bs_plan_task'){
-        
-        var realname = '';
+      if (curTableName == "bs_plan_task") {
+        var realname = "";
 
         //遍历任务数组，找出分配对象是否存在
-        for ( let item of this.data){
-
+        for (let item of this.data) {
           let username = await manageAPI.patchCnameEname(item.create_by);
 
-          if(tools.isNull(username)){
+          if (tools.isNull(username)) {
             realname = item.create_by;
             break;
           }
-
         }
 
-        if(!tools.isNull(realname)){
+        if (!tools.isNull(realname)) {
           //数据库中已经存在此记录，提示用户无法提交审批
           this.$confirm_({
             title: "温馨提示",
@@ -3224,25 +3213,23 @@ export default {
           return false;
         }
 
-        realname = '';
+        realname = "";
 
         //遍历任务数组，找出执行人员是否存在
-        for ( let item of this.data){
-
-          if(tools.isNull(item.task_exector)){
+        for (let item of this.data) {
+          if (tools.isNull(item.task_exector)) {
             continue;
           }
 
           let username = await manageAPI.patchCnameEname(item.task_exector);
 
-          if(tools.isNull(username)){
+          if (tools.isNull(username)) {
             realname = item.task_exector;
             break;
           }
-
         }
 
-        if(!tools.isNull(realname)){
+        if (!tools.isNull(realname)) {
           //数据库中已经存在此记录，提示用户无法提交审批
           this.$confirm_({
             title: "温馨提示",
@@ -3250,14 +3237,12 @@ export default {
           });
           return false;
         }
-
       }
 
       //如果是计划任务完成表，则必须坚持完成状态的填写，完成情况的填写，完成日期的填写
-      if(curTableName == 'bs_plan_task_mission'){
-
+      if (curTableName == "bs_plan_task_mission") {
         //未填写完成状态，提示用户无法提交审批
-        if(this.curRow.status != '已完成'){
+        if (this.curRow.status != "已完成") {
           this.$confirm_({
             title: "温馨提示",
             content: `计划任务完成情况表，必须在完成状态为’已完成‘时，才可以提交审批！`
@@ -3266,14 +3251,13 @@ export default {
         }
 
         //未填写完成情况说明，提示用户无法提交审批
-        if(tools.isNull(this.curRow.remark)){
+        if (tools.isNull(this.curRow.remark)) {
           this.$confirm_({
             title: "温馨提示",
             content: `计划任务完成情况表，未填写’完成情况‘说明，无法提交审批！`
           });
           return false;
         }
-
       }
 
       //如果校验标识有误，则直接返回
@@ -3341,7 +3325,11 @@ export default {
               approve_user: userInfo["username"],
               action: "发起",
               action_opinion: "发起自由流程",
-              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
+              content:
+                this.curRow["content"] ||
+                this.curRow["title"] ||
+                this.curRow["plan_title"] ||
+                this.curRow["task_title"],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(freeWFNode)
@@ -3368,7 +3356,11 @@ export default {
               process_station: "自由流程审批",
               process_audit: "000000000",
               proponents: userInfo["username"],
-              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
+              content:
+                this.curRow["content"] ||
+                this.curRow["title"] ||
+                this.curRow["plan_title"] ||
+                this.curRow["task_title"],
               operate_time: ctime,
               create_time: ctime,
               business_data: JSON.stringify(node)
@@ -3508,7 +3500,11 @@ export default {
               operate_time: ctime,
               create_time: ctime,
               proponents: userInfo["username"],
-              content: this.curRow["content"] || this.curRow["title"] || this.curRow['plan_title'] || this.curRow['task_title'],
+              content:
+                this.curRow["content"] ||
+                this.curRow["title"] ||
+                this.curRow["plan_title"] ||
+                this.curRow["task_title"],
               business_data: JSON.stringify(this.curRow)
             };
 

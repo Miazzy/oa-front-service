@@ -22,15 +22,15 @@ import 'vue-photo-preview/dist/skin.css';
 import '@jeecg/antd-onine';
 import '@jeecg/antd-onine/dist/OnlineForm.css';
 
-import ViewUI from 'view-design';
-import 'view-design/dist/styles/iview.css';
+//import ViewUI from 'view-design';
+//import 'view-design/dist/styles/iview.css';
 
-import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+//import Element from 'element-ui';
+//import 'element-ui/lib/theme-chalk/index.css';
 
 //import formCreate from '@form-create/element-ui';
 
-import leMarkdownEditor from 'le-markdown-editor'
+//import leMarkdownEditor from 'le-markdown-editor'
 
 //import EleForm from 'vue-ele-form';
 //import F2 from '@antv/f2';
@@ -39,7 +39,7 @@ import leMarkdownEditor from 'le-markdown-editor'
 import qs from 'qs';
 
 try {
-    Vue.use(leMarkdownEditor)
+    //Vue.use(leMarkdownEditor)
 } catch (error) {
     console.log(error);
 }

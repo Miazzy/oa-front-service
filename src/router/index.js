@@ -1,4 +1,4 @@
-import Vue from 'vue'
+//import Vue from 'vue'
 import Router from 'vue-router'
 
 import {
@@ -15,7 +15,11 @@ try {
     console.error(e);
 }
 
-Vue.use(Router)
+try {
+    Vue.use(Router)
+} catch (error) {
+    console.error(error);
+}
 
 export default new Router({
     mode: 'history',

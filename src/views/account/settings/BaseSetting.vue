@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import AvatarModal from "./AvatarModal";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { getAction, patchTableData, queryTableData } from "@/api/manage";

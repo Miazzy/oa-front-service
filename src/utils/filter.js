@@ -1,4 +1,4 @@
-import Vue from "vue";
+//import Vue from "vue";
 import * as dayjs from "dayjs";
 
 Vue.filter('NumberFormat', function (value) {
@@ -9,20 +9,20 @@ Vue.filter('NumberFormat', function (value) {
   return intPartFormat
 })
 
-Vue.filter('dayjs', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+Vue.filter('dayjs', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return dayjs(dataStr).format(pattern)
 })
 
-Vue.filter('moment', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+Vue.filter('moment', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return dayjs(dataStr).format(pattern)
 })
 
 /** 字符串超长截取省略号显示 */
 Vue.filter('ellipsis', function (value, vlength = 25) {
-  if(!value){
+  if (!value) {
     return "";
   }
-  console.log('vlength: '+ vlength);
+  console.log('vlength: ' + vlength);
   if (value.length > vlength) {
     return value.slice(0, vlength) + '...'
   }

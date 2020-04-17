@@ -1,9 +1,16 @@
-import Vue from 'vue';
+//import Vue from 'vue';
 import axios from 'axios';
 import store from '@/store';
-import { VueAxios } from './axios';
-import { Modal, notification } from 'ant-design-vue';
-import { ACCESS_TOKEN } from '@/store/mutation-types';
+import {
+    VueAxios
+} from './axios';
+import {
+    Modal,
+    notification
+} from 'ant-design-vue';
+import {
+    ACCESS_TOKEN
+} from '@/store/mutation-types';
 
 axios.defaults.headers.post['Content-Type'] =
     'application/x-www-form-urlencoded';
@@ -58,7 +65,10 @@ const err = error => {
                 });
                 break;
             case 504:
-                notification.error({ message: '系统提示', description: '网络超时' });
+                notification.error({
+                    message: '系统提示',
+                    description: '网络超时'
+                });
                 break;
             case 401:
                 notification.error({
@@ -120,4 +130,6 @@ const installer = {
     },
 };
 
-export { installer as VueAxios, service as axios };
+export {
+    installer as VueAxios, service as axios
+};

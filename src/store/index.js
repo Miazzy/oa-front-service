@@ -1,4 +1,4 @@
-import Vue from 'vue'
+//import Vue from 'vue'
 import Vuex from 'vuex'
 
 import app from './modules/app'
@@ -11,7 +11,10 @@ import mutations from './mutations'
 import actions from './actions'
 import common from './modules/common'
 import menu from './modules/menu'
-import {getStore, setStore} from '@/assets/js/storage'
+import {
+    getStore,
+    setStore
+} from '@/assets/js/storage'
 
 Vue.use(Vuex)
 
@@ -20,11 +23,11 @@ export default new Vuex.Store({
         app,
         user,
         permission,
-		common,
-		menu,
+        common,
+        menu,
     },
-	state,
-	mutations,
-	actions,
+    state,
+    mutations,
+    actions,
     getters
 })

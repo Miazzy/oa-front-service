@@ -1,4 +1,4 @@
-import Vue from 'vue'
+//import Vue from 'vue'
 import {
   SIDEBAR_TYPE,
   DEFAULT_THEME,
@@ -75,49 +75,75 @@ const app = {
       Vue.ls.set(DEFAULT_COLOR_WEAK, flag)
       state.weak = flag
     },
-    SET_MULTI_PAGE (state, multipageFlag) {
+    SET_MULTI_PAGE(state, multipageFlag) {
       Vue.ls.set(DEFAULT_MULTI_PAGE, multipageFlag)
       state.multipage = multipageFlag
     }
   },
   actions: {
-    setSidebar: ({ commit }, type) => {
+    setSidebar: ({
+      commit
+    }, type) => {
       commit('SET_SIDEBAR_TYPE', type)
     },
-    CloseSidebar({ commit }, { withoutAnimation }) {
+    CloseSidebar({
+      commit
+    }, {
+      withoutAnimation
+    }) {
       commit('CLOSE_SIDEBAR', withoutAnimation)
     },
-    ToggleDevice({ commit }, device) {
+    ToggleDevice({
+      commit
+    }, device) {
       commit('TOGGLE_DEVICE', device)
     },
-    ToggleTheme({ commit }, theme) {
+    ToggleTheme({
+      commit
+    }, theme) {
       commit('TOGGLE_THEME', theme)
     },
-    ToggleLayoutMode({ commit }, mode) {
+    ToggleLayoutMode({
+      commit
+    }, mode) {
       commit('TOGGLE_LAYOUT_MODE', mode)
     },
-    ToggleFixedHeader({ commit }, fixedHeader) {
+    ToggleFixedHeader({
+      commit
+    }, fixedHeader) {
       if (!fixedHeader) {
         commit('TOGGLE_FIXED_HEADER_HIDDEN', false)
       }
       commit('TOGGLE_FIXED_HEADER', fixedHeader)
     },
-    ToggleFixSiderbar({ commit }, fixSiderbar) {
-      commit( 'TOGGLE_FIXED_SIDERBAR', fixSiderbar)
+    ToggleFixSiderbar({
+      commit
+    }, fixSiderbar) {
+      commit('TOGGLE_FIXED_SIDERBAR', fixSiderbar)
     },
-    ToggleFixedHeaderHidden({ commit }, show) {
+    ToggleFixedHeaderHidden({
+      commit
+    }, show) {
       commit('TOGGLE_FIXED_HEADER_HIDDEN', show)
     },
-    ToggleContentWidth({ commit }, type) {
+    ToggleContentWidth({
+      commit
+    }, type) {
       commit('TOGGLE_CONTENT_WIDTH', type)
     },
-    ToggleColor({ commit }, color) {
+    ToggleColor({
+      commit
+    }, color) {
       commit('TOGGLE_COLOR', color)
     },
-    ToggleWeak({ commit }, weakFlag) {
+    ToggleWeak({
+      commit
+    }, weakFlag) {
       commit('TOGGLE_WEAK', weakFlag)
     },
-    ToggleMultipage({ commit }, multipageFlag) {
+    ToggleMultipage({
+      commit
+    }, multipageFlag) {
       commit('SET_MULTI_PAGE', multipageFlag)
     }
   }

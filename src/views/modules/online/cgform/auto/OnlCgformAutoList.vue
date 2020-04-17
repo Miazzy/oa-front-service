@@ -363,7 +363,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
 import JImportModal from "@/components/jeecg/JImportModal";
 

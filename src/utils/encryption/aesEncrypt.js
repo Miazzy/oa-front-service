@@ -1,12 +1,16 @@
-import { getAction } from '@/api/manage'
-import { ENCRYPTED_STRING } from "@/store/mutation-types"
-import Vue from 'vue'
+//import Vue from 'vue'
+import {
+  getAction
+} from '@/api/manage'
+import {
+  ENCRYPTED_STRING
+} from "@/store/mutation-types"
 
 /**
  * 获取加密字符串，并对结果进行缓存
  */
 export function getEncryptedString() {
-  return getAction("/sys/getEncryptedString",{}).then((res)=>{
+  return getAction("/sys/getEncryptedString", {}).then((res) => {
     let encryptedString = {};
     encryptedString.key = res.result.key;
     encryptedString.iv = res.result.iv;
@@ -37,8 +41,8 @@ export function encryption(word, keyStr, ivStr) {
 
 var CryptoJS = CryptoJS || (function (Math, undefined) {
   /*
-	     * Local polyfil of Object.create
-	     */
+   * Local polyfil of Object.create
+   */
   var create = Object.create || (function () {
     function F() {};
 
@@ -84,11 +88,11 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
        * @example
        *
        *     var MyType = CryptoJS.lib.Base.extend({
-	             *         field: 'value',
-	             *
-	             *         method: function () {
-	             *         }
-	             *     });
+       *         field: 'value',
+       *
+       *         method: function () {
+       *         }
+       *     });
        */
       extend: function (overrides) {
         // Spawn
@@ -141,13 +145,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
        * @example
        *
        *     var MyType = CryptoJS.lib.Base.extend({
-	             *         init: function () {
-	             *             // ...
-	             *         }
-	             *     });
+       *         init: function () {
+       *             // ...
+       *         }
+       *     });
        */
-      init: function () {
-      },
+      init: function () {},
 
       /**
        * Copies properties into this object.
@@ -157,8 +160,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
        * @example
        *
        *     MyType.mixIn({
-	             *         field: 'value'
-	             *     });
+       *         field: 'value'
+       *     });
        */
       mixIn: function (properties) {
         for (var propertyName in properties) {
@@ -724,7 +727,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       return hash;
     },
 
-    blockSize: 512/32,
+    blockSize: 512 / 32,
 
     /**
      * Creates a shortcut function to a hasher's object interface.
@@ -810,13 +813,14 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       // Convert
       var base64Chars = [];
       for (var i = 0; i < sigBytes; i += 3) {
-        var byte1 = (words[i >>> 2]       >>> (24 - (i % 4) * 8))       & 0xff;
+        var byte1 = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
         var byte2 = (words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
         var byte3 = (words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
 
         var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
 
-        for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+        for (var j = 0;
+          (j < 4) && (i + j * 0.75 < sigBytes); j++) {
           base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
         }
       }
@@ -928,24 +932,24 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         var M_offset_i = M[offset_i];
 
         M[offset_i] = (
-          (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
-          (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+          (((M_offset_i << 8) | (M_offset_i >>> 24)) & 0x00ff00ff) |
+          (((M_offset_i << 24) | (M_offset_i >>> 8)) & 0xff00ff00)
         );
       }
 
       // Shortcuts
       var H = this._hash.words;
 
-      var M_offset_0  = M[offset + 0];
-      var M_offset_1  = M[offset + 1];
-      var M_offset_2  = M[offset + 2];
-      var M_offset_3  = M[offset + 3];
-      var M_offset_4  = M[offset + 4];
-      var M_offset_5  = M[offset + 5];
-      var M_offset_6  = M[offset + 6];
-      var M_offset_7  = M[offset + 7];
-      var M_offset_8  = M[offset + 8];
-      var M_offset_9  = M[offset + 9];
+      var M_offset_0 = M[offset + 0];
+      var M_offset_1 = M[offset + 1];
+      var M_offset_2 = M[offset + 2];
+      var M_offset_3 = M[offset + 3];
+      var M_offset_4 = M[offset + 4];
+      var M_offset_5 = M[offset + 5];
+      var M_offset_6 = M[offset + 6];
+      var M_offset_7 = M[offset + 7];
+      var M_offset_8 = M[offset + 8];
+      var M_offset_9 = M[offset + 9];
       var M_offset_10 = M[offset + 10];
       var M_offset_11 = M[offset + 11];
       var M_offset_12 = M[offset + 12];
@@ -960,73 +964,73 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       var d = H[3];
 
       // Computation
-      a = FF(a, b, c, d, M_offset_0,  7,  T[0]);
-      d = FF(d, a, b, c, M_offset_1,  12, T[1]);
-      c = FF(c, d, a, b, M_offset_2,  17, T[2]);
-      b = FF(b, c, d, a, M_offset_3,  22, T[3]);
-      a = FF(a, b, c, d, M_offset_4,  7,  T[4]);
-      d = FF(d, a, b, c, M_offset_5,  12, T[5]);
-      c = FF(c, d, a, b, M_offset_6,  17, T[6]);
-      b = FF(b, c, d, a, M_offset_7,  22, T[7]);
-      a = FF(a, b, c, d, M_offset_8,  7,  T[8]);
-      d = FF(d, a, b, c, M_offset_9,  12, T[9]);
+      a = FF(a, b, c, d, M_offset_0, 7, T[0]);
+      d = FF(d, a, b, c, M_offset_1, 12, T[1]);
+      c = FF(c, d, a, b, M_offset_2, 17, T[2]);
+      b = FF(b, c, d, a, M_offset_3, 22, T[3]);
+      a = FF(a, b, c, d, M_offset_4, 7, T[4]);
+      d = FF(d, a, b, c, M_offset_5, 12, T[5]);
+      c = FF(c, d, a, b, M_offset_6, 17, T[6]);
+      b = FF(b, c, d, a, M_offset_7, 22, T[7]);
+      a = FF(a, b, c, d, M_offset_8, 7, T[8]);
+      d = FF(d, a, b, c, M_offset_9, 12, T[9]);
       c = FF(c, d, a, b, M_offset_10, 17, T[10]);
       b = FF(b, c, d, a, M_offset_11, 22, T[11]);
-      a = FF(a, b, c, d, M_offset_12, 7,  T[12]);
+      a = FF(a, b, c, d, M_offset_12, 7, T[12]);
       d = FF(d, a, b, c, M_offset_13, 12, T[13]);
       c = FF(c, d, a, b, M_offset_14, 17, T[14]);
       b = FF(b, c, d, a, M_offset_15, 22, T[15]);
 
-      a = GG(a, b, c, d, M_offset_1,  5,  T[16]);
-      d = GG(d, a, b, c, M_offset_6,  9,  T[17]);
+      a = GG(a, b, c, d, M_offset_1, 5, T[16]);
+      d = GG(d, a, b, c, M_offset_6, 9, T[17]);
       c = GG(c, d, a, b, M_offset_11, 14, T[18]);
-      b = GG(b, c, d, a, M_offset_0,  20, T[19]);
-      a = GG(a, b, c, d, M_offset_5,  5,  T[20]);
-      d = GG(d, a, b, c, M_offset_10, 9,  T[21]);
+      b = GG(b, c, d, a, M_offset_0, 20, T[19]);
+      a = GG(a, b, c, d, M_offset_5, 5, T[20]);
+      d = GG(d, a, b, c, M_offset_10, 9, T[21]);
       c = GG(c, d, a, b, M_offset_15, 14, T[22]);
-      b = GG(b, c, d, a, M_offset_4,  20, T[23]);
-      a = GG(a, b, c, d, M_offset_9,  5,  T[24]);
-      d = GG(d, a, b, c, M_offset_14, 9,  T[25]);
-      c = GG(c, d, a, b, M_offset_3,  14, T[26]);
-      b = GG(b, c, d, a, M_offset_8,  20, T[27]);
-      a = GG(a, b, c, d, M_offset_13, 5,  T[28]);
-      d = GG(d, a, b, c, M_offset_2,  9,  T[29]);
-      c = GG(c, d, a, b, M_offset_7,  14, T[30]);
+      b = GG(b, c, d, a, M_offset_4, 20, T[23]);
+      a = GG(a, b, c, d, M_offset_9, 5, T[24]);
+      d = GG(d, a, b, c, M_offset_14, 9, T[25]);
+      c = GG(c, d, a, b, M_offset_3, 14, T[26]);
+      b = GG(b, c, d, a, M_offset_8, 20, T[27]);
+      a = GG(a, b, c, d, M_offset_13, 5, T[28]);
+      d = GG(d, a, b, c, M_offset_2, 9, T[29]);
+      c = GG(c, d, a, b, M_offset_7, 14, T[30]);
       b = GG(b, c, d, a, M_offset_12, 20, T[31]);
 
-      a = HH(a, b, c, d, M_offset_5,  4,  T[32]);
-      d = HH(d, a, b, c, M_offset_8,  11, T[33]);
+      a = HH(a, b, c, d, M_offset_5, 4, T[32]);
+      d = HH(d, a, b, c, M_offset_8, 11, T[33]);
       c = HH(c, d, a, b, M_offset_11, 16, T[34]);
       b = HH(b, c, d, a, M_offset_14, 23, T[35]);
-      a = HH(a, b, c, d, M_offset_1,  4,  T[36]);
-      d = HH(d, a, b, c, M_offset_4,  11, T[37]);
-      c = HH(c, d, a, b, M_offset_7,  16, T[38]);
+      a = HH(a, b, c, d, M_offset_1, 4, T[36]);
+      d = HH(d, a, b, c, M_offset_4, 11, T[37]);
+      c = HH(c, d, a, b, M_offset_7, 16, T[38]);
       b = HH(b, c, d, a, M_offset_10, 23, T[39]);
-      a = HH(a, b, c, d, M_offset_13, 4,  T[40]);
-      d = HH(d, a, b, c, M_offset_0,  11, T[41]);
-      c = HH(c, d, a, b, M_offset_3,  16, T[42]);
-      b = HH(b, c, d, a, M_offset_6,  23, T[43]);
-      a = HH(a, b, c, d, M_offset_9,  4,  T[44]);
+      a = HH(a, b, c, d, M_offset_13, 4, T[40]);
+      d = HH(d, a, b, c, M_offset_0, 11, T[41]);
+      c = HH(c, d, a, b, M_offset_3, 16, T[42]);
+      b = HH(b, c, d, a, M_offset_6, 23, T[43]);
+      a = HH(a, b, c, d, M_offset_9, 4, T[44]);
       d = HH(d, a, b, c, M_offset_12, 11, T[45]);
       c = HH(c, d, a, b, M_offset_15, 16, T[46]);
-      b = HH(b, c, d, a, M_offset_2,  23, T[47]);
+      b = HH(b, c, d, a, M_offset_2, 23, T[47]);
 
-      a = II(a, b, c, d, M_offset_0,  6,  T[48]);
-      d = II(d, a, b, c, M_offset_7,  10, T[49]);
+      a = II(a, b, c, d, M_offset_0, 6, T[48]);
+      d = II(d, a, b, c, M_offset_7, 10, T[49]);
       c = II(c, d, a, b, M_offset_14, 15, T[50]);
-      b = II(b, c, d, a, M_offset_5,  21, T[51]);
-      a = II(a, b, c, d, M_offset_12, 6,  T[52]);
-      d = II(d, a, b, c, M_offset_3,  10, T[53]);
+      b = II(b, c, d, a, M_offset_5, 21, T[51]);
+      a = II(a, b, c, d, M_offset_12, 6, T[52]);
+      d = II(d, a, b, c, M_offset_3, 10, T[53]);
       c = II(c, d, a, b, M_offset_10, 15, T[54]);
-      b = II(b, c, d, a, M_offset_1,  21, T[55]);
-      a = II(a, b, c, d, M_offset_8,  6,  T[56]);
+      b = II(b, c, d, a, M_offset_1, 21, T[55]);
+      a = II(a, b, c, d, M_offset_8, 6, T[56]);
       d = II(d, a, b, c, M_offset_15, 10, T[57]);
-      c = II(c, d, a, b, M_offset_6,  15, T[58]);
+      c = II(c, d, a, b, M_offset_6, 15, T[58]);
       b = II(b, c, d, a, M_offset_13, 21, T[59]);
-      a = II(a, b, c, d, M_offset_4,  6,  T[60]);
+      a = II(a, b, c, d, M_offset_4, 6, T[60]);
       d = II(d, a, b, c, M_offset_11, 10, T[61]);
-      c = II(c, d, a, b, M_offset_2,  15, T[62]);
-      b = II(b, c, d, a, M_offset_9,  21, T[63]);
+      c = II(c, d, a, b, M_offset_2, 15, T[62]);
+      b = II(b, c, d, a, M_offset_9, 21, T[63]);
 
       // Intermediate hash value
       H[0] = (H[0] + a) | 0;
@@ -1049,12 +1053,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       var nBitsTotalH = Math.floor(nBitsTotal / 0x100000000);
       var nBitsTotalL = nBitsTotal;
       dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = (
-        (((nBitsTotalH << 8)  | (nBitsTotalH >>> 24)) & 0x00ff00ff) |
-        (((nBitsTotalH << 24) | (nBitsTotalH >>> 8))  & 0xff00ff00)
+        (((nBitsTotalH << 8) | (nBitsTotalH >>> 24)) & 0x00ff00ff) |
+        (((nBitsTotalH << 24) | (nBitsTotalH >>> 8)) & 0xff00ff00)
       );
       dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
-        (((nBitsTotalL << 8)  | (nBitsTotalL >>> 24)) & 0x00ff00ff) |
-        (((nBitsTotalL << 24) | (nBitsTotalL >>> 8))  & 0xff00ff00)
+        (((nBitsTotalL << 8) | (nBitsTotalL >>> 24)) & 0x00ff00ff) |
+        (((nBitsTotalL << 24) | (nBitsTotalL >>> 8)) & 0xff00ff00)
       );
 
       data.sigBytes = (dataWords.length + 1) * 4;
@@ -1071,8 +1075,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         // Shortcut
         var H_i = H[i];
 
-        H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) |
-          (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+        H[i] = (((H_i << 8) | (H_i >>> 24)) & 0x00ff00ff) |
+          (((H_i << 24) | (H_i >>> 8)) & 0xff00ff00);
       }
 
       // Return final computed hash
@@ -1349,23 +1353,23 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
           W[i] = M[offset + i] | 0;
         } else {
           var gamma0x = W[i - 15];
-          var gamma0  = ((gamma0x << 25) | (gamma0x >>> 7))  ^
+          var gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^
             ((gamma0x << 14) | (gamma0x >>> 18)) ^
             (gamma0x >>> 3);
 
           var gamma1x = W[i - 2];
-          var gamma1  = ((gamma1x << 15) | (gamma1x >>> 17)) ^
+          var gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^
             ((gamma1x << 13) | (gamma1x >>> 19)) ^
             (gamma1x >>> 10);
 
           W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
         }
 
-        var ch  = (e & f) ^ (~e & g);
+        var ch = (e & f) ^ (~e & g);
         var maj = (a & b) ^ (a & c) ^ (b & c);
 
         var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
-        var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7)  | (e >>> 25));
+        var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));
 
         var t1 = h + sigma1 + ch + K[i] + W[i];
         var t2 = sigma0 + maj;
@@ -1664,39 +1668,43 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
   // Constants table
   var _zl = WordArray.create([
-    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-    7,  4, 13,  1, 10,  6, 15,  3, 12,  0,  9,  5,  2, 14, 11,  8,
-    3, 10, 14,  4,  9, 15,  8,  1,  2,  7,  0,  6, 13, 11,  5, 12,
-    1,  9, 11, 10,  0,  8, 12,  4, 13,  3,  7, 15, 14,  5,  6,  2,
-    4,  0,  5,  9,  7, 12,  2, 10, 14,  1,  3,  8, 11,  6, 15, 13]);
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    7, 4, 13, 1, 10, 6, 15, 3, 12, 0, 9, 5, 2, 14, 11, 8,
+    3, 10, 14, 4, 9, 15, 8, 1, 2, 7, 0, 6, 13, 11, 5, 12,
+    1, 9, 11, 10, 0, 8, 12, 4, 13, 3, 7, 15, 14, 5, 6, 2,
+    4, 0, 5, 9, 7, 12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13
+  ]);
   var _zr = WordArray.create([
-    5, 14,  7,  0,  9,  2, 11,  4, 13,  6, 15,  8,  1, 10,  3, 12,
-    6, 11,  3,  7,  0, 13,  5, 10, 14, 15,  8, 12,  4,  9,  1,  2,
-    15,  5,  1,  3,  7, 14,  6,  9, 11,  8, 12,  2, 10,  0,  4, 13,
-    8,  6,  4,  1,  3, 11, 15,  0,  5, 12,  2, 13,  9,  7, 10, 14,
-    12, 15, 10,  4,  1,  5,  8,  7,  6,  2, 13, 14,  0,  3,  9, 11]);
+    5, 14, 7, 0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12,
+    6, 11, 3, 7, 0, 13, 5, 10, 14, 15, 8, 12, 4, 9, 1, 2,
+    15, 5, 1, 3, 7, 14, 6, 9, 11, 8, 12, 2, 10, 0, 4, 13,
+    8, 6, 4, 1, 3, 11, 15, 0, 5, 12, 2, 13, 9, 7, 10, 14,
+    12, 15, 10, 4, 1, 5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11
+  ]);
   var _sl = WordArray.create([
-    11, 14, 15, 12,  5,  8,  7,  9, 11, 13, 14, 15,  6,  7,  9,  8,
-    7, 6,   8, 13, 11,  9,  7, 15,  7, 12, 15,  9, 11,  7, 13, 12,
-    11, 13,  6,  7, 14,  9, 13, 15, 14,  8, 13,  6,  5, 12,  7,  5,
-    11, 12, 14, 15, 14, 15,  9,  8,  9, 14,  5,  6,  8,  6,  5, 12,
-    9, 15,  5, 11,  6,  8, 13, 12,  5, 12, 13, 14, 11,  8,  5,  6 ]);
+    11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8,
+    7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12,
+    11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5,
+    11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12,
+    9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6
+  ]);
   var _sr = WordArray.create([
-    8,  9,  9, 11, 13, 15, 15,  5,  7,  7,  8, 11, 14, 14, 12,  6,
-    9, 13, 15,  7, 12,  8,  9, 11,  7,  7, 12,  7,  6, 15, 13, 11,
-    9,  7, 15, 11,  8,  6,  6, 14, 12, 13,  5, 14, 13, 13,  7,  5,
-    15,  5,  8, 11, 14, 14,  6, 14,  6,  9, 12,  9, 12,  5, 15,  8,
-    8,  5, 12,  9, 12,  5, 14,  6,  8, 13,  6,  5, 15, 13, 11, 11 ]);
+    8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6,
+    9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11,
+    9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5,
+    15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8,
+    8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11
+  ]);
 
-  var _hl =  WordArray.create([ 0x00000000, 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xA953FD4E]);
-  var _hr =  WordArray.create([ 0x50A28BE6, 0x5C4DD124, 0x6D703EF3, 0x7A6D76E9, 0x00000000]);
+  var _hl = WordArray.create([0x00000000, 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xA953FD4E]);
+  var _hr = WordArray.create([0x50A28BE6, 0x5C4DD124, 0x6D703EF3, 0x7A6D76E9, 0x00000000]);
 
   /**
    * RIPEMD160 hash algorithm.
    */
   var RIPEMD160 = C_algo.RIPEMD160 = Hasher.extend({
     _doReset: function () {
-      this._hash  = WordArray.create([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]);
+      this._hash = WordArray.create([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]);
     },
 
     _doProcessBlock: function (M, offset) {
@@ -1709,12 +1717,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
         // Swap
         M[offset_i] = (
-          (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
-          (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+          (((M_offset_i << 8) | (M_offset_i >>> 24)) & 0x00ff00ff) |
+          (((M_offset_i << 24) | (M_offset_i >>> 8)) & 0xff00ff00)
         );
       }
       // Shortcut
-      var H  = this._hash.words;
+      var H = this._hash.words;
       var hl = _hl.words;
       var hr = _hr.words;
       var zl = _zl.words;
@@ -1734,42 +1742,42 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       // Computation
       var t;
       for (var i = 0; i < 80; i += 1) {
-        t = (al +  M[offset+zl[i]])|0;
-        if (i<16){
-          t +=  f1(bl,cl,dl) + hl[0];
-        } else if (i<32) {
-          t +=  f2(bl,cl,dl) + hl[1];
-        } else if (i<48) {
-          t +=  f3(bl,cl,dl) + hl[2];
-        } else if (i<64) {
-          t +=  f4(bl,cl,dl) + hl[3];
-        } else {// if (i<80) {
-          t +=  f5(bl,cl,dl) + hl[4];
+        t = (al + M[offset + zl[i]]) | 0;
+        if (i < 16) {
+          t += f1(bl, cl, dl) + hl[0];
+        } else if (i < 32) {
+          t += f2(bl, cl, dl) + hl[1];
+        } else if (i < 48) {
+          t += f3(bl, cl, dl) + hl[2];
+        } else if (i < 64) {
+          t += f4(bl, cl, dl) + hl[3];
+        } else { // if (i<80) {
+          t += f5(bl, cl, dl) + hl[4];
         }
-        t = t|0;
-        t =  rotl(t,sl[i]);
-        t = (t+el)|0;
+        t = t | 0;
+        t = rotl(t, sl[i]);
+        t = (t + el) | 0;
         al = el;
         el = dl;
         dl = rotl(cl, 10);
         cl = bl;
         bl = t;
 
-        t = (ar + M[offset+zr[i]])|0;
-        if (i<16){
-          t +=  f5(br,cr,dr) + hr[0];
-        } else if (i<32) {
-          t +=  f4(br,cr,dr) + hr[1];
-        } else if (i<48) {
-          t +=  f3(br,cr,dr) + hr[2];
-        } else if (i<64) {
-          t +=  f2(br,cr,dr) + hr[3];
-        } else {// if (i<80) {
-          t +=  f1(br,cr,dr) + hr[4];
+        t = (ar + M[offset + zr[i]]) | 0;
+        if (i < 16) {
+          t += f5(br, cr, dr) + hr[0];
+        } else if (i < 32) {
+          t += f4(br, cr, dr) + hr[1];
+        } else if (i < 48) {
+          t += f3(br, cr, dr) + hr[2];
+        } else if (i < 64) {
+          t += f2(br, cr, dr) + hr[3];
+        } else { // if (i<80) {
+          t += f1(br, cr, dr) + hr[4];
         }
-        t = t|0;
-        t =  rotl(t,sr[i]) ;
-        t = (t+er)|0;
+        t = t | 0;
+        t = rotl(t, sr[i]);
+        t = (t + er) | 0;
         ar = er;
         er = dr;
         dr = rotl(cr, 10);
@@ -1777,12 +1785,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         br = t;
       }
       // Intermediate hash value
-      t    = (H[1] + cl + dr)|0;
-      H[1] = (H[2] + dl + er)|0;
-      H[2] = (H[3] + el + ar)|0;
-      H[3] = (H[4] + al + br)|0;
-      H[4] = (H[0] + bl + cr)|0;
-      H[0] =  t;
+      t = (H[1] + cl + dr) | 0;
+      H[1] = (H[2] + dl + er) | 0;
+      H[2] = (H[3] + el + ar) | 0;
+      H[3] = (H[4] + al + br) | 0;
+      H[4] = (H[0] + bl + cr) | 0;
+      H[0] = t;
     },
 
     _doFinalize: function () {
@@ -1796,8 +1804,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       // Add padding
       dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
       dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
-        (((nBitsTotal << 8)  | (nBitsTotal >>> 24)) & 0x00ff00ff) |
-        (((nBitsTotal << 24) | (nBitsTotal >>> 8))  & 0xff00ff00)
+        (((nBitsTotal << 8) | (nBitsTotal >>> 24)) & 0x00ff00ff) |
+        (((nBitsTotal << 24) | (nBitsTotal >>> 8)) & 0xff00ff00)
       );
       data.sigBytes = (dataWords.length + 1) * 4;
 
@@ -1814,8 +1822,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         var H_i = H[i];
 
         // Swap
-        H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) |
-          (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+        H[i] = (((H_i << 8) | (H_i >>> 24)) & 0x00ff00ff) |
+          (((H_i << 24) | (H_i >>> 8)) & 0xff00ff00);
       }
 
       // Return final computed hash
@@ -1837,7 +1845,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
   }
 
   function f2(x, y, z) {
-    return (((x)&(y)) | ((~x)&(z)));
+    return (((x) & (y)) | ((~x) & (z)));
   }
 
   function f3(x, y, z) {
@@ -1845,16 +1853,16 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
   }
 
   function f4(x, y, z) {
-    return (((x) & (z)) | ((y)&(~(z))));
+    return (((x) & (z)) | ((y) & (~(z))));
   }
 
   function f5(x, y, z) {
-    return ((x) ^ ((y) |(~(z))));
+    return ((x) ^ ((y) | (~(z))));
 
   }
 
-  function rotl(x,n) {
-    return (x<<n) | (x>>>(32-n));
+  function rotl(x, n) {
+    return (x << n) | (x >>> (32 - n));
   }
 
 
@@ -2041,7 +2049,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
      * @property {number} iterations The number of iterations to perform. Default: 1
      */
     cfg: Base.extend({
-      keySize: 128/32,
+      keySize: 128 / 32,
       hasher: SHA1,
       iterations: 1
     }),
@@ -2168,7 +2176,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
      * @property {number} iterations The number of iterations to perform. Default: 1
      */
     cfg: Base.extend({
-      keySize: 128/32,
+      keySize: 128 / 32,
       hasher: MD5,
       iterations: 1
     }),
@@ -2620,13 +2628,14 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
   // Constants tables
   var RHO_OFFSETS = [];
-  var PI_INDEXES  = [];
+  var PI_INDEXES = [];
   var ROUND_CONSTANTS = [];
 
   // Compute Constants
   (function () {
     // Compute rho offset constants
-    var x = 1, y = 0;
+    var x = 1,
+      y = 0;
     for (var t = 0; t < 24; t++) {
       RHO_OFFSETS[x + 5 * y] = ((t + 1) * (t + 2) / 2) % 64;
 
@@ -2713,23 +2722,23 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       // Absorb
       for (var i = 0; i < nBlockSizeLanes; i++) {
         // Shortcuts
-        var M2i  = M[offset + 2 * i];
+        var M2i = M[offset + 2 * i];
         var M2i1 = M[offset + 2 * i + 1];
 
         // Swap endian
         M2i = (
-          (((M2i << 8)  | (M2i >>> 24)) & 0x00ff00ff) |
-          (((M2i << 24) | (M2i >>> 8))  & 0xff00ff00)
+          (((M2i << 8) | (M2i >>> 24)) & 0x00ff00ff) |
+          (((M2i << 24) | (M2i >>> 8)) & 0xff00ff00)
         );
         M2i1 = (
-          (((M2i1 << 8)  | (M2i1 >>> 24)) & 0x00ff00ff) |
-          (((M2i1 << 24) | (M2i1 >>> 8))  & 0xff00ff00)
+          (((M2i1 << 8) | (M2i1 >>> 24)) & 0x00ff00ff) |
+          (((M2i1 << 24) | (M2i1 >>> 8)) & 0xff00ff00)
         );
 
         // Absorb message into state
         var lane = state[i];
         lane.high ^= M2i1;
-        lane.low  ^= M2i;
+        lane.low ^= M2i;
       }
 
       // Rounds
@@ -2737,7 +2746,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         // Theta
         for (var x = 0; x < 5; x++) {
           // Mix column lanes
-          var tMsw = 0, tLsw = 0;
+          var tMsw = 0,
+            tLsw = 0;
           for (var y = 0; y < 5; y++) {
             var lane = state[x + 5 * y];
             tMsw ^= lane.high;
@@ -2747,7 +2757,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
           // Temporary values
           var Tx = T[x];
           Tx.high = tMsw;
-          Tx.low  = tLsw;
+          Tx.low = tLsw;
         }
         for (var x = 0; x < 5; x++) {
           // Shortcuts
@@ -2758,11 +2768,11 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
           // Mix surrounding columns
           var tMsw = Tx4.high ^ ((Tx1Msw << 1) | (Tx1Lsw >>> 31));
-          var tLsw = Tx4.low  ^ ((Tx1Lsw << 1) | (Tx1Msw >>> 31));
+          var tLsw = Tx4.low ^ ((Tx1Lsw << 1) | (Tx1Msw >>> 31));
           for (var y = 0; y < 5; y++) {
             var lane = state[x + 5 * y];
             lane.high ^= tMsw;
-            lane.low  ^= tLsw;
+            lane.low ^= tLsw;
           }
         }
 
@@ -2786,14 +2796,14 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
           // Transpose lanes
           var TPiLane = T[PI_INDEXES[laneIndex]];
           TPiLane.high = tMsw;
-          TPiLane.low  = tLsw;
+          TPiLane.low = tLsw;
         }
 
         // Rho pi at x = y = 0
         var T0 = T[0];
         var state0 = state[0];
         T0.high = state0.high;
-        T0.low  = state0.low;
+        T0.low = state0.low;
 
         // Chi
         for (var x = 0; x < 5; x++) {
@@ -2807,7 +2817,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
             // Mix rows
             lane.high = TLane.high ^ (~Tx1Lane.high & Tx2Lane.high);
-            lane.low  = TLane.low  ^ (~Tx1Lane.low  & Tx2Lane.low);
+            lane.low = TLane.low ^ (~Tx1Lane.low & Tx2Lane.low);
           }
         }
 
@@ -2815,7 +2825,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         var lane = state[0];
         var roundConstant = ROUND_CONSTANTS[round];
         lane.high ^= roundConstant.high;
-        lane.low  ^= roundConstant.low;;
+        lane.low ^= roundConstant.low;;
       }
     },
 
@@ -2850,12 +2860,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
         // Swap endian
         laneMsw = (
-          (((laneMsw << 8)  | (laneMsw >>> 24)) & 0x00ff00ff) |
-          (((laneMsw << 24) | (laneMsw >>> 8))  & 0xff00ff00)
+          (((laneMsw << 8) | (laneMsw >>> 24)) & 0x00ff00ff) |
+          (((laneMsw << 24) | (laneMsw >>> 8)) & 0xff00ff00)
         );
         laneLsw = (
-          (((laneLsw << 8)  | (laneLsw >>> 24)) & 0x00ff00ff) |
-          (((laneLsw << 24) | (laneLsw >>> 8))  & 0xff00ff00)
+          (((laneLsw << 8) | (laneLsw >>> 24)) & 0x00ff00ff) |
+          (((laneLsw << 24) | (laneLsw >>> 8)) & 0xff00ff00)
         );
 
         // Squeeze state to retrieve hash
@@ -3047,29 +3057,29 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
         // Extend message
         if (i < 16) {
-          var Wih = Wi.high = M[offset + i * 2]     | 0;
-          var Wil = Wi.low  = M[offset + i * 2 + 1] | 0;
+          var Wih = Wi.high = M[offset + i * 2] | 0;
+          var Wil = Wi.low = M[offset + i * 2 + 1] | 0;
         } else {
           // Gamma0
-          var gamma0x  = W[i - 15];
+          var gamma0x = W[i - 15];
           var gamma0xh = gamma0x.high;
           var gamma0xl = gamma0x.low;
-          var gamma0h  = ((gamma0xh >>> 1) | (gamma0xl << 31)) ^ ((gamma0xh >>> 8) | (gamma0xl << 24)) ^ (gamma0xh >>> 7);
-          var gamma0l  = ((gamma0xl >>> 1) | (gamma0xh << 31)) ^ ((gamma0xl >>> 8) | (gamma0xh << 24)) ^ ((gamma0xl >>> 7) | (gamma0xh << 25));
+          var gamma0h = ((gamma0xh >>> 1) | (gamma0xl << 31)) ^ ((gamma0xh >>> 8) | (gamma0xl << 24)) ^ (gamma0xh >>> 7);
+          var gamma0l = ((gamma0xl >>> 1) | (gamma0xh << 31)) ^ ((gamma0xl >>> 8) | (gamma0xh << 24)) ^ ((gamma0xl >>> 7) | (gamma0xh << 25));
 
           // Gamma1
-          var gamma1x  = W[i - 2];
+          var gamma1x = W[i - 2];
           var gamma1xh = gamma1x.high;
           var gamma1xl = gamma1x.low;
-          var gamma1h  = ((gamma1xh >>> 19) | (gamma1xl << 13)) ^ ((gamma1xh << 3) | (gamma1xl >>> 29)) ^ (gamma1xh >>> 6);
-          var gamma1l  = ((gamma1xl >>> 19) | (gamma1xh << 13)) ^ ((gamma1xl << 3) | (gamma1xh >>> 29)) ^ ((gamma1xl >>> 6) | (gamma1xh << 26));
+          var gamma1h = ((gamma1xh >>> 19) | (gamma1xl << 13)) ^ ((gamma1xh << 3) | (gamma1xl >>> 29)) ^ (gamma1xh >>> 6);
+          var gamma1l = ((gamma1xl >>> 19) | (gamma1xh << 13)) ^ ((gamma1xl << 3) | (gamma1xh >>> 29)) ^ ((gamma1xl >>> 6) | (gamma1xh << 26));
 
           // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
-          var Wi7  = W[i - 7];
+          var Wi7 = W[i - 7];
           var Wi7h = Wi7.high;
           var Wi7l = Wi7.low;
 
-          var Wi16  = W[i - 16];
+          var Wi16 = W[i - 16];
           var Wi16h = Wi16.high;
           var Wi16l = Wi16.low;
 
@@ -3081,21 +3091,21 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
           var Wih = Wih + Wi16h + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0);
 
           Wi.high = Wih;
-          Wi.low  = Wil;
+          Wi.low = Wil;
         }
 
-        var chh  = (eh & fh) ^ (~eh & gh);
-        var chl  = (el & fl) ^ (~el & gl);
+        var chh = (eh & fh) ^ (~eh & gh);
+        var chl = (el & fl) ^ (~el & gl);
         var majh = (ah & bh) ^ (ah & ch) ^ (bh & ch);
         var majl = (al & bl) ^ (al & cl) ^ (bl & cl);
 
-        var sigma0h = ((ah >>> 28) | (al << 4))  ^ ((ah << 30)  | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
-        var sigma0l = ((al >>> 28) | (ah << 4))  ^ ((al << 30)  | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
+        var sigma0h = ((ah >>> 28) | (al << 4)) ^ ((ah << 30) | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
+        var sigma0l = ((al >>> 28) | (ah << 4)) ^ ((al << 30) | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
         var sigma1h = ((eh >>> 14) | (el << 18)) ^ ((eh >>> 18) | (el << 14)) ^ ((eh << 23) | (el >>> 9));
         var sigma1l = ((el >>> 14) | (eh << 18)) ^ ((el >>> 18) | (eh << 14)) ^ ((el << 23) | (eh >>> 9));
 
         // t1 = h + sigma1 + ch + K[i] + W[i]
-        var Ki  = K[i];
+        var Ki = K[i];
         var Kih = Ki.high;
         var Kil = Ki.low;
 
@@ -3132,21 +3142,21 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       }
 
       // Intermediate hash value
-      H0l = H0.low  = (H0l + al);
+      H0l = H0.low = (H0l + al);
       H0.high = (H0h + ah + ((H0l >>> 0) < (al >>> 0) ? 1 : 0));
-      H1l = H1.low  = (H1l + bl);
+      H1l = H1.low = (H1l + bl);
       H1.high = (H1h + bh + ((H1l >>> 0) < (bl >>> 0) ? 1 : 0));
-      H2l = H2.low  = (H2l + cl);
+      H2l = H2.low = (H2l + cl);
       H2.high = (H2h + ch + ((H2l >>> 0) < (cl >>> 0) ? 1 : 0));
-      H3l = H3.low  = (H3l + dl);
+      H3l = H3.low = (H3l + dl);
       H3.high = (H3h + dh + ((H3l >>> 0) < (dl >>> 0) ? 1 : 0));
-      H4l = H4.low  = (H4l + el);
+      H4l = H4.low = (H4l + el);
       H4.high = (H4h + eh + ((H4l >>> 0) < (el >>> 0) ? 1 : 0));
-      H5l = H5.low  = (H5l + fl);
+      H5l = H5.low = (H5l + fl);
       H5.high = (H5h + fh + ((H5l >>> 0) < (fl >>> 0) ? 1 : 0));
-      H6l = H6.low  = (H6l + gl);
+      H6l = H6.low = (H6l + gl);
       H6.high = (H6h + gh + ((H6l >>> 0) < (gl >>> 0) ? 1 : 0));
-      H7l = H7.low  = (H7l + hl);
+      H7l = H7.low = (H7l + hl);
       H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0));
     },
 
@@ -3181,7 +3191,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
       return clone;
     },
 
-    blockSize: 1024/32
+    blockSize: 1024 / 32
   });
 
   /**
@@ -3435,9 +3445,9 @@ CryptoJS.lib.Cipher || (function (undefined) {
       return finalProcessedData;
     },
 
-    keySize: 128/32,
+    keySize: 128 / 32,
 
-    ivSize: 128/32,
+    ivSize: 128 / 32,
 
     _ENC_XFORM_MODE: 1,
 
@@ -3774,7 +3784,7 @@ CryptoJS.lib.Cipher || (function (undefined) {
       return finalProcessedBlocks;
     },
 
-    blockSize: 128/32
+    blockSize: 128 / 32
   });
 
   /**
@@ -3799,16 +3809,16 @@ CryptoJS.lib.Cipher || (function (undefined) {
      * @example
      *
      *     var cipherParams = CryptoJS.lib.CipherParams.create({
-	         *         ciphertext: ciphertextWordArray,
-	         *         key: keyWordArray,
-	         *         iv: ivWordArray,
-	         *         salt: saltWordArray,
-	         *         algorithm: CryptoJS.algo.AES,
-	         *         mode: CryptoJS.mode.CBC,
-	         *         padding: CryptoJS.pad.PKCS7,
-	         *         blockSize: 4,
-	         *         formatter: CryptoJS.format.OpenSSL
-	         *     });
+     *         ciphertext: ciphertextWordArray,
+     *         key: keyWordArray,
+     *         iv: ivWordArray,
+     *         salt: saltWordArray,
+     *         algorithm: CryptoJS.algo.AES,
+     *         mode: CryptoJS.mode.CBC,
+     *         padding: CryptoJS.pad.PKCS7,
+     *         blockSize: 4,
+     *         formatter: CryptoJS.format.OpenSSL
+     *     });
      */
     init: function (cipherParams) {
       this.mixIn(cipherParams);
@@ -3901,7 +3911,10 @@ CryptoJS.lib.Cipher || (function (undefined) {
         ciphertext.sigBytes -= 16;
       }
 
-      return CipherParams.create({ ciphertext: ciphertext, salt: salt });
+      return CipherParams.create({
+        ciphertext: ciphertext,
+        salt: salt
+      });
     }
   };
 
@@ -4043,18 +4056,24 @@ CryptoJS.lib.Cipher || (function (undefined) {
     execute: function (password, keySize, ivSize, salt) {
       // Generate random salt
       if (!salt) {
-        salt = WordArray.random(64/8);
+        salt = WordArray.random(64 / 8);
       }
 
       // Derive key and IV
-      var key = EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
+      var key = EvpKDF.create({
+        keySize: keySize + ivSize
+      }).compute(password, salt);
 
       // Separate key and IV
       var iv = WordArray.create(key.words.slice(keySize), ivSize * 4);
       key.sigBytes = keySize * 4;
 
       // Return params
-      return CipherParams.create({ key: key, iv: iv, salt: salt });
+      return CipherParams.create({
+        key: key,
+        iv: iv,
+        salt: salt
+      });
     }
   };
 
@@ -4348,11 +4367,9 @@ CryptoJS.mode.OFB = (function () {
  * A noop padding strategy.
  */
 CryptoJS.pad.NoPadding = {
-  pad: function () {
-  },
+  pad: function () {},
 
-  unpad: function () {
-  }
+  unpad: function () {}
 };
 
 
@@ -4398,7 +4415,9 @@ CryptoJS.pad.NoPadding = {
      */
     parse: function (input) {
       var ciphertext = Hex.parse(input);
-      return CipherParams.create({ ciphertext: ciphertext });
+      return CipherParams.create({
+        ciphertext: ciphertext
+      });
     }
   };
 }());
@@ -4454,14 +4473,14 @@ CryptoJS.pad.NoPadding = {
       var t = (d[sx] * 0x101) ^ (sx * 0x1010100);
       SUB_MIX_0[x] = (t << 24) | (t >>> 8);
       SUB_MIX_1[x] = (t << 16) | (t >>> 16);
-      SUB_MIX_2[x] = (t << 8)  | (t >>> 24);
+      SUB_MIX_2[x] = (t << 8) | (t >>> 24);
       SUB_MIX_3[x] = t;
 
       // Compute inv sub bytes, inv mix columns tables
       var t = (x8 * 0x1010101) ^ (x4 * 0x10001) ^ (x2 * 0x101) ^ (x * 0x1010100);
       INV_SUB_MIX_0[sx] = (t << 24) | (t >>> 8);
       INV_SUB_MIX_1[sx] = (t << 16) | (t >>> 16);
-      INV_SUB_MIX_2[sx] = (t << 8)  | (t >>> 24);
+      INV_SUB_MIX_2[sx] = (t << 8) | (t >>> 24);
       INV_SUB_MIX_3[sx] = t;
 
       // Compute next counter
@@ -4567,7 +4586,7 @@ CryptoJS.pad.NoPadding = {
       var nRounds = this._nRounds;
 
       // Get input, add round key
-      var s0 = M[offset]     ^ keySchedule[0];
+      var s0 = M[offset] ^ keySchedule[0];
       var s1 = M[offset + 1] ^ keySchedule[1];
       var s2 = M[offset + 2] ^ keySchedule[2];
       var s3 = M[offset + 3] ^ keySchedule[3];
@@ -4597,13 +4616,13 @@ CryptoJS.pad.NoPadding = {
       var t3 = ((SBOX[s3 >>> 24] << 24) | (SBOX[(s0 >>> 16) & 0xff] << 16) | (SBOX[(s1 >>> 8) & 0xff] << 8) | SBOX[s2 & 0xff]) ^ keySchedule[ksRow++];
 
       // Set output
-      M[offset]     = t0;
+      M[offset] = t0;
       M[offset + 1] = t1;
       M[offset + 2] = t2;
       M[offset + 3] = t3;
     },
 
-    keySize: 256/32
+    keySize: 256 / 32
   });
 
   /**
@@ -4628,21 +4647,21 @@ CryptoJS.pad.NoPadding = {
 
   // Permuted Choice 1 constants
   var PC1 = [
-    57, 49, 41, 33, 25, 17, 9,  1,
+    57, 49, 41, 33, 25, 17, 9, 1,
     58, 50, 42, 34, 26, 18, 10, 2,
     59, 51, 43, 35, 27, 19, 11, 3,
     60, 52, 44, 36, 63, 55, 47, 39,
-    31, 23, 15, 7,  62, 54, 46, 38,
-    30, 22, 14, 6,  61, 53, 45, 37,
-    29, 21, 13, 5,  28, 20, 12, 4
+    31, 23, 15, 7, 62, 54, 46, 38,
+    30, 22, 14, 6, 61, 53, 45, 37,
+    29, 21, 13, 5, 28, 20, 12, 4
   ];
 
   // Permuted Choice 2 constants
   var PC2 = [
-    14, 17, 11, 24, 1,  5,
-    3,  28, 15, 6,  21, 10,
-    23, 19, 12, 4,  26, 8,
-    16, 7,  27, 20, 13, 2,
+    14, 17, 11, 24, 1, 5,
+    3, 28, 15, 6, 21, 10,
+    23, 19, 12, 4, 26, 8,
+    16, 7, 27, 20, 13, 2,
     41, 52, 31, 37, 47, 55,
     30, 40, 51, 45, 33, 48,
     44, 49, 39, 56, 34, 53,
@@ -4650,11 +4669,10 @@ CryptoJS.pad.NoPadding = {
   ];
 
   // Cumulative bit shift constants
-  var BIT_SHIFTS = [1,  2,  4,  6,  8,  10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28];
+  var BIT_SHIFTS = [1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28];
 
   // SBOXes and round permutation constants
-  var SBOX_P = [
-    {
+  var SBOX_P = [{
       0x0: 0x808200,
       0x10000000: 0x8000,
       0x20000000: 0x808002,
@@ -5255,11 +5273,11 @@ CryptoJS.pad.NoPadding = {
       this._rBlock = M[offset + 1];
 
       // Initial permutation
-      exchangeLR.call(this, 4,  0x0f0f0f0f);
+      exchangeLR.call(this, 4, 0x0f0f0f0f);
       exchangeLR.call(this, 16, 0x0000ffff);
-      exchangeRL.call(this, 2,  0x33333333);
-      exchangeRL.call(this, 8,  0x00ff00ff);
-      exchangeLR.call(this, 1,  0x55555555);
+      exchangeRL.call(this, 2, 0x33333333);
+      exchangeRL.call(this, 8, 0x00ff00ff);
+      exchangeLR.call(this, 1, 0x55555555);
 
       // Rounds
       for (var round = 0; round < 16; round++) {
@@ -5283,22 +5301,22 @@ CryptoJS.pad.NoPadding = {
       this._rBlock = t;
 
       // Final permutation
-      exchangeLR.call(this, 1,  0x55555555);
-      exchangeRL.call(this, 8,  0x00ff00ff);
-      exchangeRL.call(this, 2,  0x33333333);
+      exchangeLR.call(this, 1, 0x55555555);
+      exchangeRL.call(this, 8, 0x00ff00ff);
+      exchangeRL.call(this, 2, 0x33333333);
       exchangeLR.call(this, 16, 0x0000ffff);
-      exchangeLR.call(this, 4,  0x0f0f0f0f);
+      exchangeLR.call(this, 4, 0x0f0f0f0f);
 
       // Set output
       M[offset] = this._lBlock;
       M[offset + 1] = this._rBlock;
     },
 
-    keySize: 64/32,
+    keySize: 64 / 32,
 
-    ivSize: 64/32,
+    ivSize: 64 / 32,
 
-    blockSize: 64/32
+    blockSize: 64 / 32
   });
 
   // Swap bits across the left and right words
@@ -5351,11 +5369,11 @@ CryptoJS.pad.NoPadding = {
       this._des1.decryptBlock(M, offset);
     },
 
-    keySize: 192/32,
+    keySize: 192 / 32,
 
-    ivSize: 64/32,
+    ivSize: 64 / 32,
 
-    blockSize: 64/32
+    blockSize: 64 / 32
   });
 
   /**
@@ -5414,7 +5432,7 @@ CryptoJS.pad.NoPadding = {
       M[offset] ^= generateKeystreamWord.call(this);
     },
 
-    keySize: 256/32,
+    keySize: 256 / 32,
 
     ivSize: 0
   });
@@ -5499,35 +5517,26 @@ CryptoJS.pad.NoPadding = {
 CryptoJS.mode.CTRGladman = (function () {
   var CTRGladman = CryptoJS.lib.BlockCipherMode.extend();
 
-  function incWord(word)
-  {
+  function incWord(word) {
     if (((word >> 24) & 0xff) === 0xff) { //overflow
-      var b1 = (word >> 16)&0xff;
-      var b2 = (word >> 8)&0xff;
+      var b1 = (word >> 16) & 0xff;
+      var b2 = (word >> 8) & 0xff;
       var b3 = word & 0xff;
 
       if (b1 === 0xff) // overflow b1
       {
         b1 = 0;
-        if (b2 === 0xff)
-        {
+        if (b2 === 0xff) {
           b2 = 0;
-          if (b3 === 0xff)
-          {
+          if (b3 === 0xff) {
             b3 = 0;
-          }
-          else
-          {
+          } else {
             ++b3;
           }
-        }
-        else
-        {
+        } else {
           ++b2;
         }
-      }
-      else
-      {
+      } else {
         ++b1;
       }
 
@@ -5535,18 +5544,14 @@ CryptoJS.mode.CTRGladman = (function () {
       word += (b1 << 16);
       word += (b2 << 8);
       word += b3;
-    }
-    else
-    {
+    } else {
       word += (0x01 << 24);
     }
     return word;
   }
 
-  function incCounter(counter)
-  {
-    if ((counter[0] = incWord(counter[0])) === 0)
-    {
+  function incCounter(counter) {
+    if ((counter[0] = incWord(counter[0])) === 0) {
       // encr_data in fileenc.c from  Dr Brian Gladman's counts only with DWORD j < 8
       counter[1] = incWord(counter[1]);
     }
@@ -5597,9 +5602,9 @@ CryptoJS.mode.CTRGladman = (function () {
   var C_algo = C.algo;
 
   // Reusable objects
-  var S  = [];
+  var S = [];
   var C_ = [];
-  var G  = [];
+  var G = [];
 
   /**
    * Rabbit stream cipher algorithm
@@ -5612,8 +5617,8 @@ CryptoJS.mode.CTRGladman = (function () {
 
       // Swap endian
       for (var i = 0; i < 4; i++) {
-        K[i] = (((K[i] << 8)  | (K[i] >>> 24)) & 0x00ff00ff) |
-          (((K[i] << 24) | (K[i] >>> 8))  & 0xff00ff00);
+        K[i] = (((K[i] << 8) | (K[i] >>> 24)) & 0x00ff00ff) |
+          (((K[i] << 24) | (K[i] >>> 8)) & 0xff00ff00);
       }
 
       // Generate initial state values
@@ -5656,7 +5661,7 @@ CryptoJS.mode.CTRGladman = (function () {
         var i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
         var i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
         var i1 = (i0 >>> 16) | (i2 & 0xffff0000);
-        var i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+        var i3 = (i2 << 16) | (i0 & 0x0000ffff);
 
         // Modify counter values
         C[0] ^= i0;
@@ -5690,17 +5695,17 @@ CryptoJS.mode.CTRGladman = (function () {
 
       for (var i = 0; i < 4; i++) {
         // Swap endian
-        S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
-          (((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+        S[i] = (((S[i] << 8) | (S[i] >>> 24)) & 0x00ff00ff) |
+          (((S[i] << 24) | (S[i] >>> 8)) & 0xff00ff00);
 
         // Encrypt
         M[offset + i] ^= S[i];
       }
     },
 
-    blockSize: 128/32,
+    blockSize: 128 / 32,
 
-    ivSize: 64/32
+    ivSize: 64 / 32
   });
 
   function nextState() {
@@ -5742,13 +5747,13 @@ CryptoJS.mode.CTRGladman = (function () {
 
     // Calculate new state values
     X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
-    X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+    X[1] = (G[1] + ((G[0] << 8) | (G[0] >>> 24)) + G[7]) | 0;
     X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
-    X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+    X[3] = (G[3] + ((G[2] << 8) | (G[2] >>> 24)) + G[1]) | 0;
     X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
-    X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+    X[5] = (G[5] + ((G[4] << 8) | (G[4] >>> 24)) + G[3]) | 0;
     X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
-    X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+    X[7] = (G[7] + ((G[6] << 8) | (G[6] >>> 24)) + G[5]) | 0;
   }
 
   /**
@@ -5811,9 +5816,9 @@ CryptoJS.mode.CTR = (function () {
   var C_algo = C.algo;
 
   // Reusable objects
-  var S  = [];
+  var S = [];
   var C_ = [];
-  var G  = [];
+  var G = [];
 
   /**
    * Rabbit stream cipher algorithm.
@@ -5868,7 +5873,7 @@ CryptoJS.mode.CTR = (function () {
         var i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
         var i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
         var i1 = (i0 >>> 16) | (i2 & 0xffff0000);
-        var i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+        var i3 = (i2 << 16) | (i0 & 0x0000ffff);
 
         // Modify counter values
         C[0] ^= i0;
@@ -5902,17 +5907,17 @@ CryptoJS.mode.CTR = (function () {
 
       for (var i = 0; i < 4; i++) {
         // Swap endian
-        S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
-          (((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+        S[i] = (((S[i] << 8) | (S[i] >>> 24)) & 0x00ff00ff) |
+          (((S[i] << 24) | (S[i] >>> 8)) & 0xff00ff00);
 
         // Encrypt
         M[offset + i] ^= S[i];
       }
     },
 
-    blockSize: 128/32,
+    blockSize: 128 / 32,
 
-    ivSize: 64/32
+    ivSize: 64 / 32
   });
 
   function nextState() {
@@ -5954,13 +5959,13 @@ CryptoJS.mode.CTR = (function () {
 
     // Calculate new state values
     X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
-    X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+    X[1] = (G[1] + ((G[0] << 8) | (G[0] >>> 24)) + G[7]) | 0;
     X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
-    X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+    X[3] = (G[3] + ((G[2] << 8) | (G[2] >>> 24)) + G[1]) | 0;
     X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
-    X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+    X[5] = (G[5] + ((G[4] << 8) | (G[4] >>> 24)) + G[3]) | 0;
     X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
-    X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+    X[7] = (G[7] + ((G[6] << 8) | (G[6] >>> 24)) + G[5]) | 0;
   }
 
   /**
@@ -6000,4 +6005,3 @@ CryptoJS.pad.ZeroPadding = {
     data.sigBytes = i + 1;
   }
 };
-

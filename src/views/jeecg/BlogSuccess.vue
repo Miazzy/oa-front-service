@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
