@@ -4,14 +4,12 @@
       <div class="project-nav-header">
         <a-breadcrumb>
           <a-breadcrumb-item>
-            <router-link to="/home"> <a-icon type="home" />首页 </router-link>
+            <router-link to="/home">
+              <a-icon type="home" />首页
+            </router-link>
           </a-breadcrumb-item>
           <a-breadcrumb-item>
-            <project-select
-              class="nav-title"
-              style="display: inline-block;"
-              :code="code"
-            ></project-select>
+            <project-select class="nav-title" style="display: inline-block;" :code="code"></project-select>
             <span class="actions">
               <a-tooltip
                 :mouseEnterDelay="0.3"
@@ -41,36 +39,24 @@
       <section class="nav-body">
         <ul class="nav-wrapper nav nav-underscore pull-left">
           <li>
-            <a
-              class="app"
-              data-app="tasks"
-              @click="$router.push('/project/space/task/' + code)"
-              >任务</a
-            >
+            <a class="app" data-app="tasks" @click="$router.push('/project/space/task/' + code)">任务</a>
           </li>
           <li class>
-            <a
-              class="app"
-              data-app="works"
-              @click="$router.push('/project/space/files/' + code)"
-              >文件</a
-            >
+            <a class="app" data-app="works" @click="$router.push('/project/space/files/' + code)">文件</a>
           </li>
           <li>
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/overview/' + code)"
-              >概览</a
-            >
+            >概览</a>
           </li>
           <li class="actives">
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/features/' + code)"
-              >版本</a
-            >
+            >版本</a>
           </li>
         </ul>
       </section>
@@ -79,11 +65,7 @@
       <div class="content-wrapper">
         <div class="content-item features-content">
           <div class="actions m-t">
-            <a-dropdown
-              placement="bottomCenter"
-              :trigger="['click']"
-              v-if="currentProjectFeatures"
-            >
+            <a-dropdown placement="bottomCenter" :trigger="['click']" v-if="currentProjectFeatures">
               <a class="m-r text-default features-list-dropdown">
                 <span class="m-r-xs">{{ currentProjectFeatures.name }}</span>
                 <a-icon type="down" />
@@ -109,10 +91,7 @@
                     </div>
                     <div>
                       <a class="muted">
-                        <a-icon
-                          type="edit"
-                          @click.stop="editFeatures(projectFeatures)"
-                        ></a-icon>
+                        <a-icon type="edit" @click.stop="editFeatures(projectFeatures)"></a-icon>
                       </a>
                       <a class="muted">
                         <a-icon
@@ -126,17 +105,12 @@
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
-            <a-button icon="plus" type="primary" @click="createFeatures"
-              >创建版本库</a-button
-            >
+            <a-button icon="plus" type="primary" @click="createFeatures">创建版本库</a-button>
             <a-divider class="m-b-lg m-t-lg"></a-divider>
           </div>
           <a-spin :spinning="loading" v-if="currentProjectFeatures">
             <template v-if="versionTotal">
-              <div
-                :key="versionType"
-                v-for="(versionItem, versionType) in versionList"
-              >
+              <div :key="versionType" v-for="(versionItem, versionType) in versionList">
                 <a
                   style="cursor: pointer; display: block;"
                   class="muted m-l-sm m-b-sm"
@@ -147,10 +121,7 @@
                   <a-icon type="up" v-show="showPublished" />
                   <a-icon type="ellipsis" v-show="!showPublished" />
                 </a>
-                <div
-                  class="version-content"
-                  :class="{published: versionType == 'published'}"
-                >
+                <div class="version-content" :class="{published: versionType == 'published'}">
                   <template v-for="(version, versionIndex) in versionItem">
                     <a-card
                       class="version-item"
@@ -163,9 +134,11 @@
                       @click="showVersionDetail(version.code)"
                     >
                       <template slot="title">
-                        <strong :class="{muted: versionType == 'published'}">{{
+                        <strong :class="{muted: versionType == 'published'}">
+                          {{
                           version.name
-                        }}</strong>
+                          }}
+                        </strong>
                         <a-dropdown
                           placement="bottomCenter"
                           :trigger="['click']"
@@ -241,12 +214,10 @@
                             version.publish_time || version.plan_publish_time
                           "
                         >
-                          <span v-if="versionType == 'normal'"
-                            >预计发布时间：{{ version.plan_publish_time }}</span
-                          >
-                          <span v-else
-                            >发布时间：{{ version.publish_time }}</span
-                          >
+                          <span
+                            v-if="versionType == 'normal'"
+                          >预计发布时间：{{ version.plan_publish_time }}</span>
+                          <span v-else>发布时间：{{ version.publish_time }}</span>
                         </template>
                       </div>
                       <a-tooltip
@@ -281,9 +252,7 @@
             </template>
             <div class="text-center" v-else>
               <p class="muted">暂无可用版本</p>
-              <a-button type="primary" @click="createVersion"
-                >创建版本</a-button
-              >
+              <a-button type="primary" @click="createVersion">创建版本</a-button>
             </div>
           </a-spin>
         </div>
@@ -308,11 +277,7 @@
           />
         </a-form-item>
         <a-form-item>
-          <a-textarea
-            placeholder="版本库简介"
-            :rows="2"
-            v-decorator="['description']"
-          />
+          <a-textarea placeholder="版本库简介" :rows="2" v-decorator="['description']" />
         </a-form-item>
         <a-form-item>
           <div class="action-btn">
@@ -323,8 +288,7 @@
               size="large"
               :loading="projectFeatures.confirmLoading"
               class="middle-btn"
-              >{{ projectFeatures.modalTitle }}</a-button
-            >
+            >{{ projectFeatures.modalTitle }}</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -337,10 +301,7 @@
       :bodyStyle="{paddingBottom: '1px'}"
       :footer="null"
     >
-      <a-form
-        @submit.prevent="handleSubmitProjectVersion"
-        :form="projectVersionForm"
-      >
+      <a-form @submit.prevent="handleSubmitProjectVersion" :form="projectVersionForm">
         <a-form-item>
           <a-input
             placeholder="版本名称"
@@ -351,11 +312,7 @@
           />
         </a-form-item>
         <a-form-item>
-          <a-textarea
-            placeholder="版本备注"
-            :rows="2"
-            v-decorator="['description']"
-          />
+          <a-textarea placeholder="版本备注" :rows="2" v-decorator="['description']" />
         </a-form-item>
         <a-form-item>
           <a-row :gutter="16">
@@ -388,8 +345,7 @@
               size="large"
               :loading="projectVersion.confirmLoading"
               class="middle-btn"
-              >创建版本</a-button
-            >
+            >创建版本</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -402,10 +358,7 @@
       :bodyStyle="{paddingBottom: '1px'}"
       :footer="null"
     >
-      <a-form
-        @submit.prevent="handleSubmitPublishVersion"
-        :form="publishVersionForm"
-      >
+      <a-form @submit.prevent="handleSubmitPublishVersion" :form="publishVersionForm">
         <a-form-item>
           <a-date-picker
             showTime
@@ -424,8 +377,7 @@
               size="large"
               :loading="publishVersion.confirmLoading"
               class="middle-btn"
-              >确认发布</a-button
-            >
+            >确认发布</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -440,46 +392,43 @@
       v-model="versionDetail.modalStatus"
       @cancel="versionDetailClose"
     >
-      <version-detail
-        :versionCode="versionDetail.code"
-        @close="versionDetailClose"
-      ></version-detail>
+      <version-detail :versionCode="versionDetail.code" @close="versionDetailClose"></version-detail>
     </a-modal>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-import {read as getProject} from '@/pearapi/project';
-import {collect} from '@/pearapi/projectCollect';
-import {checkResponse} from '@/assets/js/utils';
-import {relativelyTime} from '@/assets/js/dateTime';
-import pagination from '@/mixins/pagination';
+//import moment from 'moment';
+import { read as getProject } from "@/pearapi/project";
+import { collect } from "@/pearapi/projectCollect";
+import { checkResponse } from "@/assets/js/utils";
+import { relativelyTime } from "@/assets/js/dateTime";
+import pagination from "@/mixins/pagination";
 import {
   save,
   list as getProjectFeatureList,
   edit,
-  del,
-} from '@/pearapi/projectFeatures';
+  del
+} from "@/pearapi/projectFeatures";
 import {
   save as saveProjectVersion,
   list as getProjectVersionList,
-  changeStatus,
-} from '@/pearapi/projectVersion';
-import versionDetail from '@/components/project/versionDetail';
-import projectSelect from '@/components/project/projectSelect';
+  changeStatus
+} from "@/pearapi/projectVersion";
+import versionDetail from "@/components/project/versionDetail";
+import projectSelect from "@/components/project/projectSelect";
 
 export default {
-  name: 'project-space-features',
+  name: "project-space-features",
   components: {
     versionDetail,
-    projectSelect,
+    projectSelect
   },
   mixins: [pagination],
   data() {
     return {
       code: this.$route.params.code,
-      project: {task_board_theme: 'simple'},
+      project: { task_board_theme: "simple" },
       loading: true,
       form: this.$form.createForm(this),
       projectVersionForm: this.$form.createForm(this),
@@ -490,31 +439,31 @@ export default {
       versionTotal: 1,
       versionList: {
         normal: [],
-        published: [],
+        published: []
       },
       showPublished: false,
       projectFeatures: {
         modalStatus: false,
         confirmLoading: false,
-        modalTitle: '编辑版本库',
-        info: null,
+        modalTitle: "编辑版本库",
+        info: null
       },
       projectVersion: {
         modalStatus: false,
         confirmLoading: false,
-        modalTitle: '编辑版本',
-        info: null,
+        modalTitle: "编辑版本",
+        info: null
       },
       publishVersion: {
         modalStatus: false,
         confirmLoading: false,
         info: null,
-        status: -1,
+        status: -1
       },
       versionDetail: {
         modalStatus: false,
-        code: '',
-      },
+        code: ""
+      }
     };
   },
   created() {
@@ -527,13 +476,13 @@ export default {
     },
     getProject() {
       this.loading = true;
-      getProject(this.code).then((res) => {
+      getProject(this.code).then(res => {
         this.loading = false;
         this.project = res.data;
       });
     },
     getProjectFeaturesList() {
-      getProjectFeatureList({projectCode: this.code}).then((res) => {
+      getProjectFeatureList({ projectCode: this.code }).then(res => {
         this.projectFeaturesList = res.data;
         if (res.data.length && !this.currentProjectFeature) {
           this.currentProjectFeatures = res.data[0];
@@ -545,12 +494,12 @@ export default {
       let app = this;
       app.loading = true;
       getProjectVersionList({
-        projectFeaturesCode: this.currentProjectFeatures.code,
-      }).then((res) => {
+        projectFeaturesCode: this.currentProjectFeatures.code
+      }).then(res => {
         let versionTotal = 0;
         let normal = [];
         let published = [];
-        res.data.forEach((v) => {
+        res.data.forEach(v => {
           versionTotal++;
           if (v.status == 3) {
             published.push(v);
@@ -568,30 +517,30 @@ export default {
       let app = this;
       app.projectFeatures.modalStatus = true;
       app.projectFeatures.info = null;
-      app.projectFeatures.modalTitle = '创建版本库';
+      app.projectFeatures.modalTitle = "创建版本库";
     },
     editFeatures(features) {
       let app = this;
       app.projectFeatures.modalStatus = true;
-      app.projectFeatures.modalTitle = '编辑版本库';
+      app.projectFeatures.modalTitle = "编辑版本库";
       app.projectFeatures.info = features;
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         app.form.setFieldsValue({
           name: features.name,
-          description: features.description,
+          description: features.description
         });
       });
     },
     deleteFeatures(features) {
       let app = this;
       this.$confirm({
-        title: '删除版本库',
-        content: `若将『${features['name']}』 删除，所有与版本库相关的信息将会被彻底删除，删除后不可恢复。`,
-        okText: '删除',
-        okType: 'danger',
+        title: "删除版本库",
+        content: `若将『${features["name"]}』 删除，所有与版本库相关的信息将会被彻底删除，删除后不可恢复。`,
+        okText: "删除",
+        okType: "danger",
         cancelText: `再想想`,
         onOk() {
-          del({featuresCode: features.code}).then((res) => {
+          del({ featuresCode: features.code }).then(res => {
             const result = checkResponse(res);
             if (!result) {
               return false;
@@ -602,14 +551,14 @@ export default {
             app.init();
           });
           return Promise.resolve();
-        },
+        }
       });
     },
     createVersion() {
       let app = this;
       app.projectVersion.modalStatus = true;
       app.projectVersion.info = null;
-      app.projectVersion.modalTitle = '创建版本';
+      app.projectVersion.modalTitle = "创建版本";
     },
     changeVersionStatus(e, versionType, version, index) {
       let app = this;
@@ -619,24 +568,24 @@ export default {
       if (e.key == 3) {
         //请确认当前版本发布内容已全部完成后再发布。
         this.$confirm({
-          title: '发布提示',
+          title: "发布提示",
           content: `请确认当前版本发布内容已全部完成后再发布。`,
-          okText: '确认发布',
-          okType: 'primary',
+          okText: "确认发布",
+          okType: "primary",
           onOk() {
             app.publishVersion.info = version;
             app.publishVersion.status = e.key;
             app.publishVersion.modalStatus = true;
-            app.$nextTick(function () {
+            app.$nextTick(function() {
               app.publishVersionForm.setFieldsValue({
-                publishTime: moment(),
+                publishTime: moment()
               });
             });
             return Promise.resolve();
-          },
+          }
         });
       } else {
-        changeStatus({versionCode: version.code, status: e.key}).then((res) => {
+        changeStatus({ versionCode: version.code, status: e.key }).then(res => {
           this.getProjectVersionList();
         });
       }
@@ -647,20 +596,20 @@ export default {
     },
     versionDetailClose() {
       this.versionDetail.modalStatus = false;
-      this.versionDetail.code = '';
+      this.versionDetail.code = "";
       this.getProjectVersionList();
     },
     handleSubmitPublishVersion() {
       let app = this;
-      app.publishVersionForm.validateFields((err) => {
+      app.publishVersionForm.validateFields(err => {
         if (!err) {
           let obj = app.publishVersionForm.getFieldsValue();
-          obj.publishTime = moment(obj.publishTime).format('YYYY-MM-DD HH:mm');
+          obj.publishTime = moment(obj.publishTime).format("YYYY-MM-DD HH:mm");
           changeStatus({
             versionCode: this.publishVersion.info.code,
             status: this.publishVersion.status,
-            publishTime: obj.publishTime,
-          }).then((res) => {
+            publishTime: obj.publishTime
+          }).then(res => {
             app.publishVersion.modalStatus = false;
             app.getProjectVersionList();
           });
@@ -669,7 +618,7 @@ export default {
     },
     handleSubmit() {
       let app = this;
-      app.form.validateFields((err) => {
+      app.form.validateFields(err => {
         if (!err) {
           app.handleOk();
         }
@@ -682,7 +631,7 @@ export default {
       obj.projectCode = this.code;
       if (app.projectFeatures.info) {
         obj.featuresCode = app.projectFeatures.info.code;
-        edit(obj).then((res) => {
+        edit(obj).then(res => {
           app.projectFeatures.confirmLoading = false;
           if (!checkResponse(res)) {
             return;
@@ -692,7 +641,7 @@ export default {
           app.projectFeatures.modalStatus = false;
         });
       } else {
-        save(obj).then((res) => {
+        save(obj).then(res => {
           app.projectFeatures.confirmLoading = false;
           if (!checkResponse(res)) {
             return;
@@ -705,7 +654,7 @@ export default {
     },
     handleSubmitProjectVersion() {
       let app = this;
-      app.projectVersionForm.validateFields((err) => {
+      app.projectVersionForm.validateFields(err => {
         if (!err) {
           app.handleOkProjectVersion();
         }
@@ -716,11 +665,11 @@ export default {
       app.projectVersion.confirmLoading = true;
       let obj = app.projectVersionForm.getFieldsValue();
       obj.featuresCode = this.currentProjectFeatures.code;
-      obj.startTime = moment(obj.startTime).format('YYYY-MM-DD HH:mm');
+      obj.startTime = moment(obj.startTime).format("YYYY-MM-DD HH:mm");
       obj.planPublishTime = moment(obj.planPublishTime).format(
-        'YYYY-MM-DD HH:mm'
+        "YYYY-MM-DD HH:mm"
       );
-      saveProjectVersion(obj).then((res) => {
+      saveProjectVersion(obj).then(res => {
         app.projectVersion.confirmLoading = false;
         if (!checkResponse(res)) {
           return;
@@ -732,13 +681,13 @@ export default {
     },
     changeProjectFeatures(e) {
       this.currentProjectFeatures = this.projectFeaturesList.find(
-        (item) => item.code == e.key
+        item => item.code == e.key
       );
       this.getProjectVersionList();
     },
     collectProject() {
-      const type = this.project.collected ? 'cancel' : 'collect';
-      collect(this.project.code, type).then((res) => {
+      const type = this.project.collected ? "cancel" : "collect";
+      collect(this.project.code, type).then(res => {
         if (!checkResponse(res)) {
           return;
         }
@@ -747,8 +696,8 @@ export default {
     },
     formatTime(time) {
       return relativelyTime(time);
-    },
-  },
+    }
+  }
 };
 </script>
 

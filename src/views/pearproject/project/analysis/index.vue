@@ -3,11 +3,7 @@
     <div class="page-wrapper">
       <a-row :gutter="24">
         <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-          <chart-card
-            :loading="loading"
-            title="项目总数"
-            :total="projectData.count | NumberFormat"
-          >
+          <chart-card :loading="loading" title="项目总数" :total="projectData.count | NumberFormat">
             <a-tooltip title="指标说明" slot="action">
               <a-icon type="info-circle-o" />
             </a-tooltip>
@@ -27,11 +23,7 @@
           </chart-card>
         </a-col>
         <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-          <chart-card
-            :loading="loading"
-            title="任务总数"
-            :total="taskData.count | NumberFormat"
-          >
+          <chart-card :loading="loading" title="任务总数" :total="taskData.count | NumberFormat">
             <a-tooltip title="指标说明" slot="action">
               <a-icon type="info-circle-o" />
             </a-tooltip>
@@ -78,11 +70,7 @@
           </chart-card>
         </a-col>
         <a-col :sm="24" :md="12" :xl="6" :style="{marginBottom: '24px'}">
-          <chart-card
-            :loading="loading"
-            title="整体进度"
-            :total="`${projectData.projectSchedule}%`"
-          >
+          <chart-card :loading="loading" title="整体进度" :total="`${projectData.projectSchedule}%`">
             <a-tooltip title="指标说明" slot="action">
               <a-icon type="info-circle-o" />
             </a-tooltip>
@@ -164,17 +152,8 @@
       </a-card>
       <a-row :gutter="12">
         <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card
-            :loading="loading"
-            :bordered="false"
-            title="我的项目"
-            :style="{marginTop: '24px'}"
-          >
-            <a-dropdown
-              :trigger="['click']"
-              placement="bottomLeft"
-              slot="extra"
-            >
+          <a-card :loading="loading" :bordered="false" title="我的项目" :style="{marginTop: '24px'}">
+            <a-dropdown :trigger="['click']" placement="bottomLeft" slot="extra">
               <a class="ant-dropdown-link" href="#">
                 <a-icon type="ellipsis" />
               </a>
@@ -187,9 +166,7 @@
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
-            <p v-for="project in projectList" :key="project.id">
-              {{ project.name }}
-            </p>
+            <p v-for="project in projectList" :key="project.id">{{ project.name }}</p>
             <a-pagination
               v-model="pagination.page"
               :total="projectTotal"
@@ -199,17 +176,8 @@
           </a-card>
         </a-col>
         <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card
-            :loading="loading"
-            :bordered="false"
-            title="任务优先级分布"
-            :style="{marginTop: '24px'}"
-          >
-            <a-dropdown
-              :trigger="['click']"
-              placement="bottomLeft"
-              slot="extra"
-            >
+          <a-card :loading="loading" :bordered="false" title="任务优先级分布" :style="{marginTop: '24px'}">
+            <a-dropdown :trigger="['click']" placement="bottomLeft" slot="extra">
               <a class="ant-dropdown-link" href="#">
                 <a-icon type="ellipsis" />
               </a>
@@ -232,36 +200,36 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex';
-import moment from 'moment';
-import VeLine from 'v-charts/lib/line.common';
-import VeHistogram from 'v-charts/lib/histogram.common';
-import ChartCard from '@/components/pchart/ChartCard';
-import Trend from '@/components/Trend';
-import MiniProgress from '@/components/chart/MiniProgress';
-import RankList from '@/components/chart/RankList';
-import pagination from '@/mixins/pagination';
-import {analysis, selfList as getProjectList} from '@/pearapi/project';
+import { mapState } from "vuex";
+//import moment from 'moment';
+import VeLine from "v-charts/lib/line.common";
+import VeHistogram from "v-charts/lib/histogram.common";
+import ChartCard from "@/components/pchart/ChartCard";
+import Trend from "@/components/Trend";
+import MiniProgress from "@/components/chart/MiniProgress";
+import RankList from "@/components/chart/RankList";
+import pagination from "@/mixins/pagination";
+import { analysis, selfList as getProjectList } from "@/pearapi/project";
 
 const rankList = [];
 for (let i = 0; i < 7; i++) {
   rankList.push({
-    name: 'XX公司 ' + (i + 1) + ' 号员工',
-    total: 1234.56 - i * 100,
+    name: "XX公司 " + (i + 1) + " 号员工",
+    total: 1234.56 - i * 100
   });
 }
 const taskList = [];
 for (let i = 1; i < 20; i++) {
   taskList.push({
     日期: `1月${i}日`,
-    任务: (Math.random() * 10 + 1).toFixed(0),
+    任务: (Math.random() * 10 + 1).toFixed(0)
   });
 }
 const projectList = [];
 for (let i = 1; i < 13; i++) {
   projectList.push({
     日期: `${i}月`,
-    数量: (Math.random() * 10 + 1).toFixed(0),
+    数量: (Math.random() * 10 + 1).toFixed(0)
   });
 }
 export default {
@@ -271,7 +239,7 @@ export default {
     ChartCard,
     MiniProgress,
     Trend,
-    RankList,
+    RankList
   },
   mixins: [pagination],
   data() {
@@ -280,103 +248,103 @@ export default {
       rankList,
       chartExtend: {
         grid: {
-          left: '-25',
-          right: '0',
-          top: '10',
-          bottom: '-15',
+          left: "-25",
+          right: "0",
+          top: "10",
+          bottom: "-15"
         },
         series: {
-          barWidth: 15,
+          barWidth: 15
         },
         xAxis: {
-          show: false,
+          show: false
         },
         yAxis: {
-          show: false,
+          show: false
         },
         tooltip: {
-          backgroundColor: '#fff',
+          backgroundColor: "#fff",
           textStyle: {
-            color: '#333',
+            color: "#333"
           },
           borderWidth: 1,
-          borderColor: '#e8e8e8',
+          borderColor: "#e8e8e8"
         },
         axisPointer: {
           lineStyle: {
-            width: 0,
-          },
-        },
+            width: 0
+          }
+        }
       },
       projectData: {
         count: 0,
         projectSchedule: 0,
         chartData: {
-          columns: ['日期', '数量'],
-          rows: projectList,
+          columns: ["日期", "数量"],
+          rows: projectList
         },
         chartSettings: {
           itemStyle: {
-            color: '#1890ff',
-          },
-        },
+            color: "#1890ff"
+          }
+        }
       },
       taskData: {
         count: 0,
         taskOverdueCount: 0,
         taskOverduePercent: 0,
         chartData: {
-          columns: ['日期', '任务'],
-          rows: taskList,
+          columns: ["日期", "任务"],
+          rows: taskList
         },
         chartSettings: {
           area: true,
           itemStyle: {
-            color: '#b68eec',
+            color: "#b68eec"
           },
           areaStyle: {
-            color: '#b68eec',
-          },
-        },
+            color: "#b68eec"
+          }
+        }
       },
       projectTotalData: {
         chartData: {
-          columns: ['日期', '数量'],
-          rows: projectList,
+          columns: ["日期", "数量"],
+          rows: projectList
         },
         chartSettings: {
           itemStyle: {
-            color: '#1890ff',
-          },
+            color: "#1890ff"
+          }
         },
         chartExtend: {
           grid: {
-            left: '30',
-            right: '0',
-            top: '15',
-            bottom: '0',
+            left: "30",
+            right: "0",
+            top: "15",
+            bottom: "0"
           },
           series: {
-            barWidth: 45,
-          },
-        },
+            barWidth: 45
+          }
+        }
       },
       projectList: [],
       projectTotal: 0,
-      projectLoading: false,
+      projectLoading: false
     };
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.userInfo,
-    }),
+      userInfo: state => state.userInfo
+    })
   },
   created() {
     this.init();
   },
   methods: {
     init(reset = true) {
-      analysis({type: 1}).then((res) => {
+      analysis({ type: 1 }).then(res => {
         this.projectData.count = res.data.projectCount;
         this.projectData.projectSchedule = res.data.projectSchedule;
         this.projectData.chartData.rows = res.data.projectList;
@@ -397,7 +365,7 @@ export default {
       if (loading) {
         this.projectLoading = true;
       }
-      getProjectList(this.requestData).then((res) => {
+      getProjectList(this.requestData).then(res => {
         this.projectList = res.data.list;
         this.projectTotal = res.data.total;
         this.projectLoading = false;
@@ -406,8 +374,8 @@ export default {
     pageChange(page, pageSize) {
       this.pagination.page = page;
       this.getProjectList(true);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less">

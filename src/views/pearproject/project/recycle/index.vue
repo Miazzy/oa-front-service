@@ -31,10 +31,7 @@
         </div>
         <a-list-item slot="renderItem" slot-scope="item, index">
           <span slot="actions">
-            <a-tooltip
-              title="恢复项目"
-              @click="doAction(item, 'recovery', index)"
-            >
+            <a-tooltip title="恢复项目" @click="doAction(item, 'recovery', index)">
               <a-icon type="undo" />
             </a-tooltip>
           </span>
@@ -44,11 +41,7 @@
                          </a-tooltip>
           </span>-->
           <a-list-item-meta :description="item.description">
-            <router-link
-              :to="'/project/space/task/' + item.code"
-              slot="title"
-              >{{ item.name }}</router-link
-            >
+            <router-link :to="'/project/space/task/' + item.code" slot="title">{{ item.name }}</router-link>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
           <div class="other-info muted">
@@ -63,11 +56,11 @@
   </div>
 </template>
 <script>
-import {list, doData, del} from '@/api/project';
-import {checkResponse} from '@/assets/js/utils';
-import pagination from '@/mixins/pagination';
-import moment from 'moment';
-import {recovery, recycle} from '@/pearapi/project';
+import { list, doData, del } from "@/api/project";
+import { checkResponse } from "@/assets/js/utils";
+import pagination from "@/mixins/pagination";
+//import moment from 'moment';
+import { recovery, recycle } from "@/pearapi/project";
 
 export default {
   mixins: [pagination],
@@ -81,8 +74,8 @@ export default {
       currentProject: {},
       currentProjectId: 0,
       newData: {
-        id: 0,
-      },
+        id: 0
+      }
     };
   },
   created() {
@@ -99,9 +92,9 @@ export default {
         this.showLoadingMore = false;
       }
       this.requestData.recycle = 1;
-      this.requestData.type = 'other';
+      this.requestData.type = "other";
       app.loading = true;
-      list(app.requestData).then((res) => {
+      list(app.requestData).then(res => {
         app.dataSource = app.dataSource.concat(res.data.list);
         app.pagination.total = res.data.total;
         app.showLoadingMore = app.pagination.total > app.dataSource.length;
@@ -122,25 +115,25 @@ export default {
     doAction(record, action, index) {
       this.currentProject = record;
       let app = this;
-      app.newData = {id: 0};
-      if (action == 'recovery') {
+      app.newData = { id: 0 };
+      if (action == "recovery") {
         this.$confirm({
-          title: '确定恢复项目？',
+          title: "确定恢复项目？",
           content: `恢复「${this.currentProject.name}」后就可以正常使用了`,
-          okText: '恢复项目',
-          okType: 'primary',
-          cancelText: '再想想',
+          okText: "恢复项目",
+          okType: "primary",
+          cancelText: "再想想",
           onOk() {
             recovery(record.code).then(() => {
               app.dataSource.splice(index, 1);
               // app.init();
             });
             return Promise.resolve();
-          },
+          }
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less">

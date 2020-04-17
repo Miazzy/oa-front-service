@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import moment from 'moment'
+  //import moment from 'moment'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { randomUUID, randomNumber , deNull} from '@/utils/util'
   import JEditableTable from '@/components/jeecg/JEditableTable'

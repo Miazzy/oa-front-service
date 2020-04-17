@@ -4,14 +4,12 @@
       <div class="project-nav-header">
         <a-breadcrumb>
           <a-breadcrumb-item>
-            <a @click="toHome"> <a-icon type="home" />首页 </a>
+            <a @click="toHome">
+              <a-icon type="home" />首页
+            </a>
           </a-breadcrumb-item>
           <a-breadcrumb-item>
-            <project-select
-              class="nav-title"
-              style="display: inline-block;"
-              :code="code"
-            ></project-select>
+            <project-select class="nav-title" style="display: inline-block;" :code="code"></project-select>
             <span class="actions">
               <a-tooltip
                 :mouseEnterDelay="0.3"
@@ -44,28 +42,21 @@
             <a class="app" data-app="tasks">任务</a>
           </li>
           <li class>
-            <a
-              class="app"
-              data-app="works"
-              @click="$router.push('/project/space/files/' + code)"
-              >文件</a
-            >
+            <a class="app" data-app="works" @click="$router.push('/project/space/files/' + code)">文件</a>
           </li>
           <li class>
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/overview/' + code)"
-              >概览</a
-            >
+            >概览</a>
           </li>
           <li class>
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/features/' + code)"
-              >版本</a
-            >
+            >版本</a>
           </li>
         </ul>
       </section>
@@ -121,15 +112,13 @@
                          {{ stage.name }}
                          <span class="task-count" v-if="stage.list.length > 0"> · {{ stage.list.length }}</span>
           </template>-->
-          <header
-            class="scrum-stage-header ui-sortable-handle"
-            v-show="!stage.tasksLoading"
-          >
+          <header class="scrum-stage-header ui-sortable-handle" v-show="!stage.tasksLoading">
             <div class="stage-name hinted">
               {{ stage.name }}
-              <span class="task-count" v-if="stage.tasks.length > 0"
-                >· {{ stage.tasks.length }}</span
-              >
+              <span
+                class="task-count"
+                v-if="stage.tasks.length > 0"
+              >· {{ stage.tasks.length }}</span>
             </div>
             <div class="stage-menu-toggler popover">
               <a-dropdown :trigger="['click']" placement="bottomCenter">
@@ -150,18 +139,14 @@
                     <a-icon type="edit"></a-icon>编辑列表
                   </a-menu-item>
                   <a-menu-item :key="'setExecutor_' + stage.code + '_' + index">
-                    <a-icon size="14" type="user"></a-icon
-                    >设置本列所有任务执行者
+                    <a-icon size="14" type="user"></a-icon>设置本列所有任务执行者
                   </a-menu-item>
                   <!--<a-menu-item :key="'setEndTime_' + stage.code + '_' + index">
                                         <a-icon size="14" type="clock-circle"></a-icon>
                                         设置本列所有任务截止时间 *
                   </a-menu-item>-->
-                  <a-menu-item
-                    :key="'recycleBatch_' + stage.code + '_' + index"
-                  >
-                    <a-icon size="14" type="delete"></a-icon
-                    >本列所有任务移到回收站
+                  <a-menu-item :key="'recycleBatch_' + stage.code + '_' + index">
+                    <a-icon size="14" type="delete"></a-icon>本列所有任务移到回收站
                   </a-menu-item>
                   <a-menu-item :key="'delStage_' + stage.code + '_' + index">
                     <a-icon size="14" type="delete"></a-icon>删除列表
@@ -186,10 +171,7 @@
                 :task-type-index="index"
                 class="scrum-stage-content thin-scroll"
               >
-                <a-spin
-                  wrapperClassName="tasks-loading"
-                  :spinning="stage.tasksLoading"
-                >
+                <a-spin wrapperClassName="tasks-loading" :spinning="stage.tasksLoading">
                   <!--未完成列表-->
                   <draggable
                     v-model="stage.unDoneTasks"
@@ -216,9 +198,7 @@
                         <div class="task-priority bg-priority-0"></div>
                         <a-tooltip :placement="index > 0 ? 'top' : 'right'">
                           <template slot="title">
-                            <span v-if="task.hasUnDone" style="font-size: 12px;"
-                              >子任务尚未全部完成，无法完成父任务</span
-                            >
+                            <span v-if="task.hasUnDone" style="font-size: 12px;">子任务尚未全部完成，无法完成父任务</span>
                           </template>
                           <div
                             class="check-box-wrapper"
@@ -240,10 +220,7 @@
                         <div class="task-content-set open-detail">
                           <div class="task-content-wrapper">
                             <div class="task-content">{{ task.name }}</div>
-                            <a-tooltip
-                              placement="top"
-                              v-if="task.executor && task.executor.avatar"
-                            >
+                            <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
                               <template slot="title">
                                 <span>{{ task.executor.name }}</span>
                               </template>
@@ -261,48 +238,31 @@
                                 :class="showTimeLabel(task.end_time)"
                                 v-if="task.end_time"
                               >
-                                <span :title="task.end_time">{{
+                                <span :title="task.end_time">
+                                  {{
                                   showTaskTime(task.begin_time, task.end_time)
-                                }}</span>
+                                  }}
+                                </span>
                               </span>
-                              <span
-                                class="icon-wrapper muted"
-                                v-if="task.description"
-                              >
+                              <span class="icon-wrapper muted" v-if="task.description">
                                 <a-icon type="file-text"></a-icon>
                               </span>
-                              <span
-                                class="icon-wrapper muted"
-                                v-if="task.hasSource"
-                              >
+                              <span class="icon-wrapper muted" v-if="task.hasSource">
                                 <a-icon type="link"></a-icon>
                               </span>
-                              <span
-                                class="icon-wrapper muted"
-                                v-if="task.hasComment"
-                              >
+                              <span class="icon-wrapper muted" v-if="task.hasComment">
                                 <a-icon type="message" />
                               </span>
-                              <span
-                                class="icon-wrapper muted"
-                                v-if="task.childCount[0] > 0"
-                              >
+                              <span class="icon-wrapper muted" v-if="task.childCount[0] > 0">
                                 <a-icon type="bars"></a-icon>
-                                <span
-                                  >{{ task.childCount[1] }}/{{
-                                    task.childCount[0]
-                                  }}</span
-                                >
+                                <span>
+                                  {{ task.childCount[1] }}/{{
+                                  task.childCount[0]
+                                  }}
+                                </span>
                               </span>
-                              <span
-                                class="tag muted"
-                                v-for="tag in task.tags"
-                                :key="tag.code"
-                              >
-                                <a-badge
-                                  status="success"
-                                  :class="`badge-${tag.tag.color}`"
-                                />
+                              <span class="tag muted" v-for="tag in task.tags" :key="tag.code">
+                                <a-badge status="success" :class="`badge-${tag.tag.color}`" />
                                 {{ tag.tag.name }}
                               </span>
                               <span
@@ -311,8 +271,7 @@
                                   task.task_execute.color
                                 "
                                 v-if="task.execute_state > 0"
-                                >{{ task.task_execute_name }}</span
-                              >
+                              >{{ task.task_execute_name }}</span>
                               <span class="icon-wrapper muted" v-if="task.like">
                                 <a-icon type="like" />
                                 <span>{{ task.like }}</span>
@@ -323,9 +282,7 @@
                             class="task-info-footer"
                             v-if="project.prefix && project.open_prefix"
                           >
-                            <span class="task-id-number"
-                              >{{ project.prefix }}-{{ task.id_num }}</span
-                            >
+                            <span class="task-id-number">{{ project.prefix }}-{{ task.id_num }}</span>
                           </footer>
                         </div>
                       </div>
@@ -354,26 +311,27 @@
                               :src="defaultExecutor.avatar"
                               class="avatar img-circle img-24 hinted"
                             />
-                            <span class="creator-handler-text name">{{
+                            <span class="creator-handler-text name">
+                              {{
                               defaultExecutor.name
-                            }}</span>
+                              }}
+                            </span>
                           </a>
                           <a-menu
                             class="executor-handler-menu"
                             @click="selectExecutor"
                             slot="overlay"
                           >
-                            <a-menu-item
-                              v-for="(member, index) in projectMembers"
-                              :key="index"
-                            >
+                            <a-menu-item v-for="(member, index) in projectMembers" :key="index">
                               <img
                                 class="avatar img-circle img-32 pull-left m-r-sm"
                                 :src="member.avatar"
                               />
-                              <span class="muted" style="line-height: 25px;">{{
+                              <span class="muted" style="line-height: 25px;">
+                                {{
                                 member.name
-                              }}</span>
+                                }}
+                              </span>
                               <a-icon
                                 type="check"
                                 class="muted"
@@ -389,8 +347,7 @@
                           size="large"
                           class="middle-btn"
                           @click.stop="showTaskCard(index, false)"
-                          >取消</a-button
-                        >
+                        >取消</a-button>
                         <a-button
                           :loading="createTaskLoading"
                           :disabled="!task.name"
@@ -399,8 +356,7 @@
                           class="middle-btn"
                           :class="{'disabled-btn': !task.name}"
                           @click.stop="createTask(stage.code, index)"
-                          >创建</a-button
-                        >
+                        >创建</a-button>
                       </div>
                     </form>
                   </div>
@@ -446,10 +402,7 @@
                         <div class="task-content-set open-detail">
                           <div class="task-content-wrapper">
                             <div class="task-content">{{ task.name }}</div>
-                            <a-tooltip
-                              placement="top"
-                              v-if="task.executor && task.executor.avatar"
-                            >
+                            <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
                               <template slot="title">
                                 <span>{{ task.executor.name }}</span>
                               </template>
@@ -469,8 +422,7 @@
                                 v-for="(tag,
                                 tag_index) in task.task_tag_item_list"
                                 :key="tag.code"
-                                >{{ tag.name }}</span
-                              >
+                              >{{ tag.name }}</span>
                             </div>
                           </div>
                         </div>
@@ -478,10 +430,7 @@
                     </template>
                     <!--</ul>-->
                   </draggable>
-                  <div
-                    class="scrum-stage-tasks-done"
-                    v-show="stage.canNotReadCount"
-                  >
+                  <div class="scrum-stage-tasks-done" v-show="stage.canNotReadCount">
                     <li class="task muted" style="margin: 0 10px 8px;">
                       <span>
                         <a-icon type="lock"></a-icon>
@@ -498,11 +447,7 @@
                     v-if="!stage.showTaskCard"
                   >
                     <a class="task-creator-handler link-add-handler">
-                      <a-icon
-                        type="plus-circle"
-                        style="padding-right: 6px;"
-                      ></a-icon
-                      >添加任务
+                      <a-icon type="plus-circle" style="padding-right: 6px;"></a-icon>添加任务
                     </a>
                   </div>
                 </a-spin>
@@ -514,11 +459,7 @@
         <div class="scrum-stage undraggable create-stage">
           <header class="scrum-stage-header">
             <div class="stage-name hinted" style="width: 100%;">
-              <a
-                class="muted"
-                v-show="!showCreateStage"
-                @click="showInputStrageName"
-              >
+              <a class="muted" v-show="!showCreateStage" @click="showInputStrageName">
                 <a-icon type="plus" />
                 <span class="m-l-xs">新建任务列表</span>
               </a>
@@ -537,14 +478,8 @@
                     type="text"
                     class="cancel-text muted"
                     @click="showCreateStage = !showCreateStage"
-                    >取消</a
-                  >
-                  <a-button
-                    type="primary"
-                    class="middle-btn"
-                    @click="creteStage"
-                    >保存</a-button
-                  >
+                  >取消</a>
+                  <a-button type="primary" class="middle-btn" @click="creteStage">保存</a-button>
                 </div>
               </div>
             </div>
@@ -574,15 +509,8 @@
         </a-form-item>
         <a-form-item>
           <div class="action-btn pull-right">
-            <a
-              type="text"
-              class="cancel-text muted"
-              @click="stageModal.modalStatus = false"
-              >取消</a
-            >
-            <a-button type="primary" htmlType="submit" class="middle-btn"
-              >保存</a-button
-            >
+            <a type="text" class="cancel-text muted" @click="stageModal.modalStatus = false">取消</a>
+            <a-button type="primary" htmlType="submit" class="middle-btn">保存</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -597,11 +525,7 @@
       :visible="inviteMemberDraw.visible"
     >
       <div class="search-content">
-        <a-input
-          v-model="inviteMemberDraw.keyword"
-          size="large"
-          placeholder="输入昵称或邮箱查找"
-        >
+        <a-input v-model="inviteMemberDraw.keyword" size="large" placeholder="输入昵称或邮箱查找">
           <a-icon slot="prefix" type="search" />
         </a-input>
       </div>
@@ -629,11 +553,7 @@
                 : '',
           }"
         >
-          <a-list-item
-            class="member-list-item"
-            slot="renderItem"
-            slot-scope="item, index"
-          >
+          <a-list-item class="member-list-item" slot="renderItem" slot-scope="item, index">
             <span slot="actions" v-if="!item.is_owner">
               <a class="muted" @click="removeMember(item, index)">
                 <a-icon type="user-delete" />移除
@@ -691,23 +611,25 @@
               :headers="headers"
               @change="handleChange"
             >
-              <a
-                class="text-default"
-                :loading="uploadLoading"
-                :disabled="uploadLoading"
-              >
+              <a class="text-default" :loading="uploadLoading" :disabled="uploadLoading">
                 <a-icon type="upload" v-show="!uploadLoading" />上传文件导入任务
               </a>
             </a-upload>
           </li>
           <li class="menu-item">
-            <a> <a-icon type="logout" />导出任务 * </a>
+            <a>
+              <a-icon type="logout" />导出任务 *
+            </a>
           </li>
           <li class="menu-item">
-            <a> <a-icon type="copy" />复制项目 * </a>
+            <a>
+              <a-icon type="copy" />复制项目 *
+            </a>
           </li>
           <li class="menu-item">
-            <a> <a-icon type="block" />保存为项目模板 * </a>
+            <a>
+              <a-icon type="block" />保存为项目模板 *
+            </a>
           </li>
         </ul>
       </div>
@@ -731,11 +653,7 @@
       :title="recycleModal.modalTitle"
       :footer="null"
     >
-      <recycle-bin
-        v-if="recycleModal.modalStatus"
-        :code="code"
-        @update="init"
-      ></recycle-bin>
+      <recycle-bin v-if="recycleModal.modalStatus" :code="code" @update="init"></recycle-bin>
     </a-modal>
     <!--任务标签-->
     <a-modal
@@ -745,11 +663,7 @@
       :title="taskTagModal.modalTitle"
       :footer="null"
     >
-      <task-tag
-        v-if="taskTagModal.modalStatus"
-        :code="code"
-        @update="init"
-      ></task-tag>
+      <task-tag v-if="taskTagModal.modalStatus" :code="code" @update="init"></task-tag>
     </a-modal>
     <!--设置任务执行者-->
     <a-modal
@@ -768,13 +682,7 @@
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <span slot="actions">
-              <a-button
-                size="small"
-                type="dashed"
-                icon="user-add"
-                @click="setExecutor(item)"
-                >设置</a-button
-              >
+              <a-button size="small" type="dashed" icon="user-add" @click="setExecutor(item)">设置</a-button>
             </span>
             <a-list-item-meta :description="item.email">
               <span slot="title">{{ item.name }}</span>
@@ -793,66 +701,59 @@
       @close="taskSearch.visible = false"
       :visible="taskSearch.visible"
     >
-      <task-search
-        :project-code="code"
-        @search="taskSearchAction"
-      ></task-search>
+      <task-search :project-code="code" @search="taskSearchAction"></task-search>
     </a-drawer>
-    <invite-project-member
-      v-model="showInviteMember"
-      :project-code="code"
-      v-if="showInviteMember"
-    ></invite-project-member>
+    <invite-project-member v-model="showInviteMember" :project-code="code" v-if="showInviteMember"></invite-project-member>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import _ from 'lodash';
-import moment from 'moment';
-import draggable from 'vuedraggable';
-import projectSelect from '@/components/project/projectSelect';
-import inviteProjectMember from '@/components/project/inviteProjectMember';
-import projectConfig from '@/components/project/projectConfig';
-import RecycleBin from '@/components/project/recycleBin';
-import TaskTag from '@/components/project/taskTag';
-import TaskSearch from '@/components/project/taskSearch';
+import { mapState } from "vuex";
+import _ from "lodash";
+//import moment from 'moment';
+import draggable from "vuedraggable";
+import projectSelect from "@/components/project/projectSelect";
+import inviteProjectMember from "@/components/project/inviteProjectMember";
+import projectConfig from "@/components/project/projectConfig";
+import RecycleBin from "@/components/project/recycleBin";
+import TaskTag from "@/components/project/taskTag";
+import TaskSearch from "@/components/project/taskSearch";
 
 import {
   list as getTaskStages,
   sort,
-  tasks as getTasks,
-} from '@/pearapi/taskStages';
-import {read as getProject} from '@/pearapi/project';
+  tasks as getTasks
+} from "@/pearapi/taskStages";
+import { read as getProject } from "@/pearapi/project";
 import {
   inviteMember,
   list as getProjectMembers,
-  removeMember,
-} from '@/pearapi/projectMember';
+  removeMember
+} from "@/pearapi/projectMember";
 import {
   save as createTask,
   taskDone,
   sort as sortTask,
   recycleBatch,
-  batchAssignTask,
-} from '@/pearapi/task';
+  batchAssignTask
+} from "@/pearapi/task";
 import {
   save as createState,
   edit as editStage,
-  del as delStage,
-} from '@/pearapi/taskStages';
+  del as delStage
+} from "@/pearapi/taskStages";
 import {
   checkResponse,
   getApiUrl,
   getAuthorization,
-  getUploadUrl,
-} from '@/assets/js/utils';
-import {formatTaskTime} from '@/assets/js/dateTime';
-import {collect} from '@/pearapi/projectCollect';
-import {notice} from '@/assets/js/notice';
+  getUploadUrl
+} from "@/assets/js/utils";
+import { formatTaskTime } from "@/assets/js/dateTime";
+import { collect } from "@/pearapi/projectCollect";
+import { notice } from "@/assets/js/notice";
 
 export default {
-  name: 'project-space-task',
+  name: "project-space-task",
   components: {
     RecycleBin,
     TaskTag,
@@ -860,14 +761,14 @@ export default {
     projectSelect,
     TaskSearch,
     inviteProjectMember,
-    projectConfig,
+    projectConfig
   },
   data() {
     return {
       code: this.$route.params.code,
       loading: true,
-      project: {task_board_theme: 'simple'},
-      stageName: '',
+      project: { task_board_theme: "simple" },
+      stageName: "",
       task: {}, //当前任务
       taskStages: [], //任务列表
       defaultExecutor: {}, //默认执行人
@@ -876,54 +777,54 @@ export default {
       createTaskLoading: false, //创建任务loading
       showCreateStage: false,
 
-      preCode: '',
-      nextCode: '',
+      preCode: "",
+      nextCode: "",
 
       taskSearchParams: {},
 
       stageKeys: [],
       stageModal: {
         form: this.$form.createForm(this),
-        stageCode: '',
+        stageCode: "",
         stageIndex: 0,
         modalStatus: false,
         confirmLoading: false,
-        modalTitle: '编辑列表',
+        modalTitle: "编辑列表"
       },
 
-      slideMenuKey: '',
+      slideMenuKey: "",
       showInviteMember: false,
       inviteMemberDraw: {
         visible: false,
-        keyword: '',
+        keyword: "",
         searching: false,
-        list: [],
+        list: []
       },
       configDraw: {
-        visible: false,
+        visible: false
       },
       taskSearch: {
-        visible: false,
+        visible: false
       },
 
-      downLoadUrl: getUploadUrl('project/task/_downloadTemplate'),
+      downLoadUrl: getUploadUrl("project/task/_downloadTemplate"),
       uploadLoading: false,
-      uploadAction: getApiUrl('project/task/uploadFile'),
+      uploadAction: getApiUrl("project/task/uploadFile"),
 
       /*项目设置*/
       projectModal: {
         modalStatus: false,
-        modalTitle: '项目设置',
+        modalTitle: "项目设置"
       },
       /*回收站*/
       recycleModal: {
         modalStatus: false,
-        modalTitle: '查看回收站',
+        modalTitle: "查看回收站"
       },
       /*任务标签*/
       taskTagModal: {
         modalStatus: false,
-        modalTitle: '任务标签',
+        modalTitle: "任务标签"
       },
 
       /*项目成员*/
@@ -931,15 +832,15 @@ export default {
         loading: false,
         currentStageIndex: 0,
         modalStatus: false,
-        modalTitle: '设置任务执行者',
-      },
+        modalTitle: "设置任务执行者"
+      }
     };
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.userInfo,
-      viewRefresh: (state) => state.common.viewRefresh,
-      socketAction: (state) => state.socketAction,
+      userInfo: state => state.userInfo,
+      viewRefresh: state => state.common.viewRefresh,
+      socketAction: state => state.socketAction
     }),
     headers() {
       return getAuthorization();
@@ -947,14 +848,14 @@ export default {
     scrollOps() {
       return {
         rail: {
-          background: '#e5e5e5',
-          opacity: 1,
+          background: "#e5e5e5",
+          opacity: 1
         },
         bar: {
-          keepShow: true,
-        },
+          keepShow: true
+        }
       };
-    },
+    }
   },
   watch: {
     $route(to, from) {
@@ -965,21 +866,21 @@ export default {
         this.getProjectMembers();
         this.init();
       }
-      if (from.name == 'taskdetail') {
+      if (from.name == "taskdetail") {
         const stageIndex = from.query.from;
         // this.getTaskStages(false);
         if (stageIndex != undefined) {
           let searchParams = this.taskSearchParams;
           let params = Object.assign(
-            {stageCode: this.taskStages[stageIndex].code},
+            { stageCode: this.taskStages[stageIndex].code },
             searchParams
           );
-          getTasks(params).then((res) => {
+          getTasks(params).then(res => {
             this.taskStages[stageIndex].tasksLoading = false;
             this.taskStages[stageIndex].tasks = res.data;
             let doneTasks = (this.taskStages[stageIndex].doneTasks = []);
             let unDoneTasks = (this.taskStages[stageIndex].unDoneTasks = []);
-            res.data.forEach((task) => {
+            res.data.forEach(task => {
               if (task.done) {
                 doneTasks.push(task);
               } else {
@@ -991,7 +892,7 @@ export default {
       }
     },
     socketAction(val) {
-      if (val.action === 'organization:task') {
+      if (val.action === "organization:task") {
         const data = val.data.data;
         if (data.projectCode == this.code) {
           this.getTaskStages(false);
@@ -999,13 +900,13 @@ export default {
       }
     },
     viewRefresh() {
-      console.log('viewRefresh');
+      console.log("viewRefresh");
       // this.getTaskStages(false);
     },
     inviteMemberDraw: {
       handler(newVal) {
         if (newVal.visible) {
-          this.slideMenuKey = 'member';
+          this.slideMenuKey = "member";
         } else {
           this.slideMenuKey = false;
         }
@@ -1013,23 +914,23 @@ export default {
           this.searchInviteMember();
         }
       },
-      deep: true,
+      deep: true
     },
     configDraw: {
       handler(newVal) {
         if (newVal.visible) {
-          this.slideMenuKey = 'config';
+          this.slideMenuKey = "config";
         } else {
           this.slideMenuKey = false;
         }
       },
-      deep: true,
+      deep: true
     },
     showInviteMember(val) {
       if (!val) {
         this.getProjectMembers();
       }
-    },
+    }
   },
   created() {
     this.defaultExecutor = this.userInfo;
@@ -1043,23 +944,23 @@ export default {
     },
     getProject() {
       this.loading = true;
-      getProject(this.code).then((res) => {
+      getProject(this.code).then(res => {
         this.loading = false;
         this.project = res.data;
       });
     },
     getProjectMembers() {
-      getProjectMembers({projectCode: this.code, pageSize: 100}).then((res) => {
+      getProjectMembers({ projectCode: this.code, pageSize: 100 }).then(res => {
         this.projectMembers = res.data.list;
         this.projectMembersCopy = res.data.list;
       });
     },
     getTaskStages(showLoading = true) {
       let app = this;
-      getTaskStages({projectCode: this.code, pageSize: 30}).then((res) => {
+      getTaskStages({ projectCode: this.code, pageSize: 30 }).then(res => {
         let taskStages = [];
         if (!showLoading) {
-          res.data.list.forEach((v) => {
+          res.data.list.forEach(v => {
             v.tasksLoading = false;
             taskStages.push(v);
           });
@@ -1072,11 +973,11 @@ export default {
           let searchParams = app.taskSearchParams;
           let params = {};
           taskStages.forEach((v, k) => {
-            params = {stageCode: v.code};
+            params = { stageCode: v.code };
             params = Object.assign(params, searchParams);
-            getTasks(params).then((res) => {
+            getTasks(params).then(res => {
               let canNotReadCount = 0;
-              res.data.forEach((task) => {
+              res.data.forEach(task => {
                 if (!task.canRead) {
                   canNotReadCount++;
                 }
@@ -1098,7 +999,7 @@ export default {
       });
     },
     filterTask(tasks, done) {
-      return tasks.filter((item) => item.done == done);
+      return tasks.filter(item => item.done == done);
     },
     taskSearchAction(value) {
       console.log(value);
@@ -1107,7 +1008,7 @@ export default {
     },
     //显示添加任务卡片
     showTaskCard(index = false, show = true) {
-      this.taskStages.forEach((v) => {
+      this.taskStages.forEach(v => {
         v.showTaskCard = false;
       });
       if (index === false) {
@@ -1116,17 +1017,17 @@ export default {
       this.taskStages[index].showTaskCard = show;
       this.$nextTick(() => {
         //滚动创建到创建窗口
-        this.$refs[index + '-stage'][0].scrollIntoView('#card' + index);
+        this.$refs[index + "-stage"][0].scrollIntoView("#card" + index);
         this.$refs[`inputTaskName${index}`][0].focus();
       });
     },
-    selectExecutor({key}) {
+    selectExecutor({ key }) {
       this.defaultExecutor = this.projectMembers[key];
     },
     //准备添加任务
     createTask(stageCode, stageIndex) {
       if (!this.task.name) {
-        this.$message.warning('任务内容不能为空', 2);
+        this.$message.warning("任务内容不能为空", 2);
         return false;
       }
       this.task.stage_code = stageCode;
@@ -1156,20 +1057,20 @@ export default {
     confirmCreateTask(stageIndex) {
       let app = this;
       if (app.createTaskLoading) {
-        app.$message.warning('正在添加任务，请稍后...', 2);
+        app.$message.warning("正在添加任务，请稍后...", 2);
         return false;
       }
-      setTimeout(function () {
+      setTimeout(function() {
         if (app.createTaskLoading === true) {
           app.$message.loading({
-            content: '正在添加任务，请稍后...',
-            duration: 5,
+            content: "正在添加任务，请稍后...",
+            duration: 5
           });
         }
       }, 2000);
       app.createTaskLoading = true;
       createTask(app.task)
-        .then((res) => {
+        .then(res => {
           app.createTaskLoading = false;
           const result = checkResponse(res);
           if (result) {
@@ -1209,7 +1110,7 @@ export default {
       if (done) {
         unDoneTasks.splice(taskIndex, 1);
         doneTasks.push(task);
-        doneTasks = doneTasks.sort(function (a, b) {
+        doneTasks = doneTasks.sort(function(a, b) {
           if (a.sort === b.sort) {
             return a.id_num - b.id_num;
           } else {
@@ -1219,7 +1120,7 @@ export default {
       } else {
         doneTasks.splice(taskIndex, 1);
         unDoneTasks.push(task);
-        unDoneTasks = unDoneTasks.sort(function (a, b) {
+        unDoneTasks = unDoneTasks.sort(function(a, b) {
           if (a.sort === b.sort) {
             return a.id_num - b.id_num;
           } else {
@@ -1227,7 +1128,7 @@ export default {
           }
         });
       }
-      taskDone(taskCode, done).then((res) => {
+      taskDone(taskCode, done).then(res => {
         const result = checkResponse(res);
         if (!result) {
           return false;
@@ -1244,92 +1145,92 @@ export default {
     },
     doStage(action) {
       let app = this;
-      let actionKeys = action.key.split('_');
+      let actionKeys = action.key.split("_");
       const stageCode = actionKeys[actionKeys.length - 2];
       const stageIndex = actionKeys[actionKeys.length - 1];
       const actionKey = actionKeys[0];
       switch (actionKey) {
-        case 'editStage':
+        case "editStage":
           this.stageModal.stageCode = stageCode;
           this.stageModal.stageIndex = stageIndex;
           this.$nextTick(() => {
             this.stageModal.form.setFieldsValue({
-              name: this.taskStages[stageIndex].name,
+              name: this.taskStages[stageIndex].name
             });
             this.$refs.inputStageTitle.focus();
           });
           this.stageModal.modalStatus = true;
           break;
-        case 'recycleBatch':
+        case "recycleBatch":
           //您确定要把列表下的所有任务移到回收站吗？
           this.$confirm({
-            title: '移到回收站',
+            title: "移到回收站",
             content: `您确定要把列表下的所有任务移到回收站吗？`,
-            okText: '移到回收站',
-            okType: 'danger',
+            okText: "移到回收站",
+            okType: "danger",
             cancelText: `再想想`,
             onOk() {
               app.taskStages[stageIndex].tasks = [];
-              app.$set(app.taskStages[stageIndex], 'doneTasks', []);
-              recycleBatch({stageCode: stageCode}).then((res) => {
+              app.$set(app.taskStages[stageIndex], "doneTasks", []);
+              recycleBatch({ stageCode: stageCode }).then(res => {
                 const result = checkResponse(res);
                 if (!result) {
                   return false;
                 }
-                app.$set(app.taskStages[stageIndex], 'doneTasks', []);
-                app.$set(app.taskStages[stageIndex], 'unDoneTasks', []);
+                app.$set(app.taskStages[stageIndex], "doneTasks", []);
+                app.$set(app.taskStages[stageIndex], "unDoneTasks", []);
               });
               return Promise.resolve();
-            },
+            }
           });
           break;
-        case 'setEndTime':
+        case "setEndTime":
           this.set_type_endTime_modal = true;
           break;
-        case 'setExecutor':
+        case "setExecutor":
           this.projectMemberModal.currentStageIndex = stageIndex;
           this.projectMemberModal.modalStatus = true;
           break;
-        case 'delStage':
+        case "delStage":
           if (this.taskStages[stageIndex].tasks.length > 0) {
             this.$warning({
-              title: '删除列表',
+              title: "删除列表",
               content: `请先清空此列表上的任务，然后再删除这个列表`,
-              okText: '确定',
+              okText: "确定"
             });
             return false;
           }
           this.$confirm({
-            title: '删除列表',
+            title: "删除列表",
             content: `您确定要永远删除这个列表吗？`,
-            okText: '删除',
-            okType: 'danger',
+            okText: "删除",
+            okType: "danger",
             cancelText: `再想想`,
             onOk() {
               delStage(stageCode);
               app.taskStages.splice(stageIndex, 1);
               return Promise.resolve();
-            },
+            }
           });
           break;
       }
     },
     creteStage() {
       if (!this.stageName) {
-        this.$message.warning('请输入列表名称', 2);
+        this.$message.warning("请输入列表名称", 2);
         return false;
       }
-      createState({name: this.stageName, projectCode: this.code}).then(
-        (res) => {
+      createState({ name: this.stageName, projectCode: this.code }).then(
+        res => {
           const result = checkResponse(res);
           if (!result) {
             return false;
           }
           const stage = res.data;
           this.taskStages.push(stage);
-          this.stageName = '';
+          this.stageName = "";
           this.$nextTick(() => {
-            document.getElementById('board-scrum-stages').scrollLeft = 10000;
+            document.getElementById("board-scrum-stages").scrollLeft = 10000;
           });
         }
       );
@@ -1337,13 +1238,13 @@ export default {
     editStage() {
       let stage = this.stageModal.form.getFieldsValue();
       if (!stage.name) {
-        this.$message.warning('请输入列表名称', 2);
+        this.$message.warning("请输入列表名称", 2);
         return false;
       }
       editStage({
         name: stage.name,
-        stageCode: this.stageModal.stageCode,
-      }).then((res) => {
+        stageCode: this.stageModal.stageCode
+      }).then(res => {
         const result = checkResponse(res);
         if (!result) {
           return false;
@@ -1355,7 +1256,7 @@ export default {
     setExecutor(member) {
       let stage = this.taskStages[this.projectMemberModal.currentStageIndex];
       let taskCodes = [];
-      stage.tasks.forEach((v) => {
+      stage.tasks.forEach(v => {
         if (v.canRead) {
           taskCodes.push(v.code);
         }
@@ -1363,15 +1264,15 @@ export default {
       if (taskCodes) {
         batchAssignTask({
           taskCodes: JSON.stringify(taskCodes),
-          executorCode: member.code,
-        }).then((res) => {
+          executorCode: member.code
+        }).then(res => {
           this.projectMemberModal.modalStatus = false;
           if (!checkResponse(res)) {
             return false;
           }
-          getTasks({stageCode: stage.code}).then((res) => {
+          getTasks({ stageCode: stage.code }).then(res => {
             let canNotReadCount = 0;
-            res.data.forEach((task) => {
+            res.data.forEach(task => {
               if (!task.canRead) {
                 canNotReadCount++;
               }
@@ -1388,24 +1289,24 @@ export default {
     showTaskPri(pri) {
       return {
         warning: pri == 1,
-        error: pri == 2,
+        error: pri == 2
       };
     },
     showTimeLabel(time) {
-      let str = 'label-primary';
+      let str = "label-primary";
       if (time == null) {
         return str;
       }
-      let cha = moment(moment(time).format('YYYY-MM-DD')).diff(
-        moment().format('YYYY-MM-DD'),
-        'days'
+      let cha = moment(moment(time).format("YYYY-MM-DD")).diff(
+        moment().format("YYYY-MM-DD"),
+        "days"
       );
       if (cha < 0) {
-        str = 'label-danger';
+        str = "label-danger";
       } else if (cha == 0) {
-        str = 'label-warning';
+        str = "label-warning";
       } else if (cha > 7) {
-        str = 'label-normal';
+        str = "label-normal";
       }
       return str;
     },
@@ -1428,13 +1329,13 @@ export default {
     taskSort(event) {
       console.log(event);
       const toStageCode = event.to.parentNode.parentNode.parentNode.getAttribute(
-        'id'
+        "id"
       );
-      let codes = '';
+      let codes = "";
       for (let i = 0, len = event.to.children.length; i < len; i++) {
-        codes += ',' + event.to.children[i].getAttribute('id');
+        codes += "," + event.to.children[i].getAttribute("id");
       }
-      sortTask({stageCode: toStageCode, codes: codes.substr(1)}).then((res) => {
+      sortTask({ stageCode: toStageCode, codes: codes.substr(1) }).then(res => {
         this.getTaskStages(false);
       });
     },
@@ -1445,11 +1346,11 @@ export default {
     },
 
     visibleDraw(type) {
-      if (type == 'member') {
+      if (type == "member") {
         this.configDraw.visible = false;
         this.taskSearch.visible = false;
         this.inviteMemberDraw.visible = !this.inviteMemberDraw.visible;
-      } else if (type == 'taskSearch') {
+      } else if (type == "taskSearch") {
         this.taskSearch.visible = !this.taskSearch.visible;
         this.configDraw.visible = false;
         this.inviteMemberDraw.visible = false;
@@ -1464,30 +1365,30 @@ export default {
       this.$confirm({
         title: `您确定要将「${member.name}」从项目中移除吗？`,
         content: `移除后该成员将不能查看任何关于该项目的信息`,
-        okText: '移除',
-        okType: 'danger',
-        cancelText: '再想想',
+        okText: "移除",
+        okType: "danger",
+        cancelText: "再想想",
         onOk() {
-          removeMember(member.code, app.code).then((res) => {
+          removeMember(member.code, app.code).then(res => {
             if (!checkResponse(res)) {
               return;
             }
             app.projectMembers.splice(index, 1);
-            notice({title: '移除成功'}, 'notice', 'success');
+            notice({ title: "移除成功" }, "notice", "success");
           });
           return Promise.resolve();
-        },
+        }
       });
     },
     inviteMember(item) {
-      inviteMember(item.memberCode, this.projectCode).then((res) => {
+      inviteMember(item.memberCode, this.projectCode).then(res => {
         const success = checkResponse(res);
         if (success) {
           item.joined = true;
         }
       });
     },
-    searchInviteMember: _.debounce(function () {
+    searchInviteMember: _.debounce(function() {
       if (!this.inviteMemberDraw.keyword) {
         this.projectMembers = JSON.parse(
           JSON.stringify(this.projectMembersCopy)
@@ -1498,15 +1399,15 @@ export default {
       }
       this.searching = true;
       this.projectMembers = this.projectMembers.filter(
-        (item) => item.name.indexOf(this.inviteMemberDraw.keyword) != -1
+        item => item.name.indexOf(this.inviteMemberDraw.keyword) != -1
       );
     }, 500),
     updateProject(data) {
       this.project = data;
     },
     collectProject() {
-      const type = this.project.collected ? 'cancel' : 'collect';
-      collect(this.project.code, type).then((res) => {
+      const type = this.project.collected ? "cancel" : "collect";
+      collect(this.project.code, type).then(res => {
         if (!checkResponse(res)) {
           return;
         }
@@ -1514,20 +1415,20 @@ export default {
       });
     },
     handleChange(info) {
-      if (info.file.status === 'uploading') {
-        notice(`正在导入，请稍后...`, 'message', 'loading', 0);
+      if (info.file.status === "uploading") {
+        notice(`正在导入，请稍后...`, "message", "loading", 0);
         this.uploadLoading = true;
         return;
       }
-      if (info.file.status === 'done') {
+      if (info.file.status === "done") {
         console.log(info);
         this.uploadLoading = false;
         if (checkResponse(info.file.response, true)) {
           const count = info.file.response.data;
           if (count) {
-            notice(`成功导入${count}个任务`, 'message', 'success');
+            notice(`成功导入${count}个任务`, "message", "success");
           } else {
-            notice(`没有成功导入任何任务`, 'message', 'warning');
+            notice(`没有成功导入任何任务`, "message", "warning");
           }
           this.getTaskStages(false);
         }
@@ -1536,11 +1437,11 @@ export default {
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        this.$message.error('文件不能超过2MB!');
+        this.$message.error("文件不能超过2MB!");
       }
       return isLt2M;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -1981,7 +1882,7 @@ export default {
 }
 
 .tag.tag-color-blue:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1996,7 +1897,7 @@ export default {
 }
 
 .tag.tag-color-orange:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2011,7 +1912,7 @@ export default {
 }
 
 .tag.tag-color-red:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2026,7 +1927,7 @@ export default {
 }
 
 .tag.tag-color-green:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2041,7 +1942,7 @@ export default {
 }
 
 .tag.tag-color-brown:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2056,7 +1957,7 @@ export default {
 }
 
 .tag.tag-color-purple:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2715,7 +2616,7 @@ li.activity.creator i {
 
 .project-nav-footer :not(:first-child):after {
   position: absolute;
-  content: '';
+  content: "";
   right: -5px;
   top: 16px;
   bottom: 16px;
@@ -2769,7 +2670,7 @@ li.activity.creator i {
   left: 14px;
   right: 16px;
   bottom: 0;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -2919,7 +2820,7 @@ li.activity.creator i {
   left: 49px;
   right: 15px;
   bottom: 1px;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -2956,7 +2857,7 @@ li.activity.creator i {
   left: 34px;
   right: 1px;
   bottom: 0;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -3050,7 +2951,7 @@ li.activity.creator i {
   left: 48px;
   right: 16px;
   bottom: -5px;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }

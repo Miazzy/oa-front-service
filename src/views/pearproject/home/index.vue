@@ -12,15 +12,14 @@
               <span class="ant-breadcrumb-link">任务中心</span>
             </div>
 
-            <div
-              class="page-wrapper"
-              style="position: absolute; top: 40px; left: 35px;"
-            >
+            <div class="page-wrapper" style="position: absolute; top: 40px; left: 35px;">
               <div class="left-content">
                 <div class="avatar">
-                  <a-avatar :size="64" :src="avatar">{{
+                  <a-avatar :size="64" :src="avatar">
+                    {{
                     userInfo.realname
-                  }}</a-avatar>
+                    }}
+                  </a-avatar>
                 </div>
               </div>
 
@@ -28,7 +27,7 @@
                 <div class="content-item">
                   <div class="item-title muted">团队数目</div>
                   <div class="item-text">
-                    <span> {{ accountsTotal }}</span>
+                    <span>{{ accountsTotal }}</span>
                   </div>
                 </div>
                 <div class="content-item">
@@ -62,15 +61,9 @@
             title="进行中的项目"
             :body-style="{padding: 0}"
           >
-            <router-link to="/project/list/my" slot="extra"
-              >全部项目</router-link
-            >
+            <router-link to="/project/list/my" slot="extra">全部项目</router-link>
             <div>
-              <a-card-grid
-                class="project-card-grid"
-                :key="i"
-                v-for="(item, i) in projectList"
-              >
+              <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projectList">
                 <a-card
                   :bordered="false"
                   :body-style="{padding: 0}"
@@ -90,14 +83,13 @@
                       </router-link>
                     </div>
                     <div slot="description" class="card-description">
-                      <a-tooltip
-                        :mouseEnterDelay="0.3"
-                        :title="item.description"
-                      >
+                      <a-tooltip :mouseEnterDelay="0.3" :title="item.description">
                         <span class="description-text">
-                          <span v-if="item.description">{{
+                          <span v-if="item.description">
+                            {{
                             item.description
-                          }}</span>
+                            }}
+                          </span>
                           <span v-else>暂无介绍</span>
                         </span>
                       </a-tooltip>
@@ -106,36 +98,24 @@
                         :mouseEnterDelay="0.3"
                         :title="`当前进度：${item.schedule}%`"
                       >
-                        <a-progress
-                          :strokeWidth="2"
-                          :showInfo="false"
-                          :percent="item.schedule"
-                        />
+                        <a-progress :strokeWidth="2" :showInfo="false" :percent="item.schedule" />
                       </a-tooltip>
                     </div>
                   </a-card-meta>
                   <div class="project-item">
                     <a href="/#/">{{ item.owner_name }}</a>
-                    <span class="datetime">{{
+                    <span class="datetime">
+                      {{
                       formatTime(item.create_time)
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                 </a-card>
               </a-card-grid>
-              <p
-                class="muted text-center m-t-md m-b-md"
-                v-if="!projectList.length"
-              >
-                暂无项目
-              </p>
+              <p class="muted text-center m-t-md m-b-md" v-if="!projectList.length">暂无项目</p>
             </div>
           </a-card>
-          <a-card
-            class="activities-list"
-            :loading="loading"
-            title="动态"
-            :bordered="false"
-          >
+          <a-card class="activities-list" :loading="loading" title="动态" :bordered="false">
             <a-list>
               <a-list-item :key="index" v-for="(item, index) in activities">
                 <a-list-item-meta>
@@ -143,8 +123,8 @@
                   <div slot="title">
                     <span>{{ item.member_name }}</span>
                     <span v-if="item.is_comment == 0">
-                      <span v-html="item.remark"></span> </span
-                    >&nbsp;
+                      <span v-html="item.remark"></span>
+                    </span>&nbsp;
                     <template v-if="item.is_comment == 1">
                       发表了评论
                       <p class="comment-text">{{ item.content }}</p>
@@ -153,8 +133,7 @@
                       target="_blank"
                       :to="`/project/space/task/${item.project_code}/detail/${item.source_code}`"
                       class="right-item"
-                      >「 {{ item.task_name }} 」</router-link
-                    >
+                    >「 {{ item.task_name }} 」</router-link>
                   </div>
                   <div slot="description">
                     <!--<a-tooltip :mouseEnterDelay="0.3" :title="item.create_time">-->
@@ -163,8 +142,7 @@
                       target="_blank"
                       :to="`/project/space/task/${item.project_code}`"
                       class="muted"
-                      >{{ item.project_name }}</router-link
-                    >
+                    >{{ item.project_name }}</router-link>
                     <!--</a-tooltip>-->
                   </div>
                 </a-list-item-meta>
@@ -172,14 +150,7 @@
             </a-list>
           </a-card>
         </a-col>
-        <a-col
-          style="padding: 0 12px;"
-          :xl="8"
-          :lg="24"
-          :md="24"
-          :sm="24"
-          :xs="24"
-        >
+        <a-col style="padding: 0 12px;" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
           <a-card
             class="tasks-list"
             :title="`我的任务 · ${tasks.length}`"
@@ -191,28 +162,27 @@
               <a-list-item :key="index" v-for="(item, index) in tasks">
                 <a-list-item-meta>
                   <div slot="title" style="float: left;">
-                    <a-tag :color="tags[item.pri].color">{{
+                    <a-tag :color="tags[item.pri].color">
+                      {{
                       tags[item.pri].name
-                    }}</a-tag>
+                      }}
+                    </a-tag>
                     <router-link
                       target="_blank"
                       :to="`/project/space/task/${item.projectInfo.code}/detail/${item.code}`"
-                      >{{ item.name }}</router-link
-                    >
+                    >{{ item.name }}</router-link>
                   </div>
                   <div slot="description" style="float: right;">
                     <span
                       class="label m-r-xs"
                       :class="showTimeLabel(item.end_time)"
                       v-if="item.end_time"
-                      >{{ showTaskTime(item.begin_time, item.end_time) }}</span
-                    >
+                    >{{ showTaskTime(item.begin_time, item.end_time) }}</span>
                     <router-link
                       target="_blank"
                       class="muted"
                       :to="'/project/space/task/' + item.projectInfo.code"
-                      >{{ item.projectInfo.name }}</router-link
-                    >
+                    >{{ item.projectInfo.name }}</router-link>
                   </div>
                 </a-list-item-meta>
               </a-list-item>
@@ -221,11 +191,7 @@
           <a-card :loading="loading" title="团队" :bordered="false">
             <div class="members">
               <a-row>
-                <a-col
-                  :span="12"
-                  v-for="(item, index) in accounts"
-                  :key="index"
-                >
+                <a-col :span="12" v-for="(item, index) in accounts" :key="index">
                   <a
                     @click="
                       routerLink(
@@ -250,20 +216,20 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex';
-import moment from 'moment';
-import {getYiYan} from '@/pearapi/other';
+import { mapState } from "vuex";
+//import moment from 'moment';
+import { getYiYan } from "@/pearapi/other";
 import {
   formatTaskTime,
   relativelyTime,
-  showHelloTime,
-} from '@/assets/js/dateTime';
-import {selfList as getProjectList} from '@/pearapi/project';
-import {list as accountList} from '@/pearapi/user';
-import pagination from '@/mixins/pagination';
-import {getLogBySelfProject, selfList} from '@/pearapi/task';
-import * as storage from '@/utils/storage';
-import * as manageAPI from '@/api/manage';
+  showHelloTime
+} from "@/assets/js/dateTime";
+import { selfList as getProjectList } from "@/pearapi/project";
+import { list as accountList } from "@/pearapi/user";
+import pagination from "@/mixins/pagination";
+import { getLogBySelfProject, selfList } from "@/pearapi/task";
+import * as storage from "@/utils/storage";
+import * as manageAPI from "@/api/manage";
 
 export default {
   components: {},
@@ -279,50 +245,50 @@ export default {
       tasksTotal: 0,
       accounts: [],
       userInfo: {},
-      avatar: '',
+      avatar: "",
       tags: {
         0: {
-          name: '普通',
-          color: 'green',
+          name: "普通",
+          color: "green"
         },
         1: {
-          name: '紧急',
-          color: 'orange',
+          name: "紧急",
+          color: "orange"
         },
         2: {
-          name: '非常紧急',
-          color: 'red',
-        },
-      },
+          name: "非常紧急",
+          color: "red"
+        }
+      }
     };
   },
   computed: {
     ...mapState({
-      socketAction: (state) => state.socketAction,
+      socketAction: state => state.socketAction
     }),
     helloTime() {
       return showHelloTime();
-    },
+    }
   },
   async created() {
     //获取员工基本信息
-    this.userInfo = storage.getStore('cur_user');
+    this.userInfo = storage.getStore("cur_user");
 
     //设置员工岗位信息/部门信息
     try {
       this.v_user = await manageAPI.queryUserInfoByView(this.userInfo.username);
 
-      this.postName = this.v_user[0]['post'];
-      this.departName = this.v_user[0]['name'];
+      this.postName = this.v_user[0]["post"];
+      this.departName = this.v_user[0]["name"];
 
-      this.address = this.v_user[0]['address'];
-      this.bio = this.v_user[0]['bio'];
+      this.address = this.v_user[0]["address"];
+      this.bio = this.v_user[0]["bio"];
 
       //设置头像信息
       this.avatar = this.userInfo.avatar =
-        window._CONFIG['imgDomainURL'] + '/' + this.v_user[0]['avatar'];
+        window._CONFIG["imgDomainURL"] + "/" + this.v_user[0]["avatar"];
     } catch (error) {
-      console.log('工作台设置员工岗位信息/部门信息异常：' + error);
+      console.log("工作台设置员工岗位信息/部门信息异常：" + error);
     }
 
     //初始化任务中心页面
@@ -333,15 +299,15 @@ export default {
     }
   },
   watch: {
-    $route: function (to, from) {
+    $route: function(to, from) {
       this.init();
     },
     socketAction(val) {
       console.log(val);
-      if (val.action === 'organization:task') {
+      if (val.action === "organization:task") {
         this.init(false, false);
       }
-    },
+    }
   },
   methods: {
     init(reset = true, loading = true) {
@@ -380,8 +346,6 @@ export default {
      * @function 获取项目信息
      */
     getProjectList(loading) {
-
-
       //加载数据
       if (loading) {
         this.loading = true;
@@ -425,24 +389,24 @@ export default {
       return formatTaskTime(time, timeEnd);
     },
     showTimeLabel(time) {
-      let str = 'label-primary';
+      let str = "label-primary";
       if (time == null) {
         return str;
       }
-      let cha = moment(moment(time).format('YYYY-MM-DD')).diff(
-        moment().format('YYYY-MM-DD'),
-        'days'
+      let cha = moment(moment(time).format("YYYY-MM-DD")).diff(
+        moment().format("YYYY-MM-DD"),
+        "days"
       );
       if (cha < 0) {
-        str = 'label-danger';
+        str = "label-danger";
       } else if (cha == 0) {
-        str = 'label-warning';
+        str = "label-warning";
       } else if (cha > 7) {
-        str = 'label-normal';
+        str = "label-normal";
       }
       return str;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less">
@@ -506,7 +470,7 @@ export default {
             right: 0;
             width: 1px;
             height: 40px;
-            content: '';
+            content: "";
           }
 
           &:last-child {

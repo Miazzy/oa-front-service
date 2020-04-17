@@ -188,7 +188,7 @@
 <script>
 //import Vue from "vue";
 import pick from "lodash.pick";
-import moment from "moment";
+//import moment from "moment";
 // 引入搜索部门弹出框的组件
 import departWindow from "./DepartWindow";
 import JSelectPosition from "@/components/jeecgbiz/JSelectPosition";
@@ -204,7 +204,8 @@ export default {
   components: {
     JImageUpload,
     departWindow,
-    JSelectPosition
+    JSelectPosition,
+    moment
   },
   data() {
     return {
@@ -325,6 +326,7 @@ export default {
     }
   },
   methods: {
+    moment,
     isDisabledAuth(code) {
       return disabledAuthFilter(code);
     },
@@ -464,7 +466,6 @@ export default {
       this.identity = "1";
       this.fileList = [];
     },
-    moment,
     handleSubmit() {
       const that = this;
       // 触发表单验证

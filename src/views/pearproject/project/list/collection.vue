@@ -2,9 +2,7 @@
   <div class="project-list-index">
     <wrapper-content :showHeader="false">
       <div class="action">
-        <a-button type="primary" icon="plus" @click="doAction(null, 'new')"
-          >创建新项目</a-button
-        >
+        <a-button type="primary" icon="plus" @click="doAction(null, 'new')">创建新项目</a-button>
       </div>
       <a-list
         class="project-list"
@@ -47,22 +45,17 @@
               @click="doAction(item, 'collect', index)"
             >
               <a-icon type="star" v-show="!item.collected" />
-              <a-icon
-                type="star"
-                theme="filled"
-                style="color: #ffaf38;"
-                v-show="item.collected"
-              />
+              <a-icon type="star" theme="filled" style="color: #ffaf38;" v-show="item.collected" />
             </a-tooltip>
           </span>
           <a-list-item-meta :description="item.description">
             <div slot="title">
-              <router-link :to="'/project/space/task/' + item.code">{{
+              <router-link :to="'/project/space/task/' + item.code">
+                {{
                 item.name
-              }}</router-link>
-              <a-tag color="green" class="m-l" v-show="!item.private"
-                >公开</a-tag
-              >
+                }}
+              </router-link>
+              <a-tag color="green" class="m-l" v-show="!item.private">公开</a-tag>
             </div>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
@@ -107,16 +100,11 @@
             <a-select-option
               :key="template.code"
               v-for="template in templateList"
-              >{{ template.name }}</a-select-option
-            >
+            >{{ template.name }}</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item>
-          <a-textarea
-            placeholder="项目简介"
-            :rows="2"
-            v-decorator="['description']"
-          />
+          <a-textarea placeholder="项目简介" :rows="2" v-decorator="['description']" />
         </a-form-item>
         <a-form-item>
           <div class="action-btn">
@@ -127,8 +115,7 @@
               size="large"
               :loading="actionInfo.confirmLoading"
               class="middle-btn"
-              >完成并创建</a-button
-            >
+            >完成并创建</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -141,10 +128,7 @@
       :title="projectModal.modalTitle"
       :footer="null"
     >
-      <project-config
-        :code="currentProjectCode"
-        @update="updateProject"
-      ></project-config>
+      <project-config :code="currentProjectCode" @update="updateProject"></project-config>
     </a-modal>
     <invite-project-member
       v-model="showInviteMember"
@@ -154,19 +138,19 @@
   </div>
 </template>
 <script>
-import inviteProjectMember from '@/components/project/inviteProjectMember';
-import projectConfig from '@/components/project/projectConfig';
-import {list, doData, recycle} from '@/pearapi/project';
-import {checkResponse} from '@/assets/js/utils';
-import pagination from '@/mixins/pagination';
-import moment from 'moment';
-import {collect} from '@/pearapi/projectCollect';
-import {list as projectTemplates} from '@/pearapi/projectTemplate';
+import inviteProjectMember from "@/components/project/inviteProjectMember";
+import projectConfig from "@/components/project/projectConfig";
+import { list, doData, recycle } from "@/pearapi/project";
+import { checkResponse } from "@/assets/js/utils";
+import pagination from "@/mixins/pagination";
+//import moment from 'moment';
+import { collect } from "@/pearapi/projectCollect";
+import { list as projectTemplates } from "@/pearapi/projectTemplate";
 
 export default {
   components: {
     inviteProjectMember,
-    projectConfig,
+    projectConfig
   },
   mixins: [pagination],
   data() {
@@ -180,27 +164,27 @@ export default {
       currentProjectCode: 0,
       currentProjectIndex: 0,
       newData: {
-        code: '',
+        code: ""
       },
       form: this.$form.createForm(this),
       searchForm: {},
       actionInfo: {
         modalStatus: false,
         confirmLoading: false,
-        modalTitle: '编辑项目',
+        modalTitle: "编辑项目"
       },
       /*项目设置*/
       projectModal: {
         modalStatus: false,
-        modalTitle: '项目设置',
+        modalTitle: "项目设置"
       },
-      templateList: [],
+      templateList: []
     };
   },
   watch: {
-    $route: function () {
+    $route: function() {
       this.init();
-    },
+    }
   },
   created() {
     this.init();
@@ -218,7 +202,7 @@ export default {
       }
       this.requestData.type = this.$route.params.type;
       app.loading = true;
-      list(app.requestData).then((res) => {
+      list(app.requestData).then(res => {
         app.dataSource = app.dataSource.concat(res.data.list);
         app.pagination.total = res.data.total;
         app.showLoadingMore = app.pagination.total > app.dataSource.length;
@@ -227,7 +211,7 @@ export default {
       });
     },
     projectTemplates() {
-      projectTemplates({pageSize: 100, viewType: -1}).then((res) => {
+      projectTemplates({ pageSize: 100, viewType: -1 }).then(res => {
         this.templateList = res.data.list;
       });
     },
@@ -245,36 +229,36 @@ export default {
       this.currentProject = record;
       this.currentProjectIndex = index;
       let app = this;
-      app.newData = {id: 0};
-      if (action == 'new') {
-        setTimeout(function () {
+      app.newData = { id: 0 };
+      if (action == "new") {
+        setTimeout(function() {
           app.form && app.form.resetFields();
         }, 0);
         app.actionInfo.modalStatus = true;
-        app.actionInfo.modalTitle = '创建项目';
-      } else if (action == 'edit') {
+        app.actionInfo.modalTitle = "创建项目";
+      } else if (action == "edit") {
         app.currentProjectCode = record.code;
         app.projectModal.modalStatus = true;
-      } else if (action == 'del') {
+      } else if (action == "del") {
         this.$confirm({
-          title: '确定放入回收站？',
+          title: "确定放入回收站？",
           content: `一旦将项目「${this.currentProject.name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
-          okText: '放入回收站',
-          okType: 'danger',
-          cancelText: '再想想',
+          okText: "放入回收站",
+          okType: "danger",
+          cancelText: "再想想",
           onOk() {
             recycle(record.code).then(() => {
               app.dataSource.splice(index, 1);
               // app.init();
             });
             return Promise.resolve();
-          },
+          }
         });
-      } else if (action == 'collect') {
-        const type = record.collected ? 'cancel' : 'collect';
+      } else if (action == "collect") {
+        const type = record.collected ? "cancel" : "collect";
         collect(record.code, type).then(() => {
-          app.$set(app.dataSource[index], 'collected', !record.collected);
-          if (this.requestData.type == 'collect') {
+          app.$set(app.dataSource[index], "collected", !record.collected);
+          if (this.requestData.type == "collect") {
             app.dataSource.splice(index, 1);
           }
         });
@@ -287,7 +271,7 @@ export default {
     },
     handleSubmit() {
       let app = this;
-      app.form.validateFields((err) => {
+      app.form.validateFields(err => {
         if (!err) {
           app.handleOk();
         }
@@ -305,20 +289,20 @@ export default {
         Object.assign(obj, app.newData);
       }
 
-      doData(obj).then((res) => {
+      doData(obj).then(res => {
         app.actionInfo.confirmLoading = false;
         if (!checkResponse(res)) {
           return;
         }
         app.form.resetFields();
-        app.newData = {id: 0};
+        app.newData = { id: 0 };
         app.actionInfo.modalStatus = false;
         app.init();
       });
     },
     handleSearchSubmit() {
       let app = this;
-      app.searchForm.validateFields((err) => {
+      app.searchForm.validateFields(err => {
         if (!err) {
           app.search();
         }
@@ -328,12 +312,12 @@ export default {
       let obj = this.searchForm.getFieldsValue();
       Object.assign(this.requestData, obj);
       this.init();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less">
-@import '~ant-design-vue/lib/style/themes/default';
+@import "~ant-design-vue/lib/style/themes/default";
 
 .project-list-index {
   .project-list {

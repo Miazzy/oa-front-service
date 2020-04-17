@@ -200,7 +200,7 @@ import { encryption, getEncryptedString } from "@/utils/encryption/aesEncrypt";
 import store from "@/store/";
 import { setStore, getStore, clearStore, clearAll } from "@/utils/storage";
 import { USER_INFO } from "@/store/mutation-types";
-import CryptoJS from "crypto-js";
+//import CryptoJS from "crypto-js";
 import crypto from "@/assets/crypto";
 
 //注册crypto

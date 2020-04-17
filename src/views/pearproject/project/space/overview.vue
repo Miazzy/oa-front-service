@@ -4,14 +4,12 @@
       <div class="project-nav-header">
         <a-breadcrumb>
           <a-breadcrumb-item>
-            <router-link to="/home"> <a-icon type="home" />首页 </router-link>
+            <router-link to="/home">
+              <a-icon type="home" />首页
+            </router-link>
           </a-breadcrumb-item>
           <a-breadcrumb-item>
-            <project-select
-              class="nav-title"
-              style="display: inline-block;"
-              :code="code"
-            ></project-select>
+            <project-select class="nav-title" style="display: inline-block;" :code="code"></project-select>
             <span class="actions">
               <a-tooltip
                 :mouseEnterDelay="0.3"
@@ -41,36 +39,24 @@
       <section class="nav-body">
         <ul class="nav-wrapper nav nav-underscore pull-left">
           <li>
-            <a
-              class="app"
-              data-app="tasks"
-              @click="$router.push('/project/space/task/' + code)"
-              >任务</a
-            >
+            <a class="app" data-app="tasks" @click="$router.push('/project/space/task/' + code)">任务</a>
           </li>
           <li class>
-            <a
-              class="app"
-              data-app="works"
-              @click="$router.push('/project/space/files/' + code)"
-              >文件</a
-            >
+            <a class="app" data-app="works" @click="$router.push('/project/space/files/' + code)">文件</a>
           </li>
           <li class="actives">
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/overview/' + code)"
-              >概览</a
-            >
+            >概览</a>
           </li>
           <li class>
             <a
               class="app"
               data-app="build"
               @click="$router.push('/project/space/features/' + code)"
-              >版本</a
-            >
+            >版本</a>
           </li>
         </ul>
       </section>
@@ -108,17 +94,16 @@
             </div>
             <div class="list-content">
               <a-list>
-                <a-list-item
-                  :key="index"
-                  v-for="(item, index) in projectInfoList"
-                >
+                <a-list-item :key="index" v-for="(item, index) in projectInfoList">
                   <a-list-item-meta>
                     <div slot="title">
                       <a-tooltip :mouseEnterDelay="0.5">
                         <template slot="title">
-                          <span>{{
+                          <span>
+                            {{
                             item.description ? item.description : '暂无描述'
-                          }}</span>
+                            }}
+                          </span>
                         </template>
                         <span>{{ item.name }}</span>
                       </a-tooltip>
@@ -164,23 +149,24 @@
                     <div slot="title">
                       <span>{{ item.member_name }}</span>
                       <span v-if="item.is_comment == 0">
-                        <span v-html="item.remark"></span> </span
-                      >&nbsp;
+                        <span v-html="item.remark"></span>
+                      </span>&nbsp;
                       <template v-if="item.is_comment == 1">
                         发表了评论
                         <p class="comment-text">{{ item.content }}</p>
                       </template>
-                      <span class="right-item muted">{{
+                      <span class="right-item muted">
+                        {{
                         formatTime(item.create_time)
-                      }}</span>
+                        }}
+                      </span>
                     </div>
                     <div slot="description">
                       <template v-if="item.action_type == 'task'">
                         <router-link
                           class="muted"
                           :to="`/project/space/task/${item.project_code}/detail/${item.source_code}`"
-                          >{{ item.sourceInfo.name }}</router-link
-                        >
+                        >{{ item.sourceInfo.name }}</router-link>
                       </template>
                       <template v-if="item.action_type == 'project'">
                         <span v-html="item.content"></span>
@@ -217,29 +203,17 @@
               <div class="muted m-b-xs">
                 <a-tag color="green">项目周期</a-tag>
               </div>
-              <a-range-picker
-                v-model="projectDate"
-                format="YYYY年MM月DD日"
-                @change="ondateChange"
-              />
+              <a-range-picker v-model="projectDate" format="YYYY年MM月DD日" @change="ondateChange" />
             </div>
             <div class="project-stats m-b-lg">
               <div class="muted m-b-xs">
                 <a-tag color="green">项目统计</a-tag>
               </div>
               <div class="stats-content">
-                <div
-                  class="stats-item"
-                  :key="index"
-                  v-for="(stats, index) in projectStats"
-                >
+                <div class="stats-item" :key="index" v-for="(stats, index) in projectStats">
                   <div class="stats-title muted">{{ stats.title }}</div>
                   <div class="stats-number">{{ stats.number }}</div>
-                  <a-tooltip
-                    placement="right"
-                    :mouseEnterDelay="0.3"
-                    :title="`${stats.schedule}%`"
-                  >
+                  <a-tooltip placement="right" :mouseEnterDelay="0.3" :title="`${stats.schedule}%`">
                     <a-progress
                       strokeColor="#1890ff"
                       :strokeWidth="3"
@@ -289,11 +263,7 @@
           <a-textarea placeholder="内容" :rows="2" v-decorator="['value']" />
         </a-form-item>
         <a-form-item>
-          <a-textarea
-            placeholder="描述"
-            :rows="2"
-            v-decorator="['description']"
-          />
+          <a-textarea placeholder="描述" :rows="2" v-decorator="['description']" />
         </a-form-item>
         <a-form-item></a-form-item>
       </a-form>
@@ -302,38 +272,38 @@
 </template>
 
 <script>
-import moment from 'moment';
-import VeLine from 'v-charts/lib/line.common';
+//import moment from 'moment';
+import VeLine from "v-charts/lib/line.common";
 import {
   _getProjectReport,
   _projectStats,
   doData,
-  read as getProject,
-} from '@/pearapi/project';
+  read as getProject
+} from "@/pearapi/project";
 import {
   doData as doInfo,
   list as getInfoList,
-  del as delProjectInfo,
-} from '@/pearapi/projectInfo';
-import {collect} from '@/pearapi/projectCollect';
-import {checkResponse} from '@/assets/js/utils';
-import {getLogBySelfProject, dateTotalForProject} from '@/pearapi/task';
-import {relativelyTime} from '@/assets/js/dateTime';
-import pagination from '@/mixins/pagination';
-import projectSelect from '@/components/project/projectSelect';
+  del as delProjectInfo
+} from "@/pearapi/projectInfo";
+import { collect } from "@/pearapi/projectCollect";
+import { checkResponse } from "@/assets/js/utils";
+import { getLogBySelfProject, dateTotalForProject } from "@/pearapi/task";
+import { relativelyTime } from "@/assets/js/dateTime";
+import pagination from "@/mixins/pagination";
+import projectSelect from "@/components/project/projectSelect";
 
 export default {
-  name: 'project-space-overview',
+  name: "project-space-overview",
   components: {
     VeLine,
-    projectSelect,
+    projectSelect
   },
   mixins: [pagination],
   data() {
     return {
       code: this.$route.params.code,
       loading: true,
-      project: {task_board_theme: 'simple'},
+      project: { task_board_theme: "simple" },
       projectDate: [],
       activities: [],
       projectInfoList: [],
@@ -342,156 +312,156 @@ export default {
       infoModal: {
         form: this.$form.createForm(this),
         newData: {
-          code: '',
+          code: ""
         },
         loading: false,
         modalStatus: false,
-        modalTitle: '项目信息',
+        modalTitle: "项目信息"
       },
       burnoutMap: {
         loading: true,
         chartData: {
-          columns: ['日期', '实际剩余任务', '理想剩余任务'],
-          rows: [],
+          columns: ["日期", "实际剩余任务", "理想剩余任务"],
+          rows: []
         },
         series: [
           {
-            type: 'line',
-            name: '实际剩余任务',
+            type: "line",
+            name: "实际剩余任务",
             smooth: false,
-            color: '#1890ff',
-            data: [],
+            color: "#1890ff",
+            data: []
           },
           {
-            type: 'line',
-            name: '理想剩余任务',
-            color: '#52C41A',
+            type: "line",
+            name: "理想剩余任务",
+            color: "#52C41A",
             smooth: false,
             lineStyle: {
-              type: 'dashed',
+              type: "dashed"
             },
-            data: [],
-          },
+            data: []
+          }
         ],
         chartSettings: {},
         chartExtend: {
           grid: {
-            left: '5',
-            right: '20',
-            top: '10',
-            bottom: '0',
+            left: "5",
+            right: "20",
+            top: "10",
+            bottom: "0"
           },
           xAxis: {
             show: true,
             // boundaryGap: false,
             splitLine: {
-              show: false,
-            },
+              show: false
+            }
           },
           yAxis: {
             show: true,
             splitLine: {
               show: true,
               lineStyle: {
-                type: 'dashed',
-                color: ['#e4e4e4'],
-              },
-            },
+                type: "dashed",
+                color: ["#e4e4e4"]
+              }
+            }
           },
           tooltip: {
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             textStyle: {
-              color: '#333',
+              color: "#333"
             },
             borderWidth: 1,
-            borderColor: '#e8e8e8',
+            borderColor: "#e8e8e8"
           },
           axisPointer: {
             lineStyle: {
-              width: 0,
-            },
-          },
-        },
+              width: 0
+            }
+          }
+        }
       },
       chartData: {
-        columns: ['日期', '任务'],
-        rows: [],
+        columns: ["日期", "任务"],
+        rows: []
       },
       chartSettings: {
         area: true,
         itemStyle: {
-          color: '#1890ff',
+          color: "#1890ff"
         },
         areaStyle: {
-          color: '#e6f7ff',
-        },
+          color: "#e6f7ff"
+        }
       },
       chartExtend: {
         grid: {
-          left: '-20',
-          right: '0',
-          top: '10',
-          bottom: '0',
+          left: "-20",
+          right: "0",
+          top: "10",
+          bottom: "0"
         },
         xAxis: {
-          show: false,
+          show: false
         },
         yAxis: {
-          show: false,
+          show: false
         },
         tooltip: {
-          backgroundColor: '#fff',
+          backgroundColor: "#fff",
           textStyle: {
-            color: '#333',
+            color: "#333"
           },
           borderWidth: 1,
-          borderColor: '#e8e8e8',
+          borderColor: "#e8e8e8"
         },
         axisPointer: {
           lineStyle: {
-            width: 0,
-          },
-        },
+            width: 0
+          }
+        }
       },
 
       projectStats: [
         {
-          title: '未完成',
-          key: 'unDone',
+          title: "未完成",
+          key: "unDone",
           number: 0,
-          schedule: 0,
+          schedule: 0
         },
         {
-          title: '已完成',
-          key: 'done',
+          title: "已完成",
+          key: "done",
           number: 0,
-          schedule: 0,
+          schedule: 0
         },
         {
-          title: '已逾期',
-          key: 'overdue',
+          title: "已逾期",
+          key: "overdue",
           number: 0,
-          schedule: 0,
+          schedule: 0
         },
         {
-          title: '待认领',
-          key: 'toBeAssign',
+          title: "待认领",
+          key: "toBeAssign",
           number: 0,
-          schedule: 0,
+          schedule: 0
         },
         {
-          title: '今日到期',
-          key: 'expireToday',
+          title: "今日到期",
+          key: "expireToday",
           number: 0,
-          schedule: 0,
+          schedule: 0
         },
         {
-          title: '逾期完成',
-          key: 'doneOverdue',
+          title: "逾期完成",
+          key: "doneOverdue",
           number: 0,
-          schedule: 0,
-        },
-      ],
+          schedule: 0
+        }
+      ]
     };
   },
   created() {
@@ -509,23 +479,23 @@ export default {
     },
     getProject() {
       this.loading = true;
-      getProject(this.code).then((res) => {
+      getProject(this.code).then(res => {
         this.loading = false;
         this.project = res.data;
         if (this.project.begin_time) {
           this.projectDate = [
             moment(this.project.begin_time),
-            moment(this.project.end_time),
+            moment(this.project.end_time)
           ];
         }
       });
     },
     getProjectReport() {
       let app = this;
-      _getProjectReport({projectCode: this.code}).then((res) => {
+      _getProjectReport({ projectCode: this.code }).then(res => {
         let rows = [];
-        res.data.date.forEach((v) => {
-          rows.push({日期: v});
+        res.data.date.forEach(v => {
+          rows.push({ 日期: v });
         });
         app.burnoutMap.loading = false;
         app.burnoutMap.chartData.rows = rows;
@@ -541,9 +511,9 @@ export default {
         app.showLoadingMore = false;
       }
       this.requestData.projectCode = this.code;
-      getLogBySelfProject(this.requestData).then((res) => {
+      getLogBySelfProject(this.requestData).then(res => {
         let list = [];
-        res.data.list.forEach((item) => {
+        res.data.list.forEach(item => {
           list.push(item);
           //只显示任务的完成动态
           // if (item.action_type === 'task') {
@@ -566,16 +536,16 @@ export default {
     },
     getProjectInfoList() {
       let app = this;
-      getInfoList({projectCode: app.code}).then((res) => {
+      getInfoList({ projectCode: app.code }).then(res => {
         app.projectInfoList = res.data;
       });
     },
     getProjectStats() {
       _projectStats({
-        projectCode: this.code,
-      }).then((res) => {
+        projectCode: this.code
+      }).then(res => {
         const taskStats = res.data;
-        const total = taskStats['total'];
+        const total = taskStats["total"];
         this.projectStats.forEach((v, k) => {
           v.number = taskStats[v.key];
           if (total) {
@@ -590,12 +560,12 @@ export default {
       this.getProjectLog(false);
     },
     overviewForProject() {
-      dateTotalForProject({projectCode: this.code}).then((res) => {
+      dateTotalForProject({ projectCode: this.code }).then(res => {
         let list = [];
-        res.data.forEach((v) => {
+        res.data.forEach(v => {
           list.push({
-            日期: moment(v.date).format('M月D日'),
-            任务: v.total,
+            日期: moment(v.date).format("M月D日"),
+            任务: v.total
           });
         });
         this.chartData.rows = list;
@@ -603,45 +573,45 @@ export default {
     },
     createInfo() {
       let app = this;
-      app.infoModal.newData = {code: ''};
-      setTimeout(function () {
+      app.infoModal.newData = { code: "" };
+      setTimeout(function() {
         app.infoModal.form && app.infoModal.form.resetFields();
       }, 0);
       app.infoModal.modalStatus = true;
-      app.infoModal.modalTitle = '添加字段';
+      app.infoModal.modalTitle = "添加字段";
     },
     editInfo(info) {
       let app = this;
       app.infoModal.newData = info;
       app.infoModal.modalStatus = true;
-      setTimeout(function () {
-        app.infoModal.modalTitle = '编辑字段';
+      setTimeout(function() {
+        app.infoModal.modalTitle = "编辑字段";
         app.infoModal.form.setFieldsValue({
           name: info.name,
           value: info.value,
-          description: info.description,
+          description: info.description
         });
       }, 0);
     },
     delInfo(info, index) {
       let app = this;
       app.$confirm({
-        title: '确定删除当前字段吗？',
-        okText: '删除',
-        okType: 'danger',
-        cancelText: '再想想',
+        title: "确定删除当前字段吗？",
+        okText: "删除",
+        okType: "danger",
+        cancelText: "再想想",
         onOk() {
-          delProjectInfo({infoCode: info.code}).then(() => {
+          delProjectInfo({ infoCode: info.code }).then(() => {
             app.projectInfoList.splice(index, 1);
             // app.init();
           });
           return Promise.resolve();
-        },
+        }
       });
     },
     handleSubmit() {
       let app = this;
-      app.infoModal.form.validateFields((err) => {
+      app.infoModal.form.validateFields(err => {
         if (!err) {
           app.handleOk();
         }
@@ -660,20 +630,20 @@ export default {
       }
       obj.projectCode = app.code;
       console.log(obj);
-      doInfo(obj).then((res) => {
+      doInfo(obj).then(res => {
         app.infoModal.loading = false;
         if (!checkResponse(res)) {
           return;
         }
         app.infoModal.form.resetFields();
-        app.infoModal.newData = {code: 0};
+        app.infoModal.newData = { code: 0 };
         app.infoModal.modalStatus = false;
         app.getProjectInfoList();
       });
     },
     collectProject() {
-      const type = this.project.collected ? 'cancel' : 'collect';
-      collect(this.project.code, type).then((res) => {
+      const type = this.project.collected ? "cancel" : "collect";
+      collect(this.project.code, type).then(res => {
         if (!checkResponse(res)) {
           return;
         }
@@ -685,14 +655,14 @@ export default {
       const project = this.project;
       doData({
         projectCode: project.code,
-        begin_time: e.length ? e[0].format('YYYY-MM-DD') : '',
-        end_time: e.length ? e[1].format('YYYY-MM-DD') : '',
+        begin_time: e.length ? e[0].format("YYYY-MM-DD") : "",
+        end_time: e.length ? e[1].format("YYYY-MM-DD") : ""
       });
     },
     formatTime(time) {
       return relativelyTime(time);
-    },
-  },
+    }
+  }
 };
 </script>
 
