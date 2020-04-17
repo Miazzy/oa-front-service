@@ -9,7 +9,7 @@ import {
 } from '@/utils/request';
 
 //import antd from 'ant-design-vue';
-//import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
+import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 
 import Viser from 'viser-vue';
 
@@ -27,7 +27,7 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 //import 'view-design/dist/styles/iview.css';
 
 //import Element from 'element-ui';
-//import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/index.css';
 
 //import formCreate from '@form-create/element-ui';
 
@@ -79,7 +79,6 @@ import hasPermission from '@/utils/hasPermission';
 import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index';
 import VuePreview from 'vue-preview';
-
 
 try {
     Vue.config.productionTip = false;

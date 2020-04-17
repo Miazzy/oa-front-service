@@ -6,42 +6,42 @@
 
 <script>
 //import * as $ from 'jquery'
-import { getAction } from '@/api/manage'
-import BpmnViewer from 'bpmn-js'
+import { getAction } from "@/api/manage";
+//import BpmnViewer from 'bpmn-js'
 export default {
   data() {
     return {
-      msg: ''
-    }
+      msg: ""
+    };
   },
   methods: {
     initing() {
-      var url = '/demo/info/hello'
+      var url = "/demo/info/hello";
       getAction(url).then(res => {
         if (res.success) {
-          this.msg = res.result
+          this.msg = res.result;
         }
-      })
+      });
     }
   },
   created() {
-    this.initing()
-    init()
+    this.initing();
+    init();
   }
-}
+};
 
 function init() {
   var viewer = new BpmnViewer({
-    container: '#canvas'
-  })
+    container: "#canvas"
+  });
 
   viewer.importXML(pizzaDiagram, function(err) {
     if (!err) {
-      console.log('success!')
-      viewer.get('canvas').zoom('fit-viewport')
+      console.log("success!");
+      viewer.get("canvas").zoom("fit-viewport");
     } else {
-      console.log('something went wrong:', err)
+      console.log("something went wrong:", err);
     }
-  })
+  });
 }
 </script>
