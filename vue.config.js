@@ -35,7 +35,6 @@ const assetsCDN = {
         'jquery': '$',
         'underscore': '_',
         'superagent': 'superagent',
-        'vue-ls': 'Storage',
         'qs': 'qs',
         'moment': 'moment',
         'dayjs': 'dayjs',
