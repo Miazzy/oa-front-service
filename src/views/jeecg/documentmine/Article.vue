@@ -65,8 +65,8 @@ import IconText from "@/views/list/search/components/IconText";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
-import * as $ from "jquery";
+//import * as _ from "underscore";
+//import * as $ from "jquery";
 
 export default {
   name: "Article",
@@ -115,12 +115,18 @@ export default {
       //新增查询页面
       this.page++;
 
+      debugger;
+
       //间隔一段时间后设置样式
       manageAPI.setTimeouts(() => {
-        $(".ant-list-item-action").css("position", "absolute");
-        $(".ant-list-item-action").css("display", "block");
-        $(".ant-list-item-action").css("left", "135px");
-        $(".ant-list-item-action").css("top", "150px");
+        try {
+          $(".ant-list-item-action").css("position", "absolute");
+          $(".ant-list-item-action").css("display", "block");
+          $(".ant-list-item-action").css("left", "135px");
+          $(".ant-list-item-action").css("top", "150px");
+        } catch (error) {
+          console.error(error);
+        }
       }, this.interval);
 
       //返回结果
@@ -197,7 +203,7 @@ export default {
             await manageAPI.deleteTableData("bs_blog", item.id);
 
             //初始化数据
-            this.data = _.reject(this.data, blog => {
+            this.data = window.__.reject(this.data, blog => {
               return blog.id == item.id;
             });
 

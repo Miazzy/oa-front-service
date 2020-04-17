@@ -372,8 +372,8 @@ import * as systemAPI from "@/api/api";
 import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
-import * as $ from "jquery";
+//import * as _ from "underscore";
+//import * as $ from "jquery";
 
 import {
   ACCESS_TOKEN,
@@ -578,7 +578,7 @@ export default {
       //获取下拉框选择的值
       let value = this.modelWFlowSelection;
 
-      this.fixedWFlow = _.find(this.rights, function(item) {
+      this.fixedWFlow = window.__.find(this.rights, function(item) {
         return (item["id"] = value);
       });
 
@@ -646,7 +646,7 @@ export default {
           currColumns.push(this.actionColumn);
           this.table.columns = [...currColumns];
           //去掉展示content内容列，通过点击+按钮展示
-          this.table.columns = _.filter(this.table.columns, function(item) {
+          this.table.columns = window.__.filter(this.table.columns, function(item) {
             return item.dataIndex != "content";
           });
           this.hasBpmStatusFilter();
@@ -785,7 +785,7 @@ export default {
                 //获取分页数据总数
                 this.table.pagination.total = Number(res.result.total);
 
-                res.result.records = _.filter(res.result.records, function(
+                res.result.records = window.__.filter(res.result.records, function(
                   item
                 ) {
                   //如果是在团队管理界面，则只有团队负责人和成员能查看团队列表
@@ -1333,7 +1333,7 @@ export default {
       let node = await manageAPI.queryProcessLog(tableName, bussinessCodeID);
 
       //遍历node,设置approve_user，action
-      _.each(node, function(item) {
+      window.__.each(node, function(item) {
         //记录创建时间
         let ctime = item["create_time"];
         //设置审批人员
@@ -1661,7 +1661,7 @@ export default {
       );
 
       //遍历node,设置approve_user，action
-      _.each(node, function(item) {
+      window.__.each(node, function(item) {
         item["approve_user"] = userInfo["username"];
         item["action"] = operation;
         item["operate_time"] = date;
@@ -1941,7 +1941,7 @@ export default {
       //检查审批权限，当前用户必须申请人员，才可以进行撤销审批操作
 
       //遍历node,设置approve_user，action
-      _.each(node, function(item) {
+      window.__.each(node, function(item) {
         //记录创建时间
         let ctime = item["create_time"];
         //设置审批人员

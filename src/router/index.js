@@ -1,5 +1,5 @@
 //import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 
 import {
     constantRouterMap
@@ -7,8 +7,8 @@ import {
 
 
 try {
-    const originalPush = VueRouter.prototype.push
-    VueRouter.prototype.push = function push(location) {
+    const originalPush = Router.prototype.push
+    Router.prototype.push = function push(location) {
         return originalPush.call(this, location).catch(err => err)
     }
 } catch (e) {
@@ -16,12 +16,12 @@ try {
 }
 
 try {
-    Vue.use(VueRouter)
+    Vue.use(Router)
 } catch (error) {
     console.error(error);
 }
 
-export default new VueRouter({
+export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     scrollBehavior: () => ({

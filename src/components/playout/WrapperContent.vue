@@ -57,7 +57,7 @@
     import {mapState} from 'vuex'
     import {getStore} from '@/assets/js/storage'
     import {getClassObj} from '@/assets/js/utils'
-    import $ from 'jquery'
+    //import * as $ from 'jquery'
     import ABreadcrumb from 'ant-design-vue/es/breadcrumb'
 
     const ABreadcrumbItem = ABreadcrumb.Item;

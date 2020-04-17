@@ -47,7 +47,7 @@ import IconText from "@/views/list/search/components/IconText";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
+//import * as _ from "underscore";
 
 export default {
   name: "Article",
@@ -165,7 +165,7 @@ export default {
             await manageAPI.deleteTableData("bs_blog", item.id);
 
             //初始化数据
-            this.data = _.reject(this.data, blog => {
+            this.data = window.__.reject(this.data, blog => {
               return blog.id == item.id;
             });
 

@@ -30,20 +30,6 @@ body,
     width: 120px;
     height: 120px;
     margin: -75px 0 0 -75px;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    /* COLOR 1 */
-    border-top-color: #FFF;
-    -webkit-animation: spin 2s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -ms-animation: spin 2s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -moz-animation: spin 2s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -o-animation: spin 2s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    animation: spin 2s linear infinite;
-    /* Chrome, Firefox 16+, IE 10+, Opera */
     z-index: 1001;
 }
 
@@ -54,20 +40,6 @@ body,
     left: 5px;
     right: 5px;
     bottom: 5px;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    /* COLOR 2 */
-    border-top-color: #FFF;
-    -webkit-animation: spin 3s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -moz-animation: spin 3s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -o-animation: spin 3s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -ms-animation: spin 3s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    animation: spin 3s linear infinite;
-    /* Chrome, Firefox 16+, IE 10+, Opera */
 }
 
 #loader:after {
@@ -79,55 +51,37 @@ body,
     bottom: 15px;
     border-radius: 50%;
     border: 3px solid transparent;
-    border-top-color: #FFF;
-    /* COLOR 3 */
-    -moz-animation: spin 1.5s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -o-animation: spin 1.5s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -ms-animation: spin 1.5s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    -webkit-animation: spin 1.5s linear infinite;
-    /* Chrome, Opera 15+, Safari 5+ */
-    animation: spin 1.5s linear infinite;
-    /* Chrome, Firefox 16+, IE 10+, Opera */
+    border-top-color: skyblue;
+    -moz-animation: spin 1s linear infinite;
+    -o-animation: spin 1s linear infinite;
+    -ms-animation: spin 1s linear infinite;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
 }
 
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(0deg);
-        /* IE 9 */
         transform: rotate(0deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
     100% {
         -webkit-transform: rotate(360deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(360deg);
-        /* IE 9 */
         transform: rotate(360deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
 }
 
 @keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(0deg);
-        /* IE 9 */
         transform: rotate(0deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
     100% {
         -webkit-transform: rotate(360deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(360deg);
-        /* IE 9 */
         transform: rotate(360deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
 }
 
@@ -137,14 +91,10 @@ body,
     width: 51%;
     height: 100%;
     background: #49a9ee;
-    /* Old browsers */
     z-index: 1000;
     -webkit-transform: translateX(0);
-    /* Chrome, Opera 15+, Safari 3.1+ */
     -ms-transform: translateX(0);
-    /* IE 9 */
     transform: translateX(0);
-    /* Firefox 16+, IE 10+, Opera */
 }
 
 #loader-wrapper .loader-section.section-left {
@@ -211,7 +161,7 @@ body,
 
 #loader-wrapper .load_title {
     font-family: 'Open Sans';
-    color: #FFF;
+    color: #333;
     font-size: 14px;
     width: 100%;
     text-align: center;
@@ -233,26 +183,26 @@ body,
 
 /* 滚动条优化 start */
 
- ::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
- ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: #f6f6f6;
     border-radius: 2px;
 }
 
- ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #cdcdcd;
     border-radius: 2px;
 }
 
- ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #747474;
 }
 
- ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
     background: #f6f6f6;
 }
 

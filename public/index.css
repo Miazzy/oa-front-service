@@ -62,38 +62,26 @@ body,
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(0deg);
-        /* IE 9 */
         transform: rotate(0deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
     100% {
         -webkit-transform: rotate(360deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(360deg);
-        /* IE 9 */
         transform: rotate(360deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
 }
 
 @keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(0deg);
-        /* IE 9 */
         transform: rotate(0deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
     100% {
         -webkit-transform: rotate(360deg);
-        /* Chrome, Opera 15+, Safari 3.1+ */
         -ms-transform: rotate(360deg);
-        /* IE 9 */
         transform: rotate(360deg);
-        /* Firefox 16+, IE 10+, Opera */
     }
 }
 
@@ -103,14 +91,10 @@ body,
     width: 51%;
     height: 100%;
     background: #49a9ee;
-    /* Old browsers */
     z-index: 1000;
     -webkit-transform: translateX(0);
-    /* Chrome, Opera 15+, Safari 3.1+ */
     -ms-transform: translateX(0);
-    /* IE 9 */
     transform: translateX(0);
-    /* Firefox 16+, IE 10+, Opera */
 }
 
 #loader-wrapper .loader-section.section-left {

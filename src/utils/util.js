@@ -1,5 +1,5 @@
 import * as validate from '@/utils/validate';
-import * as superagent from 'superagent';
+//import * as superagent from 'superagent';
 import * as storage from '@/utils/storage';
 import * as tools from '@/utils/util';
 import * as api from '@/api/api'

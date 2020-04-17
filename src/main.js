@@ -1,6 +1,6 @@
 //import Vue from 'vue';
 import App from './App.vue';
-import Storage from 'vue-ls';
+import storage from 'vue-ls';
 import router from './router';
 import store from './store/';
 
@@ -15,7 +15,7 @@ import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 import '@/permission'; // permission control
 import '@/utils/filter'; // base filter
 import Print from 'vue-print-nb-jeecg';
-import VueApexCharts from 'vue-apexcharts';
+//import VueApexCharts from 'vue-apexcharts';
 
 import preview from 'vue-photo-preview';
 import 'vue-photo-preview/dist/skin.css';
@@ -36,7 +36,7 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 //import F2 from '@antv/f2';
 
 //import axios from 'axios';
-import qs from 'qs';
+//import qs from 'qs';
 
 try {
     //Vue.use(leMarkdownEditor)
@@ -88,7 +88,7 @@ try {
 
 try {
     //Vue注册组件
-    Vue.use(Storage, config.storageOptions);
+    Vue.use(storage, config.storageOptions);
 } catch (error) {
     console.log(error);
 }

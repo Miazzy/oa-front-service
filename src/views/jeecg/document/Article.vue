@@ -1,24 +1,33 @@
 <template>
   <a-list size="large" rowKey="id" :loading="loading" itemLayout="vertical" :dataSource="data">
-    <a-list-item :key="item.id" slot="renderItem" slot-scope="item" style="position:relative;height:220px;margin-top:15px;">
-
+    <a-list-item
+      :key="item.id"
+      slot="renderItem"
+      slot-scope="item"
+      style="position:relative;height:220px;margin-top:15px;"
+    >
       <template slot="actions" style="top:180px;">
-          <a style="color:#303030;top:180px;">
-            <icon-text type="star-o" :text="item.star" />
-          </a>
-          <a style="color:#303030;top:180px;">
-            <icon-text type="like-o" :text="item.likes" />
-          </a>
-          <a style="color:#303030;top:180px;">
-            <icon-text type="message" :text="item.messages" />
-          </a>
+        <a style="color:#303030;top:180px;">
+          <icon-text type="star-o" :text="item.star" />
+        </a>
+        <a style="color:#303030;top:180px;">
+          <icon-text type="like-o" :text="item.likes" />
+        </a>
+        <a style="color:#303030;top:180px;">
+          <icon-text type="message" :text="item.messages" />
+        </a>
       </template>
 
-      <div style="position: relative; left:0px; top:-25px;margin-top: 0px;width: 138px;height: 157px;background-size: cover;background-position: center;background-repeat: no-repeat;box-sizing: border-box;transition: all .5s;-moz-transition: all .5s;-webkit-transition: all .5s;-o-transition: all .5s;float: left;background-image:url(//img4.sycdn.imooc.com/5e16e9730001c32802940333.jpg);">
-      </div>
+      <div
+        style="position: relative; left:0px; top:-25px;margin-top: 0px;width: 138px;height: 157px;background-size: cover;background-position: center;background-repeat: no-repeat;box-sizing: border-box;transition: all .5s;-moz-transition: all .5s;-webkit-transition: all .5s;-o-transition: all .5s;float: left;background-image:url(//img4.sycdn.imooc.com/5e16e9730001c32802940333.jpg);"
+      ></div>
 
       <a-list-item-meta style="position: relative;height:60px;margin-left:200px;">
-        <a slot="title" @click="handleBlogView(item)" style="position: absolute;left: 135px;">{{ item.title }}</a>
+        <a
+          slot="title"
+          @click="handleBlogView(item)"
+          style="position: absolute;left: 135px;"
+        >{{ item.title }}</a>
         <template slot="description" style="position: absolute;left: 135px;top: 35px;">
           <span style="position: absolute;display:block;left: 135px;top:50px;">
             <a-tag v-for="(tag, index) in item.page_tags.split(',')" :key="index">{{tag}}</a-tag>
@@ -26,14 +35,14 @@
         </template>
       </a-list-item-meta>
 
-      <article-list-content style="position: absolute; top: 90px; height:150px;margin-left:135px;"
+      <article-list-content
+        style="position: absolute; top: 90px; height:150px;margin-left:135px;"
         :description="item.description"
         :owner="item.create_by"
         :avatar="item.avatar"
         :updateAt="item.createtime"
         @click="handleBlogView(item)"
       />
-
     </a-list-item>
     <div slot="footer" v-if="data.length > 0" style="text-align: center; margin-top: 16px;">
       <a-button @click="loadMore" :loading="loadingMore">加载更多</a-button>
@@ -48,8 +57,8 @@ import IconText from "@/views/list/search/components/IconText";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
-import * as $ from "jquery";
+//import * as _ from "underscore";
+//import * as $ from "jquery";
 
 export default {
   name: "Article",
@@ -62,7 +71,7 @@ export default {
       loading: true,
       loadingMore: false,
       data: [],
-      interval:[300,500,1000,3000,5000,7000,9000,11000],
+      interval: [300, 500, 1000, 3000, 5000, 7000, 9000, 11000],
       page: 0,
       size: 50
     };
@@ -76,7 +85,6 @@ export default {
      * @function 获取博文数据函数
      */
     async getList() {
-
       //获取当前登录用户
       var userInfo = storage.getStore("cur_user");
 
@@ -102,12 +110,12 @@ export default {
       debugger;
 
       //间隔一段时间后设置样式
-      manageAPI.setTimeouts(()=>{
-          $('.ant-list-item-action').css('position','absolute');
-          $('.ant-list-item-action').css('display','block');
-          $('.ant-list-item-action').css('left','135px');
-          $('.ant-list-item-action').css('top','150px');
-      },this.interval);
+      manageAPI.setTimeouts(() => {
+        $(".ant-list-item-action").css("position", "absolute");
+        $(".ant-list-item-action").css("display", "block");
+        $(".ant-list-item-action").css("left", "135px");
+        $(".ant-list-item-action").css("top", "150px");
+      }, this.interval);
 
       //返回结果
       return "";
@@ -183,7 +191,7 @@ export default {
             await manageAPI.deleteTableData("bs_blog", item.id);
 
             //初始化数据
-            this.data = _.reject(this.data, blog => {
+            this.data = window.__.reject(this.data, blog => {
               return blog.id == item.id;
             });
 
@@ -200,9 +208,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .ant-list-vertical {
-  .ant-list-item-action  {
+  .ant-list-item-action {
     margin-left: auto;
     position: absolute;
     display: block;
@@ -210,5 +217,4 @@ export default {
     top: 150px;
   }
 }
-
 </style>

@@ -94,7 +94,7 @@ import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
-import * as $ from "jquery";
+//import * as $ from "jquery";
 import * as tools from "@/utils/util";
 import * as moment from "moment";
 
@@ -217,8 +217,6 @@ export default {
      * @function 查询函数
      */
     async searchQuery(type = "all", content = "", starttime, endtime) {
-
-
       //获取type类型
       type = this.queryParam.type || "all";
 

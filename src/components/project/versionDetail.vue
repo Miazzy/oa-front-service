@@ -7,11 +7,7 @@
         </span>
         <span class="header-action text-right">
           <template>
-            <a-dropdown
-              :trigger="['click']"
-              placement="bottomCenter"
-              v-model="visibleTaskMenu"
-            >
+            <a-dropdown :trigger="['click']" placement="bottomCenter" v-model="visibleTaskMenu">
               <a-tooltip :mouseEnterDelay="0.5">
                 <template slot="title">
                   <span>打开菜单</span>
@@ -20,11 +16,7 @@
                   <a-icon type="ellipsis" />
                 </a>
               </a-tooltip>
-              <a-menu
-                @click="doVersion"
-                class="field-right-menu"
-                slot="overlay"
-              >
+              <a-menu @click="doVersion" class="field-right-menu" slot="overlay">
                 <a-menu-item key="delete">
                   <a-icon type="delete"></a-icon>
                   <span>删除版本</span>
@@ -63,13 +55,9 @@
                     class="title-text"
                     @click="editTitle"
                     v-show="!showEditName"
-                  >
-                    {{ version.name }}
-                  </div>
+                  >{{ version.name }}</div>
                 </a-tooltip>
-                <div v-else class="title-text" v-show="!showEditName">
-                  {{ version.name }}
-                </div>
+                <div v-else class="title-text" v-show="!showEditName">{{ version.name }}</div>
               </div>
               <div class="task-basic-attrs-view muted">
                 <div class="field-list" :class="{disabled: disableEdit}">
@@ -88,19 +76,16 @@
                         >
                           <a-tooltip placement="top">
                             <template slot="title">
-                              <span v-if="disableEdit" style="font-size: 12px;"
-                                >版本已发布，不能编辑</span
-                              >
+                              <span v-if="disableEdit" style="font-size: 12px;">版本已发布，不能编辑</span>
                             </template>
                             <span>
-                              <span
-                                class="version-status"
-                                :class="`status-${version.status}`"
-                              >
+                              <span class="version-status" :class="`status-${version.status}`">
                                 <a-icon type="schedule" />
-                                <span class="m-l-xs">{{
+                                <span class="m-l-xs">
+                                  {{
                                   version.statusText
-                                }}</span>
+                                  }}
+                                </span>
                               </span>
                             </span>
                           </a-tooltip>
@@ -174,23 +159,23 @@
                             </template>
                             <div class="field-flex">
                               <a class="muted name" style="margin: 0;">
-                                <template v-if="!version.setStartTime"
-                                  >设置开始时间</template
-                                >
-                                <template v-else>{{
+                                <template v-if="!version.setStartTime">设置开始时间</template>
+                                <template v-else>
+                                  {{
                                   version.start_time_format
-                                }}</template>
+                                  }}
+                                </template>
                               </a>
                             </div>
                           </a-tooltip>
                           <div class="field-flex" v-else>
                             <a class="muted name" style="margin: 0;">
-                              <template v-if="!version.setStartTime"
-                                >设置开始时间</template
-                              >
-                              <template v-else>{{
+                              <template v-if="!version.setStartTime">设置开始时间</template>
+                              <template v-else>
+                                {{
                                 version.start_time_format
-                              }}</template>
+                                }}
+                              </template>
                             </a>
                           </div>
                           <div slot="overlay">
@@ -209,8 +194,7 @@
                                   style="position: absolute;"
                                   size="small"
                                   @click="doStartTime(false)"
-                                  >清除</a
-                                >
+                                >清除</a>
                               </template>
                             </a-date-picker>
                           </div>
@@ -236,23 +220,23 @@
                             </template>
                             <div class="field-flex">
                               <a class="muted name" style="margin: 0;">
-                                <template v-if="!version.setPlanPublishTime"
-                                  >设置发布时间</template
-                                >
-                                <template v-else>{{
+                                <template v-if="!version.setPlanPublishTime">设置发布时间</template>
+                                <template v-else>
+                                  {{
                                   version.plan_publish_time_format
-                                }}</template>
+                                  }}
+                                </template>
                               </a>
                             </div>
                           </a-tooltip>
                           <div class="field-flex" v-else>
                             <a class="muted name" style="margin: 0;">
-                              <template v-if="!version.setPlanPublishTime"
-                                >设置发布时间</template
-                              >
-                              <template v-else>{{
+                              <template v-if="!version.setPlanPublishTime">设置发布时间</template>
+                              <template v-else>
+                                {{
                                 version.plan_publish_time_format
-                              }}</template>
+                                }}
+                              </template>
                             </a>
                           </div>
                           <div slot="overlay">
@@ -271,8 +255,7 @@
                                   style="position: absolute;"
                                   size="small"
                                   @click="doPlanPublishTime(false)"
-                                  >清除</a
-                                >
+                                >清除</a>
                               </template>
                             </a-date-picker>
                           </div>
@@ -292,10 +275,7 @@
                           :mouseEnterDelay="0.3"
                           :title="`系统自动统计当前版本的完成进度`"
                         >
-                          <a-progress
-                            :strokeWidth="4"
-                            :percent="version.schedule"
-                          />
+                          <a-progress :strokeWidth="4" :percent="version.schedule" />
                         </a-tooltip>
                       </div>
                     </div>
@@ -321,24 +301,19 @@
                           <span v-show="!version.description">添加备注</span>
                         </div>
                         <div v-show="showVersionDescriptionEdit">
-                          <a-input
-                            type="textarea"
-                            v-model="version.description"
-                          ></a-input>
+                          <a-input type="textarea" v-model="version.description"></a-input>
                           <div class="action-btn pull-right">
                             <a
                               type="text"
                               class="cancel-text muted"
                               @click="showVersionDescriptionEdit = false"
-                              >取消</a
-                            >
+                            >取消</a>
                             <a-button
                               type="primary"
                               htmlType="submit"
                               class="middle-btn"
                               @click="doContent"
-                              >保存</a-button
-                            >
+                            >保存</a-button>
                           </div>
                         </div>
                       </div>
@@ -350,11 +325,11 @@
                         <a-icon type="bars" />
                         <span class="field-name">
                           发布内容
-                          <span v-show="versionTaskSchedule !== false"
-                            >· {{ versionTaskDoneNum }}/{{
-                              versionTaskList.length
-                            }}</span
-                          >
+                          <span v-show="versionTaskSchedule !== false">
+                            · {{ versionTaskDoneNum }}/{{
+                            versionTaskList.length
+                            }}
+                          </span>
                         </span>
                       </div>
                       <div class="field-right width-block"></div>
@@ -364,10 +339,7 @@
                     <div class="field">
                       <div class="block-field width-block">
                         <div class="task-child">
-                          <div
-                            class="task-list"
-                            v-show="versionTaskList.length"
-                          >
+                          <div class="task-list" v-show="versionTaskList.length">
                             <div
                               v-for="(versionTask, index) in versionTaskList"
                               :key="versionTask.code"
@@ -389,14 +361,14 @@
                                 </div>
                                 <a-tooltip :mouseEnterDelay="0.5">
                                   <template slot="title">
-                                    <span v-if="versionTask.executor">{{
+                                    <span v-if="versionTask.executor">
+                                      {{
                                       versionTask.executor.name
-                                    }}</span>
+                                      }}
+                                    </span>
                                     <span v-else>待认领</span>
                                   </template>
-                                  <div
-                                    @click.stop="showTaskDetail(versionTask)"
-                                  >
+                                  <div @click.stop="showTaskDetail(versionTask)">
                                     <a-avatar
                                       v-if="versionTask.executor"
                                       class="task-item"
@@ -404,34 +376,20 @@
                                       icon="user"
                                       :src="versionTask.executor.avatar"
                                     ></a-avatar>
-                                    <a-avatar
-                                      v-else
-                                      class="task-item"
-                                      size="small"
-                                      icon="user"
-                                    ></a-avatar>
+                                    <a-avatar v-else class="task-item" size="small" icon="user"></a-avatar>
                                   </div>
                                 </a-tooltip>
                                 <div
                                   class="task-item task-title"
                                   @click.stop="showTaskDetail(versionTask)"
                                 >
-                                  <div class="title-text">
-                                    {{ versionTask.name }}
-                                  </div>
+                                  <div class="title-text">{{ versionTask.name }}</div>
                                 </div>
                                 <span class="m-r muted">
-                                  <span
-                                    v-if="versionTask.done"
-                                    class="text-success"
-                                    >已完成</span
-                                  >
+                                  <span v-if="versionTask.done" class="text-success">已完成</span>
                                   <span v-else>未完成</span>
                                 </span>
-                                <a
-                                  class="muted"
-                                  @click.stop="removeVersionTask(versionTask)"
-                                >
+                                <a class="muted" @click.stop="removeVersionTask(versionTask)">
                                   <a-icon class="task-item" type="delete" />
                                 </a>
                               </div>
@@ -444,10 +402,7 @@
                               v-show="!showChildTask"
                               @click="getTaskStages"
                             >
-                              <a-icon
-                                type="plus"
-                                style="margin-right: 6px;"
-                              />添加发布内容
+                              <a-icon type="plus" style="margin-right: 6px;" />添加发布内容
                             </a>
                           </a-tooltip>
                         </div>
@@ -465,19 +420,11 @@
               </div>
               <vue-scroll>
                 <div class="log-list muted">
-                  <a
-                    class="show-more muted"
-                    v-show="checkShowMoreLog"
-                    @click="getMoreVersionLog"
-                  >
+                  <a class="show-more muted" v-show="checkShowMoreLog" @click="getMoreVersionLog">
                     <a-icon type="ellipsis" />
                     显示较早的 {{ versionLogTotal - versionLog.length }} 条动态
                   </a>
-                  <div
-                    class="list-item"
-                    v-for="log in versionLog"
-                    :key="log.code"
-                  >
+                  <div class="list-item" v-for="log in versionLog" :key="log.code">
                     <template>
                       <a-icon class="log-item" :type="log.icon" />
                       <div class="log-item log-txt">
@@ -485,20 +432,18 @@
                           {{ log.member.name }}
                           <span v-html="log.remark"></span>
                         </div>
-                        <div
-                          v-if="log.content"
-                          class="log-content"
-                          v-html="log.content"
-                        ></div>
+                        <div v-if="log.content" class="log-content" v-html="log.content"></div>
                       </div>
                     </template>
                     <a-tooltip :mouseEnterDelay="0.5">
                       <template slot="title">
                         <span>{{ log.create_time }}</span>
                       </template>
-                      <span class="log-item">{{
+                      <span class="log-item">
+                        {{
                         log.create_time | formatLogTime
-                      }}</span>
+                        }}
+                      </span>
                     </a-tooltip>
                   </div>
                 </div>
@@ -516,10 +461,7 @@
       :bodyStyle="{paddingBottom: '1px'}"
       :footer="null"
     >
-      <a-form
-        @submit.prevent="handleSubmitPublishVersion"
-        :form="publishVersionForm"
-      >
+      <a-form @submit.prevent="handleSubmitPublishVersion" :form="publishVersionForm">
         <a-form-item>
           <a-date-picker
             showTime
@@ -538,8 +480,7 @@
               size="large"
               :loading="publishVersion.confirmLoading"
               class="middle-btn"
-              >确认发布</a-button
-            >
+            >确认发布</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -555,14 +496,14 @@
       <div>
         <p v-show="publishTask.selectTaskList.length">
           已选择
-          <span class="text-warning">{{
+          <span class="text-warning">
+            {{
             publishTask.selectTaskList.length
-          }}</span>
+            }}
+          </span>
           项
         </p>
-        <p class="muted" v-show="!publishTask.selectTaskList.length">
-          请勾选需要发布的内容
-        </p>
+        <p class="muted" v-show="!publishTask.selectTaskList.length">请勾选需要发布的内容</p>
       </div>
       <vue-scroll>
         <div class="publish-task">
@@ -581,9 +522,7 @@
               >
                 <a-list-item slot="renderItem" slot-scope="task, index">
                   <a-list-item-meta>
-                    <div slot="title" :class="{muted: task.version_code}">
-                      {{ task.name }}
-                    </div>
+                    <div slot="title" :class="{muted: task.version_code}">{{ task.name }}</div>
                     <div slot="avatar">
                       <a-checkbox :value="task.code"></a-checkbox>
                     </div>
@@ -595,13 +534,7 @@
         </div>
       </vue-scroll>
       <div class="footer-item text-right m-t">
-        <a-button
-          type="primary"
-          size="large"
-          class="middle-btn"
-          @click="addVersionTask"
-          >保存</a-button
-        >
+        <a-button type="primary" size="large" class="middle-btn" @click="addVersionTask">保存</a-button>
       </div>
     </a-modal>
     <a-modal
@@ -620,61 +553,61 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import $ from 'jquery';
-import moment from 'moment';
-import taskDetail from '@/components/project/taskDetail';
+import { mapState } from "vuex";
+import moment from "moment";
+import taskDetail from "@/components/project/taskDetail";
+//import * as $ from 'jquery';
 import {
   edit,
   del,
   read as getVersionInfo,
   getVersionTask,
-  getVersionLog,
-} from '@/pearapi/projectVersion';
-import {relativelyTaskTime, relativelyTime} from '@/assets/js/dateTime';
-import {checkResponse} from '@/assets/js/utils';
+  getVersionLog
+} from "@/pearapi/projectVersion";
+import { relativelyTaskTime, relativelyTime } from "@/assets/js/dateTime";
+import { checkResponse } from "@/assets/js/utils";
 import {
   addVersionTask,
   changeStatus,
-  removeVersionTask,
-} from '@/pearapi/projectVersion';
-import {list as getTaskStages, tasks as getTasks} from '@/pearapi/taskStages';
-import {notice} from '@/assets/js/notice';
+  removeVersionTask
+} from "@/pearapi/projectVersion";
+import { list as getTaskStages, tasks as getTasks } from "@/pearapi/taskStages";
+import { notice } from "@/assets/js/notice";
 
 export default {
-  name: 'version-detail',
+  name: "version-detail",
   components: {
-    taskDetail,
+    taskDetail
   },
   props: {
     versionCode: {
       type: [String],
       default() {
-        return '';
-      },
+        return "";
+      }
     },
     width: {
       type: [String, Number],
       default() {
-        return '1200';
-      },
-    },
+        return "1200";
+      }
+    }
   },
   data() {
     return {
       loading: false,
       code: this.versionCode,
-      projectCodeCurrent: '',
+      projectCodeCurrent: "",
       task: {},
       showTaskDetailModal: false,
-      taskCode: '',
+      taskCode: "",
       version: {},
 
       /*菜单*/
       visibleTaskMenu: false,
 
       /*标题*/
-      versionName: '',
+      versionName: "",
 
       /*日期*/
       showEditName: false,
@@ -693,7 +626,7 @@ export default {
       publishVersion: {
         modalStatus: false,
         confirmLoading: false,
-        status: -1,
+        status: -1
       },
 
       showMoreTaskLog: 0,
@@ -705,19 +638,19 @@ export default {
         confirmLoading: false,
         loading: false,
         selectTaskList: [],
-        taskStages: [],
-      },
+        taskStages: []
+      }
     };
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.userInfo,
+      userInfo: state => state.userInfo
     }),
     disableEdit() {
       return this.version.status == 3;
     },
     versionTaskDoneNum() {
-      const list = this.versionTaskList.filter((item) => item.done == 1);
+      const list = this.versionTaskList.filter(item => item.done == 1);
       return list.length;
     },
     checkShowMoreLog() {
@@ -737,21 +670,21 @@ export default {
     scrollOps() {
       return {
         rail: {
-          background: '#e5e5e5',
-          opacity: 1,
+          background: "#e5e5e5",
+          opacity: 1
         },
         bar: {
-          keepShow: true,
-        },
+          keepShow: true
+        }
       };
-    },
+    }
   },
   watch: {
     $route(to, from) {
       // if (from.name == 'taskdetail') {
       //     this.init();
       // }
-    },
+    }
   },
   created() {
     this.init();
@@ -763,7 +696,7 @@ export default {
         this.changeModalHeight();
       })();
     };
-    document.onkeydown = (event) => {
+    document.onkeydown = event => {
       var e = event || window.event || arguments.callee.caller.arguments[0];
       if (13 == e.keyCode && e.ctrlKey) {
         //处理的部分
@@ -774,7 +707,7 @@ export default {
   filters: {
     formatLogTime(value) {
       return relativelyTime(value);
-    },
+    }
   },
   methods: {
     init() {
@@ -783,17 +716,17 @@ export default {
       this.getVersionTask();
     },
     detailClose() {
-      this.$emit('close', this.version);
+      this.$emit("close", this.version);
     },
     getVersion() {
-      getVersionInfo({versionCode: this.code}).then((res) => {
+      getVersionInfo({ versionCode: this.code }).then(res => {
         this.getVersionLog();
         this.version = res.data;
         this.versionName = res.data.name;
         if (!this.version.start_time) {
           this.version.setStartTime = false;
           this.version.start_time = moment(
-            moment().format('YYYY-MM-DD') + ' 18:00'
+            moment().format("YYYY-MM-DD") + " 18:00"
           );
         } else {
           this.version.setStartTime = true;
@@ -807,7 +740,7 @@ export default {
         if (!this.version.plan_publish_time) {
           this.version.setPlanPublishTime = false;
           this.version.plan_publish_time = moment(
-            moment().format('YYYY-MM-DD') + ' 18:00'
+            moment().format("YYYY-MM-DD") + " 18:00"
           );
         } else {
           this.version.setPlanPublishTime = true;
@@ -823,7 +756,7 @@ export default {
       });
     },
     getVersionTask() {
-      getVersionTask({versionCode: this.code}).then((res) => {
+      getVersionTask({ versionCode: this.code }).then(res => {
         this.versionTaskList = res.data;
       });
     },
@@ -831,8 +764,8 @@ export default {
       getVersionLog({
         versionCode: this.code,
         all: this.showMoreVersionLog,
-        pageSize: 5,
-      }).then((res) => {
+        pageSize: 5
+      }).then(res => {
         // this.versionLog = res.data;
         this.versionLog = res.data.list;
         this.versionLogTotal = res.data.total;
@@ -855,12 +788,12 @@ export default {
       this.publishTask.loading = true;
       getTaskStages({
         projectCode: this.version.projectCode,
-        pageSize: 30,
-      }).then((res) => {
+        pageSize: 30
+      }).then(res => {
         this.publishTask.taskStages = res.data.list;
         if (this.publishTask.taskStages) {
-          this.publishTask.taskStages.forEach((v) => {
-            getTasks({stageCode: v.code}).then((res) => {
+          this.publishTask.taskStages.forEach(v => {
+            getTasks({ stageCode: v.code }).then(res => {
               v.tasksLoading = false;
               v.tasks = res.data;
             });
@@ -877,21 +810,21 @@ export default {
     taskDetailClose() {
       this.init();
       this.showTaskDetailModal = false;
-      this.taskCode = '';
+      this.taskCode = "";
     },
     doVersion(action) {
       let app = this;
       const actionKey = action.key;
       switch (actionKey) {
-        case 'delete':
+        case "delete":
           this.$confirm({
-            title: '删除版本',
+            title: "删除版本",
             content: `删除版本后，发布内容的版本字段将被清空，是否确定删除？`,
-            okText: '确定',
-            okType: 'danger',
+            okText: "确定",
+            okType: "danger",
             cancelText: `再想想`,
             onOk() {
-              del({versionCode: app.code}).then((res) => {
+              del({ versionCode: app.code }).then(res => {
                 const result = checkResponse(res);
                 if (!result) {
                   return false;
@@ -899,7 +832,7 @@ export default {
                 app.detailClose();
               });
               return Promise.resolve();
-            },
+            }
           });
           break;
       }
@@ -914,18 +847,18 @@ export default {
     deleteTask() {
       let app = this;
       this.$confirm({
-        title: '彻底删除',
+        title: "彻底删除",
         content: `彻底删除任务后，该任务及其子任务将会被永久被删除。`,
-        okText: '删除',
-        okType: 'danger',
+        okText: "删除",
+        okType: "danger",
         cancelText: `再想想`,
         onOk() {
-          del(app.code).then((res) => {
+          del(app.code).then(res => {
             ``;
             app.detailClose();
           });
           return Promise.resolve();
-        },
+        }
       });
     },
     changeVersionStatus(e) {
@@ -936,24 +869,24 @@ export default {
       if (e.key == 3) {
         //请确认当前版本发布内容已全部完成后再发布。
         this.$confirm({
-          title: '发布提示',
+          title: "发布提示",
           content: `请确认当前版本发布内容已全部完成后再发布。`,
-          okText: '确认发布',
-          okType: 'primary',
+          okText: "确认发布",
+          okType: "primary",
           onOk() {
             app.publishVersion.status = e.key;
             app.publishVersion.modalStatus = true;
-            app.$nextTick(function () {
+            app.$nextTick(function() {
               app.publishVersionForm.setFieldsValue({
-                publishTime: moment(),
+                publishTime: moment()
               });
             });
             return Promise.resolve();
-          },
+          }
         });
       } else {
-        changeStatus({versionCode: this.version.code, status: e.key}).then(
-          (res) => {
+        changeStatus({ versionCode: this.version.code, status: e.key }).then(
+          res => {
             this.getVersion();
           }
         );
@@ -961,15 +894,15 @@ export default {
     },
     handleSubmitPublishVersion() {
       let app = this;
-      app.publishVersionForm.validateFields((err) => {
+      app.publishVersionForm.validateFields(err => {
         if (!err) {
           let obj = app.publishVersionForm.getFieldsValue();
-          obj.publishTime = moment(obj.publishTime).format('YYYY-MM-DD HH:mm');
+          obj.publishTime = moment(obj.publishTime).format("YYYY-MM-DD HH:mm");
           changeStatus({
             versionCode: this.code,
             status: this.publishVersion.status,
-            publishTime: obj.publishTime,
-          }).then((res) => {
+            publishTime: obj.publishTime
+          }).then(res => {
             app.publishVersion.modalStatus = false;
             app.getVersion();
           });
@@ -979,32 +912,32 @@ export default {
     doStartTime(setStartTime = false, showStartTime = false) {
       this.version.setStartTime = setStartTime;
       this.showStartTime = showStartTime;
-      let beginTime = '';
+      let beginTime = "";
       if (setStartTime) {
-        beginTime = moment(this.version.start_time).format('YYYY-MM-DD HH:mm');
+        beginTime = moment(this.version.start_time).format("YYYY-MM-DD HH:mm");
         this.version.start_time_format = moment(this.version.start_time).format(
-          'MM月DD日 HH:mm'
+          "MM月DD日 HH:mm"
         );
       } else {
-        beginTime = '';
+        beginTime = "";
       }
-      this.editVersion({start_time: beginTime});
+      this.editVersion({ start_time: beginTime });
     },
     doPlanPublishTime(setPlanPublishTime = false, showPlanPublishTime = false) {
       this.version.setPlanPublishTime = setPlanPublishTime;
       this.showPlanPublishTime = showPlanPublishTime;
-      let endTime = '';
+      let endTime = "";
       if (setPlanPublishTime) {
         endTime = moment(this.version.plan_publish_time).format(
-          'YYYY-MM-DD HH:mm'
+          "YYYY-MM-DD HH:mm"
         );
         this.version.plan_publish_time_format = moment(
           this.version.plan_publish_time
-        ).format('MM月DD日 HH:mm');
+        ).format("MM月DD日 HH:mm");
       } else {
-        endTime = '';
+        endTime = "";
       }
-      this.editVersion({plan_publish_time: endTime});
+      this.editVersion({ plan_publish_time: endTime });
     },
     doName() {
       this.showEditName = false;
@@ -1012,11 +945,11 @@ export default {
         this.version.name = this.versionName;
         return false;
       }
-      this.editVersion({name: this.version.name});
+      this.editVersion({ name: this.version.name });
     },
     editVersion(data) {
       data.versionCode = this.code;
-      edit(data).then((res) => {
+      edit(data).then(res => {
         const result = checkResponse(res);
         if (!result) {
           return false;
@@ -1032,18 +965,18 @@ export default {
     },
     doContent() {
       let content = this.version.description;
-      this.editVersion({description: content});
+      this.editVersion({ description: content });
       this.showVersionDescriptionEdit = false;
     },
     addVersionTask() {
       addVersionTask({
         taskCodeList: JSON.stringify(this.publishTask.selectTaskList),
-        versionCode: this.code,
-      }).then((res) => {
+        versionCode: this.code
+      }).then(res => {
         notice(
-          {title: `成功添加 ${res.data.successTotal} 项发布内容到版本`},
-          'notice',
-          'success'
+          { title: `成功添加 ${res.data.successTotal} 项发布内容到版本` },
+          "notice",
+          "success"
         );
         this.publishTask.modalStatus = false;
         this.publishTask.selectTaskList = [];
@@ -1053,13 +986,13 @@ export default {
     removeVersionTask(task) {
       let app = this;
       this.$confirm({
-        title: '移除发布内容',
+        title: "移除发布内容",
         content: `确定移除这个发布内容？`,
-        okText: '确定',
-        okType: 'danger',
+        okText: "确定",
+        okType: "danger",
         cancelText: `再想想`,
         onOk() {
-          removeVersionTask({taskCode: task.code}).then((res) => {
+          removeVersionTask({ taskCode: task.code }).then(res => {
             const result = checkResponse(res);
             if (!result) {
               return false;
@@ -1067,7 +1000,7 @@ export default {
             app.init();
           });
           return Promise.resolve();
-        },
+        }
       });
     },
     changeModalHeight() {
@@ -1077,28 +1010,28 @@ export default {
       let logHeight = $(window).height() - 200;
       let publishModalHeight = $(window).height() - 255;
       if (
-        defaultWidth === 'full-screen' ||
-        this.$route.query['full-screen'] !== undefined
+        defaultWidth === "full-screen" ||
+        this.$route.query["full-screen"] !== undefined
       ) {
         //全屏显示
-        $('.task-detail-modal').css('width', $(window).width());
-        $('.version-detail').css('width', $(window).width());
-        $('.ant-modal').css('top', 0);
+        $(".task-detail-modal").css("width", $(window).width());
+        $(".version-detail").css("width", $(window).width());
+        $(".ant-modal").css("top", 0);
         height += 85;
         logHeight += 85;
-        $('.content-left').css('height', height + 'px');
-        $('.log-wrap').css('height', logHeight + 'px');
+        $(".content-left").css("height", height + "px");
+        $(".log-wrap").css("height", logHeight + "px");
       } else {
         if (width > defaultWidth) {
           width = defaultWidth;
         }
-        $('.version-detail').css('width', width);
-        $('.content-left').css('height', height + 'px');
-        $('.log-wrap').css('height', logHeight + 'px');
-        $('.publish-task').css('height', publishModalHeight + 'px');
+        $(".version-detail").css("width", width);
+        $(".content-left").css("height", height + "px");
+        $(".log-wrap").css("height", logHeight + "px");
+        $(".publish-task").css("height", publishModalHeight + "px");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -1539,7 +1472,7 @@ export default {
 }
 
 .tag.tag-color-blue:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1554,7 +1487,7 @@ export default {
 }
 
 .tag.tag-color-orange:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1569,7 +1502,7 @@ export default {
 }
 
 .tag.tag-color-red:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1584,7 +1517,7 @@ export default {
 }
 
 .tag.tag-color-green:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1599,7 +1532,7 @@ export default {
 }
 
 .tag.tag-color-brown:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -1614,7 +1547,7 @@ export default {
 }
 
 .tag.tag-color-purple:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 7px;
   left: 4px;
@@ -2273,7 +2206,7 @@ li.activity.creator i {
 
 .project-nav-footer :not(:first-child):after {
   position: absolute;
-  content: '';
+  content: "";
   right: -5px;
   top: 16px;
   bottom: 16px;
@@ -2327,7 +2260,7 @@ li.activity.creator i {
   left: 14px;
   right: 16px;
   bottom: 0;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -2477,7 +2410,7 @@ li.activity.creator i {
   left: 49px;
   right: 15px;
   bottom: 1px;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -2514,7 +2447,7 @@ li.activity.creator i {
   left: 34px;
   right: 1px;
   bottom: 0;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -2608,7 +2541,7 @@ li.activity.creator i {
   left: 48px;
   right: 16px;
   bottom: -5px;
-  content: ' ';
+  content: " ";
   height: 1px;
   background-color: rgba(0, 0, 0, 0.06);
 }

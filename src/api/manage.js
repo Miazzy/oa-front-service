@@ -1,16 +1,20 @@
 import {
     axios
 } from '@/utils/request';
-import axios_ from 'axios';
-import superagent from 'superagent';
-import * as _ from 'underscore';
+//import axios from 'axios';
+//import superagent from 'superagent';
+//import * as _ from 'underscore';
 import * as storage from '@/utils/storage';
 import * as tools from '@/utils/util';
-import * as $ from 'jquery';
+//import * as $ from 'jquery';
 import * as workflowAPI from '@/api/workflow';
 
-axios_.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded';
+try {
+    axios.defaults.headers.post['Content-Type'] =
+        'application/x-www-form-urlencoded';
+} catch (e) {
+    console.error(e);
+}
 
 export const api = {
     domain: window._CONFIG['domain'],
@@ -501,7 +505,7 @@ export async function queryTableAll(tableName) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            window.__.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -573,7 +577,7 @@ export async function queryDynamic() {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            window.__.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -614,7 +618,7 @@ export async function queryDynamicByUser(username) {
             result = res.body;
 
             //遍历并格式化日期
-            _.each(result, function(item) {
+            window.__.each(result, function(item) {
                 var optime = tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
@@ -841,7 +845,7 @@ export async function queryUserList(params) {
         console.log(res);
 
         //遍历并设置属性
-        _.each(res.body, item => {
+        window.__.each(res.body, item => {
             item['status'] = '1';
             item['orgCode'] = '';
             item['updateBy'] = '';
@@ -916,7 +920,7 @@ export async function queryProcessLogHisApproved(username, realname, params) {
         result.records = res.body;
 
         //遍历并格式化日期
-        _.each(result.records, function(item) {
+        window.__.each(result.records, function(item) {
             var optime = tools.formatDate(
                 item['operate_time'],
                 'yyyy-MM-dd hh:mm:ss'
@@ -952,7 +956,7 @@ export async function queryProcessLogWait(
         const res = await superagent.get(queryURL).set('accept', 'json');
         console.log(res);
         result = res.body;
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -970,8 +974,8 @@ export async function queryProcessLogWait(
 
             //查询是否存在此用户名，且已处理用户中，不含登录用户
             var flag =
-                (_.contains(item['username'], username) ||
-                    _.contains(item['username'], realname)) &&
+                (window.__.contains(item['username'], username) ||
+                    window.__.contains(item['username'], realname)) &&
                 !item.user.includes(username);
 
             //返回结果
@@ -1200,7 +1204,7 @@ export async function queryProcessLogWaitByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1217,7 +1221,7 @@ export async function queryProcessLogWaitByParam(
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
-            var flag = _.contains(item['username'], username);
+            var flag = window.__.contains(item['username'], username);
 
             //返回结果
             return flag;
@@ -1248,7 +1252,7 @@ export async function queryProcessLogDoneByTime(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1266,15 +1270,15 @@ export async function queryProcessLogDoneByTime(
 
             //查询是否存在此用户名
             var flag =
-                _.contains(item['username'], username) ||
-                _.contains(item['username'], realname);
+                window.__.contains(item['username'], username) ||
+                window.__.contains(item['username'], realname);
 
             //返回结果
             return flag;
         });
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         return result;
     } catch (err) {
@@ -1296,7 +1300,7 @@ export async function queryBlogInfoNew(page = 0, size = 10) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1321,7 +1325,7 @@ export async function queryBlogInfoNew(page = 0, size = 10) {
         });
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         return result;
     } catch (err) {
@@ -1344,7 +1348,7 @@ export async function queryBlogInfoByUser(username, page = 0, size = 50) {
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1368,7 +1372,7 @@ export async function queryBlogInfoByUser(username, page = 0, size = 50) {
         });
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         return result;
     } catch (err) {
@@ -1396,7 +1400,7 @@ export async function queryBlogInfo(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -1420,7 +1424,7 @@ export async function queryBlogInfo(
         });
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         return result;
     } catch (err) {
@@ -1446,7 +1450,7 @@ export async function queryProcessLogDone(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1464,15 +1468,15 @@ export async function queryProcessLogDone(
 
             //查询是否存在此用户名
             var flag =
-                _.contains(item['username'], username) ||
-                _.contains(item['username'], realname);
+                window.__.contains(item['username'], username) ||
+                window.__.contains(item['username'], realname);
 
             //返回结果
             return flag;
         });
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         return result;
     } catch (err) {
@@ -1518,7 +1522,7 @@ export async function queryProcessLogDoneAll(username, realname) {
             }
 
             //根据ID编号去掉重复的数据
-            result = _.uniq(result, false, 'id');
+            result = window.__.uniq(result, false, 'id');
 
             //将数据缓存到localstorage中
             storage.setStore(
@@ -1528,7 +1532,7 @@ export async function queryProcessLogDoneAll(username, realname) {
             );
         } else {
             //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
-            var first = _.max(result, function(item) {
+            var first = window.__.max(result, function(item) {
                 let time = tools.isNull(item.timestamp) ?
                     tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
                     item.timestamp;
@@ -1571,10 +1575,10 @@ export async function queryProcessLogDoneAll(username, realname) {
             result = result.concat(nlist);
 
             //根据ID编号去掉重复的数据
-            result = _.uniq(result, false, 'id');
+            result = window.__.uniq(result, false, 'id');
 
             //根据时间戳排序
-            result = _.sortBy(result, item => {
+            result = window.__.sortBy(result, item => {
                 return item['timestamp'] * -1;
             });
 
@@ -1661,10 +1665,10 @@ export async function queryProcessLogDoneByParamAll(username, param) {
         }
 
         //根据ID编号去掉重复的数据
-        result = _.uniq(result, false, 'id');
+        result = window.__.uniq(result, false, 'id');
 
         //根据时间戳排序
-        result = _.sortBy(result, item => {
+        result = window.__.sortBy(result, item => {
             return item['timestamp'] * -1;
         });
 
@@ -1776,7 +1780,7 @@ export async function queryProcessLogDoneByParam(
         result = res.body;
 
         //遍历并格式化日期
-        result = _.filter(result, function(item) {
+        result = window.__.filter(result, function(item) {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
@@ -1793,7 +1797,7 @@ export async function queryProcessLogDoneByParam(
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
-            var flag = _.contains(item['username'], username);
+            var flag = window.__.contains(item['username'], username);
 
             //返回结果
             return flag;
@@ -1924,7 +1928,7 @@ export async function deleteTableItem(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        window.__.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -1967,7 +1971,7 @@ export async function deleteProcessLog(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        window.__.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2010,7 +2014,7 @@ export async function deleteProcessLogInf(tableName, node) {
     }
 
     try {
-        _.each(node, function(item) {
+        window.__.each(node, function(item) {
             ids = ids + ',' + item['id'];
         });
 
@@ -2226,7 +2230,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        window.__.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2257,7 +2261,7 @@ export async function queryHeadList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        window.__.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2288,7 +2292,7 @@ export async function queryNewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        window.__.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2318,7 +2322,7 @@ export async function queryNoticeList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        window.__.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2348,7 +2352,7 @@ export async function queryViewsList(page = 0, size = 50) {
         var result = res.body;
 
         //遍历并格式化日期
-        _.each(result, function(item) {
+        window.__.each(result, function(item) {
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -2434,7 +2438,7 @@ export async function queryNotifyAll(
     }
 
     //遍历并筛选数据
-    result = _.filter(result, function(item) {
+    result = window.__.filter(result, function(item) {
         //设置数据
         var flag = true;
 
@@ -2457,7 +2461,7 @@ export async function queryNotifyAll(
     });
 
     //遍历数据并排序
-    result = _.sortBy(result, function(item) {
+    result = window.__.sortBy(result, function(item) {
         return item['timestamp'] * -1.0;
     });
 
@@ -3073,8 +3077,7 @@ export function queryFormMTSubColumns(tableName) {
                 align: 'center',
             },
         ],
-        BS_PLAN_TASK: [
-            {
+        BS_PLAN_TASK: [{
                 title: "任务编号",
                 dataIndex: "pid",
                 width: '8%',
@@ -3161,12 +3164,12 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
 
     //表单配置
     var tableConfig = {
-        'BS_ATTENDANCE': 'BS_ATTENDANCE_DETAILS' ,
-        'BS_REIM' : 'BS_REIM_ITEM' , 
-        'BS_PURCHASE' : 'BS_PURCHASE_ITEM' , 
-        'BS_MIREANNA' : 'BS_MIREANNA_ITEM' , 
-        'BS_PLAN_TASK' : 'BS_PLAN_TASK_ITEM' , 
-        'BS_DOCUMENT' : 'BS_DOCUMENT_ITEM'
+        'BS_ATTENDANCE': 'BS_ATTENDANCE_DETAILS',
+        'BS_REIM': 'BS_REIM_ITEM',
+        'BS_PURCHASE': 'BS_PURCHASE_ITEM',
+        'BS_MIREANNA': 'BS_MIREANNA_ITEM',
+        'BS_PLAN_TASK': 'BS_PLAN_TASK_ITEM',
+        'BS_DOCUMENT': 'BS_DOCUMENT_ITEM'
     }
 
     //设置返回数据
@@ -3177,7 +3180,7 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
 
     //检查是否存在表单
     try {
-        cflag = ['BS_ATTENDANCE','BS_REIM', 'BS_PURCHASE', 'BS_MIREANNA', 'BS_PLAN_TASK', 'BS_DOCUMENT'].includes(tableName);
+        cflag = ['BS_ATTENDANCE', 'BS_REIM', 'BS_PURCHASE', 'BS_MIREANNA', 'BS_PLAN_TASK', 'BS_DOCUMENT'].includes(tableName);
     } catch (error) {
         console.error(error);
     }
@@ -3230,12 +3233,12 @@ export async function queryFormMTSubData(tableName, foreignKey, id) {
                         console.error(error);
                     }
                     try {
-                        item.work_date = tools.formatDate(item.work_date , 'yyyy-MM-dd');
+                        item.work_date = tools.formatDate(item.work_date, 'yyyy-MM-dd');
                     } catch (error) {
                         console.error(error);
                     }
                     try {
-                        item.status = /^[0-9]*$/.test(item.status) ?  queryBpmStatus(item.status) : item.status;
+                        item.status = /^[0-9]*$/.test(item.status) ? queryBpmStatus(item.status) : item.status;
                     } catch (error) {
                         console.error(error);
                     }
@@ -3272,9 +3275,9 @@ export function queryUserRealName(name) {
         } else {
             if (name.includes(',')) {
                 var ulist = name.split(',');
-                _.each(ulist, item => {
+                window.__.each(ulist, item => {
                     //查询用户信息
-                    var obj = _.find(userlist, user => {
+                    var obj = window.__.find(userlist, user => {
                         return user.username == item;
                     });
                     user = user + ',' + obj.realname;
@@ -3286,7 +3289,7 @@ export function queryUserRealName(name) {
                 }
             } else {
                 //查询用户信息
-                user = _.find(userlist, user => {
+                user = window.__.find(userlist, user => {
                     return user.username == name;
                 });
 
@@ -3429,7 +3432,7 @@ export async function queryWorkflows(business_data_id) {
             processLogs = await queryPRLogHistoryByDataID(business_data_id);
 
             //遍历审批日志
-            _.each(processLogs, (item, index) => {
+            window.__.each(processLogs, (item, index) => {
                 //获取下一节点
                 var next =
                     index < processLogs.length - 1 ?
@@ -3502,7 +3505,7 @@ export async function queryWorkflows(business_data_id) {
             processLogs = await queryPRLogByDataID(business_data_id);
 
             //遍历数据
-            _.each(processLogs, (item, index) => {
+            window.__.each(processLogs, (item, index) => {
                 var node = {
                     id: item.id,
                     employee: item.employee,
@@ -3536,7 +3539,7 @@ export async function queryWorkflows(business_data_id) {
             //获取正在审批的知会日志信息
             processLogs = await queryPRLogInfByDataID(business_data_id);
 
-            _.each(processLogs, (item, index) => {
+            window.__.each(processLogs, (item, index) => {
                 //获取操作时间
                 var optime = tools.formatDate(
                     new Date(item.operate_time),
@@ -3755,7 +3758,7 @@ export async function watchFormLeave(that) {
         //设置结束日期
         that.curRow.end_time = tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
 
-         //设置开始日期
+        //设置开始日期
         that.curRow.real_start_time = tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
 
         //设置结束日期
@@ -3965,7 +3968,7 @@ export async function queryFileViewURL(text) {
         }
 
         //获取第一个office文档
-        url = _.find(fileList, function(text) {
+        url = window.__.find(fileList, function(text) {
             //获取小写字符串
             text = tools.deNull(text).toLowerCase();
             return (
@@ -4116,7 +4119,7 @@ export function queryImageURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = window.__.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -4206,7 +4209,7 @@ export function queryVideoURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = window.__.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
 
@@ -4253,7 +4256,7 @@ export async function queryBloggerInfo(username, result) {
         console.log(res);
 
         //查找作者的原创博文数量
-        result = _.find(res.body, function(item) {
+        result = window.__.find(res.body, function(item) {
             return item.create_by == username && item.page_type == 'Y';
         });
 
@@ -4333,7 +4336,7 @@ export async function queryWageByParam(
         console.log(res);
 
         //遍历所有数据，设置日期格式
-        result = _.filter(res.body, item => {
+        result = window.__.filter(res.body, item => {
             //日期格式化操作
             item['wages_date'] = tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
@@ -4428,7 +4431,7 @@ export async function queryWageBillByParam(
         console.log(res);
 
         //遍历所有数据，设置日期格式
-        result = _.filter(res.body, item => {
+        result = window.__.filter(res.body, item => {
             //日期格式化操作
             item['wages_date'] = tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
@@ -4475,7 +4478,7 @@ export async function queryWageByUserName(
         console.log(res);
 
         //遍历所有数据，设置日期格式
-        result = _.filter(res.body, item => {
+        result = window.__.filter(res.body, item => {
             //日期格式化操作
             //item['create_time'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
@@ -4521,7 +4524,7 @@ export async function queryRegisterByUserName(
         console.log(res);
 
         //遍历所有数据，设置日期格式
-        result = _.filter(res.body, item => {
+        result = window.__.filter(res.body, item => {
             //日期格式化操作
             item['create_time'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
@@ -4615,7 +4618,7 @@ export async function queryRegisterByParam(
         console.log(res);
 
         //遍历所有数据，设置日期格式
-        result = _.filter(res.body, item => {
+        result = window.__.filter(res.body, item => {
             //日期格式化操作
             item['create_time'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
             item['join_time'] = tools.formatDate(item['join_time'], 'yyyy-MM-dd');
@@ -4666,7 +4669,7 @@ export async function queryOfficeURL(text) {
 
     try {
         //遍历并筛选出里面的图片信息
-        fileList = _.filter(fileList, function(text) {
+        fileList = window.__.filter(fileList, function(text) {
             //获取小写后的路径
             var ptext = tools.deNull(text).toLowerCase();
             //定义下载地址
@@ -4763,25 +4766,15 @@ export async function queryOfficeURL(text) {
  * @function 设置详情页面图片展示样式
  */
 export function changeImageCSS() {
+    //执行间隔
+    var imgInterval = [100, 500, 1000, 3000, 5000, 7000, 9000];
     //设置图片预览CSS样式
     try {
         setTimeouts(
             () => {
                 postcss();
             },
-            100,
-            300,
-            500,
-            800,
-            1000,
-            2000,
-            3000,
-            4000,
-            5000,
-            6000,
-            7000,
-            8000,
-            9000
+            ...imgInterval
         );
     } catch (error) {
         console.log('change image css error :' + error);
@@ -4813,14 +4806,18 @@ export function setTimeouts(callback, ...times) {
  * @function 设置css样式
  */
 export function postcss() {
-    //图片预览，Css设置Float:left
-    $('figure[itemscope="itemscope"]').css('float', 'left');
-    $('figure[itemscope="itemscope"]').css('margin-right', '10px');
-    $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
-    //图片预览，文件名称展示位置Center
-    $('.pswp__caption__center').css('text-align', 'center');
-    //异常图片高度，避免竖版图片走样
-    $('.pswp__img').css('height', '');
+    try {
+        //图片预览，Css设置Float:left
+        $('figure[itemscope="itemscope"]').css('float', 'left');
+        $('figure[itemscope="itemscope"]').css('margin-right', '10px');
+        $('figure[itemscope="itemscope"]').css('margin-bottom', '10px');
+        //图片预览，文件名称展示位置Center
+        $('.pswp__caption__center').css('text-align', 'center');
+        //异常图片高度，避免竖版图片走样
+        $('.pswp__img').css('height', '');
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 /**
@@ -5307,12 +5304,12 @@ export async function patchEnameCname(origin) {
     //遍历用户获取中文名称列表
     for (var ename of originlist) {
         //获取流程发起人的中文信息
-        var user = _.find(userlist, item => {
+        var user = window.__.find(userlist, item => {
             return ename == item.username;
         });
 
         //如果找到用户信息，则设置用户信息
-        if(!tools.isNull(user)){
+        if (!tools.isNull(user)) {
             chinese = `${chinese},${user.realname}`;
         }
     }
@@ -5348,12 +5345,12 @@ export async function patchCnameEname(origin) {
     for (var ename of originlist) {
 
         //获取流程发起人的中文信息
-        var user = _.find(userlist, item => {
+        var user = window.__.find(userlist, item => {
             return ename == item.realname;
         });
 
         //如果找到用户信息，则设置用户信息
-        if(!tools.isNull(user)){
+        if (!tools.isNull(user)) {
             chinese = `${chinese},${user.username}`;
         }
 

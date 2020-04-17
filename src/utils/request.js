@@ -1,5 +1,5 @@
 //import Vue from 'vue';
-import axios from 'axios';
+//import axios from 'axios';
 import store from '@/store';
 import {
     VueAxios
@@ -12,14 +12,26 @@ import {
     ACCESS_TOKEN
 } from '@/store/mutation-types';
 
-axios.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded';
+try {
+    axios.defaults.headers.post['Content-Type'] =
+        'application/x-www-form-urlencoded';
+} catch (error) {
+    console.error(error);
+}
+
+var tempAxiosResponse = '';
+
+try {
+    tempAxiosResponse = axios.create({
+        baseURL: `${window._CONFIG['domain']}/jeecg-boot`, // api base_url
+        timeout: 6000, // 请求超时时间
+    });
+} catch (error) {
+    console.log(error);
+}
 
 // 创建 axios 实例
-const service = axios.create({
-    baseURL: `${window._CONFIG['domain']}/jeecg-boot`, // api base_url
-    timeout: 6000, // 请求超时时间
-});
+const service = tempAxiosResponse;
 
 const err = error => {
     if (error.response) {

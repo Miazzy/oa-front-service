@@ -5,15 +5,11 @@
     </div>
     <div class="fill-container">
       <div class="fill" v-if="!isError">
-        <router-link to="/qslist" tag="span" class="back"
-          >&lt; 返回</router-link
-        >
+        <router-link to="/qslist" tag="span" class="back">&lt; 返回</router-link>
         <h2>{{ qsItem.title }}</h2>
         <div class="content">
           <div class="content-item" v-for="item in qsItem.question">
-            <p class="qs-title">
-              {{ item.num }}&nbsp;{{ item.title }}&nbsp;{{ getMsg(item) }}
-            </p>
+            <p class="qs-title">{{ item.num }}&nbsp;{{ item.title }}&nbsp;{{ getMsg(item) }}</p>
             <p v-for="option in item.options" class="option">
               <label>
                 <input
@@ -33,10 +29,7 @@
                 {{ option }}
               </label>
             </p>
-            <textarea
-              v-if="item.type === 'textarea'"
-              v-model="requiredItem[item.num]"
-            ></textarea>
+            <textarea v-if="item.type === 'textarea'" v-model="requiredItem[item.num]"></textarea>
           </div>
         </div>
         <transition name="fade">
@@ -71,13 +64,13 @@
 </template>
 
 <script>
-import vHeader from '@/components/questionnaire/public/header';
-import * as storage from '@/utils/storage';
-import * as manageAPI from '@/api/manage';
-import * as tools from '@/utils/util';
-import * as _ from 'underscore';
+import vHeader from "@/components/questionnaire/public/header";
+import * as storage from "@/utils/storage";
+import * as manageAPI from "@/api/manage";
+import * as tools from "@/utils/util";
+//import * as _ from 'underscore';
 
-const STORAGE_KEY = 'questionnaire';
+const STORAGE_KEY = "questionnaire";
 
 /**
  * A module that define qs-fill router view
@@ -85,22 +78,22 @@ const STORAGE_KEY = 'questionnaire';
  * @author oyh(Reusjs)
  */
 export default {
-  name: 'QsFill',
-  components: {vHeader},
+  name: "QsFill",
+  components: { vHeader },
   data() {
     return {
       qsItem: [],
-      qsList: '',
+      qsList: "",
       isError: false,
       showDialog: false,
-      info: '',
+      info: "",
       submitError: false,
-      requiredItem: {},
+      requiredItem: {}
     };
   },
   async created() {
     //获取用户信息
-    var userInfo = storage.getStore('cur_user');
+    var userInfo = storage.getStore("cur_user");
     //从数据库中获取
     this.qsList =
       storage.get(storage.STORAGE_KEY + userInfo.username) ||
@@ -113,7 +106,6 @@ export default {
   },
   methods: {
     async fetchData() {
-
       let i = 0;
       for (let length = this.qsList.length; i < length; i++) {
         if (this.qsList[i].id == this.$route.params.num) {
@@ -143,13 +135,13 @@ export default {
       }
     },
     getMsg(item) {
-      let msg = '';
-      if (item.type === 'radio') {
-        msg = '(单选题)';
-      } else if (item.type === 'checkbox') {
-        msg = '(多选题)';
+      let msg = "";
+      if (item.type === "radio") {
+        msg = "(单选题)";
+      } else if (item.type === "checkbox") {
+        msg = "(多选题)";
       } else {
-        msg = '(文本题)';
+        msg = "(文本题)";
       }
 
       return item.isNeed ? `${msg} *` : msg;
@@ -159,10 +151,10 @@ export default {
      */
     async submit() {
       //获取当前用户信息
-      var userInfo = storage.getStore('cur_user');
+      var userInfo = storage.getStore("cur_user");
 
       //获取当前日期
-      var ctime = tools.formatDate(new Date().getTime(), 'yyyy-MM-dd');
+      var ctime = tools.formatDate(new Date().getTime(), "yyyy-MM-dd");
 
       //获取原数据库调查数据
       var item = await manageAPI.queryQuestionById(this.qsItem.id);
@@ -181,7 +173,7 @@ export default {
       }
 
       //查询用户的填写记录
-      var flag = _.find(qalist, obj => {
+      var flag = window.__.find(qalist, obj => {
         return obj.username == userInfo.username;
       });
 
@@ -189,12 +181,12 @@ export default {
       if (!tools.isNull(flag)) {
         this.showDialog = true;
         this.submitError = true;
-        this.info = '提交失败，您已经提交过调查问卷了！';
-        return 'false';
+        this.info = "提交失败，您已经提交过调查问卷了！";
+        return "false";
       }
 
       //发布中的调研问卷才可以进行提交
-      if (this.qsItem.state === 'inissue') {
+      if (this.qsItem.state === "inissue") {
         //校验表单是否正常
         let result = this.validate();
 
@@ -204,7 +196,7 @@ export default {
           var node = {
             username: userInfo.username,
             replay: this.requiredItem,
-            create_time: ctime,
+            create_time: ctime
           };
 
           //将新调查数据保存至数据列表中
@@ -215,12 +207,12 @@ export default {
 
           //提交参数
           var params = [
-            'bs_questions',
+            "bs_questions",
             item.id,
             {
               id: item.id,
-              answers: item.answers,
-            },
+              answers: item.answers
+            }
           ];
 
           //将用户调查数据保存至数据库中
@@ -229,7 +221,7 @@ export default {
           //显示弹出框
           this.showDialog = true;
           this.submitError = false;
-          this.info = '提交成功！';
+          this.info = "提交成功！";
 
           //关闭对话框
           setTimeout(() => {
@@ -238,17 +230,17 @@ export default {
 
           //跳转到
           setTimeout(() => {
-            this.$router.push({path: '/'});
+            this.$router.push({ path: "/" });
           }, 1500);
         } else {
           this.showDialog = true;
           this.submitError = true;
-          this.info = '提交失败！ 存在必填项未填';
+          this.info = "提交失败！ 存在必填项未填";
         }
       } else {
         this.showDialog = true;
         this.submitError = true;
-        this.info = '提交失败！ 只有发布中的问卷才能提交';
+        this.info = "提交失败！ 只有发布中的问卷才能提交";
       }
     },
     /**
@@ -258,10 +250,10 @@ export default {
       this.qsItem.question.forEach(item => {
         if (item.isNeed) {
           if (item.isNeed) {
-            if (item.type === 'checkbox') {
+            if (item.type === "checkbox") {
               this.requiredItem[item.num] = [];
             } else {
-              this.requiredItem[item.num] = '';
+              this.requiredItem[item.num] = "";
             }
           }
         }
@@ -275,11 +267,11 @@ export default {
         if (this.requiredItem[i].length === 0) return false;
       }
       return true;
-    },
+    }
   },
   watch: {
-    $route: 'fetchData',
-  },
+    $route: "fetchData"
+  }
 };
 </script>
 
@@ -302,7 +294,7 @@ body {
 #app {
   height: 100%;
   overflow: auto;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #efefef;
 }
 

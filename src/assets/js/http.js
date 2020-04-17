@@ -1,7 +1,7 @@
 import {
     message,
 } from 'ant-design-vue'
-import Axios from "axios"
+//import axios from "axios"
 import * as utils from './utils'
 import {
     getStore
@@ -24,7 +24,7 @@ if (crossDomain) {
     axiosConfig.withCredentials = true;
     axiosConfig.crossDomain = true;
 }
-const $http = Axios.create(axiosConfig);
+const $http = axios.create(axiosConfig);
 
 // Before request
 $http.interceptors.request.use(

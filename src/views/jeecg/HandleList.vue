@@ -313,12 +313,12 @@ import { filterMultiDictText } from "@/components/dict/JDictSelectUtil";
 import JImportModal from "@/components/jeecg/JImportModal";
 
 import * as manageAPI from "@/api/manage";
-import * as systemAPI from "@/api/api";
-import * as workflowAPI from "@/api/workflow";
+//import * as systemAPI from "@/api/api";
+//import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
-import * as $ from "jquery";
+//import * as _ from "underscore";
+//import * as $ from "jquery";
 
 const tableColumns = [
   {
@@ -607,7 +607,7 @@ export default {
       //获取下拉框选择的值
       let value = this.modelWFlowSelection;
 
-      this.fixedWFlow = _.find(this.rights, function(item) {
+      this.fixedWFlow = window.__.find(this.rights, function(item) {
         return (item["id"] = value);
       });
 
@@ -658,7 +658,9 @@ export default {
           currColumns.push(this.actionColumn);
           this.table.columns = [...currColumns];
           //去掉展示content内容列，通过点击+按钮展示
-          this.table.columns = _.filter(this.table.columns, function(item) {
+          this.table.columns = window.__.filter(this.table.columns, function(
+            item
+          ) {
             return item.dataIndex != "content";
           });
           this.hasBpmStatusFilter();
@@ -732,7 +734,9 @@ export default {
             if (Number(result.total) > 0) {
               this.table.pagination.total = Number(res.result.total);
 
-              res.result.records = _.filter(res.result.records, function(item) {
+              res.result.records = window.__.filter(res.result.records, function(
+                item
+              ) {
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
                   //获取属性的值

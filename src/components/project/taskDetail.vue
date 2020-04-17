@@ -689,7 +689,10 @@
                           工时
                           <span v-if="workTimeList.length">
                             · 实际工时 {{workTimeTotal}} 小时，工时记录 {{workTimeList.length}} 条，预估工时 {{task.work_time}} 小时
-                            <a class="muted m-l-sm" @click="doPlainWorkTime">
+                            <a
+                              class="muted m-l-sm"
+                              @click="doPlainWorkTime"
+                            >
                               <a-icon class="task-item" type="edit" />
                             </a>
                           </span>
@@ -1126,9 +1129,9 @@
 
 <script>
 import { mapState } from "vuex";
-import $ from "jquery";
 import moment from "moment";
 import editor from "@/components/ptools/editor";
+//import * as $ from "jquery";
 import {
   createComment,
   del,

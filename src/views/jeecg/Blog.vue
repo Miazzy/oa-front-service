@@ -1077,7 +1077,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      replay = _.reject(replay, item => {
+      replay = window.__.reject(replay, item => {
         return item.id == subId;
       });
 
@@ -1115,7 +1115,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      _.each(replay, item => {
+      window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
           //定义回复评论
@@ -1157,7 +1157,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      _.each(replay, item => {
+      window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
           //定义回复评论

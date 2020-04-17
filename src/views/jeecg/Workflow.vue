@@ -1543,8 +1543,8 @@ import * as manageAPI from "@/api/manage";
 import * as workflowAPI from "@/api/workflow";
 import * as storage from "@/utils/storage";
 import * as tools from "@/utils/util";
-import * as _ from "underscore";
-import * as $ from "jquery";
+//import * as _ from "underscore";
+//import * as $ from "jquery";
 import ACol from "ant-design-vue/es/grid/Col";
 import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
@@ -1552,7 +1552,11 @@ import JSelectMultiUser from "@/components/jeecgbiz/JSelectMultiUser";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 
 //Vue挂载QRCode组件
-Vue.component(VueQrcode.name, VueQrcode);
+try {
+  Vue.component(VueQrcode.name, VueQrcode);
+} catch (error) {
+  console.error(error);
+}
 
 //默认预览图片
 const images = [];
@@ -1701,9 +1705,9 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.wflowAddData = [];
-      _.each(ulist, (item, index) => {
+      window.__.each(ulist, (item, index) => {
         //查询用户信息
-        var user = _.find(userlist, user => {
+        var user = window.__.find(userlist, user => {
           return user.username == item;
         });
         this.wflowAddData.push({
@@ -1718,9 +1722,9 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.wflowNotifyData = [];
-      _.each(ulist, (item, index) => {
+      window.__.each(ulist, (item, index) => {
         //查询用户信息
-        var user = _.find(userlist, user => {
+        var user = window.__.find(userlist, user => {
           return user.username == item;
         });
         this.wflowNotifyData.push({
@@ -1735,9 +1739,9 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.auditData = [];
-      _.each(ulist, (item, index) => {
+      window.__.each(ulist, (item, index) => {
         //查询用户信息
-        var user = _.find(userlist, user => {
+        var user = window.__.find(userlist, user => {
           return user.username == item;
         });
         this.auditData.push({
@@ -1752,9 +1756,9 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.approveData = [];
-      _.each(ulist, (item, index) => {
+      window.__.each(ulist, (item, index) => {
         //查询用户信息
-        var user = _.find(userlist, user => {
+        var user = window.__.find(userlist, user => {
           return user.username == item;
         });
         this.approveData.push({
@@ -1769,9 +1773,9 @@ export default {
       var userlist = await manageAPI.queryUserName();
       var ulist = users.split(",");
       this.notifyData = [];
-      _.each(ulist, (item, index) => {
+      window.__.each(ulist, (item, index) => {
         //查询用户信息
-        var user = _.find(userlist, user => {
+        var user = window.__.find(userlist, user => {
           return user.username == item;
         });
         this.notifyData.push({
@@ -1863,7 +1867,7 @@ export default {
         return false;
       }
 
-      var startInfo = _.find(userlist, user => {
+      var startInfo = window.__.find(userlist, user => {
         return user.username == node.start;
       });
 
@@ -1874,7 +1878,7 @@ export default {
         console.log(error);
       }
 
-      var approveInfo = _.find(userlist, user => {
+      var approveInfo = window.__.find(userlist, user => {
         return user.username == node.approve;
       });
 
@@ -1906,10 +1910,10 @@ export default {
         //去除‘undefined’字符串
         node.audit = ulist.toString();
 
-        _.each(ulist, item => {
+        window.__.each(ulist, item => {
           try {
             //查询用户信息
-            var user = _.find(userlist, user => {
+            var user = window.__.find(userlist, user => {
               return user.username == item;
             });
             if (item == node.operate) {
@@ -1947,10 +1951,10 @@ export default {
         //去除‘undefined’字符串
         node.notify = nlist.toString();
 
-        _.each(nlist, item => {
+        window.__.each(nlist, item => {
           try {
             //查询用户信息
-            var user = _.find(userlist, user => {
+            var user = window.__.find(userlist, user => {
               return user.username == item;
             });
             notifyInfo.realname = notifyInfo.realname + "," + user.realname;
@@ -2312,7 +2316,7 @@ export default {
           }
 
           //遍历node,设置approve_user，action
-          _.each(node, function(item) {
+          window.__.each(node, function(item) {
             //记录创建时间
             let ctime = item["create_time"];
             //设置审批人员
@@ -2903,7 +2907,7 @@ export default {
           );
 
           //遍历node,设置approve_user，action
-          _.each(node, function(item) {
+          window.__.each(node, function(item) {
             //获取创建时间
             let ctime = item["create_time"];
             //设置审批人员
@@ -3727,7 +3731,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      replay = _.reject(replay, item => {
+      replay = window.__.reject(replay, item => {
         return item.id == subId;
       });
 
@@ -3768,7 +3772,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      _.each(replay, item => {
+      window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
           //定义回复评论
@@ -3810,7 +3814,7 @@ export default {
       var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
       //将回复评论加入数组
-      _.each(replay, item => {
+      window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
           //定义回复评论

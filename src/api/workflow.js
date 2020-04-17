@@ -1,7 +1,7 @@
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import * as storage from "@/utils/storage";
-import * as _ from 'underscore';
+//import * as _ from 'underscore';
 
 /**
  * @function 审批同意处理
@@ -420,7 +420,7 @@ export async function postDynamicReject(tableName, curRow) {
         var proponents = curRow.proponents;
 
         //获取流程发起人的中文信息
-        proponents = _.find(userlist, (item) => {
+        proponents = window.__.find(userlist, (item) => {
             return curRow.proponents == item.username;
         });
 
@@ -493,7 +493,7 @@ export async function postDynamicAgree(tableName, curRow) {
         var proponents = curRow.proponents;
 
         //获取流程发起人的中文信息
-        proponents = _.find(userlist, (item) => {
+        proponents = window.__.find(userlist, (item) => {
             return curRow.proponents == item.username;
         });
 
@@ -567,7 +567,7 @@ export async function postDynamicNotify(tableName, curRow) {
         var proponents = curRow.proponents;
 
         //获取流程发起人的中文信息
-        proponents = _.find(userlist, (item) => {
+        proponents = window.__.find(userlist, (item) => {
             return curRow.proponents == item.username;
         });
 

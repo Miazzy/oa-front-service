@@ -122,7 +122,7 @@ import ARow from "ant-design-vue/es/grid/Row";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import * as manageAPI from "@/api/manage";
 import * as storage from "@/utils/storage";
-import * as $ from "jquery";
+//import * as $ from "jquery";
 import * as tools from "@/utils/util";
 import * as moment from "moment";
 
@@ -222,7 +222,6 @@ export default {
   },
   methods: {
     async loadData() {
-
       //获取用户信息
       var userInfo = storage.getStore("cur_user");
 

@@ -32,7 +32,7 @@ import GlobalLayout from "@/components/page/GlobalLayout";
 import Contextmenu from "@/components/menu/Contextmenu";
 import { mixin, mixinDevice } from "@/utils/mixin.js";
 import { deNull } from "@/utils/util";
-import _ from "underscore";
+//import _ from "underscore";
 
 const indexKey = `/dashboard/analysis`;
 const workplaceKey = `/dashboard/workplace`;
@@ -73,8 +73,8 @@ const titleKV = {
   c990e98e13124c91aabec84ae149e423: "备用金申请",
   e7ee0cd851454ed1a17454c31116b012: "物品领用",
   dae6cc0e7a7f4b7e9dc0fc36757fdc96: "审批历史",
-  c98940fae2404cacb6ed4bd0aeffbc6d: '我的计划',
-  a10f38d1c64343f39560061e4124ba44: '我的任务'
+  c98940fae2404cacb6ed4bd0aeffbc6d: "我的计划",
+  a10f38d1c64343f39560061e4124ba44: "我的任务"
 };
 
 //
@@ -111,7 +111,7 @@ export default {
   },
   created() {
     //是否存在路径标识,检查pageList中是否含有indexKey
-    let flag = _.find(this.pageList, item => {
+    let flag = window.__.find(this.pageList, item => {
       return item.path == indexKey;
     });
     if (flag == null || typeof flag == "undefined") {
@@ -127,7 +127,7 @@ export default {
       this.linkList.push(indexKey);
     }
     //是否存在路径标识,检查pageList中是否含有centerKey
-    flag = _.find(this.pageList, item => {
+    flag = window.__.find(this.pageList, item => {
       return item.path == centerKey;
     });
     if (flag == null || typeof flag == "undefined") {
@@ -143,7 +143,7 @@ export default {
       this.linkList.push(centerKey);
     }
     //是否存在路径标识,检查pageList中是否含有workplaceKey
-    flag = _.find(this.pageList, item => {
+    flag = window.__.find(this.pageList, item => {
       return item.path == workplaceKey;
     });
     if (flag == null || typeof flag == "undefined") {
@@ -159,7 +159,7 @@ export default {
       this.linkList.push(workplaceKey);
     }
     //是否存在路径标识,检查pageList中是否含有blogKey
-    flag = _.find(this.pageList, item => {
+    flag = window.__.find(this.pageList, item => {
       return item.path == blogKey;
     });
     if (flag == null || typeof flag == "undefined") {
@@ -175,7 +175,7 @@ export default {
       this.linkList.push(blogKey);
     }
     //是否存在路径标识,检查pageList中是否含有taskKey
-    flag = _.find(this.pageList, item => {
+    flag = window.__.find(this.pageList, item => {
       return item.path == taskKey;
     });
     if (flag == null || typeof flag == "undefined") {

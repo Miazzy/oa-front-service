@@ -198,12 +198,16 @@ import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
-import axios from "axios";
 import JUpload from "@/components/jeecg/JUpload";
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
+//import axios from "axios";
 
-Vue.use(mavonEditor);
+try {
+  Vue.use(mavonEditor);
+} catch (error) {
+  console.error(error);
+}
 
 export default {
   name: "BlogCenter",
@@ -464,20 +468,24 @@ export default {
       var formdata = new FormData();
       //设置图片上传属性名称
       formdata.append("file", $file);
-      axios({
-        url: `${window._CONFIG["domain"]}/jeecg-boot/sys/common/upload`,
-        method: "post",
-        data: formdata,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "X-Access-Token": token
-        }
-      }).then(url => {
-        //计算图片服务器地址
-        url = `${window._CONFIG["domain"]}/jeecg-boot/sys/common/view/${url.data.message}`;
-        //将返回的url替换到文本原位置![...](0) -> ![...](url) $vm.$img2Url 详情见本页末尾
-        this.$refs.md.$img2Url(pos, url);
-      });
+      try {
+        axios({
+          url: `${window._CONFIG["domain"]}/jeecg-boot/sys/common/upload`,
+          method: "post",
+          data: formdata,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-Access-Token": token
+          }
+        }).then(url => {
+          //计算图片服务器地址
+          url = `${window._CONFIG["domain"]}/jeecg-boot/sys/common/view/${url.data.message}`;
+          //将返回的url替换到文本原位置![...](0) -> ![...](url) $vm.$img2Url 详情见本页末尾
+          this.$refs.md.$img2Url(pos, url);
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
     /**
      * @function 设置岗位style

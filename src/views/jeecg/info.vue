@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
+//import * as $ from 'jquery'
 import { getAction } from '@/api/manage'
 import BpmnViewer from 'bpmn-js'
 export default {

@@ -205,8 +205,8 @@ import STable from "@/components/table/";
 import ATextarea from "ant-design-vue/es/input/TextArea";
 import AInput from "ant-design-vue/es/input/Input";
 import moment from "moment";
-import axios from "axios";
 import { getRoleList, getServiceList } from "@/api/manage";
+//import axios from "axios";
 
 export default {
   name: "TableList",
@@ -301,16 +301,22 @@ export default {
         if (err) {
           return;
         }
+
         const description = this.createForm.getFieldValue("description");
-        axios
-          .post("/saveRule", {
-            desc: description
-          })
-          .then(res => {
-            this.createForm.resetFields();
-            this.visibleCreateModal = false;
-            this.loadRuleData();
-          });
+
+        try {
+          axios
+            .post("/saveRule", {
+              desc: description
+            })
+            .then(res => {
+              this.createForm.resetFields();
+              this.visibleCreateModal = false;
+              this.loadRuleData();
+            });
+        } catch (error) {
+          console.error(error);
+        }
       });
     },
     handleCreateModalCancel() {
