@@ -9,8 +9,9 @@ import {
 } from '@/utils/request';
 
 import antd from 'ant-design-vue';
+//import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
+
 import Viser from 'viser-vue';
-import 'ant-design-vue/dist/antd.less'; // or 'ant-design-vue/dist/antd.less'
 
 import '@/permission'; // permission control
 import '@/utils/filter'; // base filter
