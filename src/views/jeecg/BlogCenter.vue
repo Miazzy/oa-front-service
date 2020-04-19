@@ -199,8 +199,8 @@ import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import JUpload from "@/components/jeecg/JUpload";
-import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
+//import mavonEditor from "mavon-editor";
 //import axios from "axios";
 
 try {

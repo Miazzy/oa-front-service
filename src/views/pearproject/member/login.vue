@@ -12,7 +12,7 @@
     >
       <a-tabs
         :activeKey="customActiveKey"
-        :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
+        :tabBarStyle="{textAlign: 'center', borderBottom: 'unset'}"
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" tab="账号密码登录">
@@ -22,11 +22,21 @@
               type="text"
               placeholder="帐户名或邮箱地址"
               v-decorator="[
-                                'account',
-                                {rules: [{ required: true, message: '请输入帐户名或邮箱地址' },{ validator: this.handleUsernameOrEmail }], validateTrigger: 'blur'}
-                            ]"
+                'account',
+                {
+                  rules: [
+                    {required: true, message: '请输入帐户名或邮箱地址'},
+                    {validator: this.handleUsernameOrEmail},
+                  ],
+                  validateTrigger: 'blur',
+                },
+              ]"
             >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon
+                slot="prefix"
+                type="user"
+                :style="{color: 'rgba(0,0,0,.25)'}"
+              />
             </a-input>
           </a-form-item>
 
@@ -37,11 +47,18 @@
               autocomplete="false"
               placeholder="密码"
               v-decorator="[
-                                'password',
-                                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
-                            ]"
+                'password',
+                {
+                  rules: [{required: true, message: '请输入密码'}],
+                  validateTrigger: 'blur',
+                },
+              ]"
             >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon
+                slot="prefix"
+                type="lock"
+                :style="{color: 'rgba(0,0,0,.25)'}"
+              />
             </a-input>
           </a-form-item>
         </a-tab-pane>
@@ -52,11 +69,25 @@
               type="text"
               placeholder="手机号"
               v-decorator="[
-                                'mobile',
-                                {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },{ validator: this.handleUsernameOrEmail }], validateTrigger: 'change'}
-                            ]"
+                'mobile',
+                {
+                  rules: [
+                    {
+                      required: true,
+                      pattern: /^1[34578]\d{9}$/,
+                      message: '请输入正确的手机号',
+                    },
+                    {validator: this.handleUsernameOrEmail},
+                  ],
+                  validateTrigger: 'change',
+                },
+              ]"
             >
-              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon
+                slot="prefix"
+                type="mobile"
+                :style="{color: 'rgba(0,0,0,.25)'}"
+              />
             </a-input>
           </a-form-item>
 
@@ -68,11 +99,18 @@
                   type="text"
                   placeholder="验证码"
                   v-decorator="[
-                                'captcha',
-                                {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}
-                            ]"
+                    'captcha',
+                    {
+                      rules: [{required: true, message: '请输入验证码'}],
+                      validateTrigger: 'blur',
+                    },
+                  ]"
                 >
-                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                  <a-icon
+                    slot="prefix"
+                    type="mail"
+                    :style="{color: 'rgba(0,0,0,.25)'}"
+                  />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -82,7 +120,9 @@
                 tabindex="-1"
                 :disabled="state.smsSendBtn"
                 @click.stop.prevent="getCaptcha"
-                v-text="!state.smsSendBtn && '获取验证码' || (state.time+' s')"
+                v-text="
+                  (!state.smsSendBtn && '获取验证码') || state.time + ' s'
+                "
               ></a-button>
             </a-col>
           </a-row>
@@ -91,7 +131,12 @@
 
       <a-form-item>
         <a-checkbox v-model="formLogin.rememberMe">自动登录</a-checkbox>
-        <a class="forge-password" style="float: right;" @click="routerLink('/member/forgot')">忘记密码</a>
+        <a
+          class="forge-password"
+          style="float: right;"
+          @click="routerLink('/member/forgot')"
+          >忘记密码</a
+        >
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -103,7 +148,8 @@
           :loading="loginBtn"
           @click.stop.prevent="handleSubmit"
           :disabled="loginBtn"
-        >登录</a-button>
+          >登录</a-button
+        >
       </a-form-item>
 
       <div class="user-login-other">
@@ -122,33 +168,35 @@
                 <a>
                     <a-icon class="item-icon" type="weibo-circle"></a-icon>
         </a>-->
-        <router-link class="register" :to="{ name: 'register' }">注册账户</router-link>
+        <router-link class="register" :to="{name: 'register'}"
+          >注册账户</router-link
+        >
       </div>
     </a-form>
   </div>
 </template>
 
 <script>
-import md5 from "md5";
-import * as dd from "dingtalk-jsapi";
-import { mapActions } from "vuex";
-import { mapState } from "vuex";
-import { Login, getCaptcha } from "@/api/user";
-import { info } from "@/api/system";
-import config from "@/config/config";
-import { checkResponse, createRoute, timeFix } from "@/assets/js/utils";
-import { getStore } from "@/assets/js/storage";
-import { checkInstall } from "@/pearapi/common/common";
-import { setStore } from "@/assets/js/storage";
-import { _checkLogin } from "@/pearapi/user";
-import { dingTalkLoginByCode, dingTalkOauth } from "@/pearapi/oauth";
-import { notice } from "@/assets/js/notice";
+//import md5 from "md5";
+import * as dd from 'dingtalk-jsapi';
+import {mapActions} from 'vuex';
+import {mapState} from 'vuex';
+import {Login, getCaptcha} from '@/api/user';
+import {info} from '@/api/system';
+import config from '@/config/config';
+import {checkResponse, createRoute, timeFix} from '@/assets/js/utils';
+import {getStore} from '@/assets/js/storage';
+import {checkInstall} from '@/pearapi/common/common';
+import {setStore} from '@/assets/js/storage';
+import {_checkLogin} from '@/pearapi/user';
+import {dingTalkLoginByCode, dingTalkOauth} from '@/pearapi/oauth';
+import {notice} from '@/assets/js/notice';
 
 export default {
   components: {},
   data() {
     return {
-      customActiveKey: "tab1",
+      customActiveKey: 'tab1',
       loginBtn: false,
       oauthLoading: false,
       // login type: 0 email, 1 account, 2 telephone
@@ -158,21 +206,21 @@ export default {
       form: this.$form.createForm(this),
       state: {
         time: 60,
-        smsSendBtn: false
+        smsSendBtn: false,
       },
       formLogin: {
-        account: "",
-        password: "",
-        captcha: "",
-        mobile: "",
-        rememberMe: true
-      }
+        account: '',
+        password: '',
+        captcha: '',
+        mobile: '',
+        rememberMe: true,
+      },
     };
   },
   computed: {
     ...mapState({
-      system: state => state.system
-    })
+      system: (state) => state.system,
+    }),
   },
   mounted() {
     this.checkInstall();
@@ -181,22 +229,21 @@ export default {
       this.checkLogin();
     }
     if (this.$route.query.message) {
-      notice({ title: this.$route.query.message }, "notice");
+      notice({title: this.$route.query.message}, 'notice');
       // notice(this.$route.query.message);
     }
   },
   methods: {
-    ...mapActions(["Login", "Logout"]),
+    ...mapActions(['Login', 'Logout']),
     checkInstall() {
-
-      checkInstall().then(res => {
+      checkInstall().then((res) => {
         if (!checkResponse(res)) {
-          this.$router.push({ name: "install" });
+          this.$router.push({name: 'install'});
           return false;
         }
-        info().then(res => {
+        info().then((res) => {
           if (checkResponse(res)) {
-            this.$store.dispatch("setSystem", res.data);
+            this.$store.dispatch('setSystem', res.data);
             this.dingTalkLogin();
           }
         });
@@ -204,7 +251,6 @@ export default {
     },
     // handler
     handleUsernameOrEmail(rule, value, callback) {
-
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
       if (regex.test(value)) {
         this.loginType = 0;
@@ -214,30 +260,25 @@ export default {
       callback();
     },
     handleTabClick(key) {
-
       this.customActiveKey = key;
-
     },
     handleSubmit() {
-
-
       const app = this;
       let flag = false;
 
       let loginParams = {
-        remember_me: app.formLogin.rememberMe
+        remember_me: app.formLogin.rememberMe,
       };
 
-
       // 使用账户密码登录
-      if (app.customActiveKey === "tab1") {
+      if (app.customActiveKey === 'tab1') {
         app.form.validateFields(
-          ["account", "password"],
-          { force: true },
+          ['account', 'password'],
+          {force: true},
           (err, values) => {
             if (!err) {
               flag = true;
-              loginParams[!app.loginType ? "account" : "account"] =
+              loginParams[!app.loginType ? 'account' : 'account'] =
                 values.account;
               loginParams.password = md5(values.password);
             }
@@ -246,8 +287,8 @@ export default {
         // 使用手机号登录
       } else {
         app.form.validateFields(
-          ["mobile", "captcha"],
-          { force: true },
+          ['mobile', 'captcha'],
+          {force: true},
           (err, values) => {
             if (!err) {
               flag = true;
@@ -260,9 +301,9 @@ export default {
       if (!flag) return;
 
       app.loginBtn = true;
-      loginParams.clientid = getStore("client_id");
+      loginParams.clientid = getStore('client_id');
       Login(loginParams)
-        .then(res => {
+        .then((res) => {
           if (checkResponse(res)) {
             loginParams.token = res.token;
             this.dealDataBeforeLogin(res);
@@ -274,11 +315,10 @@ export default {
         });
     },
     getCaptcha(e) {
-
       e.preventDefault();
       const app = this;
 
-      this.form.validateFields(["mobile"], { force: true }, (err, values) => {
+      this.form.validateFields(['mobile'], {force: true}, (err, values) => {
         if (!err) {
           this.state.smsSendBtn = true;
 
@@ -290,26 +330,26 @@ export default {
             }
           }, 1000);
 
-          const hide = this.$message.loading("验证码发送中..", 0);
+          const hide = this.$message.loading('验证码发送中..', 0);
           getCaptcha(values.mobile)
-            .then(res => {
+            .then((res) => {
               this.$message.destroy();
 
               if (!checkResponse(res)) {
                 return false;
               }
-              let tips = "验证码获取成功";
+              let tips = '验证码获取成功';
               if (res.data) {
-                tips += "，您的验证码为：" + res.data;
+                tips += '，您的验证码为：' + res.data;
               }
-              this.$notification["success"]({
-                message: "提示",
+              this.$notification['success']({
+                message: '提示',
                 description: tips,
                 duration: 8,
-                placement: "bottomLeft"
+                placement: 'bottomLeft',
               });
             })
-            .catch(err => {
+            .catch((err) => {
               // setTimeout(hide, 1);
               clearInterval(interval);
               app.state.time = 60;
@@ -320,10 +360,8 @@ export default {
       });
     },
     loginSuccess(res, org) {
-
       setTimeout(() => {
-
-        const menu = getStore("menu", true);
+        const menu = getStore('menu', true);
         if (menu) {
           let routes = this.$router.options.routes;
           menu.forEach(function(v) {
@@ -342,28 +380,28 @@ export default {
           this.loginBtn = false;
           this.$router.addRoutes(routes);
           let redirect =
-            this.$route.query.redirect || config.HOME_PAGE + "/" + org.code;
+            this.$route.query.redirect || config.HOME_PAGE + '/' + org.code;
           if (redirect == config.HOME_PAGE) {
-            redirect = config.HOME_PAGE + "/" + org.code;
+            redirect = config.HOME_PAGE + '/' + org.code;
           }
-          console.log("redirect");
+          console.log('redirect');
           console.log(redirect);
           this.$router.push({
-            path: redirect
+            path: redirect,
           });
           this.$notification.success({
-            message: "欢迎",
-            description: `${res.data.member.name}，${timeFix()}，欢迎回来`
+            message: '欢迎',
+            description: `${res.data.member.name}，${timeFix()}，欢迎回来`,
           });
           this.oauthLoading = false;
         }
       }, 500);
     },
     dingTalkOauth() {
-      let url = dingTalkOauth() + "?redirect=" + this.$route.query.redirect;
+      let url = dingTalkOauth() + '?redirect=' + this.$route.query.redirect;
       let redirect = this.$route.query.redirect;
       if (redirect) {
-        url += "?redirect=" + redirect;
+        url += '?redirect=' + redirect;
       }
       location.href = url;
     },
@@ -372,20 +410,20 @@ export default {
       dd.ready(function() {
         // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
         dd.runtime.permission.requestAuthCode({
-          corpId: "ding42ccb1a1923b200f35c2f4657eb6378f",
+          corpId: 'ding42ccb1a1923b200f35c2f4657eb6378f',
           onSuccess: function(result) {
             app.oauthLoading = true;
-            dingTalkLoginByCode({ code: result.code }).then(res => {
+            dingTalkLoginByCode({code: result.code}).then((res) => {
               if (checkResponse(res)) {
                 app.dealDataBeforeLogin(res);
               }
             });
-          }
+          },
         });
       });
     },
     checkLogin() {
-      _checkLogin().then(res => {
+      _checkLogin().then((res) => {
         this.dealDataBeforeLogin(res);
       });
     },
@@ -394,44 +432,43 @@ export default {
       if (res.data) {
         const obj = {
           userInfo: res.data.member,
-          tokenList: res.data.tokenList
+          tokenList: res.data.tokenList,
         };
-        let currentOrganization = getStore("currentOrganization", true);
+        let currentOrganization = getStore('currentOrganization', true);
         const organizationList = res.data.organizationList;
-        app.$store.dispatch("SET_LOGGED", obj);
-        app.$store.dispatch("setOrganizationList", organizationList);
+        app.$store.dispatch('SET_LOGGED', obj);
+        app.$store.dispatch('setOrganizationList', organizationList);
         if (!currentOrganization) {
           currentOrganization = organizationList[0];
         } else {
           const has = organizationList.findIndex(
-            item => item.id == currentOrganization.id
+            (item) => item.id == currentOrganization.id
           );
           if (has === -1) {
             currentOrganization = organizationList[0];
           }
         }
-        app.$store.dispatch("setCurrentOrganization", currentOrganization);
-        app.$store.dispatch("GET_MENU").then(() => {
+        app.$store.dispatch('setCurrentOrganization', currentOrganization);
+        app.$store.dispatch('GET_MENU').then(() => {
           app.loginSuccess(res, currentOrganization);
         });
       } else {
         app.oauthLoading = false;
-        app.$store.dispatch("SET_LOGOUT");
+        app.$store.dispatch('SET_LOGOUT');
         // app.$router.replace('/login?redirect=' + this.$router.currentRoute.fullPath);
       }
     },
     requestFailed(err) {
-
-      this.$notification["error"]({
-        message: "错误",
+      this.$notification['error']({
+        message: '错误',
         description:
           ((err.response || {}).data || {}).message ||
-          "请求出现错误，请稍后再试",
-        duration: 4
+          '请求出现错误，请稍后再试',
+        duration: 4,
       });
       this.loginBtn = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

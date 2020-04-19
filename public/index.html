@@ -30,12 +30,26 @@
     <script src="//cdn.bootcss.com/dayjs/1.8.24/dayjs.min.js"></script>
     <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
     <script src="//gitee.com/yunwisdoms/vue-photo-preview/raw/master/dist/vue-photo-preview.js"></script>
-    <script src="https://unpkg.com/bpmn-js@6.4.2/dist/bpmn-navigated-viewer.development.js"></script>
-    <script src="https://cdn.bootcss.com/echarts/4.7.0/echarts.min.js"></script>
+    <script src="//unpkg.com/bpmn-js@6.4.2/dist/bpmn-navigated-viewer.development.js"></script>
+    <script src="//cdn.bootcss.com/echarts/4.7.0/echarts.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/mavon-editor@2.7.6/dist/mavon-editor.min.js"></script>
+    <script src="//cdn.bootcss.com/spark-md5/3.0.0/spark-md5.min.js"></script>
+    <script src="//cdn.bootcss.com/blueimp-md5/2.13.0/js/md5.min.js"></script>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.15/mapping.fp.js"></script>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.15/lodash.core.min.js"></script>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.15/lodash.fp.min.js"></script>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.15/lodash.min.js"></script>
+    <script src="//cdn.bootcss.com/clipboard.js/2.0.6/clipboard.min.js"></script>
+    <script src="//cdn.bootcss.com/vue-clipboard2/0.3.1/vue-clipboard.min.js"></script>
+    <script src="//cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.js"></script>
+    <script src="//cdn.bootcss.com/tinymce/5.2.1/tinymce.min.js"></script>
+    <script src="//cdn.bootcss.com/vue-i18n/8.17.0/vue-i18n.min.js"></script>
 
     <link href="//gitee.com/yunwisdoms/vue-photo-preview/raw/master/dist/skin.css" rel="stylesheet" />
     <link href="//cdn.jsdelivr.net/npm/ant-design-vue@1.5.3/dist/antd.min.css" rel="stylesheet" />
     <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet" />
+    <link href="//cdn.jsdelivr.net/npm/mavon-editor@2.7.6/dist/css/index.css" />
+    <link href="//cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet" />
     <!-- 全局配置 -->
     <script>
         //定义配置文件对象
@@ -45,28 +59,28 @@
         //定义underscore
         window.__ = _;
         //Vue服务器域名
-        window._CONFIG['domain'] = 'https://www.shengtai.club';
+        window._CONFIG['domain'] = '//www.shengtai.club';
         //Vue-REST-API服务器域名
-        window._CONFIG['restAPI'] = 'https://api.shengtai.club';
+        window._CONFIG['restAPI'] = '//api.shengtai.club';
         //API端服务器URL
-        window._CONFIG['domainURL'] = 'https://www.shengtai.club/jeecg-boot';
+        window._CONFIG['domainURL'] = '//www.shengtai.club/jeecg-boot';
         //Vue服务器域名,不要删除domian属性，因为有些组件是这样写的，而且位于node_module里面
-        window._CONFIG['domian'] = 'https://www.shengtai.club';
+        window._CONFIG['domian'] = '//www.shengtai.club';
         //API端服务器URL,不要删除domianURL属性，因为有些组件是这样写的，而且位于node_module里面
-        window._CONFIG['domianURL'] = 'https://www.shengtai.club/jeecg-boot';
+        window._CONFIG['domianURL'] = '//www.shengtai.club/jeecg-boot';
         //下载服务器域名
-        window._CONFIG['downloadURL'] = 'https://www.shengtai.club';
+        window._CONFIG['downloadURL'] = '//www.shengtai.club';
         //图片服务器域名
-        window._CONFIG['imgDomainURL'] = 'https://www.shengtai.club';
+        window._CONFIG['imgDomainURL'] = '//www.shengtai.club';
         //KKFileView文档预览URL
         window._CONFIG['previewURL'] =
-            'https://fileview.shengtai.club/onlinePreview?url=';
+            '//fileview.shengtai.club/onlinePreview?url=';
         //微软文档预览URL
         window._CONFIG['officeURL'] =
-            'https://view.officeapps.live.com/op/view.aspx?src=';
+            '//view.officeapps.live.com/op/view.aspx?src=';
         //图片压缩裁剪URL
         window._CONFIG['thumborURL'] =
-            'https://thumbor.shengtai.club/unsafe/fill/100/60/sm/0/plain/';
+            '//thumbor.shengtai.club/unsafe/fill/100/60/sm/0/plain/';
         //图片预览URL
         window._CONFIG['imageURL'] = window._CONFIG['previewURL'];
         //多媒体预览URL
@@ -75,10 +89,9 @@
         window._CONFIG['viewURL'] =
             window._CONFIG['domainURL'] + '/generic/web/viewer.html?file=';
         //单独登录URL
-        window._CONFIG['casPrefixUrl'] = 'https://sso.shengtai.club/cas';
+        window._CONFIG['casPrefixUrl'] = '//sso.shengtai.club/cas';
         //检测URL文件是否存在
-        window._CONFIG['validURL'] =
-            'https://www.shengtai.club/sys/common/url?path=';
+        window._CONFIG['validURL'] = '//www.shengtai.club/sys/common/url?path=';
     </script>
 </head>
 

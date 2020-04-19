@@ -28,21 +28,24 @@ const isProd = process.env.NODE_ENV === 'production';
 const assetsCDN = {
     // webpack build externals
     externals: {
-        'vue': 'Vue',
+        vue: 'Vue',
         'vue-router': 'VueRouter',
-        'vuex': 'Vuex',
-        'axios': 'axios',
-        'jquery': '$',
-        'underscore': '_',
-        'superagent': 'superagent',
-        'qs': 'qs',
-        'moment': 'moment',
-        'dayjs': 'dayjs',
+        vuex: 'Vuex',
+        axios: 'axios',
+        jquery: '$',
+        underscore: '_',
+        superagent: 'superagent',
+        qs: 'qs',
+        moment: 'moment',
+        dayjs: 'dayjs',
         'vue-apexcharts': 'VueApexCharts',
         'element-ui': 'Element',
-        'nprogress': 'NProgress',
+        nprogress: 'NProgress',
         'ant-design-vue': 'antd',
-        'bpmn-js': 'BpmnViewer'
+        'mavon-editor': 'mavonEditor',
+        'bpmn-js': 'BpmnViewer',
+        md5: 'md5',
+        lodash: 'lodash',
     },
     css: [],
     js: [],
@@ -70,7 +73,7 @@ const vueConfig = {
         },
     },
 
-    chainWebpack: config => {
+    chainWebpack: (config) => {
         config.resolve.alias
             .set('@$', resolve('src'))
             .set('@api', resolve('src/api'))
@@ -124,7 +127,6 @@ const vueConfig = {
             },
         },
     },
-
 
     //可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: false,

@@ -46,8 +46,8 @@ import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
-import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
+//import mavonEditor from "mavon-editor";
 
 Vue.use(mavonEditor);
 
@@ -90,13 +90,13 @@ export default {
         cid: ""
       },
       manage: [
-         {
+        {
           name: "文档中心",
           avatar: "/images/内容_文档.png",
-          click: async ()=>{
+          click: async () => {
             //跳转到博客中心
             this.$router.push(`/document/center`);
-          },
+          }
         },
         {
           name: "我的文档",
@@ -123,7 +123,7 @@ export default {
           name: "文档排行",
           avatar: "/images/icon-rank-01.svg",
           href: "/blog/rank"
-        },
+        }
       ],
 
       axis2Opts: {

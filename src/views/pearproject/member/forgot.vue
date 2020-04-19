@@ -10,9 +10,21 @@
             size="large"
             type="text"
             placeholder="注册邮箱地址"
-            v-decorator="['email',{rules: [{ required: true, type: 'email', message: '请输入邮箱地址' }], validateTrigger: ['change', 'blur']}]"
+            v-decorator="[
+              'email',
+              {
+                rules: [
+                  {required: true, type: 'email', message: '请输入邮箱地址'},
+                ],
+                validateTrigger: ['change', 'blur'],
+              },
+            ]"
           >
-            <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
+            <a-icon
+              slot="prefix"
+              type="mail"
+              :style="{color: 'rgba(0,0,0,.25)'}"
+            />
           </a-input>
         </a-form-item>
         <a-form-item>
@@ -24,8 +36,11 @@
             :loading="forgotBtn"
             @click.stop.prevent="handleSubmitCaptcha"
             :disabled="forgotBtn"
-          >获取验证码</a-button>
-          <router-link class="login" :to="{ name: 'login' }">使用其他账户登录</router-link>
+            >获取验证码</a-button
+          >
+          <router-link class="login" :to="{name: 'login'}"
+            >使用其他账户登录</router-link
+          >
         </a-form-item>
       </a-form>
     </template>
@@ -35,14 +50,28 @@
       </h3>
       <a-form :form="form" ref="formRegister" id="formRegister">
         <a-form-item>
-          <a-input size="large" type="text" placeholder="邮箱" :value="email" disabled>
-            <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
+          <a-input
+            size="large"
+            type="text"
+            placeholder="邮箱"
+            :value="email"
+            disabled
+          >
+            <a-icon
+              slot="prefix"
+              type="mail"
+              :style="{color: 'rgba(0,0,0,.25)'}"
+            />
           </a-input>
         </a-form-item>
 
-        <a-popover placement="rightTop" trigger="click" :visible="state.passwordLevelChecked">
+        <a-popover
+          placement="rightTop"
+          trigger="click"
+          :visible="state.passwordLevelChecked"
+        >
           <template slot="content">
-            <div :style="{ width: '240px' }">
+            <div :style="{width: '240px'}">
               <div :class="['user-register', passwordLevelClass]">
                 强度：
                 <span>{{ passwordLevelName }}</span>
@@ -50,7 +79,7 @@
               <a-progress
                 :percent="state.percent"
                 :showInfo="false"
-                :strokeColor=" passwordLevelColor "
+                :strokeColor="passwordLevelColor"
               />
               <div style="margin-top: 10px;">
                 <span>请至少输入 6 个字符。请不要使用容易被猜到的密码。</span>
@@ -59,38 +88,74 @@
           </template>
           <a-form-item>
             <a-input
-              v-decorator="['password',{rules: [{ required: true, message: '至少6位密码，区分大小写' },{ validator: this.handlePasswordLevel }], validateTrigger: ['change', 'blur']}]"
+              v-decorator="[
+                'password',
+                {
+                  rules: [
+                    {required: true, message: '至少6位密码，区分大小写'},
+                    {validator: this.handlePasswordLevel},
+                  ],
+                  validateTrigger: ['change', 'blur'],
+                },
+              ]"
               size="large"
               type="password"
               @click="handlePasswordInputClick"
               autocomplete="false"
               placeholder="密码须至少6位，且区分大小写"
             >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
+              <a-icon
+                slot="prefix"
+                type="lock"
+                :style="{color: 'rgba(0,0,0,.25)'}"
+              />
             </a-input>
           </a-form-item>
         </a-popover>
 
         <a-form-item>
           <a-input
-            v-decorator="['password2',{rules: [{ required: true, message: '至少6位密码，区分大小写' },{ validator: this.handlePasswordCheck }], validateTrigger: ['change', 'blur']}]"
+            v-decorator="[
+              'password2',
+              {
+                rules: [
+                  {required: true, message: '至少6位密码，区分大小写'},
+                  {validator: this.handlePasswordCheck},
+                ],
+                validateTrigger: ['change', 'blur'],
+              },
+            ]"
             size="large"
             type="password"
             autocomplete="false"
             placeholder="再次确认您的密码"
           >
-            <a-icon slot="prefix" type="check-circle" :style="{ color: 'rgba(0,0,0,.25)' }" />
+            <a-icon
+              slot="prefix"
+              type="check-circle"
+              :style="{color: 'rgba(0,0,0,.25)'}"
+            />
           </a-input>
         </a-form-item>
 
         <a-form-item>
           <a-input
-            v-decorator="['captcha',{rules: [{ required: true, message: '请输入验证码' }], validateTrigger: ['blur']}]"
+            v-decorator="[
+              'captcha',
+              {
+                rules: [{required: true, message: '请输入验证码'}],
+                validateTrigger: ['blur'],
+              },
+            ]"
             size="large"
             type="text"
             placeholder="验证码"
           >
-            <a-icon slot="prefix" type="safety-certificate" :style="{ color: 'rgba(0,0,0,.25)' }" />
+            <a-icon
+              slot="prefix"
+              type="safety-certificate"
+              :style="{color: 'rgba(0,0,0,.25)'}"
+            />
           </a-input>
         </a-form-item>
 
@@ -104,7 +169,8 @@
             :loading="registerBtn"
             @click.stop.prevent="handleSubmit"
             :disabled="registerBtn"
-          >提交</a-button>
+            >提交</a-button
+          >
         </a-form-item>
       </a-form>
     </template>
@@ -112,38 +178,38 @@
 </template>
 
 <script>
-import md5 from "md5";
-import { forgot } from "@/pearapi/user";
-import { checkResponse } from "@/assets/js/utils";
-import { notice } from "@/assets/js/notice";
-import { _getMailCaptcha, _resetPasswordByMail } from "@/pearapi/user";
+//import md5 from "md5";
+import {forgot} from '@/pearapi/user';
+import {checkResponse} from '@/assets/js/utils';
+import {notice} from '@/assets/js/notice';
+import {_getMailCaptcha, _resetPasswordByMail} from '@/pearapi/user';
 
 const levelNames = {
-  0: "低",
-  1: "低",
-  2: "中",
-  3: "强"
+  0: '低',
+  1: '低',
+  2: '中',
+  3: '强',
 };
 const levelClass = {
-  0: "error",
-  1: "error",
-  2: "warning",
-  3: "success"
+  0: 'error',
+  1: 'error',
+  2: 'warning',
+  3: 'success',
 };
 const levelColor = {
-  0: "#ff0000",
-  1: "#ff0000",
-  2: "#ff7e05",
-  3: "#52c41a"
+  0: '#ff0000',
+  1: '#ff0000',
+  2: '#ff7e05',
+  3: '#52c41a',
 };
 export default {
-  name: "Forgot",
+  name: 'Forgot',
   components: {},
   data() {
     return {
       form: this.$form.createForm(this),
       formCaptcha: this.$form.createForm(this),
-      email: "",
+      email: '',
       sended: false,
       forgotBtn: false,
 
@@ -153,9 +219,9 @@ export default {
         passwordLevel: 0,
         passwordLevelChecked: false,
         percent: 10,
-        progressColor: "#FF0000"
+        progressColor: '#FF0000',
       },
-      registerBtn: false
+      registerBtn: false,
     };
   },
   computed: {
@@ -167,7 +233,7 @@ export default {
     },
     passwordLevelColor() {
       return levelColor[this.state.passwordLevel];
-    }
+    },
   },
   methods: {
     handleSubmitCaptcha() {
@@ -176,18 +242,18 @@ export default {
           this.forgotBtn = true;
           let params = this.formCaptcha.getFieldsValue();
           this.email = params.email;
-          _getMailCaptcha(this.email).then(res => {
+          _getMailCaptcha(this.email).then((res) => {
             this.sended = true;
             this.forgotBtn = false;
             this.$message.destroy();
             if (!checkResponse(res)) {
               return false;
             }
-            let tips = "验证码获取成功";
+            let tips = '验证码获取成功';
             if (res.data) {
-              tips += "，您的验证码为：" + res.data;
+              tips += '，您的验证码为：' + res.data;
             }
-            notice({ title: "提示", msg: tips }, "notification", "success", 8);
+            notice({title: '提示', msg: tips}, 'notification', 'success', 8);
           });
         }
       });
@@ -201,17 +267,17 @@ export default {
           params.email = this.email;
           params.password = md5(params.password);
           params.password2 = md5(params.password2);
-          _resetPasswordByMail(params).then(res => {
+          _resetPasswordByMail(params).then((res) => {
             this.registerBtn = false;
             if (!checkResponse(res)) {
               return false;
             }
             notice(
-              { title: "提示", msg: "重置密码成功，请登录" },
-              "notification",
-              "success"
+              {title: '提示', msg: '重置密码成功，请登录'},
+              'notification',
+              'success'
             );
-            this.$router.push({ name: "login" });
+            this.$router.push({name: 'login'});
           });
         }
       });
@@ -248,22 +314,22 @@ export default {
         if (level === 0) {
           this.state.percent = 10;
         }
-        callback(new Error("密码强度不够"));
+        callback(new Error('密码强度不够'));
       }
     },
 
     handlePasswordCheck(rule, value, callback) {
-      const password = this.form.getFieldValue("password");
+      const password = this.form.getFieldValue('password');
       if (value === undefined) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'));
       }
       if (value && password && value.trim() !== password.trim()) {
-        callback(new Error("两次密码不一致"));
+        callback(new Error('两次密码不一致'));
       }
       callback();
-    }
+    },
   },
-  watch: {}
+  watch: {},
 };
 </script>
 <style lang="less">

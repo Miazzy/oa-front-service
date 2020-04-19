@@ -262,7 +262,7 @@
               @click.stop.prevent="getCaptcha"
               v-text="
                 (!mobileInfo.state.smsSendBtn && '获取验证码') ||
-                mobileInfo.state.time + ' s'
+                  mobileInfo.state.time + ' s'
               "
             ></a-button>
           </a-col>
@@ -343,7 +343,7 @@
 </template>
 
 <script>
-import md5 from 'md5';
+//import md5 from 'md5';
 import {mapState} from 'vuex';
 import AccountSetting from '@/components/playout/account/setting';
 import {checkResponse} from '@/assets/js/utils';
