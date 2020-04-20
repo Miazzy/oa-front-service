@@ -188,9 +188,9 @@
 
 <script>
 //import Vue from "vue";
+import * as vuex from "vuex";
 
 import { timeFix, welcome } from "@/utils/util";
-import { mapGetters } from "vuex";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 import PageLayout from "@/components/page/PageLayout";
@@ -199,12 +199,12 @@ import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 import JUpload from "@/components/jeecg/JUpload";
-import "mavon-editor/dist/css/index.css";
+//import "mavon-editor/dist/css/index.css";
 //import mavonEditor from "mavon-editor";
 //import axios from "axios";
 
 try {
-  Vue.use(mavonEditor);
+  //Vue.use(mavonEditor);
 } catch (error) {
   console.error(error);
 }
@@ -405,7 +405,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapGetters(["nickname", "welcome"]),
+    ...vuex.mapGetters(["nickname", "welcome"]),
 
     /**
      * @function 处理博文详情信息

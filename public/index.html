@@ -22,17 +22,14 @@
     <script src="//gw.alipayobjects.com/os/lib/antv/g2/3.5.11/dist/g2.min.js"></script>
     <script src="//gw.alipayobjects.com/os/antv/assets/f2/3.4.2/f2.min.js"></script>
     <script src="//libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="//cdn.bootcss.com/superagent/4.1.0/superagent.min.js"></script>
     <script src="//cdn.bootcss.com/qs/6.9.3/qs.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/vue-apexcharts@1.5.2/dist/vue-apexcharts.min.js"></script>
     <script src="//cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
     <script src="//cdn.bootcss.com/dayjs/1.8.24/dayjs.min.js"></script>
     <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-    <script src="//gitee.com/yunwisdoms/vue-photo-preview/raw/master/dist/vue-photo-preview.js"></script>
     <script src="//unpkg.com/bpmn-js@6.4.2/dist/bpmn-navigated-viewer.development.js"></script>
     <script src="//cdn.bootcss.com/echarts/4.7.0/echarts.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/mavon-editor@2.7.6/dist/mavon-editor.min.js"></script>
     <script src="//cdn.bootcss.com/spark-md5/3.0.0/spark-md5.min.js"></script>
     <script src="//cdn.bootcss.com/blueimp-md5/2.13.0/js/md5.min.js"></script>
     <script src="//cdn.bootcss.com/lodash.js/4.17.15/mapping.fp.js"></script>
@@ -44,12 +41,35 @@
     <script src="//cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.js"></script>
     <script src="//cdn.bootcss.com/tinymce/5.2.1/tinymce.min.js"></script>
     <script src="//cdn.bootcss.com/vue-i18n/8.17.0/vue-i18n.min.js"></script>
+    <script src="//cdn.bootcss.com/underscore.js/1.9.1/underscore-min.js"></script>
 
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/mavon-editor/dist/mavon-editor.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/lib/codemirror.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/javascript/javascript.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/css/css.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/xml/xml.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/clike/clike.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/markdown/markdown.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/python/python.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/r/r.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/shell/shell.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/sql/sql.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/mode/swift/swift.js"></script>
+    <script src="//yunwisdoms.gitee.io/yunwisdomxr/cdn/view-design/dist/iview.min.js"></script>
+
+    <link href="//lib.baomitu.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet" crossorigin="anonymous" integrity="sha384-lORadheqlc4cbo9L5It1a5q/AS57s9lXvER3RpFU97WXyO3bZL+siYtgOjLigS3D">
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/vue-photo-preview/dist/skin.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/view-design/dist/styles/iview.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/lib/codemirror.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/theme/panda-syntax.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/addon/hint/show-hint.css" rel="stylesheet" crossorigin="anonymous" />
     <link href="//gitee.com/yunwisdoms/vue-photo-preview/raw/master/dist/skin.css" rel="stylesheet" />
     <link href="//cdn.jsdelivr.net/npm/ant-design-vue@1.5.3/dist/antd.min.css" rel="stylesheet" />
     <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet" />
     <link href="//cdn.jsdelivr.net/npm/mavon-editor@2.7.6/dist/css/index.css" />
     <link href="//cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/codemirror/lib/codemirror.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="//yunwisdoms.gitee.io/yunwisdomxr/cdn/mavon-editor/dist/css/index.css" rel="stylesheet" crossorigin="anonymous" />
     <!-- 全局配置 -->
     <script>
         //定义配置文件对象
@@ -58,29 +78,31 @@
         window.underscore = _;
         //定义underscore
         window.__ = _;
+        //Vue服务器顶级域名
+        window._CONFIG['topDomain'] = 'shengtai.club';
         //Vue服务器域名
-        window._CONFIG['domain'] = '//www.shengtai.club';
+        window._CONFIG['domain'] = '//www.' + window._CONFIG['topDomain'];
         //Vue-REST-API服务器域名
-        window._CONFIG['restAPI'] = '//api.shengtai.club';
+        window._CONFIG['restAPI'] = '//api.' + window._CONFIG['topDomain'];
         //API端服务器URL
-        window._CONFIG['domainURL'] = '//www.shengtai.club/jeecg-boot';
+        window._CONFIG['domainURL'] = window._CONFIG['domain'] + '/jeecg-boot';
         //Vue服务器域名,不要删除domian属性，因为有些组件是这样写的，而且位于node_module里面
-        window._CONFIG['domian'] = '//www.shengtai.club';
+        window._CONFIG['domian'] = window._CONFIG['domain'];
         //API端服务器URL,不要删除domianURL属性，因为有些组件是这样写的，而且位于node_module里面
-        window._CONFIG['domianURL'] = '//www.shengtai.club/jeecg-boot';
+        window._CONFIG['domianURL'] = window._CONFIG['domain'] + '/jeecg-boot';
         //下载服务器域名
-        window._CONFIG['downloadURL'] = '//www.shengtai.club';
+        window._CONFIG['downloadURL'] = window._CONFIG['domain'];
         //图片服务器域名
-        window._CONFIG['imgDomainURL'] = '//www.shengtai.club';
+        window._CONFIG['imgDomainURL'] = window._CONFIG['domain'];
         //KKFileView文档预览URL
         window._CONFIG['previewURL'] =
-            '//fileview.shengtai.club/onlinePreview?url=';
+            '//fileview.' + window._CONFIG['topDomain'] + '/onlinePreview?url=';
         //微软文档预览URL
         window._CONFIG['officeURL'] =
             '//view.officeapps.live.com/op/view.aspx?src=';
         //图片压缩裁剪URL
         window._CONFIG['thumborURL'] =
-            '//thumbor.shengtai.club/unsafe/fill/100/60/sm/0/plain/';
+            '//thumbor.' + window._CONFIG['topDomain'] + '/unsafe/fill/100/60/sm/0/plain/';
         //图片预览URL
         window._CONFIG['imageURL'] = window._CONFIG['previewURL'];
         //多媒体预览URL
@@ -89,9 +111,9 @@
         window._CONFIG['viewURL'] =
             window._CONFIG['domainURL'] + '/generic/web/viewer.html?file=';
         //单独登录URL
-        window._CONFIG['casPrefixUrl'] = '//sso.shengtai.club/cas';
+        window._CONFIG['casPrefixUrl'] = '//sso.' + window._CONFIG['topDomain'] + '/cas';
         //检测URL文件是否存在
-        window._CONFIG['validURL'] = '//www.shengtai.club/sys/common/url?path=';
+        window._CONFIG['validURL'] = window._CONFIG['domain'] + '/sys/common/url?path=';
     </script>
 </head>
 

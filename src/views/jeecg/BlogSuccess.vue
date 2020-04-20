@@ -52,10 +52,10 @@ import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
-import "mavon-editor/dist/css/index.css";
+//import "mavon-editor/dist/css/index.css";
 //import mavonEditor from "mavon-editor";
 
-Vue.use(mavonEditor);
+//Vue.use(mavonEditor);
 
 export default {
   name: "BlogResult",

@@ -46,10 +46,10 @@ import HeadInfo from "@/components/tools/HeadInfo";
 import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
-import mavonEditor from "mavon-editor";
+//import mavonEditor from "mavon-editor";
 //import "mavon-editor/dist/css/index.css";
 
-Vue.use(mavonEditor);
+//Vue.use(mavonEditor);
 
 export default {
   name: "DocMineManage",

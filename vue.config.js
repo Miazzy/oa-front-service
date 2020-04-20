@@ -42,14 +42,17 @@ const assetsCDN = {
         'element-ui': 'Element',
         nprogress: 'NProgress',
         'ant-design-vue': 'antd',
-        'mavon-editor': 'mavonEditor',
+        'mavon-editor': 'MavonEditor',
         'bpmn-js': 'BpmnViewer',
         md5: 'md5',
-        lodash: 'lodash',
+        'codemirror': 'CodeMirror',
+        'view-design': 'iview',
+        'vue-photo-preview': 'preview',
     },
     css: [],
     js: [],
 };
+//lodash: 'lodash',
 
 // vue.config.js
 const vueConfig = {

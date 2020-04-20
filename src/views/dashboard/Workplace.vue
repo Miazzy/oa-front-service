@@ -350,7 +350,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleRecruitApply()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/hire.png" />
                   </div>
@@ -417,7 +422,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleSignEmployee()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/hire_us.png" />
                   </div>
@@ -430,7 +440,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleResignEmployee()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/dimission.png" />
                   </div>
@@ -530,7 +545,12 @@
             </a-card-grid>
             <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
-                <div slot="title" class="card-title" style="width:90%;height:90%;">
+                <div
+                  slot="title"
+                  class="card-title"
+                  style="width:90%;height:90%;"
+                  @click="handleResignEmployee()"
+                >
                   <div style="float:left;width:30%">
                     <a-avatar size="large" src="/images/dimission.png" />
                   </div>
@@ -673,7 +693,7 @@
             style="margin-bottom: 24px;"
             :body-style="{padding: 0}"
           >
-           <a-card-grid style="width:25%;textAlign:'center'">
+            <a-card-grid style="width:25%;textAlign:'center'">
               <a-card-meta>
                 <div
                   slot="title"
@@ -1383,7 +1403,7 @@
             </div>
           </a-card>
 
-           <a-card :loading="loading" title="文档" :bordered="false" style="margin-top:20px;">
+          <a-card :loading="loading" title="文档" :bordered="false" style="margin-top:20px;">
             <a-tag
               color="blue"
               style="margin-bottom:10px;position:absolute;top:18px;right:20px;"
@@ -1523,80 +1543,80 @@ export default {
       nodelist: [],
       teams: [],
       yundisk: [
-        { 
-          name: "全部", 
-          avatar: "/images/icon-all.svg" ,
+        {
+          name: "全部",
+          avatar: "/images/icon-all.svg",
           click: () => {}
         },
-        { 
-          name: "文档", 
-          avatar: "/images/icon-doc.svg" ,
+        {
+          name: "文档",
+          avatar: "/images/icon-doc.svg",
           click: () => {}
         },
-        { 
-          name: "图片", 
-          avatar: "/images/icon-pic.svg" ,
+        {
+          name: "图片",
+          avatar: "/images/icon-pic.svg",
           click: () => {}
         },
-        { 
-          name: "视频", 
-          avatar: "/images/icon-video.svg" ,
+        {
+          name: "视频",
+          avatar: "/images/icon-video.svg",
           click: () => {}
         },
-        { 
-          name: "音乐", 
-          avatar: "/images/icon-music.svg" ,
+        {
+          name: "音乐",
+          avatar: "/images/icon-music.svg",
           click: () => {}
         }
       ],
       video: [
-        { 
-          name: "活动视频", 
-          avatar: "/images/icon-activiti.svg" ,
+        {
+          name: "活动视频",
+          avatar: "/images/icon-activiti.svg",
           click: () => {}
         },
-        { 
-          name: "短视频", 
-          avatar: "/images/icon-photo.svg" ,
+        {
+          name: "短视频",
+          avatar: "/images/icon-photo.svg",
           click: () => {}
         },
-        { 
-          name: "纪录片", 
-          avatar: "/images/icon-log.svg" ,
+        {
+          name: "纪录片",
+          avatar: "/images/icon-log.svg",
           click: () => {}
         },
-        { 
-          name: "电影", 
+        {
+          name: "电影",
           avatar: "/images/icon-movie.svg",
-          click: () => {} 
+          click: () => {}
         }
       ],
       courses: [
-        { 
-          name: "全部课程", 
-          avatar: "/images/icon-course-01.svg" ,
+        {
+          name: "全部课程",
+          avatar: "/images/icon-course-01.svg",
           click: () => {}
         },
-        { 
-          name: "最新课程", 
-          avatar: "/images/icon-course-02.svg" ,
+        {
+          name: "最新课程",
+          avatar: "/images/icon-course-02.svg",
           click: () => {}
         },
-        { 
-          name: "热门课程", 
-          avatar: "/images/icon-course-hot.svg" ,
+        {
+          name: "热门课程",
+          avatar: "/images/icon-course-hot.svg",
           click: () => {}
         },
-        { 
-          name: "我的课程", 
+        {
+          name: "我的课程",
           avatar: "/images/icon-course-03.svg",
-          click: () => {} 
+          click: () => {}
         }
       ],
-      docs:[
-        { 
-          name: "文档中心", 
-          avatar: "/images/内容_文档.png" ,
+      docs: [
+        {
+          name: "文档中心",
+          avatar: "/images/内容_文档.png",
           click: () => {
             //跳转到相应页面
             this.$router.push({
@@ -1606,9 +1626,9 @@ export default {
             });
           }
         },
-        { 
-          name: "我的文档", 
-          avatar: "/images/个人中心.png" , 
+        {
+          name: "我的文档",
+          avatar: "/images/个人中心.png",
           click: () => {
             //跳转到相应页面
             this.$router.push({
@@ -1618,9 +1638,9 @@ export default {
             });
           }
         },
-        { 
-          name: "热门文档", 
-          avatar: "/images/地球仪.png" ,
+        {
+          name: "热门文档",
+          avatar: "/images/地球仪.png",
           click: () => {
             //跳转到相应页面
             this.$router.push({
@@ -1630,9 +1650,9 @@ export default {
             });
           }
         },
-        { 
-          name: "规章制度", 
-          avatar: "/images/链接.png" ,
+        {
+          name: "规章制度",
+          avatar: "/images/链接.png",
           click: () => {
             //跳转到相应页面
             this.$router.push({
@@ -1641,32 +1661,32 @@ export default {
               meta: { title: "规章制度" }
             });
           }
-        },
+        }
       ],
       dochub: [
-        { 
-          name: "专业资料", 
-          avatar: "/images/icon-file-01.svg" ,
+        {
+          name: "专业资料",
+          avatar: "/images/icon-file-01.svg",
           click: () => {}
         },
-        { 
-          name: "实用文档", 
-          avatar: "/images/icon-file-02.svg" ,
+        {
+          name: "实用文档",
+          avatar: "/images/icon-file-02.svg",
           click: () => {}
         },
-        { 
-          name: "资格考试", 
-          avatar: "/images/icon-file-03.svg" ,
+        {
+          name: "资格考试",
+          avatar: "/images/icon-file-03.svg",
           click: () => {}
         },
-        { 
-          name: "精品文档", 
-          avatar: "/images/icon-file-04.svg" ,
+        {
+          name: "精品文档",
+          avatar: "/images/icon-file-04.svg",
           click: () => {}
         },
-        { 
-          name: "个人中心", 
-          avatar: "/images/icon-file-center.svg" ,
+        {
+          name: "个人中心",
+          avatar: "/images/icon-file-center.svg",
           click: () => {}
         }
       ],
@@ -1931,6 +1951,42 @@ export default {
       });
     },
     /**
+     * @function 跳转到招聘申请界面
+     */
+    handleRecruitApply() {
+      var path = "/online/cgformList/5de397c1df3341ee92fbd27e1dcf543f";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "招聘申请" }
+      });
+    },
+    /**
+     * @function 跳转到入职申请界面
+     */
+    handleSignEmployee() {
+      var path = "/online/cgformList/24f9d4d1b3b545688af928b3224eab37";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "入职申请" }
+      });
+    },
+    /**
+     * @function 跳转到离职申请界面
+     */
+    handleResignEmployee() {
+      var path = "/online/cgformList/fdf189685d2b4f2f8497b5b6148d0e29";
+      //跳转到相应页面
+      this.$router.push({
+        path: path,
+        fullPath: path,
+        meta: { title: "离职申请" }
+      });
+    },
+    /**
      * @function 跳转到档案及证照借阅申请列表
      */
     handleFileBorrow() {
@@ -2100,7 +2156,7 @@ export default {
     /**
      * @function 跳转到
      */
-    handlePlanTaskItem(){
+    handlePlanTaskItem() {
       var path = "/online/cgformList/a10f38d1c64343f39560061e4124ba44";
       //跳转到相应页面
       this.$router.push({

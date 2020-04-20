@@ -392,7 +392,7 @@
 <script>
 //import Vue from "vue";
 //import mavonEditor from "mavon-editor";
-import "mavon-editor/dist/css/index.css";
+//import "mavon-editor/dist/css/index.css";
 
 import { timeFix, welcome } from "@/utils/util";
 import { mapGetters } from "vuex";
@@ -403,7 +403,7 @@ import Radar from "@/components/chart/Radar";
 import * as manageAPI from "@/api/manage";
 import * as tools from "@/utils/util";
 
-Vue.use(mavonEditor);
+//Vue.use(mavonEditor);
 
 export default {
   name: "BlogInfo",

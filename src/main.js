@@ -27,7 +27,7 @@ import '@jeecg/antd-onine/dist/OnlineForm.css';
 //import 'view-design/dist/styles/iview.css';
 
 //import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+//import 'element-ui/lib/theme-chalk/index.css';
 
 //import formCreate from '@form-create/element-ui';
 
@@ -38,6 +38,16 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 //import axios from 'axios';
 //import qs from 'qs';
+
+//import MavonEditor from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
+
+
+try {
+    Vue.use(MavonEditor);
+} catch (error) {
+    console.error(error);
+}
 
 try {
     //Vue.use(leMarkdownEditor)
@@ -162,7 +172,7 @@ try {
 
 try {
     //注册ViewUI前端组件
-    Vue.use(ViewUI);
+    Vue.use(iview);
 } catch (error) {
     console.log(error);
 }
