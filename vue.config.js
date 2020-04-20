@@ -45,13 +45,13 @@ const assetsCDN = {
         'mavon-editor': 'MavonEditor',
         'bpmn-js': 'BpmnViewer',
         md5: 'md5',
-        'codemirror': 'CodeMirror',
-        'view-design': 'iview',
-        'vue-photo-preview': 'preview',
     },
     css: [],
     js: [],
 };
+// 'codemirror': 'CodeMirror',
+// 'view-design': 'iview',
+// 'vue-photo-preview': 'preview',
 //lodash: 'lodash',
 
 // vue.config.js
