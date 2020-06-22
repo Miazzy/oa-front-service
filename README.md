@@ -72,7 +72,7 @@ _输入以上命令，即可快速启动文档预览服务，访问`http://127.0
 #### 文档资料showdoc服务
 ```docker run -d -p 4999:80 --restart=always --name oa-showdoc-service yunwisdom/oa-showdoc-service```
 
-_输入以上命令，即可快速启动showdoc文档服务，访问`https://showdoc.shengtai.club/web/#/user/login`, 可以编辑文档进行预览类似雀语，第一次请默认创建公司账户admin/admin，后续会自动登录此账户，因为这个文档服务，主要是用于展示OA系统的规章制度，共享资料的，只需要一个账户就行了，关于文档预览服务更多信息，请搜索showdoc_
+_输入以上命令，即可快速启动showdoc文档服务，访问`https://showdoc.shengtai.club/web/#/user/login`, 可以编辑文档进行预览类似雀语，第一次请默认创建公司账户admin/admin，后续会自动登录此账户，因为这个文档服务，主要是用于展示OA系统的规章制度，共享资料的，只需要一个账户就行了，关于文档预览服务更多信息，请Github上搜索showdoc_
 
 
 ### 源码地址
