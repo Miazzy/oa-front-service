@@ -8116,9 +8116,9 @@ mimic-fn@^2.0.0, mimic-fn@^2.1.0:
   integrity sha1-ftLCzMyvhNP/y3pptXcR/CCDQBs=
 
 min-dash@^3.0.0, min-dash@^3.5.0, min-dash@^3.5.1:
-  version "3.5.2"
-  resolved "https://registry.npm.taobao.org/min-dash/download/min-dash-3.5.2.tgz#23786fa289116ba3656038e16511577413d27200"
-  integrity sha1-I3hvookRa6NlYDjhZRFXdBPScgA=
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/min-dash/-/min-dash-3.8.1.tgz#09a8bd8a041d65eec4732042cde9cb24a6e84b0d"
+  integrity sha512-evumdlmIlg9mbRVPbC4F5FuRhNmcMS5pvuBUbqb1G9v09Ro0ImPEgz5n3khir83lFok1inKqVDjnKEg3GpDxQg==
 
 min-dom@^3.0.0:
   version "3.1.1"
