@@ -11778,15 +11778,10 @@ tinycolor2@^1.4.1:
   resolved "https://registry.npm.taobao.org/tinycolor2/download/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
-tinymce@^5.0.2:
-  version "5.1.5"
-  resolved "https://registry.npm.taobao.org/tinymce/download/tinymce-5.1.5.tgz#08a4815bcefd33fb5f654b0b82b066f788a8ddf4"
-  integrity sha1-CKSBW879M/tfZUsLgrBm94io3fQ=
-
-tinymce@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.npm.taobao.org/tinymce/download/tinymce-5.2.1.tgz#8e6113e8492c2c31b3bec044ddae32bca432ac50"
-  integrity sha1-jmET6EksLDGzvsBE3a4yvKQyrFA=
+tinymce@^5.0.2, tinymce@^5.10.7:
+  version "5.10.7"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.10.7.tgz#d89d446f1962f2a1df6b2b70018ce475ec7ffb80"
+  integrity sha512-9UUjaO0R7FxcFo0oxnd1lMs7H+D0Eh+dDVo5hKbVe1a+VB0nit97vOqlinj+YwgoBDt6/DSCUoWqAYlLI8BLYA==
 
 tmp@^0.0.33:
   version "0.0.33"
